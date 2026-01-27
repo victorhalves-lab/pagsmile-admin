@@ -15,6 +15,7 @@ import DisputeDashboard from './pages/DisputeDashboard';
 import DisputeManager from './pages/DisputeManager';
 import Disputes from './pages/Disputes';
 import DunningSettings from './pages/DunningSettings';
+import Fees from './pages/Fees';
 import Financial from './pages/Financial';
 import FinancialOverview from './pages/FinancialOverview';
 import FinancialStatement from './pages/FinancialStatement';
@@ -41,16 +42,15 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import Fees from './pages/Fees';
 import LandingPage from './pages/LandingPage';
 import AccountCreationStep1 from './pages/AccountCreationStep1';
 import PlanSelection from './pages/PlanSelection';
 import AccountCreationStep3 from './pages/AccountCreationStep3';
 import ComplianceOnboardingStart from './pages/ComplianceOnboardingStart';
 import CompliancePixOnly from './pages/CompliancePixOnly';
-import ComplianceFullKYC from './pages/ComplianceFullKYC';
 import LivenessFacematchStep from './pages/LivenessFacematchStep';
 import LivenessSimulation from './pages/LivenessSimulation';
+import ComplianceFullKYC from './pages/ComplianceFullKYC';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +72,7 @@ export const PAGES = {
     "DisputeManager": DisputeManager,
     "Disputes": Disputes,
     "DunningSettings": DunningSettings,
+    "Fees": Fees,
     "Financial": Financial,
     "FinancialOverview": FinancialOverview,
     "FinancialStatement": FinancialStatement,
@@ -98,16 +99,15 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "Fees": Fees,
     "LandingPage": LandingPage,
     "AccountCreationStep1": AccountCreationStep1,
     "PlanSelection": PlanSelection,
     "AccountCreationStep3": AccountCreationStep3,
     "ComplianceOnboardingStart": ComplianceOnboardingStart,
     "CompliancePixOnly": CompliancePixOnly,
-    "ComplianceFullKYC": ComplianceFullKYC,
     "LivenessFacematchStep": LivenessFacematchStep,
     "LivenessSimulation": LivenessSimulation,
+    "ComplianceFullKYC": ComplianceFullKYC,
 }
 
 export const pagesConfig = {
