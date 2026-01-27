@@ -152,21 +152,21 @@ const menuItems = [
     id: 'analytics',
     label: 'Analytics',
     icon: BarChart3,
-    page: 'Analytics',
+    page: 'Reports',
     submenu: [
       { label: 'Relatórios', page: 'Reports' },
-      { label: 'Dashboards', page: 'CustomDashboards' },
+      { label: 'Dashboards Customizados', page: 'CustomDashboards' },
     ]
   },
   {
     id: 'integrations',
     label: 'Integrações',
     icon: Plug,
-    page: 'Integrations',
+    page: 'ApiKeys',
     submenu: [
-      { label: 'API Keys', page: 'ApiKeys' },
+      { label: 'Chaves de API', page: 'ApiKeys' },
       { label: 'Webhooks', page: 'Webhooks' },
-      { label: 'Plugins', page: 'Plugins' },
+      { label: 'Plugins e Conectores', page: 'Plugins' },
     ]
   },
   {
