@@ -5,6 +5,13 @@ import Disputes from './pages/Disputes';
 import Subscriptions from './pages/Subscriptions';
 import PaymentLinks from './pages/PaymentLinks';
 import Customers from './pages/Customers';
+import Subaccounts from './pages/Subaccounts';
+import Withdrawals from './pages/Withdrawals';
+import Webhooks from './pages/Webhooks';
+import ApiKeys from './pages/ApiKeys';
+import SettingsPage from './pages/SettingsPage';
+import Support from './pages/Support';
+import DIACopilot from './pages/DIACopilot';
 import __Layout from './Layout.jsx';
 
 
@@ -16,6 +23,13 @@ export const PAGES = {
     "Subscriptions": Subscriptions,
     "PaymentLinks": PaymentLinks,
     "Customers": Customers,
+    "Subaccounts": Subaccounts,
+    "Withdrawals": Withdrawals,
+    "Webhooks": Webhooks,
+    "ApiKeys": ApiKeys,
+    "SettingsPage": SettingsPage,
+    "Support": Support,
+    "DIACopilot": DIACopilot,
 }
 
 export const pagesConfig = {
