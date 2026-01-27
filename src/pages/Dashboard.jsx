@@ -32,15 +32,15 @@ import BalanceCard from '@/components/dashboard/BalanceCard';
 import VolumeChart from '@/components/dashboard/VolumeChart';
 import PaymentMethodsChart from '@/components/dashboard/PaymentMethodsChart';
 import ApprovalRateChart from '@/components/dashboard/ApprovalRateChart';
-import GMVCards from '@/components/dashboard/GMVCards';
-import TransactionMetricsCards from '@/components/dashboard/TransactionMetricsCards';
-import PerformanceIndicators from '@/components/dashboard/PerformanceIndicators';
-import CardPerformanceMetrics from '@/components/dashboard/CardPerformanceMetrics';
-import PixPerformanceMetrics from '@/components/dashboard/PixPerformanceMetrics';
-import HeatmapChart from '@/components/dashboard/HeatmapChart';
-import DeclineAnalysis from '@/components/dashboard/DeclineAnalysis';
-import ComparativeMetrics from '@/components/dashboard/ComparativeMetrics';
-import AlertsPanel from '@/components/dashboard/AlertsPanel';
+import GMVCards from '@/components/dashboard/GMVCards.jsx';
+import TransactionMetricsCards from '@/components/dashboard/TransactionMetricsCards.jsx';
+import PerformanceIndicators from '@/components/dashboard/PerformanceIndicators.jsx';
+import CardPerformanceMetrics from '@/components/dashboard/CardPerformanceMetrics.jsx';
+import PixPerformanceMetrics from '@/components/dashboard/PixPerformanceMetrics.jsx';
+import HeatmapChart from '@/components/dashboard/HeatmapChart.jsx';
+import DeclineAnalysis from '@/components/dashboard/DeclineAnalysis.jsx';
+import ComparativeMetrics from '@/components/dashboard/ComparativeMetrics.jsx';
+import AlertsPanel from '@/components/dashboard/AlertsPanel.jsx';
 
 export default function Dashboard() {
   const [period, setPeriod] = React.useState('7d');
