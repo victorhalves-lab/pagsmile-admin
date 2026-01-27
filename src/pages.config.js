@@ -1,5 +1,6 @@
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
+import TransactionDetail from './pages/TransactionDetail';
 import Financial from './pages/Financial';
 import Disputes from './pages/Disputes';
 import Subscriptions from './pages/Subscriptions';
@@ -16,13 +17,13 @@ import RecoveryAgent from './pages/RecoveryAgent';
 import ConverterAgent from './pages/ConverterAgent';
 import DisputeManager from './pages/DisputeManager';
 import OriginationAgent from './pages/OriginationAgent';
-import TransactionDetail from './pages/TransactionDetail';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Dashboard": Dashboard,
     "Transactions": Transactions,
+    "TransactionDetail": TransactionDetail,
     "Financial": Financial,
     "Disputes": Disputes,
     "Subscriptions": Subscriptions,
@@ -39,7 +40,6 @@ export const PAGES = {
     "ConverterAgent": ConverterAgent,
     "DisputeManager": DisputeManager,
     "OriginationAgent": OriginationAgent,
-    "TransactionDetail": TransactionDetail,
 }
 
 export const pagesConfig = {
