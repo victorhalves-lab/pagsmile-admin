@@ -32,6 +32,8 @@ import FinancialStatement from './pages/FinancialStatement';
 import ReceivablesAgenda from './pages/ReceivablesAgenda';
 import Anticipation from './pages/Anticipation';
 import SplitManagement from './pages/SplitManagement';
+import SubaccountsDashboard from './pages/SubaccountsDashboard';
+import SubaccountsList from './pages/SubaccountsList';
 import __Layout from './Layout.jsx';
 
 
@@ -70,6 +72,8 @@ export const PAGES = {
     "ReceivablesAgenda": ReceivablesAgenda,
     "Anticipation": Anticipation,
     "SplitManagement": SplitManagement,
+    "SubaccountsDashboard": SubaccountsDashboard,
+    "SubaccountsList": SubaccountsList,
 }
 
 export const pagesConfig = {
