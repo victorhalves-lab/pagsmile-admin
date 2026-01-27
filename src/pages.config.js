@@ -26,6 +26,7 @@ import DisputeDashboard from './pages/DisputeDashboard';
 import PreChargebacks from './pages/PreChargebacks';
 import Chargebacks from './pages/Chargebacks';
 import DisputeContestation from './pages/DisputeContestation';
+import DisputeAgentSettings from './pages/DisputeAgentSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -58,6 +59,7 @@ export const PAGES = {
     "PreChargebacks": PreChargebacks,
     "Chargebacks": Chargebacks,
     "DisputeContestation": DisputeContestation,
+    "DisputeAgentSettings": DisputeAgentSettings,
 }
 
 export const pagesConfig = {
