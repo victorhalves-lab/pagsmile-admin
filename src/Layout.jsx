@@ -121,6 +121,7 @@ const menuItems = [
       { label: 'Visão Geral', page: 'FinancialOverview' },
       { label: 'Extrato', page: 'FinancialStatement' },
       { label: 'Agenda de Recebíveis', page: 'ReceivablesAgenda' },
+      { label: 'Tarifas', page: 'Fees' },
       { label: 'Antecipação', page: 'Anticipation' },
       { label: 'Split', page: 'SplitManagement' },
     ]
