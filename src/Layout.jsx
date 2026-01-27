@@ -213,25 +213,25 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-[#F1F5F9] font-sans antialiased selection:bg-primary/20 selection:text-primary">
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 left-0 z-50 h-full bg-[#101F3E] transition-all duration-300",
+        "fixed top-0 left-0 z-50 h-full bg-[#0F172A] text-slate-300 transition-all duration-300 shadow-2xl",
         sidebarOpen ? "w-64" : "w-20",
         mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className={cn(
-            "flex items-center h-16 px-4 border-b border-white/10",
+            "flex items-center h-16 px-4 border-b border-slate-800/50",
             sidebarOpen ? "justify-between" : "justify-center"
           )}>
             {sidebarOpen ? (
@@ -421,8 +421,8 @@ export default function Layout({ children, currentPageName }) {
         sidebarOpen ? "lg:ml-64" : "lg:ml-20"
       )}>
         {/* Header */}
-        <header className="sticky top-0 z-30 bg-white border-b border-gray-200">
-          <div className="flex items-center justify-between h-16 px-4 lg:px-6">
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/60 shadow-sm supports-[backdrop-filter]:bg-white/60">
+          <div className="flex items-center justify-between h-16 px-4 lg:px-8">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
@@ -432,33 +432,37 @@ export default function Layout({ children, currentPageName }) {
               >
                 <Menu className="w-5 h-5" />
               </Button>
-              <div className="relative hidden sm:block">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <div className="relative hidden sm:block group">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
                 <Input
-                  placeholder="Buscar transações, clientes..."
-                  className="w-64 lg:w-80 pl-9 bg-gray-50 border-gray-200"
+                  placeholder="Buscar transações, clientes, (⌘K)"
+                  className="w-64 lg:w-96 pl-10 bg-slate-50 border-slate-200 focus:bg-white transition-all shadow-sm"
                 />
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {/* AI Assistant Button */}
               <Button
                 variant="outline"
                 size="sm"
-                className="hidden sm:flex items-center gap-2 border-[#00D26A]/30 text-[#00D26A] hover:bg-[#00D26A]/10"
+                className="hidden sm:flex items-center gap-2 border-primary/20 text-primary hover:bg-primary/5 hover:border-primary/40 shadow-sm"
                 onClick={() => setShowAIPanel(!showAIPanel)}
               >
-                <Sparkles className="w-4 h-4" />
-                <span>DIA Copilot</span>
+                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center">
+                  <Sparkles className="w-3 h-3 text-white" />
+                </div>
+                <span className="font-medium">DIA Copilot</span>
               </Button>
+
+              <div className="h-6 w-px bg-slate-200 mx-1" />
 
               {/* Notifications */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative">
-                    <Bell className="w-5 h-5" />
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                  <Button variant="ghost" size="icon" className="relative hover:bg-slate-100 rounded-full w-10 h-10">
+                    <Bell className="w-5 h-5 text-slate-600" />
+                    <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-80">

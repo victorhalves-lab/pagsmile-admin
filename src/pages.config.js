@@ -40,6 +40,7 @@ import CustomerDetail from './pages/CustomerDetail';
 import Reports from './pages/Reports';
 import CustomDashboards from './pages/CustomDashboards';
 import Plugins from './pages/Plugins';
+import DeclineAnalysis from './pages/DeclineAnalysis';
 import __Layout from './Layout.jsx';
 
 
@@ -86,6 +87,7 @@ export const PAGES = {
     "Reports": Reports,
     "CustomDashboards": CustomDashboards,
     "Plugins": Plugins,
+    "DeclineAnalysis": DeclineAnalysis,
 }
 
 export const pagesConfig = {
