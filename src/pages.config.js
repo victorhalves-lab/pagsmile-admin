@@ -36,6 +36,10 @@ import SubaccountsDashboard from './pages/SubaccountsDashboard';
 import SubaccountsList from './pages/SubaccountsList';
 import SubaccountOnboarding from './pages/SubaccountOnboarding';
 import OriginationAgentSettings from './pages/OriginationAgentSettings';
+import CustomerDetail from './pages/CustomerDetail';
+import Reports from './pages/Reports';
+import CustomDashboards from './pages/CustomDashboards';
+import Plugins from './pages/Plugins';
 import __Layout from './Layout.jsx';
 
 
@@ -78,6 +82,10 @@ export const PAGES = {
     "SubaccountsList": SubaccountsList,
     "SubaccountOnboarding": SubaccountOnboarding,
     "OriginationAgentSettings": OriginationAgentSettings,
+    "CustomerDetail": CustomerDetail,
+    "Reports": Reports,
+    "CustomDashboards": CustomDashboards,
+    "Plugins": Plugins,
 }
 
 export const pagesConfig = {
