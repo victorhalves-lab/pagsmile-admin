@@ -16,6 +16,7 @@ import RecoveryAgent from './pages/RecoveryAgent';
 import ConverterAgent from './pages/ConverterAgent';
 import DisputeManager from './pages/DisputeManager';
 import OriginationAgent from './pages/OriginationAgent';
+import TransactionDetail from './pages/TransactionDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -38,6 +39,7 @@ export const PAGES = {
     "ConverterAgent": ConverterAgent,
     "DisputeManager": DisputeManager,
     "OriginationAgent": OriginationAgent,
+    "TransactionDetail": TransactionDetail,
 }
 
 export const pagesConfig = {
