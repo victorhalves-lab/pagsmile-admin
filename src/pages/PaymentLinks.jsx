@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { createPageUrl } from '@/utils';
 import { 
   Link2, 
   Plus, 
@@ -14,27 +16,29 @@ import {
   BarChart3,
   Trash2,
   Edit,
-  Share2
+  Share2,
+  Pause,
+  Play,
+  Archive,
+  LayoutGrid,
+  List,
+  Filter,
+  Download
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -44,6 +48,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
@@ -54,16 +59,14 @@ import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
 import KPICard from '@/components/dashboard/KPICard';
 import EmptyState from '@/components/common/EmptyState';
+import ShareOptions from '@/components/payment-links/ShareOptions';
 
 export default function PaymentLinks() {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [newLink, setNewLink] = useState({
-    name: '',
-    description: '',
-    amount: '',
-    type: 'reusable',
-    allow_custom_amount: false,
-  });
+  const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState('table');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [shareLink, setShareLink] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -72,18 +75,19 @@ export default function PaymentLinks() {
     queryFn: () => base44.entities.PaymentLink.list('-created_date', 100),
   });
 
-  const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.PaymentLink.create({
-      ...data,
-      link_id: `link_${Date.now()}`,
-      url: `https://pay.pagsmile.com/${Date.now()}`,
-      short_url: `https://pag.sm/${Date.now().toString(36)}`,
-    }),
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.PaymentLink.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['payment-links']);
-      setIsCreateOpen(false);
-      setNewLink({ name: '', description: '', amount: '', type: 'reusable', allow_custom_amount: false });
-      toast.success('Link criado com sucesso!');
+      toast.success('Link atualizado!');
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.PaymentLink.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['payment-links']);
+      toast.success('Link excluído!');
     }
   });
 
@@ -99,13 +103,33 @@ export default function PaymentLinks() {
     toast.success('Link copiado!');
   };
 
+  // Filter links
+  const filteredLinks = links.filter(link => {
+    const matchesStatus = statusFilter === 'all' || link.status === statusFilter;
+    const matchesSearch = !searchTerm || 
+      link.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      link.link_id?.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
+
   // Calculate metrics
   const activeLinks = links.filter(l => l.status === 'active');
   const totalCollected = links.reduce((sum, l) => sum + (l.total_collected || 0), 0);
   const totalViews = links.reduce((sum, l) => sum + (l.views_count || 0), 0);
-  const avgConversion = links.length > 0 
-    ? links.reduce((sum, l) => sum + (l.conversion_rate || 0), 0) / links.length 
-    : 0;
+  const totalSales = links.reduce((sum, l) => sum + (l.usage_count || 0), 0);
+  const avgConversion = totalViews > 0 ? (totalSales / totalViews) * 100 : 0;
+
+  const getStatusBadge = (status) => {
+    const statusConfig = {
+      active: { label: 'Ativo', className: 'bg-green-100 text-green-700' },
+      inactive: { label: 'Inativo', className: 'bg-gray-100 text-gray-600' },
+      expired: { label: 'Expirado', className: 'bg-gray-100 text-gray-600' },
+      sold_out: { label: 'Esgotado', className: 'bg-yellow-100 text-yellow-700' },
+      draft: { label: 'Rascunho', className: 'bg-blue-100 text-blue-700' },
+    };
+    const config = statusConfig[status] || statusConfig.draft;
+    return <Badge className={config.className}>{config.label}</Badge>;
+  };
 
   const columns = [
     {
@@ -113,18 +137,26 @@ export default function PaymentLinks() {
       label: 'Link',
       render: (value, row) => (
         <div className="flex items-center gap-3">
-          <div className={cn(
-            "w-10 h-10 rounded-lg flex items-center justify-center",
-            row.status === 'active' ? 'bg-blue-100' : 'bg-gray-100'
-          )}>
-            <Link2 className={cn(
-              "w-5 h-5",
-              row.status === 'active' ? 'text-blue-600' : 'text-gray-400'
-            )} />
-          </div>
+          {row.main_image_url ? (
+            <img 
+              src={row.main_image_url} 
+              alt={value} 
+              className="w-10 h-10 rounded-lg object-cover"
+            />
+          ) : (
+            <div className={cn(
+              "w-10 h-10 rounded-lg flex items-center justify-center",
+              row.status === 'active' ? 'bg-blue-100' : 'bg-gray-100'
+            )}>
+              <Link2 className={cn(
+                "w-5 h-5",
+                row.status === 'active' ? 'text-blue-600' : 'text-gray-400'
+              )} />
+            </div>
+          )}
           <div>
             <p className="font-medium text-gray-900 text-sm">{value}</p>
-            <p className="text-xs text-gray-500">{row.short_url || row.link_id}</p>
+            <p className="text-xs text-gray-500 truncate max-w-[200px]">{row.short_url || row.url}</p>
           </div>
         </div>
       )
@@ -134,8 +166,10 @@ export default function PaymentLinks() {
       label: 'Valor',
       render: (value, row) => (
         <div>
-          {row.allow_custom_amount ? (
-            <span className="text-sm text-gray-500">Valor flexível</span>
+          {row.value_type === 'open' ? (
+            <span className="text-sm text-gray-500">Valor aberto</span>
+          ) : row.value_type === 'minimum' ? (
+            <span className="text-sm">Min. {formatCurrency(row.min_amount)}</span>
           ) : (
             <span className="font-semibold text-gray-900">{formatCurrency(value)}</span>
           )}
@@ -143,21 +177,9 @@ export default function PaymentLinks() {
       )
     },
     {
-      key: 'type',
-      label: 'Tipo',
-      render: (value) => {
-        const labels = {
-          single: 'Uso único',
-          reusable: 'Reutilizável',
-          subscription: 'Assinatura'
-        };
-        return <Badge variant="outline">{labels[value] || value}</Badge>;
-      }
-    },
-    {
       key: 'status',
       label: 'Status',
-      render: (value) => <StatusBadge status={value} />
+      render: (value) => getStatusBadge(value)
     },
     {
       key: 'usage_count',
@@ -177,6 +199,23 @@ export default function PaymentLinks() {
       )
     },
     {
+      key: 'conversion_rate',
+      label: 'Conversão',
+      render: (_, row) => {
+        const rate = row.views_count > 0 
+          ? ((row.usage_count || 0) / row.views_count) * 100 
+          : 0;
+        return (
+          <span className={cn(
+            "text-sm font-medium",
+            rate >= 5 ? 'text-green-600' : rate >= 2 ? 'text-yellow-600' : 'text-gray-500'
+          )}>
+            {rate.toFixed(1)}%
+          </span>
+        );
+      }
+    },
+    {
       key: 'actions',
       label: '',
       render: (_, row) => (
@@ -193,9 +232,9 @@ export default function PaymentLinks() {
             variant="ghost" 
             size="icon" 
             className="h-8 w-8"
-            onClick={() => window.open(row.url, '_blank')}
+            onClick={() => setShareLink(row)}
           >
-            <ExternalLink className="w-4 h-4" />
+            <Share2 className="w-4 h-4" />
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -204,23 +243,35 @@ export default function PaymentLinks() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Eye className="w-4 h-4 mr-2" />
-                Ver detalhes
+              <DropdownMenuItem onClick={() => window.open(row.url, '_blank')}>
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Abrir link
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate(createPageUrl('PaymentLinkCreate') + `?id=${row.id}`)}>
                 <Edit className="w-4 h-4 mr-2" />
                 Editar
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShareLink(row)}>
                 <QrCode className="w-4 h-4 mr-2" />
-                Gerar QR Code
+                QR Code
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Share2 className="w-4 h-4 mr-2" />
-                Compartilhar
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">
+              <DropdownMenuSeparator />
+              {row.status === 'active' ? (
+                <DropdownMenuItem onClick={() => updateMutation.mutate({ id: row.id, data: { status: 'inactive' } })}>
+                  <Pause className="w-4 h-4 mr-2" />
+                  Desativar
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem onClick={() => updateMutation.mutate({ id: row.id, data: { status: 'active' } })}>
+                  <Play className="w-4 h-4 mr-2" />
+                  Ativar
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem className="text-red-600" onClick={() => {
+                if (confirm('Excluir este link?')) {
+                  deleteMutation.mutate(row.id);
+                }
+              }}>
                 <Trash2 className="w-4 h-4 mr-2" />
                 Excluir
               </DropdownMenuItem>
@@ -231,16 +282,60 @@ export default function PaymentLinks() {
     }
   ];
 
-  const handleCreate = () => {
-    if (!newLink.name) {
-      toast.error('Nome é obrigatório');
-      return;
-    }
-    createMutation.mutate({
-      ...newLink,
-      amount: newLink.allow_custom_amount ? null : parseFloat(newLink.amount) || 0,
-    });
-  };
+  // Card view for links
+  const LinkCard = ({ link }) => (
+    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+      {link.main_image_url ? (
+        <img 
+          src={link.main_image_url} 
+          alt={link.name} 
+          className="w-full h-40 object-cover"
+        />
+      ) : (
+        <div className="w-full h-40 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+          <Link2 className="w-12 h-12 text-gray-400" />
+        </div>
+      )}
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="font-semibold text-gray-900 truncate flex-1">{link.name}</h3>
+          {getStatusBadge(link.status)}
+        </div>
+        <p className="text-lg font-bold text-gray-900 mb-3">
+          {link.value_type === 'fixed' ? formatCurrency(link.amount) : 'Valor variável'}
+        </p>
+        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+          <span>{link.usage_count || 0} vendas</span>
+          <span>{formatCurrency(link.total_collected || 0)}</span>
+        </div>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1"
+            onClick={() => copyToClipboard(link.short_url || link.url)}
+          >
+            <Copy className="w-4 h-4 mr-1" />
+            Copiar
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShareLink(link)}
+          >
+            <Share2 className="w-4 h-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => navigate(createPageUrl('PaymentLinkCreate') + `?id=${link.id}`)}
+          >
+            <Edit className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -251,13 +346,19 @@ export default function PaymentLinks() {
           { label: 'Links de Pagamento', page: 'PaymentLinks' }
         ]}
         actions={
-          <Button 
-            className="bg-[#00D26A] hover:bg-[#00A854]"
-            onClick={() => setIsCreateOpen(true)}
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Link
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate(createPageUrl('PaymentLinkShowcase'))}>
+              <LayoutGrid className="w-4 h-4 mr-2" />
+              Vitrines
+            </Button>
+            <Button 
+              className="bg-[#00D26A] hover:bg-[#00A854]"
+              onClick={() => navigate(createPageUrl('PaymentLinkCreate'))}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Novo Link
+            </Button>
+          </div>
         }
       />
 
@@ -281,10 +382,10 @@ export default function PaymentLinks() {
           iconColor="text-emerald-600"
         />
         <KPICard
-          title="Visualizações"
-          value={totalViews}
+          title="Total de Vendas"
+          value={totalSales}
           format="number"
-          icon={Eye}
+          icon={BarChart3}
           iconBg="bg-purple-100"
           iconColor="text-purple-600"
         />
@@ -292,120 +393,89 @@ export default function PaymentLinks() {
           title="Conversão Média"
           value={avgConversion}
           format="percentage"
-          change={2.5}
           icon={TrendingUp}
           iconBg="bg-orange-100"
           iconColor="text-orange-600"
         />
       </div>
 
-      {/* Table */}
-      {links.length === 0 && !isLoading ? (
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white p-4 rounded-xl border">
+        <div className="flex flex-1 gap-3">
+          <Input
+            placeholder="Buscar por nome ou ID..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="max-w-xs"
+          />
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="active">Ativos</SelectItem>
+              <SelectItem value="inactive">Inativos</SelectItem>
+              <SelectItem value="expired">Expirados</SelectItem>
+              <SelectItem value="sold_out">Esgotados</SelectItem>
+              <SelectItem value="draft">Rascunhos</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant={viewMode === 'table' ? 'default' : 'outline'}
+            size="icon"
+            onClick={() => setViewMode('table')}
+          >
+            <List className="w-4 h-4" />
+          </Button>
+          <Button
+            variant={viewMode === 'cards' ? 'default' : 'outline'}
+            size="icon"
+            onClick={() => setViewMode('cards')}
+          >
+            <LayoutGrid className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Content */}
+      {filteredLinks.length === 0 && !isLoading ? (
         <EmptyState
           icon={Link2}
           title="Nenhum link de pagamento"
           description="Crie seu primeiro link de pagamento para começar a receber"
           actionLabel="Criar Link"
-          onAction={() => setIsCreateOpen(true)}
+          onAction={() => navigate(createPageUrl('PaymentLinkCreate'))}
         />
+      ) : viewMode === 'cards' ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {filteredLinks.map((link) => (
+            <LinkCard key={link.id} link={link} />
+          ))}
+        </div>
       ) : (
         <DataTable
           columns={columns}
-          data={links}
+          data={filteredLinks}
           loading={isLoading}
-          searchable
-          searchPlaceholder="Buscar por nome ou ID..."
           pagination
           pageSize={25}
           currentPage={1}
-          totalItems={links.length}
+          totalItems={filteredLinks.length}
           onRefresh={refetch}
           emptyMessage="Nenhum link encontrado"
         />
       )}
 
-      {/* Create Dialog */}
-      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="max-w-md">
+      {/* Share Dialog */}
+      <Dialog open={!!shareLink} onOpenChange={(open) => !open && setShareLink(null)}>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Novo Link de Pagamento</DialogTitle>
-            <DialogDescription>
-              Crie um link para receber pagamentos de forma rápida
-            </DialogDescription>
+            <DialogTitle>Compartilhar Link</DialogTitle>
           </DialogHeader>
-
-          <div className="space-y-4">
-            <div>
-              <Label>Nome do Link *</Label>
-              <Input
-                placeholder="Ex: Produto X, Serviço Y"
-                value={newLink.name}
-                onChange={(e) => setNewLink({ ...newLink, name: e.target.value })}
-              />
-            </div>
-
-            <div>
-              <Label>Descrição</Label>
-              <Textarea
-                placeholder="Descrição opcional"
-                value={newLink.description}
-                onChange={(e) => setNewLink({ ...newLink, description: e.target.value })}
-              />
-            </div>
-
-            <div>
-              <Label>Tipo de Link</Label>
-              <Select 
-                value={newLink.type} 
-                onValueChange={(v) => setNewLink({ ...newLink, type: v })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="reusable">Reutilizável</SelectItem>
-                  <SelectItem value="single">Uso único</SelectItem>
-                  <SelectItem value="subscription">Assinatura</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <Label>Valor flexível</Label>
-                <p className="text-xs text-gray-500">Cliente define o valor</p>
-              </div>
-              <Switch
-                checked={newLink.allow_custom_amount}
-                onCheckedChange={(v) => setNewLink({ ...newLink, allow_custom_amount: v })}
-              />
-            </div>
-
-            {!newLink.allow_custom_amount && (
-              <div>
-                <Label>Valor *</Label>
-                <Input
-                  type="number"
-                  placeholder="0,00"
-                  value={newLink.amount}
-                  onChange={(e) => setNewLink({ ...newLink, amount: e.target.value })}
-                />
-              </div>
-            )}
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
-              Cancelar
-            </Button>
-            <Button 
-              className="bg-[#00D26A] hover:bg-[#00A854]"
-              onClick={handleCreate}
-              disabled={createMutation.isPending}
-            >
-              {createMutation.isPending ? 'Criando...' : 'Criar Link'}
-            </Button>
-          </DialogFooter>
+          <ShareOptions link={shareLink} onClose={() => setShareLink(null)} />
         </DialogContent>
       </Dialog>
     </div>
