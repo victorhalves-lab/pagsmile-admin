@@ -487,13 +487,13 @@ export default function Customers() {
         </TabsContent>
       </Tabs>
 
-      {/* Customer Detail Dialog */}
+      {/* Customer Quick View Dialog */}
       <Dialog open={!!selectedCustomer} onOpenChange={() => setSelectedCustomer(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Perfil do Cliente</DialogTitle>
             <DialogDescription>
-              Visão 360° do cliente
+              Visão rápida do cliente
             </DialogDescription>
           </DialogHeader>
           
@@ -513,6 +513,9 @@ export default function Customers() {
                     <Badge className={segmentConfig[selectedCustomer.segment]?.color}>
                       {segmentConfig[selectedCustomer.segment]?.label || 'Novo'}
                     </Badge>
+                    {selectedCustomer.tags?.map((tag, idx) => (
+                      <Badge key={idx} variant="outline">{tag}</Badge>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -580,9 +583,11 @@ export default function Customers() {
               </div>
 
               <div className="flex gap-3">
-                <Button className="flex-1 bg-[#00D26A] hover:bg-[#00A854]">
-                  Ver Transações
-                </Button>
+                <Link to={createPageUrl(`CustomerDetail?id=${selectedCustomer.id}`)} className="flex-1">
+                  <Button className="w-full bg-[#00D26A] hover:bg-[#00A854]">
+                    Ver Perfil Completo
+                  </Button>
+                </Link>
                 <Button variant="outline" className="flex-1">
                   Enviar E-mail
                 </Button>
