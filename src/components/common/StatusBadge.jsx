@@ -175,6 +175,10 @@ export default function StatusBadge({
   size = 'default',
   className 
 }) {
+  if (!status) {
+    return null;
+  }
+  
   const config = statusConfigs[status] || {
     label: status,
     color: 'bg-gray-100 text-gray-700 border-gray-200',
