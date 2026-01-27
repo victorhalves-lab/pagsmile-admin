@@ -46,6 +46,10 @@ import LandingPage from './pages/LandingPage';
 import AccountCreationStep1 from './pages/AccountCreationStep1';
 import PlanSelection from './pages/PlanSelection';
 import AccountCreationStep3 from './pages/AccountCreationStep3';
+import ComplianceOnboardingStart from './pages/ComplianceOnboardingStart';
+import CompliancePixOnly from './pages/CompliancePixOnly';
+import LivenessFacematchStep from './pages/LivenessFacematchStep';
+import LivenessSimulation from './pages/LivenessSimulation';
 import __Layout from './Layout.jsx';
 
 
@@ -98,6 +102,10 @@ export const PAGES = {
     "AccountCreationStep1": AccountCreationStep1,
     "PlanSelection": PlanSelection,
     "AccountCreationStep3": AccountCreationStep3,
+    "ComplianceOnboardingStart": ComplianceOnboardingStart,
+    "CompliancePixOnly": CompliancePixOnly,
+    "LivenessFacematchStep": LivenessFacematchStep,
+    "LivenessSimulation": LivenessSimulation,
 }
 
 export const pagesConfig = {
