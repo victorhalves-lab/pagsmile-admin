@@ -103,9 +103,14 @@ const menuItems = [
     id: 'disputes',
     label: 'Disputas',
     icon: ShieldAlert,
-    page: 'Disputes',
+    page: 'DisputeDashboard',
     badge: '3',
     badgeVariant: 'destructive',
+    submenu: [
+      { label: 'Dashboard', page: 'DisputeDashboard' },
+      { label: 'Pré-Chargebacks', page: 'PreChargebacks' },
+      { label: 'Chargebacks', page: 'Chargebacks' },
+    ]
   },
   {
     id: 'financial',
@@ -182,7 +187,7 @@ const aiAgents = [
   { id: 'dia', label: 'DIA Copilot', description: 'Assistente inteligente', page: 'DIACopilot' },
   { id: 'recovery', label: 'Recovery Agent', description: 'Recuperação de pagamentos', page: 'RecoveryAgent' },
   { id: 'converter', label: 'Converter Agent', description: 'Otimização de checkout', page: 'ConverterAgent' },
-  { id: 'dispute', label: 'Dispute Manager', description: 'Gestão de disputas', page: 'DisputeManager' },
+  { id: 'dispute', label: 'Dispute Manager', description: 'Gestão de disputas', page: 'DisputeAgentSettings' },
   { id: 'origination', label: 'Origination Agent', description: 'Onboarding inteligente', page: 'OriginationAgent' },
 ];
 
