@@ -116,13 +116,13 @@ const menuItems = [
     id: 'financial',
     label: 'Financeiro',
     icon: Wallet,
-    page: 'Financial',
+    page: 'FinancialOverview',
     submenu: [
-      { label: 'Visão Geral', page: 'Financial' },
-      { label: 'Extrato', page: 'Statement' },
-      { label: 'Agenda de Recebíveis', page: 'Receivables' },
+      { label: 'Visão Geral', page: 'FinancialOverview' },
+      { label: 'Extrato', page: 'FinancialStatement' },
+      { label: 'Agenda de Recebíveis', page: 'ReceivablesAgenda' },
       { label: 'Antecipação', page: 'Anticipation' },
-      { label: 'Split', page: 'Split' },
+      { label: 'Split', page: 'SplitManagement' },
     ]
   },
   {
@@ -135,11 +135,11 @@ const menuItems = [
     id: 'subaccounts',
     label: 'Subcontas',
     icon: Building2,
-    page: 'Subaccounts',
+    page: 'SubaccountsDashboard',
     submenu: [
-      { label: 'Todas as Subcontas', page: 'Subaccounts' },
+      { label: 'Dashboard', page: 'SubaccountsDashboard' },
+      { label: 'Todas as Subcontas', page: 'SubaccountsList' },
       { label: 'Onboarding', page: 'SubaccountOnboarding' },
-      { label: 'Aprovações', page: 'SubaccountApprovals' },
     ]
   },
   {
@@ -188,7 +188,7 @@ const aiAgents = [
   { id: 'recovery', label: 'Recovery Agent', description: 'Recuperação de pagamentos', page: 'RecoveryAgent' },
   { id: 'converter', label: 'Converter Agent', description: 'Otimização de checkout', page: 'ConverterAgent' },
   { id: 'dispute', label: 'Dispute Manager', description: 'Gestão de disputas', page: 'DisputeAgentSettings' },
-  { id: 'origination', label: 'Origination Agent', description: 'Onboarding inteligente', page: 'OriginationAgent' },
+  { id: 'origination', label: 'Origination Agent', description: 'Onboarding inteligente', page: 'OriginationAgentSettings' },
 ];
 
 export default function Layout({ children, currentPageName }) {
