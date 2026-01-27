@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { 
   Settings, 
   User, 
@@ -12,7 +14,15 @@ import {
   Key,
   ChevronRight,
   Upload,
-  Save
+  Save,
+  Plus,
+  Trash2,
+  Edit,
+  Check,
+  X,
+  History,
+  LogOut,
+  Landmark
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,18 +42,59 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 import PageHeader from '@/components/common/PageHeader';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import {
+  Alert,
+  AlertDescription,
+} from '@/components/ui/alert';
 
 export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState('account');
+  const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [inviteData, setInviteData] = useState({ email: '', name: '', role: 'viewer' });
 
   const sections = [
     { id: 'account', label: 'Dados da Conta', icon: Building2 },
-    { id: 'users', label: 'Usuários', icon: Users },
+    { id: 'users', label: 'Usuários e Permissões', icon: Users },
     { id: 'security', label: 'Segurança', icon: Shield },
+    { id: 'bank', label: 'Contas Bancárias', icon: Landmark },
     { id: 'payments', label: 'Métodos de Pagamento', icon: CreditCard },
     { id: 'notifications', label: 'Notificações', icon: Bell },
     { id: 'preferences', label: 'Preferências', icon: Palette },
   ];
+
+  const mockUsers = [
+    { name: 'João Silva', email: 'joao@empresa.com', role: 'Admin', status: 'active', lastAccess: '2026-01-27 14:30' },
+    { name: 'Maria Santos', email: 'maria@empresa.com', role: 'Financeiro', status: 'active', lastAccess: '2026-01-27 10:15' },
+    { name: 'Pedro Costa', email: 'pedro@empresa.com', role: 'Operações', status: 'pending', lastAccess: null },
+    { name: 'Ana Oliveira', email: 'ana@empresa.com', role: 'Visualizador', status: 'active', lastAccess: '2026-01-26 16:45' },
+  ];
+
+  const mockBankAccounts = [
+    { id: 1, name: 'Conta Principal', bank: 'Itaú', agency: '1234', account: '12345-6', type: 'checking', isPrimary: true },
+    { id: 2, name: 'Conta Pix', bank: 'Nubank', pix: 'financeiro@empresa.com', type: 'pix', isPrimary: false },
+  ];
+
+  const roles = [
+    { id: 'admin', label: 'Administrador', description: 'Acesso total ao sistema' },
+    { id: 'financial', label: 'Financeiro', description: 'Acesso a finanças, saques e relatórios' },
+    { id: 'operations', label: 'Operações', description: 'Acesso a transações e disputas' },
+    { id: 'viewer', label: 'Visualizador', description: 'Apenas visualização, sem edição' },
+  ];
+
+  const handleInvite = () => {
+    toast.success(`Convite enviado para ${inviteData.email}`);
+    setIsInviteOpen(false);
+    setInviteData({ email: '', name: '', role: 'viewer' });
+  };
 
   return (
     <div className="space-y-6">
@@ -163,24 +214,21 @@ export default function SettingsPage() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold">Usuários</h3>
+                    <h3 className="text-lg font-semibold">Usuários e Permissões</h3>
                     <p className="text-sm text-gray-500">Gerencie quem tem acesso ao admin</p>
                   </div>
-                  <Button className="bg-[#00D26A] hover:bg-[#00A854]">
+                  <Button className="bg-[#00D26A] hover:bg-[#00A854]" onClick={() => setIsInviteOpen(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
                     Convidar Usuário
                   </Button>
                 </div>
 
                 <div className="space-y-3">
-                  {[
-                    { name: 'João Silva', email: 'joao@empresa.com', role: 'Admin', status: 'Ativo' },
-                    { name: 'Maria Santos', email: 'maria@empresa.com', role: 'Financeiro', status: 'Ativo' },
-                    { name: 'Pedro Costa', email: 'pedro@empresa.com', role: 'Operações', status: 'Pendente' },
-                  ].map((user, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg">
+                  {mockUsers.map((user, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
                       <div className="flex items-center gap-3">
                         <Avatar>
-                          <AvatarFallback className="bg-gray-100">
+                          <AvatarFallback className="bg-[#101F3E] text-white">
                             {user.name.split(' ').map(n => n[0]).join('')}
                           </AvatarFallback>
                         </Avatar>
@@ -190,18 +238,98 @@ export default function SettingsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-sm text-gray-600">{user.role}</span>
+                        <Badge variant="outline">{user.role}</Badge>
                         <span className={cn(
                           "text-xs px-2 py-1 rounded-full",
-                          user.status === 'Ativo' ? 'bg-emerald-100 text-emerald-700' : 'bg-yellow-100 text-yellow-700'
+                          user.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-yellow-100 text-yellow-700'
                         )}>
-                          {user.status}
+                          {user.status === 'active' ? 'Ativo' : 'Pendente'}
                         </span>
-                        <Button variant="ghost" size="sm">Editar</Button>
+                        <div className="text-xs text-gray-400">
+                          {user.lastAccess ? `Último acesso: ${user.lastAccess}` : 'Nunca acessou'}
+                        </div>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Edit className="w-4 h-4" />
+                        </Button>
                       </div>
                     </div>
                   ))}
                 </div>
+
+                <Separator />
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Papéis (Roles)</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {roles.map((role) => (
+                      <div key={role.id} className="p-4 border border-gray-100 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium">{role.label}</h4>
+                          <Button variant="ghost" size="sm">Editar</Button>
+                        </div>
+                        <p className="text-sm text-gray-500">{role.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeSection === 'bank' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">Contas Bancárias</h3>
+                    <p className="text-sm text-gray-500">Contas para recebimento de saques</p>
+                  </div>
+                  <Button className="bg-[#00D26A] hover:bg-[#00A854]">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Adicionar Conta
+                  </Button>
+                </div>
+
+                <div className="space-y-3">
+                  {mockBankAccounts.map((account) => (
+                    <div key={account.id} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-gray-100 rounded-lg">
+                          <Landmark className="w-5 h-5 text-gray-600" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium">{account.name}</p>
+                            {account.isPrimary && (
+                              <Badge className="bg-emerald-100 text-emerald-700">Principal</Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-500">
+                            {account.pix 
+                              ? `Pix: ${account.pix}` 
+                              : `${account.bank} • Ag ${account.agency} • Cc ${account.account}`
+                            }
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        {!account.isPrimary && (
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <Alert>
+                  <Shield className="w-4 h-4" />
+                  <AlertDescription>
+                    Novas contas passam por validação de titularidade antes de serem ativadas.
+                  </AlertDescription>
+                </Alert>
               </div>
             )}
 
@@ -217,6 +345,23 @@ export default function SettingsPage() {
                         <p className="text-sm text-gray-500">Adicione uma camada extra de segurança</p>
                       </div>
                       <Switch defaultChecked />
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg">
+                      <div>
+                        <p className="font-medium">Método de 2FA</p>
+                        <p className="text-sm text-gray-500">Como você deseja receber o código</p>
+                      </div>
+                      <Select defaultValue="totp">
+                        <SelectTrigger className="w-40">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="totp">Google Auth</SelectItem>
+                          <SelectItem value="sms">SMS</SelectItem>
+                          <SelectItem value="email">E-mail</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg">
@@ -251,6 +396,7 @@ export default function SettingsPage() {
                     <div className="md:col-span-2">
                       <Label>Nova Senha</Label>
                       <Input type="password" />
+                      <p className="text-xs text-gray-500 mt-1">Mínimo 8 caracteres, 1 maiúscula, 1 número</p>
                     </div>
                     <div className="md:col-span-2">
                       <Label>Confirmar Nova Senha</Label>
@@ -259,6 +405,39 @@ export default function SettingsPage() {
                     <Button className="bg-[#00D26A] hover:bg-[#00A854]">
                       Alterar Senha
                     </Button>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Log de Auditoria</h3>
+                  <p className="text-sm text-gray-500 mb-4">Registro de ações realizadas no sistema</p>
+                  <Button variant="outline">
+                    <History className="w-4 h-4 mr-2" />
+                    Ver Log de Auditoria
+                  </Button>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Histórico de Login</h3>
+                  <div className="space-y-2">
+                    {[
+                      { date: '27/01/2026 14:30', ip: '192.168.1.1', device: 'Chrome / Windows', status: 'success' },
+                      { date: '27/01/2026 10:15', ip: '192.168.1.1', device: 'Safari / macOS', status: 'success' },
+                      { date: '26/01/2026 18:45', ip: '10.0.0.1', device: 'Chrome / Android', status: 'success' },
+                    ].map((login, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg text-sm">
+                        <div className="flex items-center gap-4">
+                          <Check className="w-4 h-4 text-emerald-500" />
+                          <span>{login.date}</span>
+                          <span className="text-gray-500">{login.ip}</span>
+                        </div>
+                        <span className="text-gray-500">{login.device}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -469,6 +648,62 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
+
+      {/* Invite User Dialog */}
+      <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Convidar Usuário</DialogTitle>
+            <DialogDescription>Envie um convite para adicionar um novo usuário</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Nome Completo</Label>
+              <Input
+                placeholder="Nome do usuário"
+                value={inviteData.name}
+                onChange={(e) => setInviteData({ ...inviteData, name: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>E-mail</Label>
+              <Input
+                type="email"
+                placeholder="email@empresa.com"
+                value={inviteData.email}
+                onChange={(e) => setInviteData({ ...inviteData, email: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>Papel (Role)</Label>
+              <Select 
+                value={inviteData.role} 
+                onValueChange={(v) => setInviteData({ ...inviteData, role: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {roles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      <div>
+                        <p className="font-medium">{role.label}</p>
+                        <p className="text-xs text-gray-500">{role.description}</p>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsInviteOpen(false)}>Cancelar</Button>
+            <Button className="bg-[#00D26A] hover:bg-[#00A854]" onClick={handleInvite}>
+              Enviar Convite
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
