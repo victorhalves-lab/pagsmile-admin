@@ -24,6 +24,8 @@ import DunningSettings from './pages/DunningSettings';
 import SubscriptionAnalytics from './pages/SubscriptionAnalytics';
 import DisputeDashboard from './pages/DisputeDashboard';
 import PreChargebacks from './pages/PreChargebacks';
+import Chargebacks from './pages/Chargebacks';
+import DisputeContestation from './pages/DisputeContestation';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +56,8 @@ export const PAGES = {
     "SubscriptionAnalytics": SubscriptionAnalytics,
     "DisputeDashboard": DisputeDashboard,
     "PreChargebacks": PreChargebacks,
+    "Chargebacks": Chargebacks,
+    "DisputeContestation": DisputeContestation,
 }
 
 export const pagesConfig = {
