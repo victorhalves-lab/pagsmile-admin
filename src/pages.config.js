@@ -18,6 +18,10 @@ import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
 import CheckoutBuilder from './pages/CheckoutBuilder';
+import PaymentLinkCreate from './pages/PaymentLinkCreate';
+import SubscriptionPlans from './pages/SubscriptionPlans';
+import DunningSettings from './pages/DunningSettings';
+import SubscriptionAnalytics from './pages/SubscriptionAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -42,6 +46,10 @@ export const PAGES = {
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
     "CheckoutBuilder": CheckoutBuilder,
+    "PaymentLinkCreate": PaymentLinkCreate,
+    "SubscriptionPlans": SubscriptionPlans,
+    "DunningSettings": DunningSettings,
+    "SubscriptionAnalytics": SubscriptionAnalytics,
 }
 
 export const pagesConfig = {
