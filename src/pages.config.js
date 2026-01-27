@@ -1,45 +1,47 @@
-import Dashboard from './pages/Dashboard';
-import Transactions from './pages/Transactions';
-import TransactionDetail from './pages/TransactionDetail';
-import Financial from './pages/Financial';
-import Disputes from './pages/Disputes';
-import Subscriptions from './pages/Subscriptions';
-import PaymentLinks from './pages/PaymentLinks';
-import Customers from './pages/Customers';
-import Subaccounts from './pages/Subaccounts';
-import Withdrawals from './pages/Withdrawals';
-import Webhooks from './pages/Webhooks';
 import ApiKeys from './pages/ApiKeys';
-import SettingsPage from './pages/SettingsPage';
-import Support from './pages/Support';
-import DIACopilot from './pages/DIACopilot';
-import RecoveryAgent from './pages/RecoveryAgent';
 import ConverterAgent from './pages/ConverterAgent';
+import Customers from './pages/Customers';
+import DIACopilot from './pages/DIACopilot';
+import Dashboard from './pages/Dashboard';
 import DisputeManager from './pages/DisputeManager';
+import Disputes from './pages/Disputes';
+import Financial from './pages/Financial';
 import OriginationAgent from './pages/OriginationAgent';
+import PaymentLinks from './pages/PaymentLinks';
+import RecoveryAgent from './pages/RecoveryAgent';
+import SettingsPage from './pages/SettingsPage';
+import Subaccounts from './pages/Subaccounts';
+import Subscriptions from './pages/Subscriptions';
+import Support from './pages/Support';
+import TransactionDetail from './pages/TransactionDetail';
+import Transactions from './pages/Transactions';
+import Webhooks from './pages/Webhooks';
+import Withdrawals from './pages/Withdrawals';
+import CheckoutBuilder from './pages/CheckoutBuilder';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Dashboard": Dashboard,
-    "Transactions": Transactions,
-    "TransactionDetail": TransactionDetail,
-    "Financial": Financial,
-    "Disputes": Disputes,
-    "Subscriptions": Subscriptions,
-    "PaymentLinks": PaymentLinks,
-    "Customers": Customers,
-    "Subaccounts": Subaccounts,
-    "Withdrawals": Withdrawals,
-    "Webhooks": Webhooks,
     "ApiKeys": ApiKeys,
-    "SettingsPage": SettingsPage,
-    "Support": Support,
-    "DIACopilot": DIACopilot,
-    "RecoveryAgent": RecoveryAgent,
     "ConverterAgent": ConverterAgent,
+    "Customers": Customers,
+    "DIACopilot": DIACopilot,
+    "Dashboard": Dashboard,
     "DisputeManager": DisputeManager,
+    "Disputes": Disputes,
+    "Financial": Financial,
     "OriginationAgent": OriginationAgent,
+    "PaymentLinks": PaymentLinks,
+    "RecoveryAgent": RecoveryAgent,
+    "SettingsPage": SettingsPage,
+    "Subaccounts": Subaccounts,
+    "Subscriptions": Subscriptions,
+    "Support": Support,
+    "TransactionDetail": TransactionDetail,
+    "Transactions": Transactions,
+    "Webhooks": Webhooks,
+    "Withdrawals": Withdrawals,
+    "CheckoutBuilder": CheckoutBuilder,
 }
 
 export const pagesConfig = {
