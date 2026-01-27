@@ -94,8 +94,9 @@ const menuItems = [
     page: 'Subscriptions',
     submenu: [
       { label: 'Assinaturas', page: 'Subscriptions' },
-      { label: 'Planos', page: 'Plans' },
-      { label: 'Dunning', page: 'Dunning' },
+      { label: 'Planos', page: 'SubscriptionPlans' },
+      { label: 'Dunning', page: 'DunningSettings' },
+      { label: 'Analytics', page: 'SubscriptionAnalytics' },
     ]
   },
   {
