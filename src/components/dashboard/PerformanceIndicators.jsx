@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { TrendingUp, Target, DollarSign, CreditCard, QrCode, ArrowUpRight } from 'lucide-react';
+import { TrendingUp, TrendingDown, Target, DollarSign, CreditCard, QrCode, ArrowUpRight, AlertTriangle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 export default function PerformanceIndicators({ transactions = [] }) {
