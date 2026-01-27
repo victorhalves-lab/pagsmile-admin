@@ -34,6 +34,8 @@ import Anticipation from './pages/Anticipation';
 import SplitManagement from './pages/SplitManagement';
 import SubaccountsDashboard from './pages/SubaccountsDashboard';
 import SubaccountsList from './pages/SubaccountsList';
+import SubaccountOnboarding from './pages/SubaccountOnboarding';
+import OriginationAgentSettings from './pages/OriginationAgentSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -74,6 +76,8 @@ export const PAGES = {
     "SplitManagement": SplitManagement,
     "SubaccountsDashboard": SubaccountsDashboard,
     "SubaccountsList": SubaccountsList,
+    "SubaccountOnboarding": SubaccountOnboarding,
+    "OriginationAgentSettings": OriginationAgentSettings,
 }
 
 export const pagesConfig = {
