@@ -22,6 +22,8 @@ import PaymentLinkCreate from './pages/PaymentLinkCreate';
 import SubscriptionPlans from './pages/SubscriptionPlans';
 import DunningSettings from './pages/DunningSettings';
 import SubscriptionAnalytics from './pages/SubscriptionAnalytics';
+import DisputeDashboard from './pages/DisputeDashboard';
+import PreChargebacks from './pages/PreChargebacks';
 import __Layout from './Layout.jsx';
 
 
@@ -50,6 +52,8 @@ export const PAGES = {
     "SubscriptionPlans": SubscriptionPlans,
     "DunningSettings": DunningSettings,
     "SubscriptionAnalytics": SubscriptionAnalytics,
+    "DisputeDashboard": DisputeDashboard,
+    "PreChargebacks": PreChargebacks,
 }
 
 export const pagesConfig = {
