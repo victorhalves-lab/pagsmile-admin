@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Trash2, GripVertical, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import CheckoutElementRenderer from './CheckoutElementRenderer';
+import CheckoutElementRenderer from './CheckoutElementRenderer.jsx';
 
 const deviceWidths = {
   desktop: 1200,

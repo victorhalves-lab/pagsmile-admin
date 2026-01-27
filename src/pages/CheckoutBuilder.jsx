@@ -22,14 +22,14 @@ import {
   ZoomOut,
   Play
 } from 'lucide-react';
-import VisualEditor from '@/components/checkout/visual-builder/VisualEditor';
-import ElementPanel from '@/components/checkout/visual-builder/ElementPanel';
-import PropertiesPanel from '@/components/checkout/visual-builder/PropertiesPanel';
-import BrandingSettings from '@/components/checkout/BrandingSettings';
-import LayoutSettings from '@/components/checkout/LayoutSettings';
-import PaymentMethodSettings from '@/components/checkout/PaymentMethodSettings';
-import ExperienceSettings from '@/components/checkout/ExperienceSettings';
-import ConverterAgentTab from '@/components/checkout/ConverterAgentTab';
+import VisualEditor from '@/components/checkout/visual-builder/VisualEditor.jsx';
+import ElementPanel from '@/components/checkout/visual-builder/ElementPanel.jsx';
+import PropertiesPanel from '@/components/checkout/visual-builder/PropertiesPanel.jsx';
+import BrandingSettings from '@/components/checkout/BrandingSettings.jsx';
+import LayoutSettings from '@/components/checkout/LayoutSettings.jsx';
+import PaymentMethodSettings from '@/components/checkout/PaymentMethodSettings.jsx';
+import ExperienceSettings from '@/components/checkout/ExperienceSettings.jsx';
+import ConverterAgentTab from '@/components/checkout/ConverterAgentTab.jsx';
 import { cn } from '@/lib/utils';
 
 const defaultCheckoutConfig = {
