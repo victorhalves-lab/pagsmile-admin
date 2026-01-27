@@ -9,7 +9,9 @@ import {
   Users,
   ShieldAlert,
   ArrowUpRight,
-  Calendar
+  Calendar,
+  Settings,
+  BarChart3
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import PageHeader from '@/components/common/PageHeader';
 import KPICard from '@/components/dashboard/KPICard';
@@ -29,13 +32,23 @@ import BalanceCard from '@/components/dashboard/BalanceCard';
 import VolumeChart from '@/components/dashboard/VolumeChart';
 import PaymentMethodsChart from '@/components/dashboard/PaymentMethodsChart';
 import ApprovalRateChart from '@/components/dashboard/ApprovalRateChart';
+import GMVCards from '@/components/dashboard/GMVCards';
+import TransactionMetricsCards from '@/components/dashboard/TransactionMetricsCards';
+import PerformanceIndicators from '@/components/dashboard/PerformanceIndicators';
+import CardPerformanceMetrics from '@/components/dashboard/CardPerformanceMetrics';
+import PixPerformanceMetrics from '@/components/dashboard/PixPerformanceMetrics';
+import HeatmapChart from '@/components/dashboard/HeatmapChart';
+import DeclineAnalysis from '@/components/dashboard/DeclineAnalysis';
+import ComparativeMetrics from '@/components/dashboard/ComparativeMetrics';
+import AlertsPanel from '@/components/dashboard/AlertsPanel';
 
 export default function Dashboard() {
   const [period, setPeriod] = React.useState('7d');
+  const [activeView, setActiveView] = React.useState('executive');
 
   const { data: transactions = [], isLoading: loadingTx } = useQuery({
-    queryKey: ['transactions', 'recent'],
-    queryFn: () => base44.entities.Transaction.list('-created_date', 10),
+    queryKey: ['transactions', 'all'],
+    queryFn: () => base44.entities.Transaction.list('-created_date', 200),
   });
 
   const { data: disputes = [] } = useQuery({
@@ -47,14 +60,32 @@ export default function Dashboard() {
   const approvedTx = transactions.filter(t => t.status === 'approved');
   const totalGMV = approvedTx.reduce((sum, t) => sum + (t.amount || 0), 0);
   const totalTx = transactions.length;
-  const approvalRate = totalTx > 0 ? (approvedTx.length / totalTx) * 100 : 0;
+  const approvalRate = totalTx > 0 ? (approvedTx.filter(t => t.status === 'approved' || t.status === 'declined').length > 0 ? (approvedTx.length / transactions.filter(t => t.status === 'approved' || t.status === 'declined').length) * 100 : 0) : 0;
   const avgTicket = approvedTx.length > 0 ? totalGMV / approvedTx.length : 0;
+
+  // Mock GMV data (in real app, calculate from actual data)
+  const gmvData = {
+    today: totalGMV * 0.15,
+    todayChange: 12.5,
+    todayCard: totalGMV * 0.1,
+    todayPix: totalGMV * 0.05,
+    yesterday: totalGMV * 0.14,
+    yesterdayChange: -2.3,
+    last7days: totalGMV,
+    last7daysChange: 8.7,
+    currentMonth: totalGMV * 2.5,
+    currentMonthChange: 15.2,
+    monthProgress: 60,
+    monthProjection: totalGMV * 4.2,
+    lastMonth: totalGMV * 3.8,
+    lastMonthChange: 5.1
+  };
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Dashboard"
-        subtitle="Visão geral do seu negócio"
+        title="Dashboard Executivo"
+        subtitle="Visão completa da sua operação em tempo real"
         actions={
           <div className="flex items-center gap-3">
             <Select value={period} onValueChange={setPeriod}>
@@ -63,12 +94,18 @@ export default function Dashboard() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="24h">Últimas 24h</SelectItem>
+                <SelectItem value="24h">Hoje</SelectItem>
+                <SelectItem value="yesterday">Ontem</SelectItem>
                 <SelectItem value="7d">Últimos 7 dias</SelectItem>
-                <SelectItem value="30d">Últimos 30 dias</SelectItem>
+                <SelectItem value="30d">Este mês</SelectItem>
+                <SelectItem value="last_month">Mês anterior</SelectItem>
                 <SelectItem value="90d">Últimos 90 dias</SelectItem>
               </SelectContent>
             </Select>
+            <Button variant="outline" size="sm">
+              <Settings className="w-4 h-4 mr-2" />
+              Personalizar
+            </Button>
           </div>
         }
       />
@@ -76,44 +113,28 @@ export default function Dashboard() {
       {/* Quick Actions */}
       <QuickActions />
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard
-          title="Volume Total (GMV)"
-          value={totalGMV}
-          format="currency"
-          change={12.5}
-          icon={DollarSign}
-          iconBg="bg-emerald-100"
-          iconColor="text-emerald-600"
-        />
-        <KPICard
-          title="Total de Transações"
-          value={totalTx}
-          format="number"
-          change={8.3}
-          icon={CreditCard}
-          iconBg="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <KPICard
-          title="Taxa de Aprovação"
-          value={approvalRate}
-          format="percentage"
-          change={2.1}
-          icon={TrendingUp}
-          iconBg="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-        <KPICard
-          title="Ticket Médio"
-          value={avgTicket}
-          format="currency"
-          change={-3.2}
-          icon={ArrowUpRight}
-          iconBg="bg-orange-100"
-          iconColor="text-orange-600"
-        />
+      {/* GMV Overview Cards */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Volume Financeiro (GMV)</h2>
+        </div>
+        <GMVCards data={gmvData} loading={loadingTx} />
+      </div>
+
+      {/* Transaction Metrics */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Quantidade de Transações</h2>
+        </div>
+        <TransactionMetricsCards transactions={transactions} />
+      </div>
+
+      {/* Performance Indicators */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Indicadores de Performance</h2>
+        </div>
+        <PerformanceIndicators transactions={transactions} />
       </div>
 
       {/* Balance + Volume Chart */}
@@ -136,24 +157,64 @@ export default function Dashboard() {
         </ChartCard>
       </div>
 
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartCard
-          title="Taxa de Aprovação por Bandeira"
-          subtitle="Meta: 85%"
-          action
-        >
-          <ApprovalRateChart target={85} />
-        </ChartCard>
-        
-        <ChartCard
-          title="Métodos de Pagamento"
-          subtitle="Distribuição do volume"
-          action
-        >
-          <PaymentMethodsChart />
-        </ChartCard>
-      </div>
+      {/* Tabs for Different Views */}
+      <Tabs value={activeView} onValueChange={setActiveView} className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="executive">Visão Executiva</TabsTrigger>
+          <TabsTrigger value="card">Performance Cartão</TabsTrigger>
+          <TabsTrigger value="pix">Performance Pix</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics Avançado</TabsTrigger>
+        </TabsList>
+
+        {/* Executive View */}
+        <TabsContent value="executive" className="space-y-6">
+          {/* Charts Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ChartCard
+              title="Métodos de Pagamento"
+              subtitle="Distribuição do volume"
+              action
+            >
+              <PaymentMethodsChart />
+            </ChartCard>
+            
+            <ChartCard
+              title="Taxa de Aprovação por Bandeira"
+              subtitle="Meta: 85%"
+              action
+            >
+              <ApprovalRateChart target={85} />
+            </ChartCard>
+          </div>
+
+          {/* Comparative Metrics */}
+          <ComparativeMetrics transactions={transactions} />
+        </TabsContent>
+
+        {/* Card Performance View */}
+        <TabsContent value="card" className="space-y-6">
+          <CardPerformanceMetrics transactions={transactions} />
+          <DeclineAnalysis transactions={transactions} />
+        </TabsContent>
+
+        {/* Pix Performance View */}
+        <TabsContent value="pix" className="space-y-6">
+          <PixPerformanceMetrics transactions={transactions} />
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <HeatmapChart type="volume" />
+            <HeatmapChart type="approval" />
+          </div>
+        </TabsContent>
+
+        {/* Advanced Analytics View */}
+        <TabsContent value="analytics" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <HeatmapChart type="volume" />
+            <DeclineAnalysis transactions={transactions} />
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* Recent Transactions + Alerts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -164,81 +225,7 @@ export default function Dashboard() {
           />
         </div>
         
-        <div className="space-y-4">
-          {/* Disputes Alert */}
-          {disputes.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-red-100 rounded-lg">
-                  <ShieldAlert className="w-5 h-5 text-red-600" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold text-red-900">Disputas Pendentes</h4>
-                  <p className="text-sm text-red-700 mt-1">
-                    Você tem {disputes.length} disputa(s) que requerem atenção
-                  </p>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="mt-3 border-red-300 text-red-700 hover:bg-red-100"
-                  >
-                    Ver Disputas
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* AI Insights */}
-          <div className="bg-gradient-to-br from-[#00D26A]/10 to-[#00D26A]/5 border border-[#00D26A]/20 rounded-xl p-4">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-[#00D26A]/20 rounded-lg">
-                <TrendingUp className="w-5 h-5 text-[#00D26A]" />
-              </div>
-              <div className="flex-1">
-                <h4 className="font-semibold text-gray-900">Insight do DIA</h4>
-                <p className="text-sm text-gray-600 mt-1">
-                  Sua taxa de aprovação aumentou 2.1% esta semana. Continue otimizando o checkout para melhores resultados.
-                </p>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-3 border-[#00D26A]/30 text-[#00D26A] hover:bg-[#00D26A]/10"
-                >
-                  Ver mais insights
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="bg-white border border-gray-100 rounded-xl p-4">
-            <h4 className="font-semibold text-gray-900 mb-4">Resumo Rápido</h4>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span className="text-sm text-gray-600">Transações Aprovadas</span>
-                </div>
-                <span className="font-semibold">{approvedTx.length}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-red-500" />
-                  <span className="text-sm text-gray-600">Transações Recusadas</span>
-                </div>
-                <span className="font-semibold">{transactions.filter(t => t.status === 'declined').length}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                  <span className="text-sm text-gray-600">Pendentes</span>
-                </div>
-                <span className="font-semibold">{transactions.filter(t => t.status === 'pending').length}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AlertsPanel />
       </div>
     </div>
   );
