@@ -75,7 +75,9 @@ const menuItems = [
     submenu: [
       { label: 'Builder', page: 'CheckoutBuilder' },
       { label: 'Meus Checkouts', page: 'Checkouts' },
+      { label: 'Templates', page: 'CheckoutTemplates' },
       { label: 'Analytics', page: 'CheckoutAnalytics' },
+      { label: 'Converter Agent', page: 'ConverterAgent' },
     ]
   },
   {
