@@ -28,7 +28,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { cn, formatCurrency } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import { XCircle } from 'lucide-react';
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value || 0);
+};
 
 import PageHeader from '@/components/common/PageHeader';
 import KPICard from '@/components/dashboard/KPICard';
