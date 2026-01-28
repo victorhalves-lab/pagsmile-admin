@@ -70,10 +70,10 @@ export default function PlanSelection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-12 px-4 pb-32 md:pb-12">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-6 px-4 pb-32 md:pb-8 flex flex-col items-center justify-center">
+      <div className="max-w-7xl w-full mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-6 hover:opacity-80 transition-opacity">
             <img
               src={getLogoUrlByTheme('light')}

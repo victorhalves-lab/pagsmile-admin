@@ -75,23 +75,24 @@ export default function CompliancePixOnly() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-2 md:p-4 pb-24 md:pb-4">
+      <div className="w-full max-w-7xl bg-white shadow-2xl border border-slate-100 rounded-2xl overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-[#00c295] to-emerald-600 w-full" />
+        <div className="text-center pb-2 pt-4 px-4">
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
             alt="PagSmile Logo"
-            className="h-10 mx-auto mb-4"
+            className="h-8 mx-auto mb-2"
           />
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Compliance PIX</h1>
-          <p className="text-gray-500">Etapa {currentSection} de {totalSections} - {sectionTitles[currentSection - 1]}</p>
-          <div className="max-w-md mx-auto mt-4">
-            <Progress value={progressPercent} className="h-2" />
+          <h1 className="text-xl font-bold text-gray-800 mb-1">Compliance PIX</h1>
+          <p className="text-sm text-gray-500">Etapa {currentSection} de {totalSections} - {sectionTitles[currentSection - 1]}</p>
+          <div className="max-w-md mx-auto mt-2">
+            <Progress value={progressPercent} className="h-1.5" />
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="p-4 md:p-6 space-y-4">
+          <div className="overflow-y-auto max-h-[70vh] px-1">
           {currentSection === 1 && <Section1Cadastrais formData={formData} handleChange={handleChange} />}
           {currentSection === 2 && <Section2Atividade formData={formData} handleChange={handleChange} />}
           {currentSection === 3 && <Section3Canais formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
@@ -101,9 +102,10 @@ export default function CompliancePixOnly() {
           {currentSection === 7 && <Section7Responsaveis formData={formData} handleChange={handleChange} />}
           {currentSection === 8 && <Section8PldFt formData={formData} handleChange={handleChange} />}
           {currentSection === 9 && <Section9RepresentanteFinal formData={formData} handleChange={handleChange} />}
+          </div>
 
           {/* Navigation */}
-          <div className="flex justify-between items-center pt-4">
+          <div className="flex justify-between items-center pt-2 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-0">
             {currentSection === 1 ? (
               <Button variant="ghost" asChild>
                 <Link to={createPageUrl('ComplianceOnboardingStart')}>
@@ -117,11 +119,11 @@ export default function CompliancePixOnly() {
             )}
             
             {currentSection < totalSections ? (
-              <Button onClick={handleNext} className="bg-[#00D26A] hover:bg-[#00A854]">
+              <Button onClick={handleNext} className="bg-[#00D26A] hover:bg-[#00A854] text-white">
                 Próxima Etapa <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             ) : (
-              <Button onClick={handleSubmit} className="bg-[#00D26A] hover:bg-[#00A854]">
+              <Button onClick={handleSubmit} className="bg-[#00D26A] hover:bg-[#00A854] text-white">
                 Continuar para Documentos <Check className="ml-2 h-4 w-4" />
               </Button>
             )}

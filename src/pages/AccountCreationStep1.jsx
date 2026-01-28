@@ -43,16 +43,16 @@ export default function AccountCreationStep1() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-4 md:p-8 pb-32 md:pb-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-2 md:p-4 pb-24 md:pb-4">
       <Card className="w-full max-w-5xl rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#1E293B]/80 backdrop-blur-sm">
-        <CardHeader className="text-center pb-2 pt-6 space-y-2 md:space-y-4">
-          <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-2 hover:opacity-80 transition-opacity">
-            <img
-              src={getLogoUrlByTheme('light')}
-              alt="PagSmile Logo"
-              className="h-12"
-            />
-          </Link>
+        <CardHeader className="text-center pb-0 pt-4 space-y-1">
+                        <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-1 hover:opacity-80 transition-opacity">
+                          <img
+                            src={getLogoUrlByTheme('light')}
+                            alt="PagSmile Logo"
+                            className="h-8"
+                          />
+                        </Link>
           <div className="space-y-1">
             <CardTitle className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Crie sua conta</CardTitle>
             <CardDescription className="text-base text-slate-500 dark:text-slate-400">Dados do Responsável</CardDescription>
@@ -181,58 +181,58 @@ export default function AccountCreationStep1() {
               </div>
             </>
           ) : (
-            <div className="space-y-8 py-6">
-              <div className="text-center space-y-4">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#00c295]/20 to-emerald-500/20 flex items-center justify-center mx-auto mb-6 shadow-inner ring-4 ring-white dark:ring-[#1E293B]">
-                  <Check className="w-10 h-10 text-[#00c295] drop-shadow-md" />
-                </div>
-                
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Verifique sua identidade</h3>
-                  <p className="text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
-                    Para sua segurança, precisamos confirmar que é você. Como deseja receber o código?
-                  </p>
-                </div>
+            <div className="space-y-4 py-2">
+                                <div className="text-center space-y-2">
+                                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00c295]/20 to-emerald-500/20 flex items-center justify-center mx-auto mb-2 shadow-inner ring-4 ring-white dark:ring-[#1E293B]">
+                                    <Check className="w-6 h-6 text-[#00c295] drop-shadow-md" />
+                                  </div>
 
-                <div className="grid grid-cols-2 gap-4 w-full max-w-sm mx-auto">
-                    <button
-                        type="button"
-                        onClick={() => setVerificationMethod('email')}
-                        className={cn(
-                            "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-200 h-24 gap-2",
-                            verificationMethod === 'email'
-                                ? "border-[#00c295] bg-[#00c295]/5 text-[#00c295]"
-                                : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
-                        )}
-                    >
-                        <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
-                            verificationMethod === 'email' ? "bg-[#00c295] text-white" : "bg-slate-100 text-slate-400"
-                        )}>
-                            <Mail className="w-4 h-4" />
-                        </div>
-                        <span className="font-semibold text-sm">Via E-mail</span>
-                    </button>
+                                  <div className="space-y-1">
+                                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Verifique sua identidade</h3>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
+                                      Como deseja receber o código?
+                                    </p>
+                                  </div>
 
-                    <button
-                        type="button"
-                        onClick={() => setVerificationMethod('sms')}
-                        className={cn(
-                            "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-200 h-24 gap-2",
-                            verificationMethod === 'sms'
-                                ? "border-[#00c295] bg-[#00c295]/5 text-[#00c295]"
-                                : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
-                        )}
-                    >
-                        <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
-                            verificationMethod === 'sms' ? "bg-[#00c295] text-white" : "bg-slate-100 text-slate-400"
-                        )}>
-                            <Smartphone className="w-4 h-4" />
-                        </div>
-                        <span className="font-semibold text-sm">Via SMS</span>
-                    </button>
-                </div>
+                                  <div className="grid grid-cols-2 gap-3 w-full max-w-sm mx-auto">
+                                      <button
+                                          type="button"
+                                          onClick={() => setVerificationMethod('email')}
+                                          className={cn(
+                                              "flex flex-row items-center justify-center p-3 rounded-xl border-2 transition-all duration-200 h-14 gap-2",
+                                              verificationMethod === 'email'
+                                                  ? "border-[#00c295] bg-[#00c295]/5 text-[#00c295]"
+                                                  : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
+                                          )}
+                                      >
+                                          <div className={cn(
+                                              "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
+                                              verificationMethod === 'email' ? "bg-[#00c295] text-white" : "bg-slate-100 text-slate-400"
+                                          )}>
+                                              <Mail className="w-3 h-3" />
+                                          </div>
+                                          <span className="font-semibold text-xs">Via E-mail</span>
+                                      </button>
+
+                                      <button
+                                          type="button"
+                                          onClick={() => setVerificationMethod('sms')}
+                                          className={cn(
+                                              "flex flex-row items-center justify-center p-3 rounded-xl border-2 transition-all duration-200 h-14 gap-2",
+                                              verificationMethod === 'sms'
+                                                  ? "border-[#00c295] bg-[#00c295]/5 text-[#00c295]"
+                                                  : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
+                                          )}
+                                      >
+                                          <div className={cn(
+                                              "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
+                                              verificationMethod === 'sms' ? "bg-[#00c295] text-white" : "bg-slate-100 text-slate-400"
+                                          )}>
+                                              <Smartphone className="w-3 h-3" />
+                                          </div>
+                                          <span className="font-semibold text-xs">Via SMS</span>
+                                      </button>
+                                  </div>
 
                 <div className="bg-[#00c295]/5 border border-[#00c295]/10 rounded-lg p-3 max-w-xs mx-auto">
                 <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Código enviado para</p>
