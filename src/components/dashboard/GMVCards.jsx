@@ -70,7 +70,7 @@ export default function GMVCards({ data = {}, loading = false }) {
             <TooltipTrigger asChild>
               <Card className={cn(
                 "cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300",
-                metric.highlight && "ring-2 ring-[#00D26A]/20"
+                metric.highlight && "ring-2 ring-[#2bc196]/20"
               )}>
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">
@@ -116,7 +116,7 @@ export default function GMVCards({ data = {}, loading = false }) {
                         {[45, 52, 48, 61, 55, 67, 72].map((val, idx) => (
                           <div
                             key={idx}
-                            className="bg-[#00D26A] rounded-t-sm flex-1 opacity-80"
+                            className="bg-[#2bc196] rounded-t-sm flex-1 opacity-80"
                             style={{ height: `${(val / 72) * 100}%` }}
                           />
                         ))}

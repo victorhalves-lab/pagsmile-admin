@@ -65,8 +65,8 @@ export default function VolumeChart({ data = [], period = '7d', className }) {
               <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
             </linearGradient>
             <linearGradient id="colorPix" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#00D26A" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="#00D26A" stopOpacity={0}/>
+              <stop offset="5%" stopColor="#2bc196" stopOpacity={0.3}/>
+              <stop offset="95%" stopColor="#2bc196" stopOpacity={0}/>
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
@@ -104,7 +104,7 @@ export default function VolumeChart({ data = [], period = '7d', className }) {
             type="monotone"
             dataKey="pix"
             name="Pix"
-            stroke="#00D26A"
+            stroke="#2bc196"
             strokeWidth={2}
             fillOpacity={1}
             fill="url(#colorPix)"

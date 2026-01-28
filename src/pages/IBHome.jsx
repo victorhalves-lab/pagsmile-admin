@@ -66,8 +66,8 @@ export default function IBHome() {
       {/* Compact Balance & Actions Row */}
       <div className="flex flex-col lg:flex-row gap-4 h-auto lg:h-36">
         {/* Compact Balance Card */}
-        <Card className="flex-1 bg-gradient-to-br from-[#101F3E] via-[#101F3E] to-[#1a2c52] text-white border-0 shadow-xl overflow-hidden relative flex flex-col justify-between">
-            <div className="absolute top-0 right-0 p-32 bg-[#00D26A] opacity-[0.03] blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
+        <Card className="flex-1 bg-gradient-to-br from-[#002443] via-[#002443] to-[#003459] text-white border-0 shadow-xl overflow-hidden relative flex flex-col justify-between">
+            <div className="absolute top-0 right-0 p-32 bg-[#2bc196] opacity-[0.03] blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
             <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
@@ -81,8 +81,8 @@ export default function IBHome() {
                     {formatCurrency(balance.available)}
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-[#00D26A]/10 flex items-center justify-center">
-                  <Wallet className="w-5 h-5 text-[#00D26A]" />
+                <div className="w-10 h-10 rounded-full bg-[#2bc196]/10 flex items-center justify-center">
+                  <Wallet className="w-5 h-5 text-[#2bc196]" />
                 </div>
               </div>
 
@@ -107,8 +107,8 @@ export default function IBHome() {
         <div className="flex gap-4 overflow-x-auto pb-1 lg:pb-0">
           <Link to={createPageUrl('IBPixSend')} className="h-full">
             <Button variant="outline" className="h-full w-36 flex flex-col items-center justify-center gap-3 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm p-0">
-              <div className="w-10 h-10 rounded-xl bg-[#00D26A]/10 flex items-center justify-center group-hover:bg-[#00D26A] transition-colors">
-                <Send className="w-5 h-5 text-[#00D26A] group-hover:text-white transition-colors" />
+              <div className="w-10 h-10 rounded-xl bg-[#2bc196]/10 flex items-center justify-center group-hover:bg-[#2bc196] transition-colors">
+                <Send className="w-5 h-5 text-[#2bc196] group-hover:text-white transition-colors" />
               </div>
               <span className="font-semibold text-xs">Enviar Pix</span>
             </Button>
@@ -192,7 +192,7 @@ export default function IBHome() {
         <CardHeader className="flex flex-row items-center justify-between pb-4">
           <CardTitle className="text-base font-semibold">Últimas Movimentações</CardTitle>
           <Link to={createPageUrl('IBExtract')}>
-            <Button variant="ghost" size="sm" className="text-[#00D26A] hover:text-[#00D26A] hover:bg-[#00D26A]/10">
+            <Button variant="ghost" size="sm" className="text-[#2bc196] hover:text-[#2bc196] hover:bg-[#2bc196]/10">
               Ver extrato
               <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
