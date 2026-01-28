@@ -5,12 +5,10 @@ import {
   XCircle, 
   Clock, 
   RotateCcw,
-  ShieldAlert,
-  TrendingUp,
-  AlertTriangle
+  ShieldAlert
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function TransactionMetricsCards({ transactions = [] }) {
   const formatCurrency = (value) => {
@@ -70,10 +68,10 @@ export default function TransactionMetricsCards({ transactions = [] }) {
       count: pending.length,
       value: pending.reduce((sum, t) => sum + (t.amount || 0), 0),
       icon: Clock,
-      color: 'yellow',
-      bgColor: 'bg-yellow-100',
-      textColor: 'text-yellow-600',
-      borderColor: 'border-yellow-200'
+      color: 'amber',
+      bgColor: 'bg-amber-100',
+      textColor: 'text-amber-600',
+      borderColor: 'border-amber-200'
     },
     {
       id: 'refunded',
@@ -92,10 +90,10 @@ export default function TransactionMetricsCards({ transactions = [] }) {
       count: chargebacks.length,
       value: chargebackValue,
       icon: ShieldAlert,
-      color: 'red',
-      bgColor: 'bg-red-100',
-      textColor: 'text-red-600',
-      borderColor: 'border-red-200',
+      color: 'rose',
+      bgColor: 'bg-rose-100',
+      textColor: 'text-rose-600',
+      borderColor: 'border-rose-200',
       alert: chargebacks.length > 0
     },
   ];
@@ -106,40 +104,42 @@ export default function TransactionMetricsCards({ transactions = [] }) {
         const Icon = metric.icon;
         
         return (
-          <div
+          <Card 
             key={metric.id}
             className={cn(
-              "bg-white rounded-xl border p-4 hover:shadow-md transition-all cursor-pointer relative",
-              metric.borderColor
+              "hover:shadow-lg transition-all duration-300 relative overflow-hidden group border-slate-100"
             )}
           >
-            {metric.alert && (
-              <div className="absolute -top-1 -right-1">
-                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-              </div>
-            )}
-
-            <div className="flex items-start justify-between mb-3">
-              <div className={cn("p-2 rounded-lg", metric.bgColor)}>
-                <Icon className={cn("w-4 h-4", metric.textColor)} />
-              </div>
-              {metric.percentage !== undefined && (
-                <Badge variant="outline" className="text-xs font-semibold">
-                  {metric.percentage.toFixed(1)}%
-                </Badge>
+            <CardContent className="p-4">
+              {metric.alert && (
+                <div className="absolute top-2 right-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
+                  <div className="w-2 h-2 bg-red-500 rounded-full absolute top-0 left-0" />
+                </div>
               )}
-            </div>
 
-            <div>
-              <p className="text-xs text-gray-500 mb-1">{metric.label}</p>
-              <p className="text-xl font-bold text-gray-900">{metric.count}</p>
-              {metric.value > 0 && (
-                <p className={cn("text-xs font-medium mt-1", metric.textColor)}>
-                  {formatCurrency(metric.value)}
-                </p>
-              )}
-            </div>
-          </div>
+              <div className="flex items-start justify-between mb-3">
+                <div className={cn("p-2 rounded-xl transition-colors duration-300", metric.bgColor)}>
+                  <Icon className={cn("w-5 h-5", metric.textColor)} />
+                </div>
+                {metric.percentage !== undefined && (
+                  <Badge variant="outline" className="text-xs font-bold border-0 bg-slate-50 text-slate-600">
+                    {metric.percentage.toFixed(1)}%
+                  </Badge>
+                )}
+              </div>
+
+              <div>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">{metric.label}</p>
+                <p className="text-2xl font-black text-slate-900 group-hover:scale-105 transition-transform origin-left">{metric.count}</p>
+                {metric.value > 0 && (
+                  <p className={cn("text-xs font-bold mt-1", metric.textColor)}>
+                    {formatCurrency(metric.value)}
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         );
       })}
     </div>

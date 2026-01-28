@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function GMVCards({ data = {}, loading = false }) {
   const formatCurrency = (value) => {
@@ -67,72 +68,74 @@ export default function GMVCards({ data = {}, loading = false }) {
         <TooltipProvider key={metric.id}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className={cn(
-                "bg-white rounded-xl border border-gray-100 p-5 hover:shadow-md transition-all cursor-pointer",
+              <Card className={cn(
+                "cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300",
                 metric.highlight && "ring-2 ring-[#00D26A]/20"
               )}>
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      {metric.label}
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900 mt-2">
-                      {formatCurrency(metric.value)}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Change Indicator */}
-                <div className="flex items-center gap-2">
-                  <span className={cn(
-                    "flex items-center gap-1 text-xs font-semibold",
-                    metric.change > 0 ? 'text-emerald-600' : metric.change < 0 ? 'text-red-600' : 'text-gray-500'
-                  )}>
-                    {metric.change > 0 ? (
-                      <TrendingUp className="w-3 h-3" />
-                    ) : metric.change < 0 ? (
-                      <TrendingDown className="w-3 h-3" />
-                    ) : null}
-                    {formatPercentage(metric.change)}
-                  </span>
-                  <span className="text-xs text-gray-400">{metric.subtitle}</span>
-                </div>
-
-                {/* Projection */}
-                {metric.projection && (
-                  <div className="mt-2 pt-2 border-t border-gray-100">
-                    <p className="text-xs text-gray-500">
-                      Projeção do mês: <span className="font-semibold text-gray-700">{formatCurrency(metric.projection)}</span>
-                    </p>
-                  </div>
-                )}
-
-                {/* Mini Sparkline */}
-                {metric.showSparkline && (
-                  <div className="mt-3 h-8">
-                    <div className="flex items-end justify-between h-full gap-0.5">
-                      {[45, 52, 48, 61, 55, 67, 72].map((val, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-[#00D26A]/30 rounded-t flex-1"
-                          style={{ height: `${(val / 72) * 100}%` }}
-                        />
-                      ))}
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        {metric.label}
+                      </p>
+                      <p className="text-2xl font-black text-slate-900 mt-2 tracking-tight">
+                        {formatCurrency(metric.value)}
+                      </p>
                     </div>
                   </div>
-                )}
-              </div>
+
+                  {/* Change Indicator */}
+                  <div className="flex items-center gap-2">
+                    <span className={cn(
+                      "flex items-center gap-1 text-xs font-bold px-1.5 py-0.5 rounded-md",
+                      metric.change > 0 ? 'text-emerald-700 bg-emerald-50' : metric.change < 0 ? 'text-red-700 bg-red-50' : 'text-slate-500 bg-slate-50'
+                    )}>
+                      {metric.change > 0 ? (
+                        <TrendingUp className="w-3 h-3" />
+                      ) : metric.change < 0 ? (
+                        <TrendingDown className="w-3 h-3" />
+                      ) : null}
+                      {formatPercentage(metric.change)}
+                    </span>
+                    <span className="text-xs text-slate-400 font-medium">{metric.subtitle}</span>
+                  </div>
+
+                  {/* Projection */}
+                  {metric.projection && (
+                    <div className="mt-3 pt-2 border-t border-slate-50">
+                      <p className="text-xs text-slate-500">
+                        Projeção: <span className="font-bold text-slate-700">{formatCurrency(metric.projection)}</span>
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Mini Sparkline */}
+                  {metric.showSparkline && (
+                    <div className="mt-4 h-6 opacity-50">
+                      <div className="flex items-end justify-between h-full gap-1">
+                        {[45, 52, 48, 61, 55, 67, 72].map((val, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-[#00D26A] rounded-t-sm flex-1 opacity-80"
+                            style={{ height: `${(val / 72) * 100}%` }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </TooltipTrigger>
             <TooltipContent>
               {metric.cardBreakdown && (
                 <div className="space-y-1">
-                  <p className="text-xs">Breakdown:</p>
-                  <p className="text-xs">Cartão: {formatCurrency(metric.cardBreakdown.card)}</p>
-                  <p className="text-xs">Pix: {formatCurrency(metric.cardBreakdown.pix)}</p>
+                  <p className="text-xs font-semibold">Detalhamento:</p>
+                  <p className="text-xs text-slate-300">Cartão: {formatCurrency(metric.cardBreakdown.card)}</p>
+                  <p className="text-xs text-slate-300">Pix: {formatCurrency(metric.cardBreakdown.pix)}</p>
                 </div>
               )}
               {!metric.cardBreakdown && (
-                <p className="text-xs">Click para ver detalhes</p>
+                <p className="text-xs">Clique para ver detalhes</p>
               )}
             </TooltipContent>
           </Tooltip>
