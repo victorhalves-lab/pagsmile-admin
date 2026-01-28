@@ -39,7 +39,7 @@ const InsightBanner = () => (
     </div>
 );
 
-import { mockMetrics } from '@/src/mockData/adminInternoMocks';
+import { mockMetrics } from '@/components/mockData/adminInternoMocks';
 
 export default function AdminIntMerchants() {
     // Mock Data from centralized file

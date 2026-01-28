@@ -14,7 +14,7 @@ import { createPageUrl } from '@/components/utils';
 export default function AdminIntKYCQueue() {
   const [searchTerm, setSearchTerm] = useState('');
 
-import { mockMerchants } from '@/src/mockData/adminInternoMocks';
+import { mockMerchants } from '@/components/mockData/adminInternoMocks';
 
 // Filter mock merchants for those needing review
 const queueItems = mockMerchants.filter(m => ['pending_compliance', 'under_review'].includes(m.compliance_status) || m.kyc_score < 70);

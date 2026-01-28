@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import FilterPanel from '@/components/common/FilterPanel';
 
-import { mockMerchants } from '@/src/mockData/adminInternoMocks';
+import { mockMerchants } from '@/components/mockData/adminInternoMocks';
 
 export default function AdminIntMerchantsList() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -25,7 +25,7 @@ export default function AdminIntMerchantsList() {
         { header: 'Empresa', accessorKey: 'business_name', cell: (info) => (
             <div>
                 <div className="font-medium text-slate-900">{info.getValue()}</div>
-                <div className="text-xs text-slate-500">{info.row.original.cnpj}</div>
+                <div className="text-xs text-slate-500">{info.row.original.document}</div>
             </div>
         )},
         { header: 'MCC', accessorKey: 'mcc', cell: (info) => <span className="text-xs px-2 py-1 bg-slate-100 rounded-full">{info.getValue()}</span> },

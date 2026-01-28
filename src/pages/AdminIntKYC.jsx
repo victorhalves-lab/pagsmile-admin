@@ -13,7 +13,7 @@ import {
   PieChart, Pie, Cell 
 } from 'recharts';
 
-import { mockMetrics } from '@/src/mockData/adminInternoMocks';
+import { mockMetrics } from '@/components/mockData/adminInternoMocks';
 
 export default function AdminIntKYC() {
   // Use centralized mock metrics

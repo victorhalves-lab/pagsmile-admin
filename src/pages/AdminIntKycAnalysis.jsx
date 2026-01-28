@@ -60,7 +60,7 @@ const DocumentViewer = ({ doc }) => (
 
 // --- Page ---
 
-import { mockMerchants } from '@/src/mockData/adminInternoMocks';
+import { mockMerchants } from '@/components/mockData/adminInternoMocks';
 import { useSearchParams } from 'react-router-dom';
 
 export default function AdminIntKycAnalysis() {
