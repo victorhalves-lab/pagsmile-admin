@@ -206,7 +206,10 @@ export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState(['transactions', 'financial']);
   const [showAIPanel, setShowAIPanel] = useState(false);
-  const [showComplianceAlert, setShowComplianceAlert] = useState(true);
+  // Verificar se usuário acabou de criar conta (via localStorage)
+const [showComplianceAlert, setShowComplianceAlert] = useState(() => {
+  return localStorage.getItem('showComplianceAlert') === 'true';
+});
 
   // Se for uma página sem layout, renderiza apenas o conteúdo
   if (noLayoutPages.includes(currentPageName)) {
