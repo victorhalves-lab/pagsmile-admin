@@ -26,7 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageHeader from '@/components/common/PageHeader';
 import KPICard from '@/components/dashboard/KPICard';
 import ChartCard from '@/components/dashboard/ChartCard';
-import QuickActions from '@/components/dashboard/QuickActions';
+import QuickActionsCustomizable from '@/components/dashboard/QuickActionsCustomizable';
 import RecentTransactions from '@/components/dashboard/RecentTransactions';
 import BalanceCard from '@/components/dashboard/BalanceCard';
 import VolumeChart from '@/components/dashboard/VolumeChart';
@@ -110,8 +110,8 @@ export default function Dashboard() {
         }
       />
 
-      {/* Quick Actions */}
-      <QuickActions />
+      {/* Quick Actions - Personalizável */}
+      <QuickActionsCustomizable />
 
       {/* GMV Overview Cards */}
       <div>

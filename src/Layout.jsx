@@ -108,6 +108,7 @@ const adminSubMenuItems = [
     submenu: [
       { label: 'Assinaturas', page: 'Subscriptions' },
       { label: 'Planos', page: 'SubscriptionPlans' },
+      { label: 'Recorrência', page: 'Recurrence' },
       { label: 'Dunning', page: 'DunningSettings' },
       { label: 'Analytics', page: 'SubscriptionAnalytics' },
     ]
@@ -134,7 +135,8 @@ const adminSubMenuItems = [
       { label: 'Visão Geral', page: 'FinancialOverview' },
       { label: 'Extrato', page: 'FinancialStatement' },
       { label: 'Agenda de Recebíveis', page: 'ReceivablesAgenda' },
-      { label: 'Tarifas', page: 'Fees' },
+      { label: 'Taxas', page: 'Fees' },
+      { label: 'Tarifas', page: 'FeesAnalysis' },
       { label: 'Antecipação', page: 'Anticipation' },
       { label: 'Split', page: 'SplitManagement' },
     ]
