@@ -176,14 +176,14 @@ export default function Chargebacks() {
       key: 'reason',
       label: 'Reason Code',
       render: (row) => {
-        const category = reasonCategoryConfig[row.reason_category] || { label: 'Desconhecido', color: 'bg-gray-100 text-gray-700' };
+        const category = reasonCategoryConfig[row?.reason_category] || { label: 'Desconhecido', color: 'bg-gray-100 text-gray-700' };
         return (
           <div>
             <Badge className={category.color}>
-              {row.reason_code || '-'}
+              {row?.reason_code || '-'}
             </Badge>
             <p className="text-xs text-gray-500 mt-1 max-w-[150px] truncate">
-              {row.reason_description}
+              {row?.reason_description || '-'}
             </p>
           </div>
         );
