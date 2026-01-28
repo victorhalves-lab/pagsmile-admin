@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 import SelectionButton from '@/components/ui/selection-button';
 
 export default function FeeSimulator({
