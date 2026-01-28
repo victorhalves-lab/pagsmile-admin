@@ -315,62 +315,62 @@ export default function Layout({ children, currentPageName }) {
               {menuItems.map((item) => (
                 <div key={item.id}>
                   {item.submenu ? (
-                    <>
-                      <button
-                        onClick={() => toggleSubmenu(item.id)}
-                        className={cn(
-                          "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
-                          isActiveSection(item)
-                            ? "bg-[#00D26A]/10 text-[#00D26A] shadow-[0_0_20px_rgba(0,210,106,0.15)]"
-                            : "text-slate-400 hover:text-slate-100 hover:bg-white/5",
-                          !sidebarOpen && "justify-center"
-                        )}
-                      >
-                        {isActiveSection(item) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#00D26A] rounded-r-full" />}
-                        <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-[#00D26A]" : "text-slate-500 group-hover:text-slate-300")} />
-                        {sidebarOpen && (
-                          <>
-                            <span className="flex-1 text-left truncate">{item.label}</span>
-                            {item.badge && (
-                              <Badge 
-                                variant={item.badgeVariant || "secondary"} 
-                                className={cn(
-                                  "h-5 px-1.5 text-[10px] rounded-full",
-                                  item.badgeVariant === 'destructive' 
-                                    ? "bg-red-500/20 text-red-400 border-0" 
-                                    : "bg-white/10 text-white border-0"
-                                )}
-                              >
-                                {item.badge}
-                              </Badge>
-                            )}
-                            <ChevronDown className={cn(
-                              "w-4 h-4 transition-transform duration-200 text-slate-500",
-                              expandedMenus.includes(item.id) && "rotate-180 text-primary"
-                            )} />
-                          </>
-                        )}
-                      </button>
-                      {sidebarOpen && expandedMenus.includes(item.id) && (
-                        <div className="ml-4 mt-1 pl-4 border-l border-slate-800 space-y-1">
-                          {item.submenu.map((sub, idx) => (
-                            <Link
-                              key={idx}
-                              to={createPageUrl(sub.page)}
-                              className={cn(
-                                "block px-3 py-2 rounded-lg text-sm transition-all relative",
-                                isActivePage(sub.page)
-                                  ? "text-primary font-medium bg-primary/5"
-                                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
-                              )}
-                            >
-                              {sub.label}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  ) : (
+                                            <>
+                                              <button
+                                                onClick={() => toggleSubmenu(item.id)}
+                                                className={cn(
+                                                  "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
+                                                  isActiveSection(item)
+                                                    ? "bg-[#00D26A]/10 text-[#00D26A] shadow-[0_0_20px_rgba(0,210,106,0.15)]"
+                                                    : "text-slate-400 hover:text-slate-100 hover:bg-white/5",
+                                                  !sidebarOpen && "justify-center"
+                                                )}
+                                              >
+                                                {isActiveSection(item) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#00D26A] rounded-r-full" />}
+                                                <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-[#00D26A]" : "text-slate-500 group-hover:text-slate-300")} />
+                                                {sidebarOpen && (
+                                                  <>
+                                                    <span className="flex-1 text-left truncate">{item.label}</span>
+                                                    {item.badge && (
+                                                      <Badge 
+                                                        variant={item.badgeVariant || "secondary"} 
+                                                        className={cn(
+                                                          "h-5 px-1.5 text-[10px] rounded-full",
+                                                          item.badgeVariant === 'destructive' 
+                                                            ? "bg-red-500/20 text-red-400 border-0" 
+                                                            : "bg-white/10 text-white border-0"
+                                                        )}
+                                                      >
+                                                        {item.badge}
+                                                      </Badge>
+                                                    )}
+                                                    <ChevronDown className={cn(
+                                                      "w-4 h-4 transition-transform duration-200 text-slate-500",
+                                                      expandedMenus.includes(item.id) && "rotate-180 text-[#00D26A]"
+                                                    )} />
+                                                  </>
+                                                )}
+                                              </button>
+                                              {sidebarOpen && expandedMenus.includes(item.id) && (
+                                                <div className="ml-4 mt-1 pl-4 border-l border-slate-700 space-y-1">
+                                                  {item.submenu.map((sub, idx) => (
+                                                    <Link
+                                                      key={idx}
+                                                      to={createPageUrl(sub.page)}
+                                                      className={cn(
+                                                        "flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-all relative",
+                                                        isActivePage(sub.page)
+                                                          ? "bg-[#00D26A] text-white font-medium shadow-lg shadow-[#00D26A]/20"
+                                                          : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                                                      )}
+                                                    >
+                                                      {sub.label}
+                                                    </Link>
+                                                  ))}
+                                                </div>
+                                              )}
+                                            </>
+                                          ) : (
                     <Link
                       to={createPageUrl(item.page)}
                       className={cn(

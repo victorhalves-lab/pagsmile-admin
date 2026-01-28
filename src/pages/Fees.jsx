@@ -5,24 +5,28 @@ import {
   Wallet,
   QrCode,
   CreditCard,
-  MoreHorizontal,
   TrendingUp,
   TrendingDown,
   Percent,
   DollarSign,
   Download,
-  Filter,
   Calendar,
-  ChevronDown,
   Eye,
   EyeOff,
-  ArrowRight,
-  Sparkles
+  Calculator,
+  Receipt,
+  Table2,
+  Info,
+  Sparkles,
+  CheckCircle2,
+  ArrowRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -31,55 +35,34 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
   Tooltip,
-  ResponsiveContainer,
-  Legend
-} from 'recharts';
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
 import PageHeader from '@/components/common/PageHeader';
-import DataTable from '@/components/common/DataTable';
-import CopilotInsightCard from '@/components/copilot/CopilotInsightCard';
-import FeeCategoryCard from '@/components/fees/FeeCategoryCard';
-import FeeSimulator from '@/components/fees/FeeSimulator';
 
 export default function Fees() {
   const [showValues, setShowValues] = useState(true);
   const [period, setPeriod] = useState('30d');
+  const [activeTab, setActiveTab] = useState('taxas');
   
-  // Taxas Mockadas para Tabela
-  const allFees = [
-    { name: 'MDR Crédito à Vista', value: '2.99%', type: 'percentage' },
-    { name: 'MDR Crédito Parcelado (2-6x)', value: '3.49%', type: 'percentage' },
-    { name: 'MDR Crédito Parcelado (7-12x)', value: '3.99%', type: 'percentage' },
-    { name: 'MDR Débito', value: '1.99%', type: 'percentage' },
-    { name: 'PIX', value: '0.99%', type: 'percentage' },
-    { name: 'Tarifa Fixa (Gateway)', value: 'R$ 0,49', type: 'fixed' },
-    { name: 'Antifraude', value: 'R$ 0,70', type: 'fixed' },
-    { name: 'Antecipação Automática', value: '1.99% a.m.', type: 'percentage' },
-    { name: 'Antecipação Pontual', value: '2.49% a.m.', type: 'percentage' },
-    { name: 'Saque', value: 'R$ 3,90', type: 'fixed' },
-  ];
-  const [insightsLoading, setInsightsLoading] = useState(false);
-
-  const { data: transactions = [], isLoading } = useQuery({
-    queryKey: ['transactions-fees'],
-    queryFn: () => base44.entities.Transaction.filter({ status: 'approved' }, '-created_date', 100),
-  });
+  // Simulador states
+  const [simAmount, setSimAmount] = useState('1000');
+  const [simInstallments, setSimInstallments] = useState('1');
+  const [simBrand, setSimBrand] = useState('visa');
 
   const formatCurrency = (value, hide = false) => {
     if (hide && !showValues) return '••••••';
@@ -89,181 +72,135 @@ export default function Fees() {
     }).format(value || 0);
   };
 
-  // Calculate fee metrics from transactions
-  const calculateMetrics = () => {
-    const approved = transactions.filter(t => t.status === 'approved');
+  const formatPercent = (value) => {
+    return `${value.toFixed(2)}%`;
+  };
+
+  // ==================== TAXAS (MDR) ====================
+  const taxasMDR = {
+    vista: {
+      visa: 2.99,
+      mastercard: 2.99,
+      elo: 3.19,
+      amex: 3.49,
+      hipercard: 3.29
+    },
+    parcelado2a6: {
+      visa: 3.49,
+      mastercard: 3.49,
+      elo: 3.69,
+      amex: 3.99,
+      hipercard: 3.79
+    },
+    parcelado7a12: {
+      visa: 3.99,
+      mastercard: 3.99,
+      elo: 4.19,
+      amex: 4.49,
+      hipercard: 4.29
+    },
+    debito: {
+      visa: 1.99,
+      mastercard: 1.99,
+      elo: 2.19
+    },
+    pix: 0.99
+  };
+
+  const taxaAntecipacao = 1.99; // % ao mês
+
+  // Tabela completa 1-12x com antecipação
+  const generateInstallmentTable = () => {
+    const rows = [];
+    for (let i = 1; i <= 12; i++) {
+      let mdr;
+      if (i === 1) mdr = taxasMDR.vista.visa;
+      else if (i <= 6) mdr = taxasMDR.parcelado2a6.visa;
+      else mdr = taxasMDR.parcelado7a12.visa;
+
+      // Prazo médio de recebimento em dias (D+30 para cada parcela)
+      const prazoMedioDias = i === 1 ? 30 : Math.round((30 + 30 * i) / 2);
+      
+      // Custo de antecipação para D+1
+      const diasAntecipados = prazoMedioDias - 1;
+      const custoAntecipacaoMensal = taxaAntecipacao;
+      const custoAntecipacaoTotal = (diasAntecipados / 30) * custoAntecipacaoMensal;
+      
+      const custoEfetivoTotal = mdr + custoAntecipacaoTotal;
+
+      rows.push({
+        parcelas: i,
+        mdr: mdr,
+        prazoMedio: prazoMedioDias,
+        custoAntecipacao: custoAntecipacaoTotal,
+        custoEfetivoTotal: custoEfetivoTotal
+      });
+    }
+    return rows;
+  };
+
+  const installmentTable = generateInstallmentTable();
+
+  // ==================== TARIFAS (FIXAS) ====================
+  const tarifasFixas = [
+    { categoria: 'Gateway', nome: 'Tarifa por Transação Aprovada', valor: 0.49, tipo: 'por_transacao' },
+    { categoria: 'Gateway', nome: 'Tarifa por Transação Recusada', valor: 0.00, tipo: 'por_transacao' },
+    { categoria: 'Antifraude', nome: 'Análise Antifraude', valor: 0.70, tipo: 'por_transacao' },
+    { categoria: 'Antifraude', nome: 'Análise Premium (3DS)', valor: 0.30, tipo: 'por_transacao' },
+    { categoria: 'Saques', nome: 'Saque via TED', valor: 3.90, tipo: 'por_operacao' },
+    { categoria: 'Saques', nome: 'Saque via PIX', valor: 0.00, tipo: 'por_operacao' },
+    { categoria: 'Estornos', nome: 'Estorno/Cancelamento', valor: 0.00, tipo: 'por_operacao' },
+    { categoria: 'Chargeback', nome: 'Taxa de Chargeback', valor: 15.00, tipo: 'por_ocorrencia' },
+    { categoria: 'Boleto', nome: 'Emissão de Boleto', valor: 2.90, tipo: 'por_boleto' },
+    { categoria: 'Boleto', nome: 'Boleto Compensado', valor: 0.00, tipo: 'por_boleto' },
+  ];
+
+  // Simulação de venda
+  const calculateSimulation = () => {
+    const amount = parseFloat(simAmount) || 0;
+    const installments = parseInt(simInstallments) || 1;
     
-    const totalVolume = approved.reduce((sum, t) => sum + (t.amount || 0), 0);
-    const totalFees = approved.reduce((sum, t) => sum + (t.fee_amount || t.amount * 0.025), 0);
-    const totalNet = totalVolume - totalFees;
-    const avgFeePercentage = totalVolume > 0 ? (totalFees / totalVolume) * 100 : 0;
+    let mdr;
+    if (installments === 1) mdr = taxasMDR.vista[simBrand] || taxasMDR.vista.visa;
+    else if (installments <= 6) mdr = taxasMDR.parcelado2a6[simBrand] || taxasMDR.parcelado2a6.visa;
+    else mdr = taxasMDR.parcelado7a12[simBrand] || taxasMDR.parcelado7a12.visa;
 
-    const pixTransactions = approved.filter(t => t.type === 'pix');
-    const cardTransactions = approved.filter(t => t.type === 'card');
+    const valorMDR = amount * (mdr / 100);
+    const tarifaGateway = 0.49;
+    const tarifaAntifraude = 0.70;
+    
+    // Antecipação
+    const prazoMedioDias = installments === 1 ? 30 : Math.round((30 + 30 * installments) / 2);
+    const diasAntecipados = prazoMedioDias - 1;
+    const custoAntecipacaoPercent = (diasAntecipados / 30) * taxaAntecipacao;
+    const valorAntecipacao = amount * (custoAntecipacaoPercent / 100);
 
-    const pixVolume = pixTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
-    const pixFees = pixTransactions.reduce((sum, t) => sum + (t.fee_amount || t.amount * 0.0099), 0);
-
-    const cardVolume = cardTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
-    const cardFees = cardTransactions.reduce((sum, t) => sum + (t.fee_amount || t.amount * 0.0249), 0);
-
-    // Other fees (anticipation, refunds, etc.)
-    const otherFees = totalFees * 0.1; // Mock: 10% of total fees
+    const custoTotal = valorMDR + tarifaGateway + tarifaAntifraude + valorAntecipacao;
+    const valorLiquido = amount - custoTotal;
+    const percentualEfetivo = (custoTotal / amount) * 100;
 
     return {
-      totalVolume,
-      totalFees,
-      totalNet,
-      avgFeePercentage,
-      pixVolume,
-      pixFees,
-      pixFeePercentage: pixVolume > 0 ? (pixFees / pixVolume) * 100 : 0,
-      cardVolume,
-      cardFees,
-      cardFeePercentage: cardVolume > 0 ? (cardFees / cardVolume) * 100 : 0,
-      otherFees,
-      pixPercentage: totalVolume > 0 ? (pixVolume / totalVolume) * 100 : 0
+      valorBruto: amount,
+      mdr: mdr,
+      valorMDR,
+      tarifaGateway,
+      tarifaAntifraude,
+      custoAntecipacaoPercent,
+      valorAntecipacao,
+      custoTotal,
+      valorLiquido,
+      percentualEfetivo,
+      prazoMedioDias
     };
   };
 
-  const metrics = calculateMetrics();
-
-  // Mock chart data
-  const trendChartData = [
-    { date: '01/01', bruto: 45200, liquido: 43900, tarifas: 1300 },
-    { date: '08/01', bruto: 52100, liquido: 50500, tarifas: 1600 },
-    { date: '15/01', bruto: 48700, liquido: 47200, tarifas: 1500 },
-    { date: '22/01', bruto: 61300, liquido: 59400, tarifas: 1900 },
-    { date: '29/01', bruto: 55800, liquido: 54100, tarifas: 1700 },
-  ];
-
-  const feePercentageChartData = [
-    { date: '01/01', percentage: 2.42 },
-    { date: '08/01', percentage: 2.38 },
-    { date: '15/01', percentage: 2.51 },
-    { date: '22/01', percentage: 2.35 },
-    { date: '29/01', percentage: 2.29 },
-  ];
-
-  const compositionData = [
-    { name: 'PIX', value: metrics.pixFees, color: '#3B82F6' },
-    { name: 'Cartão', value: metrics.cardFees, color: '#F97316' },
-    { name: 'Outras', value: metrics.otherFees, color: '#8B5CF6' },
-  ];
-
-  const cardBrandData = [
-    { brand: 'Visa', value: metrics.cardFees * 0.45, percentage: 2.35 },
-    { brand: 'Mastercard', value: metrics.cardFees * 0.35, percentage: 2.49 },
-    { brand: 'Elo', value: metrics.cardFees * 0.12, percentage: 2.89 },
-    { brand: 'Amex', value: metrics.cardFees * 0.05, percentage: 3.15 },
-    { brand: 'Hipercard', value: metrics.cardFees * 0.03, percentage: 2.99 },
-  ];
-
-  const topCostScenarios = [
-    { scenario: 'Crédito Parcelado Visa', fee: 2450, percentage: 3.15, volume: 77778 },
-    { scenario: 'Crédito à Vista Mastercard', fee: 1820, percentage: 2.49, volume: 73092 },
-    { scenario: 'Débito Elo', fee: 980, percentage: 1.99, volume: 49246 },
-    { scenario: 'PIX (Geral)', fee: 750, percentage: 0.99, volume: 75758 },
-    { scenario: 'Crédito Parcelado Amex', fee: 520, percentage: 3.45, volume: 15072 },
-  ];
-
-  const copilotInsights = [
-    {
-      type: 'alert',
-      title: 'Taxa de PIX acima da média',
-      description: 'Sua taxa média de PIX (0.99%) está 0.05% acima da média do seu segmento. Isso representa um custo adicional de R$150/mês.',
-      badge: '+0.05%',
-      metrics: [
-        { label: 'Sua taxa', value: '0.99%' },
-        { label: 'Média do mercado', value: '0.94%' }
-      ],
-      action: { label: 'Ver pontos de negociação', type: 'negotiate_pix' }
-    },
-    {
-      type: 'opportunity',
-      title: 'Oportunidade de economia',
-      description: 'Reduzindo sua taxa de Crédito Parcelado da Visa em 0.1%, você economizaria R$245/mês com base no seu volume atual.',
-      badge: 'R$245/mês',
-      action: { label: 'Simular cenário', type: 'simulate' }
-    },
-    {
-      type: 'trend_down',
-      title: 'Custo de tarifas em queda',
-      description: 'Seu percentual de custo de tarifas caiu 0.13% nas últimas 4 semanas. Continue incentivando pagamentos via PIX!',
-      badge: '-0.13%',
-      metrics: [
-        { label: 'Há 4 semanas', value: '2.42%' },
-        { label: 'Atual', value: '2.29%', color: 'text-emerald-600' }
-      ]
-    },
-    {
-      type: 'info',
-      title: 'Impacto no lucro',
-      description: 'As tarifas representam 2.3% da sua receita bruta. Reduzindo para 2.0%, seu lucro líquido aumentaria em R$1.500/mês.',
-      action: { label: 'Criar meta de redução', type: 'create_goal' }
-    }
-  ];
-
-  const handleRefreshInsights = () => {
-    setInsightsLoading(true);
-    setTimeout(() => setInsightsLoading(false), 2000);
-  };
-
-  const handleInsightAction = (action) => {
-    console.log('Insight action:', action);
-  };
-
-  const feeDetailColumns = [
-    {
-      key: 'transaction_id',
-      label: 'ID Transação',
-      render: (value) => <span className="font-mono text-xs">{value?.slice(0, 12)}...</span>
-    },
-    {
-      key: 'type',
-      label: 'Tipo',
-      render: (value) => (
-        <Badge variant="outline" className={cn(
-          value === 'pix' ? 'border-blue-200 text-blue-700 bg-blue-50' : 'border-orange-200 text-orange-700 bg-orange-50'
-        )}>
-          {value === 'pix' ? 'PIX' : value === 'card' ? 'Cartão' : value || '-'}
-        </Badge>
-      )
-    },
-    {
-      key: 'amount',
-      label: 'Valor Bruto',
-      render: (value) => <span className="font-medium">{formatCurrency(value)}</span>
-    },
-    {
-      key: 'fee_amount',
-      label: 'Tarifa',
-      render: (value, row) => {
-        const fee = value || (row?.amount || 0) * (row?.type === 'pix' ? 0.0099 : 0.0249);
-        return <span className="text-red-600 font-medium">-{formatCurrency(fee)}</span>;
-      }
-    },
-    {
-      key: 'net_amount',
-      label: 'Valor Líquido',
-      render: (value, row) => {
-        const fee = row?.fee_amount || (row?.amount || 0) * (row?.type === 'pix' ? 0.0099 : 0.0249);
-        const net = (row?.amount || 0) - fee;
-        return <span className="text-emerald-600 font-semibold">{formatCurrency(net)}</span>;
-      }
-    },
-    {
-      key: 'created_date',
-      label: 'Data',
-      render: (value) => value ? format(new Date(value), 'dd/MM/yyyy', { locale: ptBR }) : 'N/A'
-    }
-  ];
+  const simulation = calculateSimulation();
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Tarifas e Taxas"
-        subtitle="Visualize suas taxas negociadas e simule custos"
+        subtitle="Visualize suas taxas negociadas, tarifas e simule custos"
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
           { label: 'Tarifas e Taxas', page: 'Fees' }
@@ -277,18 +214,6 @@ export default function Fees() {
             >
               {showValues ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
             </Button>
-            <Select value={period} onValueChange={setPeriod}>
-              <SelectTrigger className="w-40">
-                <Calendar className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="7d">Últimos 7 dias</SelectItem>
-                <SelectItem value="30d">Últimos 30 dias</SelectItem>
-                <SelectItem value="90d">Últimos 90 dias</SelectItem>
-                <SelectItem value="custom">Personalizado</SelectItem>
-              </SelectContent>
-            </Select>
             <Button variant="outline">
               <Download className="w-4 h-4 mr-2" />
               Exportar
@@ -297,338 +222,442 @@ export default function Fees() {
         }
       />
 
-      {/* KPI Cards - Main Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 bg-white/10 rounded-lg">
-                <DollarSign className="w-5 h-5" />
-              </div>
-              <Badge className="bg-red-500/20 text-red-300 border-0">
-                <TrendingUp className="w-3 h-3 mr-1" />
-                +2.3%
-              </Badge>
-            </div>
-            <p className="text-white/60 text-sm mb-1">Custo Total de Tarifas</p>
-            <p className="text-2xl font-bold">{formatCurrency(metrics.totalFees, true)}</p>
-            <p className="text-xs text-white/40 mt-1">No período selecionado</p>
-          </CardContent>
-        </Card>
+      {/* Tabs principais: Taxas vs Tarifas */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full max-w-md grid-cols-2 h-12">
+          <TabsTrigger value="taxas" className="text-base gap-2 data-[state=active]:bg-[#00D26A] data-[state=active]:text-white">
+            <Percent className="w-4 h-4" />
+            Taxas (MDR)
+          </TabsTrigger>
+          <TabsTrigger value="tarifas" className="text-base gap-2 data-[state=active]:bg-[#00D26A] data-[state=active]:text-white">
+            <Receipt className="w-4 h-4" />
+            Tarifas (Fixas)
+          </TabsTrigger>
+        </TabsList>
 
-        <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 bg-violet-100 rounded-lg">
-                <Percent className="w-5 h-5 text-violet-600" />
-              </div>
-              <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50">
-                <TrendingDown className="w-3 h-3 mr-1" />
-                -0.13%
-              </Badge>
-            </div>
-            <p className="text-gray-500 text-sm mb-1">% Custo sobre Bruto</p>
-            <p className="text-2xl font-bold text-gray-900">{metrics.avgFeePercentage.toFixed(2)}%</p>
-            <p className="text-xs text-gray-400 mt-1">Taxa média ponderada</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 bg-emerald-100 rounded-lg">
-                <Wallet className="w-5 h-5 text-emerald-600" />
-              </div>
-            </div>
-            <p className="text-gray-500 text-sm mb-1">Valor Líquido Total</p>
-            <p className="text-2xl font-bold text-emerald-600">{formatCurrency(metrics.totalNet, true)}</p>
-            <p className="text-xs text-gray-400 mt-1">Após todas as tarifas</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
-              </div>
-            </div>
-            <p className="text-gray-500 text-sm mb-1">Volume Bruto</p>
-            <p className="text-2xl font-bold text-gray-900">{formatCurrency(metrics.totalVolume, true)}</p>
-            <p className="text-xs text-gray-400 mt-1">Total processado</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Fee Category Cards - PIX, Cartão, Outras */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <FeeCategoryCard
-          title="Tarifas PIX"
-          icon={QrCode}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-          totalFee={metrics.pixFees}
-          feePercentage={metrics.pixFeePercentage}
-          totalVolume={metrics.pixVolume}
-          trend="down"
-          trendValue="-0.05%"
-          chartData={[
-            { value: 280 }, { value: 310 }, { value: 295 }, { value: 340 }, { value: 320 }
-          ]}
-          chartColor="#3B82F6"
-          insight="Sua taxa média de PIX está competitiva. Identificamos um aumento de volume nas últimas 2 semanas, o que é positivo para reduzir o custo médio."
-          formatCurrency={formatCurrency}
-        />
-
-        <FeeCategoryCard
-          title="Tarifas Cartão"
-          icon={CreditCard}
-          iconBgColor="bg-orange-100"
-          iconColor="text-orange-600"
-          totalFee={metrics.cardFees}
-          feePercentage={metrics.cardFeePercentage}
-          totalVolume={metrics.cardVolume}
-          trend="up"
-          trendValue="+0.08%"
-          chartData={[
-            { value: 980 }, { value: 1050 }, { value: 1120 }, { value: 1200 }, { value: 1150 }
-          ]}
-          chartColor="#F97316"
-          insight="As taxas de Crédito Parcelado da bandeira Visa representam 40% do seu custo total de cartão. Considere negociar essa modalidade."
-          formatCurrency={formatCurrency}
-        />
-
-        <FeeCategoryCard
-          title="Outras Tarifas"
-          icon={MoreHorizontal}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-          totalFee={metrics.otherFees}
-          feePercentage={metrics.totalVolume > 0 ? (metrics.otherFees / metrics.totalVolume) * 100 : 0}
-          totalVolume={metrics.totalVolume}
-          trend="stable"
-          trendValue="0%"
-          chartData={[
-            { value: 150 }, { value: 180 }, { value: 160 }, { value: 170 }, { value: 165 }
-          ]}
-          chartColor="#8B5CF6"
-          insight="Você teve 3 eventos de estorno que geraram R$180 em taxas este mês. Revise as políticas de cancelamento para reduzir esses custos."
-          formatCurrency={formatCurrency}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Charts */}
-        <div className="lg:col-span-2 space-y-6">
-          <Tabs defaultValue="trend" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="trend">Evolução</TabsTrigger>
-              <TabsTrigger value="composition">Composição</TabsTrigger>
-              <TabsTrigger value="brands">Por Bandeira</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="trend">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Vendas Brutas vs Líquidas vs Tarifas</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-72">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={trendChartData}>
-                        <defs>
-                          <linearGradient id="colorBruto" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
-                          </linearGradient>
-                          <linearGradient id="colorLiquido" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                        <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
-                        <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} tickFormatter={(v) => `R$${(v/1000).toFixed(0)}k`} />
-                        <Tooltip formatter={(value) => formatCurrency(value)} />
-                        <Legend />
-                        <Area type="monotone" dataKey="bruto" name="Bruto" stroke="#3B82F6" strokeWidth={2} fill="url(#colorBruto)" />
-                        <Area type="monotone" dataKey="liquido" name="Líquido" stroke="#10B981" strokeWidth={2} fill="url(#colorLiquido)" />
-                        <Area type="monotone" dataKey="tarifas" name="Tarifas" stroke="#EF4444" strokeWidth={2} fill="none" />
-                      </AreaChart>
-                    </ResponsiveContainer>
+        {/* ==================== ABA TAXAS (MDR) ==================== */}
+        <TabsContent value="taxas" className="space-y-6">
+          
+          {/* Cards de Taxas por Modalidade */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Crédito à Vista */}
+            <Card className="border-2 border-blue-100 bg-gradient-to-br from-blue-50 to-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <CreditCard className="w-5 h-5 text-blue-600" />
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="composition">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Composição das Tarifas</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-72 flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={compositionData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={100}
-                          paddingAngle={5}
-                          dataKey="value"
-                          label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                        >
-                          {compositionData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip formatter={(value) => formatCurrency(value)} />
-                      </PieChart>
-                    </ResponsiveContainer>
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Crédito à Vista</p>
+                    <p className="text-xs text-slate-400">1x no cartão</p>
                   </div>
-                  <div className="flex justify-center gap-6 mt-4">
-                    {compositionData.map((item) => (
-                      <div key={item.name} className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                        <span className="text-sm text-gray-600">{item.name}: {formatCurrency(item.value)}</span>
-                      </div>
-                    ))}
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Visa/Master</span>
+                    <Badge className="bg-blue-600 text-white">{formatPercent(taxasMDR.vista.visa)}</Badge>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="brands">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Custo por Bandeira de Cartão</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-72">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={cardBrandData} layout="vertical">
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={true} vertical={false} />
-                        <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} tickFormatter={(v) => formatCurrency(v)} />
-                        <YAxis dataKey="brand" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#374151' }} width={80} />
-                        <Tooltip formatter={(value) => formatCurrency(value)} />
-                        <Bar dataKey="value" name="Custo" fill="#F97316" radius={[0, 4, 4, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Elo</span>
+                    <Badge variant="outline">{formatPercent(taxasMDR.vista.elo)}</Badge>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Amex</span>
+                    <Badge variant="outline">{formatPercent(taxasMDR.vista.amex)}</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Top Cost Scenarios */}
+            {/* Parcelado 2-6x */}
+            <Card className="border-2 border-orange-100 bg-gradient-to-br from-orange-50 to-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+                    <CreditCard className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Parcelado 2-6x</p>
+                    <p className="text-xs text-slate-400">Crédito parcelado</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Visa/Master</span>
+                    <Badge className="bg-orange-600 text-white">{formatPercent(taxasMDR.parcelado2a6.visa)}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Elo</span>
+                    <Badge variant="outline">{formatPercent(taxasMDR.parcelado2a6.elo)}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Amex</span>
+                    <Badge variant="outline">{formatPercent(taxasMDR.parcelado2a6.amex)}</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Parcelado 7-12x */}
+            <Card className="border-2 border-purple-100 bg-gradient-to-br from-purple-50 to-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+                    <CreditCard className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Parcelado 7-12x</p>
+                    <p className="text-xs text-slate-400">Crédito parcelado</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Visa/Master</span>
+                    <Badge className="bg-purple-600 text-white">{formatPercent(taxasMDR.parcelado7a12.visa)}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Elo</span>
+                    <Badge variant="outline">{formatPercent(taxasMDR.parcelado7a12.elo)}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Amex</span>
+                    <Badge variant="outline">{formatPercent(taxasMDR.parcelado7a12.amex)}</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Débito e PIX */}
+            <Card className="border-2 border-emerald-100 bg-gradient-to-br from-emerald-50 to-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                    <QrCode className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Débito & PIX</p>
+                    <p className="text-xs text-slate-400">Pagamento à vista</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Débito Visa/Master</span>
+                    <Badge className="bg-emerald-600 text-white">{formatPercent(taxasMDR.debito.visa)}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">Débito Elo</span>
+                    <Badge variant="outline">{formatPercent(taxasMDR.debito.elo)}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">PIX</span>
+                    <Badge className="bg-[#00D26A] text-white">{formatPercent(taxasMDR.pix)}</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Tabela Completa 1-12x com Antecipação */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Top 5 Cenários de Maior Custo</CardTitle>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Table2 className="w-5 h-5 text-slate-600" />
+                    Tabela Completa de Taxas (1-12x) com Antecipação
+                  </CardTitle>
+                  <CardDescription>
+                    Custo efetivo total considerando MDR + Antecipação para D+1 (Taxa de antecipação: {formatPercent(taxaAntecipacao)} a.m.)
+                  </CardDescription>
+                </div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Info className="w-4 h-4 text-slate-400" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                      <p>O custo efetivo total considera o MDR da transação mais o custo de antecipação para receber em D+1 ao invés do prazo padrão.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {topCostScenarios.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-gray-200 text-gray-600 text-xs font-bold flex items-center justify-center">
-                        {idx + 1}
-                      </span>
-                      <div>
-                        <p className="font-medium text-gray-900 text-sm">{item.scenario}</p>
-                        <p className="text-xs text-gray-500">Volume: {formatCurrency(item.volume)}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-red-600">{formatCurrency(item.fee)}</p>
-                      <p className="text-xs text-gray-500">{item.percentage.toFixed(2)}%</p>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-slate-50">
+                      <TableHead className="font-semibold">Parcelas</TableHead>
+                      <TableHead className="font-semibold text-center">MDR</TableHead>
+                      <TableHead className="font-semibold text-center">Prazo Médio</TableHead>
+                      <TableHead className="font-semibold text-center">Custo Antecipação</TableHead>
+                      <TableHead className="font-semibold text-center bg-slate-100">Custo Efetivo Total</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {installmentTable.map((row) => (
+                      <TableRow key={row.parcelas} className="hover:bg-slate-50">
+                        <TableCell className="font-medium">
+                          <Badge variant="outline" className="font-mono">
+                            {row.parcelas}x
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <span className="font-semibold text-blue-600">{formatPercent(row.mdr)}</span>
+                        </TableCell>
+                        <TableCell className="text-center text-slate-500">
+                          D+{row.prazoMedio}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <span className="text-orange-600">{formatPercent(row.custoAntecipacao)}</span>
+                        </TableCell>
+                        <TableCell className="text-center bg-slate-50">
+                          <Badge className={cn(
+                            "font-mono font-bold",
+                            row.custoEfetivoTotal <= 4 ? "bg-emerald-100 text-emerald-700" :
+                            row.custoEfetivoTotal <= 6 ? "bg-amber-100 text-amber-700" :
+                            "bg-red-100 text-red-700"
+                          )}>
+                            {formatPercent(row.custoEfetivoTotal)}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Simulador de Venda */}
+          <Card className="border-2 border-[#00D26A]/20 bg-gradient-to-br from-[#00D26A]/5 to-white">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calculator className="w-5 h-5 text-[#00D26A]" />
+                Simulador de Venda
+              </CardTitle>
+              <CardDescription>
+                Calcule o custo total e valor líquido de uma venda
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Inputs */}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Valor da Venda</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">R$</span>
+                      <Input
+                        type="number"
+                        value={simAmount}
+                        onChange={(e) => setSimAmount(e.target.value)}
+                        className="pl-10 text-lg font-semibold"
+                        placeholder="1000"
+                      />
                     </div>
                   </div>
-                ))}
+                  <div className="space-y-2">
+                    <Label>Parcelas</Label>
+                    <Select value={simInstallments} onValueChange={setSimInstallments}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => (
+                          <SelectItem key={n} value={n.toString()}>{n}x</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Bandeira</Label>
+                    <Select value={simBrand} onValueChange={setSimBrand}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="visa">Visa</SelectItem>
+                        <SelectItem value="mastercard">Mastercard</SelectItem>
+                        <SelectItem value="elo">Elo</SelectItem>
+                        <SelectItem value="amex">Amex</SelectItem>
+                        <SelectItem value="hipercard">Hipercard</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* Resultado */}
+                <div className="bg-slate-900 rounded-2xl p-6 text-white">
+                  <p className="text-slate-400 text-sm mb-1">Valor Líquido</p>
+                  <p className="text-4xl font-bold text-[#00D26A] mb-6">
+                    {formatCurrency(simulation.valorLiquido)}
+                  </p>
+
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Valor Bruto</span>
+                      <span>{formatCurrency(simulation.valorBruto)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">MDR ({formatPercent(simulation.mdr)})</span>
+                      <span className="text-red-400">-{formatCurrency(simulation.valorMDR)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Tarifa Gateway</span>
+                      <span className="text-red-400">-{formatCurrency(simulation.tarifaGateway)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Antifraude</span>
+                      <span className="text-red-400">-{formatCurrency(simulation.tarifaAntifraude)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Antecipação D+1 ({formatPercent(simulation.custoAntecipacaoPercent)})</span>
+                      <span className="text-red-400">-{formatCurrency(simulation.valorAntecipacao)}</span>
+                    </div>
+                    <div className="border-t border-slate-700 pt-3 flex justify-between font-semibold">
+                      <span>Custo Efetivo Total</span>
+                      <span className="text-amber-400">{formatPercent(simulation.percentualEfetivo)}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
-        </div>
+        </TabsContent>
 
-        {/* Right Column - Copilot Insights */}
-        <div className="space-y-6">
-          <CopilotInsightCard
-            title="Insights do DIA Copilot"
-            insights={copilotInsights}
-            onRefresh={handleRefreshInsights}
-            onAction={handleInsightAction}
-            loading={insightsLoading}
-          />
+        {/* ==================== ABA TARIFAS (FIXAS) ==================== */}
+        <TabsContent value="tarifas" className="space-y-6">
+          
+          {/* Cards resumo */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                    <Receipt className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-slate-400 text-sm">Tarifa por Transação</p>
+                    <p className="text-2xl font-bold">{formatCurrency(0.49)}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500">Cobrada em transações aprovadas</p>
+              </CardContent>
+            </Card>
 
-          {/* Percentage Trend Chart */}
+            <Card className="bg-gradient-to-br from-orange-50 to-white border-orange-200">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <p className="text-slate-600 text-sm">Antifraude</p>
+                    <p className="text-2xl font-bold text-slate-900">{formatCurrency(0.70)}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500">Análise automática de fraude</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-200">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-slate-600 text-sm">Saque via PIX</p>
+                    <p className="text-2xl font-bold text-emerald-600">Grátis</p>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500">Sem custo para saques</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Tabela de Tarifas por Categoria */}
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">% Custo de Tarifas</CardTitle>
-              <p className="text-xs text-gray-500">Evolução do percentual</p>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Receipt className="w-5 h-5 text-slate-600" />
+                Tabela Completa de Tarifas
+              </CardTitle>
+              <CardDescription>
+                Todas as tarifas fixas aplicáveis às suas operações
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-40">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={feePercentageChartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9CA3AF' }} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9CA3AF' }} domain={[2, 3]} tickFormatter={(v) => `${v}%`} />
-                    <Tooltip formatter={(value) => `${value.toFixed(2)}%`} />
-                    <Line type="monotone" dataKey="percentage" stroke="#8B5CF6" strokeWidth={2} dot={{ fill: '#8B5CF6', r: 4 }} />
-                  </LineChart>
-                </ResponsiveContainer>
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-slate-50">
+                    <TableHead className="font-semibold">Categoria</TableHead>
+                    <TableHead className="font-semibold">Descrição</TableHead>
+                    <TableHead className="font-semibold text-center">Tipo</TableHead>
+                    <TableHead className="font-semibold text-right">Valor</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tarifasFixas.map((tarifa, idx) => (
+                    <TableRow key={idx} className="hover:bg-slate-50">
+                      <TableCell>
+                        <Badge variant="outline" className="font-medium">
+                          {tarifa.categoria}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="font-medium text-slate-700">
+                        {tarifa.nome}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <span className="text-xs text-slate-500">
+                          {tarifa.tipo === 'por_transacao' ? 'Por transação' :
+                           tarifa.tipo === 'por_operacao' ? 'Por operação' :
+                           tarifa.tipo === 'por_ocorrencia' ? 'Por ocorrência' :
+                           'Por boleto'}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {tarifa.valor === 0 ? (
+                          <Badge className="bg-emerald-100 text-emerald-700">Grátis</Badge>
+                        ) : (
+                          <span className="font-semibold text-slate-900">{formatCurrency(tarifa.valor)}</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+
+          {/* Nota sobre Antecipação */}
+          <Card className="border-amber-200 bg-amber-50">
+            <CardContent className="p-5">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="w-5 h-5 text-amber-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-amber-900 mb-1">Taxa de Antecipação</p>
+                  <p className="text-sm text-amber-800 mb-3">
+                    A taxa de antecipação é de <strong>{formatPercent(taxaAntecipacao)} ao mês</strong> sobre o valor antecipado.
+                    Ela é calculada proporcionalmente ao número de dias antecipados.
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" className="border-amber-300 text-amber-700 hover:bg-amber-100">
+                      <Calculator className="w-4 h-4 mr-2" />
+                      Simular Antecipação
+                    </Button>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
-        </div>
-      </div>
-
-      {/* Fee Table & Simulator */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Minhas Taxas Negociadas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-0 divide-y">
-              {allFees.map((fee, idx) => (
-                <div key={idx} className="flex justify-between py-3">
-                  <span className="text-sm font-medium text-gray-700">{fee.name}</span>
-                  <Badge variant="secondary" className="font-mono">{fee.value}</Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <FeeSimulator
-          currentData={{}}
-          formatCurrency={formatCurrency}
-          className="h-full"
-        />
-      </div>
-
-      {/* Detailed Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Detalhamento de Tarifas por Transação</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DataTable
-            columns={feeDetailColumns}
-            data={transactions}
-            loading={isLoading}
-            searchable
-            searchPlaceholder="Buscar transação..."
-            pagination
-            pageSize={10}
-            currentPage={1}
-            totalItems={transactions.length}
-            emptyMessage="Nenhuma transação encontrada"
-          />
-        </CardContent>
-      </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
