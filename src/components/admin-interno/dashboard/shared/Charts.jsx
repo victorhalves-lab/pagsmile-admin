@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
-const COLORS = ['#00D26A', '#101F3E', '#FFBB28', '#FF8042', '#8884d8'];
+const COLORS = ['#2bc196', '#002443', '#FFBB28', '#FF8042', '#8884d8'];
 
 export function TPVEvolutionChart({ data }) {
   return (
@@ -20,8 +20,8 @@ export function TPVEvolutionChart({ data }) {
           <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="colorTpv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#00D26A" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#00D26A" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#2bc196" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#2bc196" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
@@ -32,7 +32,7 @@ export function TPVEvolutionChart({ data }) {
               formatter={(value) => [`R$ ${(value/1000000).toFixed(1)}M`, '']}
             />
             <Legend />
-            <Area type="monotone" dataKey="tpv" name="TPV Realizado" stroke="#00D26A" fillOpacity={1} fill="url(#colorTpv)" strokeWidth={2} />
+            <Area type="monotone" dataKey="tpv" name="TPV Realizado" stroke="#2bc196" fillOpacity={1} fill="url(#colorTpv)" strokeWidth={2} />
             <Line type="monotone" dataKey="meta" name="Meta" stroke="#9ca3af" strokeDasharray="5 5" strokeWidth={2} dot={false} />
           </AreaChart>
         </ResponsiveContainer>
@@ -56,8 +56,8 @@ export function MixChart({ data }) {
             <YAxis tickFormatter={(toPercent) => `${(toPercent * 100).toFixed(0)}%`} tick={{fontSize: 10}} />
             <Tooltip formatter={(value, name, props) => [`${(value * 100).toFixed(1)}%`, name]} />
             <Legend />
-            <Area type="monotone" dataKey="pix" name="Pix" stackId="1" stroke="#00D26A" fill="#00D26A" />
-            <Area type="monotone" dataKey="card" name="Cartão" stackId="1" stroke="#101F3E" fill="#101F3E" />
+            <Area type="monotone" dataKey="pix" name="Pix" stackId="1" stroke="#2bc196" fill="#2bc196" />
+            <Area type="monotone" dataKey="card" name="Cartão" stackId="1" stroke="#002443" fill="#002443" />
           </AreaChart>
         </ResponsiveContainer>
       </CardContent>
