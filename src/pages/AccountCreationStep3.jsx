@@ -80,10 +80,10 @@ export default function AccountCreationStep3() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-4">
-      <Card className="w-full max-w-3xl shadow-2xl border border-slate-100 rounded-2xl overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-4 pb-32 md:pb-8">
+      <Card className="w-full max-w-7xl shadow-2xl border border-slate-100 rounded-2xl overflow-hidden">
         <div className="h-2 bg-gradient-to-r from-[#00c295] to-emerald-600 w-full" />
-        <CardHeader className="text-center pb-6 pt-8 bg-white">
+        <CardHeader className="text-center pb-4 pt-6 bg-white">
           <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-6 hover:opacity-80 transition-opacity">
             <img
               src={getLogoUrlByTheme('light')}
@@ -117,8 +117,8 @@ export default function AccountCreationStep3() {
         </CardHeader>
         
         <CardContent className="space-y-4 pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2 md:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div className="space-y-2 md:col-span-4">
               <Label htmlFor="cnpj">CNPJ</Label>
               <div className="flex gap-2">
                 <Input 
@@ -134,22 +134,22 @@ export default function AccountCreationStep3() {
               </div>
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-4">
               <Label htmlFor="corporateName">Razão Social</Label>
               <Input id="corporateName" value={formData.corporateName} onChange={handleChange} className="bg-gray-50" />
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-4">
               <Label htmlFor="tradeName">Nome Fantasia</Label>
               <Input id="tradeName" value={formData.tradeName} onChange={handleChange} className="bg-gray-50" />
             </div>
             
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2 md:col-span-6">
               <Label htmlFor="address">Endereço</Label>
               <Input id="address" value={formData.address} onChange={handleChange} className="bg-gray-50" />
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-3">
               <Label htmlFor="avgMonthlyRevenue">Faturamento Médio Mensal</Label>
               <Select onValueChange={(v) => setFormData(p => ({...p, avgMonthlyRevenue: v}))}>
                 <SelectTrigger>
@@ -165,7 +165,7 @@ export default function AccountCreationStep3() {
               </Select>
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-3">
               <Label htmlFor="businessType">Tipo de Negócio</Label>
               <Select onValueChange={(v) => setFormData(p => ({...p, businessType: v}))}>
                 <SelectTrigger>
@@ -183,57 +183,55 @@ export default function AccountCreationStep3() {
               </Select>
             </div>
             
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2 md:col-span-6">
               <Label htmlFor="whatSells">O que a empresa vende/transaciona</Label>
               <Textarea 
                 id="whatSells" 
-                placeholder="Ex: Roupas, cosméticos, brinquedos; assinaturas de serviços digitais como software ou demais serviços; cursos, infoprodutos; etc."
+                placeholder="Ex: Roupas, cosméticos..."
                 value={formData.whatSells} 
                 onChange={handleChange}
                 rows={2}
+                className="resize-none"
               />
             </div>
 
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2 md:col-span-6">
               <Label htmlFor="businessModelDetails">Detalhes do modelo de Negócio</Label>
               <Textarea 
                 id="businessModelDetails" 
-                placeholder="Detalhe seu modelo de negócio"
+                placeholder="Detalhe seu modelo..."
                 value={formData.businessModelDetails} 
                 onChange={handleChange}
                 rows={2}
+                className="resize-none"
               />
             </div>
 
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2 md:col-span-6">
               <Label htmlFor="operationDetails">Detalhes da Operação</Label>
               <Textarea 
                 id="operationDetails" 
-                placeholder="Conte sobre sua operação (Ex: Como funciona seu processo de venda? Qual o volume esperado de transações? Qual o perfil do seu cliente? Detalhes sobre a logística, entrega, etc.)"
+                placeholder="Conte sobre sua operação..."
                 value={formData.operationDetails} 
                 onChange={handleChange}
-                rows={3}
+                rows={2}
+                className="resize-none"
               />
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-3">
               <Label htmlFor="websiteOrSocial">Site ou Rede Social</Label>
               <Input id="websiteOrSocial" placeholder="https://" value={formData.websiteOrSocial} onChange={handleChange} />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="positionInCompany">Cargo que ocupa na empresa</Label>
+            <div className="space-y-2 md:col-span-3">
+              <Label htmlFor="positionInCompany">Cargo na empresa</Label>
               <Input id="positionInCompany" placeholder="Ex: CEO, Diretor" value={formData.positionInCompany} onChange={handleChange} />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="birthDate">Data de Nascimento</Label>
-              <Input id="birthDate" type="date" value={formData.birthDate} onChange={handleChange} />
             </div>
           </div>
         </CardContent>
         
-        <CardFooter className="flex justify-between pt-6">
+        <CardFooter className="flex justify-between pt-6 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-8">
           <Button variant="ghost" asChild>
             <Link to={createPageUrl('PlanSelection')}>
               <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
