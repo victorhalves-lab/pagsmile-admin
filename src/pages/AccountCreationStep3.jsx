@@ -79,21 +79,22 @@ export default function AccountCreationStep3() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-      <Card className="w-full max-w-2xl shadow-xl border-0">
-        <CardHeader className="text-center pb-2">
-          <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-4">
+      <Card className="w-full max-w-3xl shadow-2xl border-0 rounded-3xl overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-[#00D26A] to-emerald-600 w-full" />
+        <CardHeader className="text-center pb-6 pt-8 bg-slate-50/50">
+          <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-6 hover:opacity-80 transition-opacity">
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
               alt="PagSmile Logo"
-              className="h-10"
+              className="h-12"
             />
           </Link>
-          <CardTitle className="text-2xl font-bold text-gray-800">Dados da Empresa</CardTitle>
-          <CardDescription className="text-gray-500">Etapa 3 de 3 - Informações do seu negócio</CardDescription>
-          <div className="flex gap-2 justify-center mt-4">
-            <div className="w-20 h-1.5 rounded-full bg-[#00D26A]"></div>
-            <div className="w-20 h-1.5 rounded-full bg-[#00D26A]"></div>
-            <div className="w-20 h-1.5 rounded-full bg-[#00D26A]"></div>
+          <CardTitle className="text-3xl font-bold text-slate-900 tracking-tight">Dados da Empresa</CardTitle>
+          <CardDescription className="text-slate-500 text-lg mt-2">Etapa 3 de 3 - Informações do seu negócio</CardDescription>
+          <div className="flex gap-3 justify-center mt-8">
+            <div className="w-24 h-2 rounded-full bg-[#00D26A] shadow-sm shadow-[#00D26A]/20"></div>
+            <div className="w-24 h-2 rounded-full bg-[#00D26A] shadow-sm shadow-[#00D26A]/20"></div>
+            <div className="w-24 h-2 rounded-full bg-[#00D26A] shadow-sm shadow-[#00D26A]/20"></div>
           </div>
         </CardHeader>
         

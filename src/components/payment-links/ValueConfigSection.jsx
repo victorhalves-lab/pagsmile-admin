@@ -28,34 +28,40 @@ export default function ValueConfigSection({ formData, setFormData }) {
   return (
     <div className="space-y-6">
       <div>
-        <Label className="text-sm font-medium">Tipo de Valor *</Label>
-        <RadioGroup
-          value={formData.value_type || 'fixed'}
-          onValueChange={(v) => setFormData({ ...formData, value_type: v })}
-          className="mt-2 space-y-2"
-        >
-          <div className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
-            <RadioGroupItem value="fixed" id="fixed" />
-            <div>
-              <Label htmlFor="fixed" className="font-medium cursor-pointer">Valor Fixo</Label>
-              <p className="text-xs text-gray-500">Valor exato a ser cobrado</p>
+        <Label className="text-sm font-medium mb-3 block">Tipo de Valor *</Label>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { id: 'fixed', label: 'Valor Fixo', desc: 'Valor exato a ser cobrado' },
+            { id: 'open', label: 'Valor Aberto', desc: 'Cliente define o valor' },
+            { id: 'minimum', label: 'Valor Mínimo', desc: 'Cliente paga igual ou acima' }
+          ].map((option) => (
+            <div
+              key={option.id}
+              onClick={() => setFormData({ ...formData, value_type: option.id })}
+              className={`
+                cursor-pointer relative p-4 rounded-xl border-2 transition-all duration-200
+                ${formData.value_type === option.id 
+                  ? 'border-[#00D26A] bg-[#00D26A]/5 shadow-sm' 
+                  : 'border-slate-100 bg-white hover:border-slate-200 hover:shadow-md'
+                }
+              `}
+            >
+              <div className="flex flex-col gap-1.5">
+                <span className={`font-semibold text-sm ${formData.value_type === option.id ? 'text-[#00D26A]' : 'text-slate-900'}`}>
+                  {option.label}
+                </span>
+                <span className="text-xs text-slate-500 leading-snug">
+                  {option.desc}
+                </span>
+              </div>
+              {formData.value_type === option.id && (
+                <div className="absolute top-3 right-3 w-4 h-4 rounded-full bg-[#00D26A] flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                </div>
+              )}
             </div>
-          </div>
-          <div className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
-            <RadioGroupItem value="open" id="open" />
-            <div>
-              <Label htmlFor="open" className="font-medium cursor-pointer">Valor Aberto</Label>
-              <p className="text-xs text-gray-500">Cliente define o valor a pagar</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
-            <RadioGroupItem value="minimum" id="minimum" />
-            <div>
-              <Label htmlFor="minimum" className="font-medium cursor-pointer">Valor Mínimo</Label>
-              <p className="text-xs text-gray-500">Cliente pode pagar igual ou acima do mínimo</p>
-            </div>
-          </div>
-        </RadioGroup>
+          ))}
+        </div>
       </div>
 
       {formData.value_type === 'fixed' && (
