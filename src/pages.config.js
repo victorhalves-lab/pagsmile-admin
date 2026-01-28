@@ -64,6 +64,11 @@ import IBPixSend from './pages/IBPixSend';
 import IBPixReceive from './pages/IBPixReceive';
 import IBPixKeys from './pages/IBPixKeys';
 import IBPixLimits from './pages/IBPixLimits';
+import IBProofs from './pages/IBProofs';
+import IBSettings from './pages/IBSettings';
+import IBSettingsAccount from './pages/IBSettingsAccount';
+import IBSettingsSecurity from './pages/IBSettingsSecurity';
+import IBSettingsNotifications from './pages/IBSettingsNotifications';
 import __Layout from './Layout.jsx';
 
 
@@ -134,6 +139,11 @@ export const PAGES = {
     "IBPixReceive": IBPixReceive,
     "IBPixKeys": IBPixKeys,
     "IBPixLimits": IBPixLimits,
+    "IBProofs": IBProofs,
+    "IBSettings": IBSettings,
+    "IBSettingsAccount": IBSettingsAccount,
+    "IBSettingsSecurity": IBSettingsSecurity,
+    "IBSettingsNotifications": IBSettingsNotifications,
 }
 
 export const pagesConfig = {
