@@ -372,7 +372,7 @@ const adminInternoPages = [
 
 import { Sun, Moon } from 'lucide-react';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
-import DIAWidget from '@/components/admin-interno/DIAWidget';
+// DIAWidget removed as it is now integrated into the header panel
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -845,15 +845,25 @@ export default function Layout({ children, currentPageName }) {
                 {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
               </Button>
 
-              {/* AI Assistant Button - Only for Admin Sub */}
-              {currentModule === 'admin-sub' && (
+              {/* AI Assistant Button - Admin Sub & Admin Interno */}
+              {(currentModule === 'admin-sub' || currentModule === 'admin-interno') && (
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hidden sm:flex items-center gap-2 border-[#00D26A]/20 text-[#00D26A] hover:bg-[#00D26A]/5 hover:border-[#00D26A]/40 shadow-sm dark:bg-[#00D26A]/10"
+                  className={cn(
+                    "hidden sm:flex items-center gap-2 shadow-sm",
+                    currentModule === 'admin-interno' 
+                      ? "border-purple-500/20 text-purple-600 hover:bg-purple-500/5 hover:border-purple-500/40 dark:text-purple-400 dark:bg-purple-500/10"
+                      : "border-[#00D26A]/20 text-[#00D26A] hover:bg-[#00D26A]/5 hover:border-[#00D26A]/40 dark:bg-[#00D26A]/10"
+                  )}
                   onClick={() => setShowAIPanel(!showAIPanel)}
                 >
-                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#00D26A] to-emerald-600 flex items-center justify-center">
+                  <div className={cn(
+                    "w-5 h-5 rounded-full flex items-center justify-center",
+                    currentModule === 'admin-interno'
+                      ? "bg-gradient-to-br from-purple-500 to-indigo-600"
+                      : "bg-gradient-to-br from-[#00D26A] to-emerald-600"
+                  )}>
                     <Sparkles className="w-3 h-3 text-white" />
                   </div>
                   <span className="font-medium">DIA Copilot</span>
@@ -917,49 +927,86 @@ export default function Layout({ children, currentPageName }) {
         </main>
       </div>
 
-      {/* DIA Widget - Global Copilot */}
-      <DIAWidget />
-
-      {/* AI Assistant Panel - Legacy/Admin Sub Specific */}
+      {/* AI Assistant Panel - Unified for Admin Sub & Admin Interno */}
       {showAIPanel && (
-        <div className="fixed right-0 top-0 h-full w-96 bg-white border-l border-gray-200 shadow-xl z-50">
-          <div className="flex items-center justify-between p-4 border-b">
+        <div className="fixed right-0 top-0 h-full w-96 bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 shadow-xl z-50 animate-in slide-in-from-right duration-300">
+          <div className="flex items-center justify-between p-4 border-b dark:border-slate-800">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00D26A] to-[#00A854] flex items-center justify-center">
+              <div className={cn(
+                "w-8 h-8 rounded-lg flex items-center justify-center",
+                currentModule === 'admin-interno' 
+                  ? "bg-gradient-to-br from-purple-500 to-indigo-600"
+                  : "bg-gradient-to-br from-[#00D26A] to-emerald-600"
+              )}>
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm">DIA Copilot</h3>
-                <p className="text-xs text-gray-500">Assistente Inteligente</p>
+                <h3 className="font-semibold text-sm dark:text-white">DIA Copilot</h3>
+                <p className="text-xs text-gray-500 dark:text-slate-400">Assistente Inteligente</p>
               </div>
             </div>
             <Button variant="ghost" size="icon" onClick={() => setShowAIPanel(false)}>
               <X className="w-4 h-4" />
             </Button>
           </div>
+          
           <div className="p-4 h-[calc(100%-140px)] overflow-y-auto">
-            <div className="bg-gray-50 rounded-lg p-4 mb-4">
-              <p className="text-sm text-gray-600">
-                Olá! Sou o DIA, seu assistente inteligente. Como posso ajudar você hoje?
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 mb-4">
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {currentModule === 'admin-interno' 
+                  ? "Olá! Sou o DIA. Estou monitorando todos os merchants e operações. O que você gostaria de analisar?"
+                  : "Olá! Sou o DIA, seu assistente financeiro. Como posso ajudar com sua conta hoje?"}
               </p>
             </div>
+            
             <div className="space-y-2">
-              <p className="text-xs font-medium text-gray-500 uppercase">Sugestões</p>
-              <button className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-[#00D26A] hover:bg-[#00D26A]/5 transition-colors text-sm">
-                📊 Analisar taxa de aprovação do mês
-              </button>
-              <button className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-[#00D26A] hover:bg-[#00D26A]/5 transition-colors text-sm">
-                💰 Ver oportunidades de recuperação
-              </button>
-              <button className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-[#00D26A] hover:bg-[#00D26A]/5 transition-colors text-sm">
-                ⚠️ Disputas que precisam de atenção
-              </button>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">
+                {currentModule === 'admin-interno' ? "Insights Operacionais" : "Sugestões"}
+              </p>
+              
+              {currentModule === 'admin-interno' ? (
+                <>
+                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors text-sm dark:text-slate-200">
+                    ⚠️ 3 merchants com ratio de chargeback alto
+                  </button>
+                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors text-sm dark:text-slate-200">
+                    🚀 5 novos leads qualificados hoje
+                  </button>
+                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors text-sm dark:text-slate-200">
+                    📋 12 validações de KYC pendentes
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#00D26A] hover:bg-[#00D26A]/5 dark:hover:bg-[#00D26A]/10 transition-colors text-sm dark:text-slate-200">
+                    📊 Analisar taxa de aprovação do mês
+                  </button>
+                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#00D26A] hover:bg-[#00D26A]/5 dark:hover:bg-[#00D26A]/10 transition-colors text-sm dark:text-slate-200">
+                    💰 Ver oportunidades de recuperação
+                  </button>
+                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#00D26A] hover:bg-[#00D26A]/5 dark:hover:bg-[#00D26A]/10 transition-colors text-sm dark:text-slate-200">
+                    ⚠️ Disputas que precisam de atenção
+                  </button>
+                </>
+              )}
             </div>
           </div>
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-white">
+          
+          <div className="absolute bottom-0 left-0 right-0 p-4 border-t dark:border-slate-800 bg-white dark:bg-slate-900">
             <div className="relative">
-              <Input placeholder="Digite sua pergunta..." className="pr-10" />
-              <Button size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 bg-[#00D26A] hover:bg-[#00A854]">
+              <Input 
+                placeholder="Digite sua pergunta..." 
+                className="pr-10 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus-visible:ring-offset-0" 
+              />
+              <Button 
+                size="icon" 
+                className={cn(
+                  "absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7",
+                  currentModule === 'admin-interno'
+                    ? "bg-purple-600 hover:bg-purple-700"
+                    : "bg-[#00D26A] hover:bg-emerald-600"
+                )}
+              >
                 <ChevronRight className="w-4 h-4" />
               </Button>
             </div>
