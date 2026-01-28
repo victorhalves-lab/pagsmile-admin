@@ -204,12 +204,21 @@ const noLayoutPages = [
   'LivenessFacematchStep', 'LivenessSimulation', 'DocumentUploadPix', 'DocumentUploadFull'
 ];
 
+import { Sun, Moon } from 'lucide-react';
+
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState(['transactions', 'financial']);
   const [showAIPanel, setShowAIPanel] = useState(false);
   const [dismissedComplianceAlertForSession, setDismissedComplianceAlertForSession] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
 
   // Buscar usuário autenticado e sua subconta para verificar status de compliance
   const { data: user } = useQuery({
@@ -247,7 +256,8 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] font-sans antialiased selection:bg-primary/20 selection:text-primary">
+    <div className={cn("min-h-screen font-sans antialiased selection:bg-[#00D26A]/20 selection:text-[#00D26A]", theme)}>
+      <div className="min-h-screen bg-slate-50 dark:bg-[#101F3E] text-slate-900 dark:text-slate-100 transition-colors duration-300">
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div 
@@ -258,7 +268,7 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 left-0 z-50 h-full bg-[#0B1121] text-slate-300 transition-all duration-300 shadow-2xl border-r border-slate-800/50",
+        "fixed top-0 left-0 z-50 h-full bg-[#101F3E] text-slate-300 transition-all duration-300 shadow-2xl border-r border-slate-800/50 dark:border-slate-700/30",
         sidebarOpen ? "w-64" : "w-20",
         mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
@@ -306,19 +316,20 @@ export default function Layout({ children, currentPageName }) {
                   {item.submenu ? (
                     <>
                       <button
-                          onClick={() => toggleSubmenu(item.id)}
-                          className={cn(
-                            "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
-                            isActiveSection(item)
-                              ? "bg-primary/10 text-primary shadow-[0_0_20px_rgba(0,210,106,0.15)]"
-                              : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
-                          )}
-                        >
-                          {isActiveSection(item) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-primary rounded-r-full" />}
-                          <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-primary" : "text-slate-500 group-hover:text-slate-300")} />
-                          {sidebarOpen && (
-                            <>
-                              <span className="flex-1 text-left truncate">{item.label}</span>
+                        onClick={() => toggleSubmenu(item.id)}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
+                          isActiveSection(item)
+                            ? "bg-[#00D26A]/10 text-[#00D26A] shadow-[0_0_20px_rgba(0,210,106,0.15)]"
+                            : "text-slate-400 hover:text-slate-100 hover:bg-white/5",
+                          !sidebarOpen && "justify-center"
+                        )}
+                      >
+                        {isActiveSection(item) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#00D26A] rounded-r-full" />}
+                        <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-[#00D26A]" : "text-slate-500 group-hover:text-slate-300")} />
+                        {sidebarOpen && (
+                          <>
+                            <span className="flex-1 text-left truncate">{item.label}</span>
                             {item.badge && (
                               <Badge 
                                 variant={item.badgeVariant || "secondary"} 
@@ -364,12 +375,13 @@ export default function Layout({ children, currentPageName }) {
                       className={cn(
                         "flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
                         isActivePage(item.page)
-                          ? "bg-primary/10 text-primary shadow-[0_0_20px_rgba(0,210,106,0.15)]"
-                          : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
+                          ? "bg-[#00D26A]/10 text-[#00D26A] shadow-[0_0_20px_rgba(0,210,106,0.15)]"
+                          : "text-slate-400 hover:text-slate-100 hover:bg-white/5",
+                        !sidebarOpen && "justify-center"
                       )}
                     >
-                      {isActivePage(item.page) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-primary rounded-r-full" />}
-                      <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActivePage(item.page) ? "text-primary" : "text-slate-500 group-hover:text-slate-300")} />
+                      {isActivePage(item.page) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#00D26A] rounded-r-full" />}
+                      <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActivePage(item.page) ? "text-[#00D26A]" : "text-slate-500 group-hover:text-slate-300")} />
                       {sidebarOpen && (
                         <>
                           <span className="flex-1 truncate">{item.label}</span>
@@ -478,7 +490,7 @@ export default function Layout({ children, currentPageName }) {
         sidebarOpen ? "lg:ml-64" : "lg:ml-20"
       )}>
         {/* Header */}
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/60 shadow-sm supports-[backdrop-filter]:bg-white/60">
+        <header className="sticky top-0 z-30 bg-white/80 dark:bg-[#101F3E]/80 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-700/30 shadow-sm supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-[#101F3E]/60 transition-colors duration-300">
           <div className="flex items-center justify-between h-16 px-4 lg:px-8">
             <div className="flex items-center gap-4">
               <Button
@@ -499,20 +511,30 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* Theme Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                className="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+              </Button>
+
               {/* AI Assistant Button */}
               <Button
                 variant="outline"
                 size="sm"
-                className="hidden sm:flex items-center gap-2 border-primary/20 text-primary hover:bg-primary/5 hover:border-primary/40 shadow-sm"
+                className="hidden sm:flex items-center gap-2 border-[#00D26A]/20 text-[#00D26A] hover:bg-[#00D26A]/5 hover:border-[#00D26A]/40 shadow-sm dark:bg-[#00D26A]/10"
                 onClick={() => setShowAIPanel(!showAIPanel)}
               >
-                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center">
+                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#00D26A] to-emerald-600 flex items-center justify-center">
                   <Sparkles className="w-3 h-3 text-white" />
                 </div>
                 <span className="font-medium">DIA Copilot</span>
               </Button>
 
-              <div className="h-6 w-px bg-slate-200 mx-1" />
+              <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
 
               {/* Notifications */}
               <DropdownMenu>
@@ -616,10 +638,33 @@ export default function Layout({ children, currentPageName }) {
         </div>
       )}
 
+      </div>
       <style>{`
         :root {
-          --pagsmile-dark: #101F3E;
-          --pagsmile-green: #00D26A;
+          --primary: #00D26A;
+          --primary-foreground: #FFFFFF;
+          --radius: 0.75rem;
+        }
+        .dark {
+          --background: #101F3E;
+          --foreground: #F1F5F9;
+          --card: #1E293B;
+          --card-foreground: #F1F5F9;
+          --popover: #1E293B;
+          --popover-foreground: #F1F5F9;
+          --primary: #00D26A;
+          --primary-foreground: #FFFFFF;
+          --secondary: #334155;
+          --secondary-foreground: #F1F5F9;
+          --muted: #334155;
+          --muted-foreground: #94A3B8;
+          --accent: #334155;
+          --accent-foreground: #F1F5F9;
+          --destructive: #EF4444;
+          --destructive-foreground: #F1F5F9;
+          --border: #334155;
+          --input: #334155;
+          --ring: #00D26A;
         }
       `}</style>
     </div>
