@@ -5,20 +5,29 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 
-import Section1Cadastrais from '@/components/compliance/pix/Section1Cadastrais';
-import Section2Atividade from '@/components/compliance/pix/Section2Atividade';
+// Novos componentes divididos
+import Step1_Identificacao from '@/components/compliance/pix/steps/Step1_Identificacao';
+import Step2_Detalhes from '@/components/compliance/pix/steps/Step2_Detalhes';
+import Step3_Enderecos from '@/components/compliance/pix/steps/Step3_Enderecos';
+import Step4_Atividade from '@/components/compliance/pix/steps/Step4_Atividade';
+import Step5_Volumetria from '@/components/compliance/pix/steps/Step5_Volumetria';
+import Step6_Clientes from '@/components/compliance/pix/steps/Step6_Clientes';
+// Componentes existentes reutilizados (pois já eram pequenos ou dinâmicos)
 import Section3Canais from '@/components/compliance/pix/Section3Canais';
 import Section4Licenciamento from '@/components/compliance/pix/Section4Licenciamento';
 import Section5Beneficiarios from '@/components/compliance/pix/Section5Beneficiarios';
 import Section6Socios from '@/components/compliance/pix/Section6Socios';
 import Section7Responsaveis from '@/components/compliance/pix/Section7Responsaveis';
-import Section8PldFt from '@/components/compliance/pix/Section8PldFt';
+// Novos componentes divididos de PLD
+import Step12_PLD_Politicas from '@/components/compliance/pix/steps/Step12_PLD_Politicas';
+import Step13_PLD_Procedimentos from '@/components/compliance/pix/steps/Step13_PLD_Procedimentos';
+import Step14_PLD_Monitoramento from '@/components/compliance/pix/steps/Step14_PLD_Monitoramento';
 import Section9RepresentanteFinal from '@/components/compliance/pix/Section9RepresentanteFinal';
 
 export default function CompliancePixOnly() {
   const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState(1);
-  const totalSections = 9;
+  const totalSections = 15;
   const [formData, setFormData] = useState({});
 
   const handleChange = (field, value) => {
@@ -62,69 +71,78 @@ export default function CompliancePixOnly() {
 
   const progressPercent = (currentSection / totalSections) * 100;
 
-  const sectionTitles = [
-    'Informações Cadastrais',
-    'Atividade e Negócios',
-    'Canais de Atendimento',
-    'Licenciamento',
-    'Beneficiários Finais',
-    'Sócios e Administradores',
-    'Responsáveis',
-    'Compliance e PLD/FT',
-    'Representante Legal e Finalização'
+  const steps = [
+    { title: 'Identificação', Component: Step1_Identificacao },
+    { title: 'Detalhes', Component: Step2_Detalhes },
+    { title: 'Localização', Component: Step3_Enderecos },
+    { title: 'Atividade', Component: Step4_Atividade },
+    { title: 'Volumetria', Component: Step5_Volumetria },
+    { title: 'Clientes', Component: Step6_Clientes },
+    { title: 'Canais', Component: Section3Canais },
+    { title: 'Licenciamento', Component: Section4Licenciamento },
+    { title: 'Beneficiários', Component: Section5Beneficiarios },
+    { title: 'Sócios', Component: Section6Socios },
+    { title: 'Responsáveis', Component: Section7Responsaveis },
+    { title: 'PLD - Sanções', Component: Step12_PLD_Politicas },
+    { title: 'PLD - Riscos', Component: Step13_PLD_Procedimentos },
+    { title: 'PLD - Operação', Component: Step14_PLD_Monitoramento },
+    { title: 'Finalização', Component: Section9RepresentanteFinal },
   ];
 
+  const CurrentComponent = steps[currentSection - 1]?.Component;
+  const currentTitle = steps[currentSection - 1]?.title;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-2 md:p-4 pb-24 md:pb-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-2 md:p-4 pb-20 md:pb-4">
       <div className="w-full max-w-7xl bg-white shadow-2xl border border-slate-100 rounded-2xl overflow-hidden">
         <div className="h-2 bg-gradient-to-r from-[#00c295] to-emerald-600 w-full" />
         <div className="text-center pb-2 pt-4 px-4">
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
             alt="PagSmile Logo"
-            className="h-8 mx-auto mb-2"
+            className="h-6 mx-auto mb-2"
           />
-          <h1 className="text-xl font-bold text-gray-800 mb-1">Compliance PIX</h1>
-          <p className="text-sm text-gray-500">Etapa {currentSection} de {totalSections} - {sectionTitles[currentSection - 1]}</p>
-          <div className="max-w-md mx-auto mt-2">
-            <Progress value={progressPercent} className="h-1.5" />
+          <h1 className="text-lg font-bold text-gray-800 mb-0">Compliance PIX</h1>
+          <p className="text-xs text-gray-500 mb-2">Etapa {currentSection} de {totalSections} - {currentTitle}</p>
+          <div className="max-w-md mx-auto">
+            <Progress value={progressPercent} className="h-1" />
           </div>
         </div>
 
-        <div className="p-4 md:p-6 space-y-4">
-          <div className="overflow-y-auto max-h-[70vh] px-1">
-            {currentSection === 1 && <Section1Cadastrais formData={formData} handleChange={handleChange} />}
-            {currentSection === 2 && <Section2Atividade formData={formData} handleChange={handleChange} />}
-            {currentSection === 3 && <Section3Canais formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
-            {currentSection === 4 && <Section4Licenciamento formData={formData} handleChange={handleChange} />}
-            {currentSection === 5 && <Section5Beneficiarios formData={formData} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
-            {currentSection === 6 && <Section6Socios formData={formData} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
-            {currentSection === 7 && <Section7Responsaveis formData={formData} handleChange={handleChange} />}
-            {currentSection === 8 && <Section8PldFt formData={formData} handleChange={handleChange} />}
-            {currentSection === 9 && <Section9RepresentanteFinal formData={formData} handleChange={handleChange} />}
+        <div className="p-3 md:p-6 space-y-3">
+          <div className="overflow-y-auto max-h-[75vh] px-1 custom-scrollbar">
+            {CurrentComponent && (
+              <CurrentComponent 
+                formData={formData} 
+                handleChange={handleChange} 
+                handleArrayChange={handleArrayChange}
+                handleAddArrayItem={handleAddArrayItem}
+                handleRemoveArrayItem={handleRemoveArrayItem}
+              />
+            )}
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-between items-center pt-2 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-0">
+          <div className="flex justify-between items-center pt-2 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-3 z-20 md:static md:bg-transparent md:border-0 md:p-0">
             {currentSection === 1 ? (
-              <Button variant="ghost" asChild>
+              <Button variant="ghost" size="sm" asChild>
                 <Link to={createPageUrl('ComplianceOnboardingStart')}>
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
+                  <ArrowLeft className="mr-2 h-3 w-3" /> Voltar
                 </Link>
               </Button>
             ) : (
-              <Button variant="ghost" onClick={handlePrevious}>
-                <ArrowLeft className="mr-2 h-4 w-4" /> Anterior
+              <Button variant="ghost" size="sm" onClick={handlePrevious}>
+                <ArrowLeft className="mr-2 h-3 w-3" /> Anterior
               </Button>
             )}
             
             {currentSection < totalSections ? (
-              <Button onClick={handleNext} className="bg-[#00D26A] hover:bg-[#00A854] text-white">
-                Próxima Etapa <ArrowRight className="ml-2 h-4 w-4" />
+              <Button size="sm" onClick={handleNext} className="bg-[#00D26A] hover:bg-[#00A854] text-white">
+                Próxima <ArrowRight className="ml-2 h-3 w-3" />
               </Button>
             ) : (
-              <Button onClick={handleSubmit} className="bg-[#00D26A] hover:bg-[#00A854] text-white">
-                Continuar para Documentos <Check className="ml-2 h-4 w-4" />
+              <Button size="sm" onClick={handleSubmit} className="bg-[#00D26A] hover:bg-[#00A854] text-white">
+                Continuar <Check className="ml-2 h-3 w-3" />
               </Button>
             )}
           </div>
