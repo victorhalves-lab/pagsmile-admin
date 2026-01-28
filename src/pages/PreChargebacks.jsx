@@ -166,11 +166,11 @@ export default function PreChargebacks() {
       label: 'Origem',
       render: (row) => (
         <Badge className={cn(
-          row.type === 'alert_ethoca' 
+          row?.type === 'alert_ethoca' 
             ? 'bg-orange-100 text-orange-700' 
             : 'bg-blue-100 text-blue-700'
         )}>
-          {row.type === 'alert_ethoca' ? 'Ethoca' : 'Verifi'}
+          {row?.type === 'alert_ethoca' ? 'Ethoca' : row?.type === 'alert_verifi' ? 'Verifi' : '-'}
         </Badge>
       )
     },
