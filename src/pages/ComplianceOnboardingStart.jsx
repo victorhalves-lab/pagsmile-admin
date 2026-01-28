@@ -84,7 +84,7 @@ export default function ComplianceOnboardingStart() {
           <Button 
             onClick={handleContinue} 
             disabled={!selectedMethod}
-            className="bg-[#00D26A] hover:bg-[#00A854]"
+            className="bg-[#2bc196] hover:bg-[#239b7a]"
           >
             Continuar <ArrowRight className="ml-2 h-4 w-4" />
           </Button>

@@ -24,7 +24,7 @@ export default function ApprovalRateChart({ data = [], target = 85, className })
   ];
 
   const getBarColor = (rate) => {
-    if (rate >= target) return '#00D26A';
+    if (rate >= target) return '#2bc196';
     if (rate >= target - 10) return '#FBBF24';
     return '#EF4444';
   };
