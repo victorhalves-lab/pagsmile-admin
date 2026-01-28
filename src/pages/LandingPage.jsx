@@ -52,7 +52,7 @@ export default function LandingPage() {
               <Link to={createPageUrl('AccountCreationStep1')}>Criar Conta Grátis</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 px-8 py-6 text-lg">
-              <Link to="#">Receber Proposta</Link>
+              <a href="https://preview--onboardingpagsmile.base44.app/QuestionarioPublico?tipo=manual" target="_blank" rel="noopener noreferrer">Receber Proposta Personalizada</a>
             </Button>
           </div>
         </div>
