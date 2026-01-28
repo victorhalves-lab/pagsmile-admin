@@ -64,10 +64,9 @@ export default function IBHome() {
       </div>
 
       {/* Compact Balance & Actions Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="flex flex-col lg:flex-row gap-4 h-auto lg:h-36">
         {/* Compact Balance Card */}
-        <div className="md:col-span-2">
-          <Card className="bg-gradient-to-br from-[#101F3E] via-[#101F3E] to-[#1a2c52] text-white border-0 shadow-xl overflow-hidden relative h-full">
+        <Card className="flex-1 bg-gradient-to-br from-[#101F3E] via-[#101F3E] to-[#1a2c52] text-white border-0 shadow-xl overflow-hidden relative flex flex-col justify-between">
             <div className="absolute top-0 right-0 p-32 bg-[#00D26A] opacity-[0.03] blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
             <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
               <div className="flex items-start justify-between">
@@ -87,7 +86,7 @@ export default function IBHome() {
                 </div>
               </div>
 
-              <div className="mt-6 flex items-center gap-6 pt-4 border-t border-white/5">
+              <div className="flex items-center gap-6 pt-3 border-t border-white/5 mt-auto">
                 <div className="flex flex-col">
                   <span className="text-[10px] text-slate-400 uppercase">Bloqueado</span>
                   <div className="flex items-center gap-1.5 mt-0.5">
@@ -102,44 +101,34 @@ export default function IBHome() {
                 </div>
               </div>
             </CardContent>
-          </Card>
-        </div>
+        </Card>
 
-        {/* Compact Quick Actions */}
-        <div className="flex flex-col gap-3 justify-center">
-          <Link to={createPageUrl('IBPixSend')}>
-            <Button variant="outline" className="w-full justify-start h-12 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm relative overflow-hidden group">
-              <div className="w-8 h-8 rounded-lg bg-[#00D26A]/10 flex items-center justify-center mr-3 group-hover:bg-[#00D26A] transition-colors">
-                <Send className="w-4 h-4 text-[#00D26A] group-hover:text-white transition-colors" />
+        {/* Quick Actions - Square Buttons */}
+        <div className="flex gap-4 overflow-x-auto pb-1 lg:pb-0">
+          <Link to={createPageUrl('IBPixSend')} className="h-full">
+            <Button variant="outline" className="h-full w-36 flex flex-col items-center justify-center gap-3 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm p-0">
+              <div className="w-10 h-10 rounded-xl bg-[#00D26A]/10 flex items-center justify-center group-hover:bg-[#00D26A] transition-colors">
+                <Send className="w-5 h-5 text-[#00D26A] group-hover:text-white transition-colors" />
               </div>
-              <div className="text-left">
-                <p className="font-semibold text-sm">Enviar Pix</p>
-              </div>
-              <ChevronRight className="w-4 h-4 ml-auto text-slate-300" />
+              <span className="font-semibold text-xs">Enviar Pix</span>
             </Button>
           </Link>
           
-          <Link to={createPageUrl('IBPixReceive')}>
-            <Button variant="outline" className="w-full justify-start h-12 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm relative overflow-hidden group">
-              <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mr-3 group-hover:bg-blue-500 transition-colors">
-                <QrCode className="w-4 h-4 text-blue-600 group-hover:text-white transition-colors" />
+          <Link to={createPageUrl('IBPixReceive')} className="h-full">
+            <Button variant="outline" className="h-full w-36 flex flex-col items-center justify-center gap-3 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm p-0">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-500 transition-colors">
+                <QrCode className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors" />
               </div>
-              <div className="text-left">
-                <p className="font-semibold text-sm">Receber Pix</p>
-              </div>
-              <ChevronRight className="w-4 h-4 ml-auto text-slate-300" />
+              <span className="font-semibold text-xs">Receber Pix</span>
             </Button>
           </Link>
           
-          <Link to={createPageUrl('IBPixKeys')}>
-            <Button variant="outline" className="w-full justify-start h-12 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm relative overflow-hidden group">
-              <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center mr-3 group-hover:bg-purple-500 transition-colors">
-                <Key className="w-4 h-4 text-purple-600 group-hover:text-white transition-colors" />
+          <Link to={createPageUrl('IBPixKeys')} className="h-full">
+            <Button variant="outline" className="h-full w-36 flex flex-col items-center justify-center gap-3 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm p-0">
+              <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center group-hover:bg-purple-500 transition-colors">
+                <Key className="w-5 h-5 text-purple-600 group-hover:text-white transition-colors" />
               </div>
-              <div className="text-left">
-                <p className="font-semibold text-sm">Minhas Chaves</p>
-              </div>
-              <ChevronRight className="w-4 h-4 ml-auto text-slate-300" />
+              <span className="font-semibold text-xs">Minhas Chaves</span>
             </Button>
           </Link>
         </div>
