@@ -5,281 +5,290 @@ import PageHeader from '@/components/common/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { AlertTriangle, CheckCircle2, ShieldAlert, Sparkles } from 'lucide-react';
-import DocumentViewer from '@/components/admin-interno/DocumentViewer';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
+import { 
+  ShieldCheck, AlertTriangle, FileText, CheckCircle2, 
+  XCircle, PauseCircle, Save, MessageSquare
+} from 'lucide-react';
+import { toast } from 'sonner';
 
-export default function AdminIntKycAnalysis() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const subaccountId = urlParams.get('id');
+// --- Components ---
 
-  const { data: subaccount } = useQuery({
-    queryKey: ['kyc_analysis_subaccount', subaccountId],
-    queryFn: () => subaccountId ? base44.entities.Subaccount.get(subaccountId) : null,
-    enabled: !!subaccountId
-  });
-
-  const { data: documents } = useQuery({
-    queryKey: ['kyc_documents', subaccountId],
-    queryFn: () => subaccountId ? base44.entities.Document.filter({ subaccount_id: subaccountId }) : [],
-    enabled: !!subaccountId
-  });
-
-  const approveMutation = useMutation({
-    mutationFn: (data) => base44.functions.invoke('approveKycManually', data),
-    onSuccess: () => alert('KYC Aprovado com sucesso!'),
-  });
-
-  const rejectMutation = useMutation({
-    mutationFn: (data) => base44.functions.invoke('rejectKycManually', data),
-    onSuccess: () => alert('KYC Reprovado.'),
-  });
-
-  const [decision, setDecision] = useState('approve'); // approve, request_docs, reject
-  const [notes, setNotes] = useState('');
-  const [conditions, setConditions] = useState({
-      monitoring: true,
-      limit_reduction: false,
-      edd_review: false
-  });
-
-  if (!subaccount) return <div className="p-8">Carregando...</div>;
-
-  const handleConfirm = () => {
-      if (decision === 'approve') {
-          approveMutation.mutate({ subaccount_id: subaccountId, notes, conditions });
-      } else if (decision === 'reject') {
-          rejectMutation.mutate({ subaccount_id: subaccountId, reason: notes });
-      }
-  };
-
-  return (
-    <div className="space-y-6">
-      <PageHeader 
-        title={`Análise KYC: ${subaccount.business_name}`} 
-        subtitle={`CNPJ: ${subaccount.document} | Score: ${subaccount.kyc_score}`}
-      />
-
-      {/* Insight Banner */}
-      <div className="bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900 rounded-lg p-4 flex gap-4">
-         <div className="bg-indigo-100 dark:bg-indigo-900 p-2 rounded-lg h-fit">
-             <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-         </div>
-         <div className="flex-1">
-             <h4 className="font-semibold text-indigo-900 dark:text-indigo-100">Insights do DIA</h4>
-             <p className="text-sm text-indigo-800 dark:text-indigo-200 mt-1">
-                Score {subaccount.kyc_score} está na faixa de análise manual. 
-                Red flags identificadas: {subaccount.ai_red_flags?.join(', ') || 'Nenhuma'}.
-                Sugestão: Aprovar com monitoramento reforçado devido ao PEP identificado.
-             </p>
-             <Button variant="link" className="text-indigo-600 dark:text-indigo-400 h-auto p-0 mt-2 text-xs">
-                 Perguntar ao DIA
-             </Button>
-         </div>
+const InsightBanner = ({ score, redFlags }) => (
+    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 border border-purple-100 dark:border-purple-900 rounded-xl p-4 mb-6">
+      <div className="flex items-start justify-between">
+          <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="bg-purple-600 rounded-lg p-1.5">
+                  <ShieldCheck className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="font-semibold text-purple-900 dark:text-purple-100">Insights do DIA para esta Análise</h3>
+              </div>
+              <ul className="space-y-1 text-sm text-purple-800 dark:text-purple-200 ml-8 list-disc">
+                  <li>Score {score} está na faixa de análise manual (50-79).</li>
+                  <li>{redFlags?.length || 0} red flags identificados.</li>
+                  <li>Documentação completa e validada.</li>
+                  <li><strong>Sugestão:</strong> Aprovar com monitoramento reforçado nos primeiros 90 dias.</li>
+              </ul>
+          </div>
+          <Button variant="outline" size="sm" className="gap-2">
+              <MessageSquare className="w-4 h-4" /> Perguntar ao DIA
+          </Button>
       </div>
-
-      <Tabs defaultValue="summary" className="space-y-4">
-         <TabsList>
-             <TabsTrigger value="summary">Resumo HELENA</TabsTrigger>
-             <TabsTrigger value="data">Dados Cadastrais</TabsTrigger>
-             <TabsTrigger value="ubo">UBOs e Sócios</TabsTrigger>
-             <TabsTrigger value="compliance">Compliance PLD</TabsTrigger>
-             <TabsTrigger value="docs">Documentos</TabsTrigger>
-             <TabsTrigger value="decision">Decisão Final</TabsTrigger>
-         </TabsList>
-
-         <TabsContent value="summary">
-             <Card>
-                 <CardHeader><CardTitle>Análise Automática</CardTitle></CardHeader>
-                 <CardContent>
-                     <div className="flex items-center gap-8 mb-8">
-                         <div className="text-center">
-                             <div className="text-5xl font-bold text-purple-600">{subaccount.kyc_score}</div>
-                             <div className="text-sm text-slate-500 uppercase font-bold mt-1">Score Geral</div>
-                         </div>
-                         <div className="flex-1 space-y-2">
-                             <div className="flex justify-between text-sm font-medium">
-                                 <span>Classificação: Análise Manual</span>
-                                 <span>Confiança: 87%</span>
-                             </div>
-                             <div className="h-4 bg-slate-100 rounded-full overflow-hidden">
-                                 <div className="h-full bg-gradient-to-r from-red-400 via-yellow-400 to-green-400 w-full relative">
-                                     <div className="absolute top-0 bottom-0 w-1 bg-black" style={{ left: `${subaccount.kyc_score}%` }} />
-                                 </div>
-                             </div>
-                             <div className="flex justify-between text-xs text-slate-400">
-                                 <span>0</span><span>50</span><span>80</span><span>100</span>
-                             </div>
-                         </div>
-                     </div>
-
-                     <div className="grid grid-cols-2 gap-6">
-                         <div className="p-4 bg-emerald-50 dark:bg-emerald-950/20 rounded-lg border border-emerald-100">
-                             <h4 className="font-bold text-emerald-800 mb-2 flex items-center gap-2">
-                                 <CheckCircle2 className="w-4 h-4" /> Pontos Fortes
-                             </h4>
-                             <ul className="text-sm space-y-1 text-emerald-700">
-                                 <li>• Documentação completa</li>
-                                 <li>• Sem sanções identificadas</li>
-                                 <li>• Endereço validado</li>
-                             </ul>
-                         </div>
-                         <div className="p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-100">
-                             <h4 className="font-bold text-amber-800 mb-2 flex items-center gap-2">
-                                 <AlertTriangle className="w-4 h-4" /> Pontos de Atenção
-                             </h4>
-                             <ul className="text-sm space-y-1 text-amber-700">
-                                 {subaccount.ai_red_flags?.map(f => <li key={f}>• {f}</li>)}
-                             </ul>
-                         </div>
-                     </div>
-                 </CardContent>
-             </Card>
-         </TabsContent>
-
-         <TabsContent value="data">
-             <Card>
-                 <CardHeader><CardTitle>Dados e Validações</CardTitle></CardHeader>
-                 <CardContent>
-                     <div className="space-y-4">
-                         <ValidationRow label="CNPJ na Receita" status="valid" value="Ativo / Regular" />
-                         <ValidationRow label="Endereço vs CNPJ" status="valid" value="Confere" />
-                         <ValidationRow label="Tempo de Atividade" status="warning" value={`${subaccount.company_age_years || 0} anos (< 2 anos)`} />
-                     </div>
-                 </CardContent>
-             </Card>
-         </TabsContent>
-
-         <TabsContent value="docs">
-             <Card>
-                 <CardHeader><CardTitle>Documentos Enviados</CardTitle></CardHeader>
-                 <CardContent>
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         {documents?.map(doc => (
-                             <div key={doc.id} className="border p-4 rounded-lg flex justify-between items-center">
-                                 <div>
-                                     <div className="font-medium">{doc.document_name}</div>
-                                     <div className="text-xs text-slate-500">{new Date(doc.uploaded_at).toLocaleDateString()}</div>
-                                 </div>
-                                 <DocumentViewer 
-                                    docUrl={doc.file_url} 
-                                    docName={doc.document_name}
-                                    onApprove={() => console.log('Approved doc')}
-                                    onReject={() => console.log('Rejected doc')}
-                                 />
-                             </div>
-                         ))}
-                     </div>
-                 </CardContent>
-             </Card>
-         </TabsContent>
-
-         <TabsContent value="decision">
-             <Card>
-                 <CardHeader><CardTitle>Decisão Final</CardTitle></CardHeader>
-                 <CardContent className="space-y-6">
-                     <div className="grid grid-cols-3 gap-4">
-                         <DecisionButton 
-                            active={decision === 'approve'} 
-                            onClick={() => setDecision('approve')}
-                            icon={CheckCircle2} 
-                            color="emerald" 
-                            title="Aprovar" 
-                         />
-                         <DecisionButton 
-                            active={decision === 'request_docs'} 
-                            onClick={() => setDecision('request_docs')}
-                            icon={FileText} 
-                            color="blue" 
-                            title="Solicitar Docs" 
-                         />
-                         <DecisionButton 
-                            active={decision === 'reject'} 
-                            onClick={() => setDecision('reject')}
-                            icon={XCircle} 
-                            color="red" 
-                            title="Reprovar" 
-                         />
-                     </div>
-
-                     {decision === 'approve' && (
-                         <div className="space-y-4 bg-slate-50 p-4 rounded-lg">
-                             <h4 className="font-medium">Condições Especiais</h4>
-                             <div className="space-y-2">
-                                 <CheckboxItem 
-                                    label="Monitoramento reforçado (90 dias)" 
-                                    checked={conditions.monitoring}
-                                    onCheckedChange={(c) => setConditions({...conditions, monitoring: c})}
-                                 />
-                                 <CheckboxItem 
-                                    label="Limite inicial reduzido" 
-                                    checked={conditions.limit_reduction}
-                                    onCheckedChange={(c) => setConditions({...conditions, limit_reduction: c})}
-                                 />
-                             </div>
-                         </div>
-                     )}
-
-                     <div className="space-y-2">
-                         <Label>Justificativa / Notas Internas</Label>
-                         <Textarea 
-                            placeholder="Descreva o motivo da decisão..." 
-                            value={notes}
-                            onChange={e => setNotes(e.target.value)}
-                            className="h-32"
-                         />
-                     </div>
-
-                     <div className="flex justify-end gap-3">
-                         <Button variant="outline">Cancelar</Button>
-                         <Button onClick={handleConfirm} className="w-32">Confirmar</Button>
-                     </div>
-                 </CardContent>
-             </Card>
-         </TabsContent>
-      </Tabs>
     </div>
-  );
-}
+);
 
-function ValidationRow({ label, status, value }) {
-    const icon = status === 'valid' ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <AlertTriangle className="w-4 h-4 text-amber-500" />;
-    return (
-        <div className="flex items-center justify-between p-3 border-b">
-            <span className="text-sm font-medium">{label}</span>
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-                {value} {icon}
+const DocumentViewer = ({ doc }) => (
+    <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-4 bg-slate-50 dark:bg-slate-900/50">
+        <div className="flex justify-between items-center mb-4">
+            <h4 className="font-medium">{doc.name}</h4>
+            <div className="flex gap-2">
+                <Button size="sm" variant="outline" className="text-red-500 border-red-200 hover:bg-red-50">Reprovar</Button>
+                <Button size="sm" variant="outline" className="text-emerald-500 border-emerald-200 hover:bg-emerald-50">Aprovar</Button>
             </div>
         </div>
-    );
-}
+        <div className="aspect-[4/3] bg-slate-200 dark:bg-slate-800 rounded flex items-center justify-center text-slate-400">
+            [Visualização do PDF/Imagem]
+        </div>
+    </div>
+);
 
-function DecisionButton({ active, onClick, icon: Icon, color, title }) {
-    const activeClass = {
-        emerald: "bg-emerald-50 border-emerald-500 text-emerald-700",
-        blue: "bg-blue-50 border-blue-500 text-blue-700",
-        red: "bg-red-50 border-red-500 text-red-700"
-    }[color];
+// --- Page ---
+
+export default function AdminIntKycAnalysis() {
+    // Mock Data
+    const subaccount = {
+        subaccount_id: '123',
+        business_name: 'Tech Solutions Ltda',
+        document: '98.765.432/0001-10',
+        account_type: 'pix_card',
+        kyc_score: 65,
+        kyc_decision: 'manual_review',
+        ai_red_flags: ['PEP na estrutura (sócio)', 'Empresa < 2 anos'],
+        ai_compliance_justification: 'A empresa apresenta score 65 devido à combinação de fatores de risco moderado...'
+    };
+
+    const [decision, setDecision] = useState('');
+    const [justification, setJustification] = useState('');
+    const [conditions, setConditions] = useState([]);
+
+    const handleApprove = async () => {
+        try {
+            await base44.functions.invoke('approveKycManually', { 
+                subaccount_id: subaccount.subaccount_id,
+                notes: justification,
+                conditions: conditions
+            });
+            toast.success('KYC Aprovado com sucesso!');
+        } catch (e) {
+            toast.error('Erro ao aprovar KYC');
+        }
+    };
+
+    const handleReject = async () => {
+         try {
+            await base44.functions.invoke('rejectKycManually', { 
+                subaccount_id: subaccount.subaccount_id,
+                reason: justification
+            });
+            toast.success('KYC Reprovado.');
+        } catch (e) {
+            toast.error('Erro ao reprovar KYC');
+        }
+    };
 
     return (
-        <button 
-            onClick={onClick}
-            className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all ${active ? activeClass : 'border-slate-200 hover:border-slate-300'}`}
-        >
-            <Icon className={`w-8 h-8 mb-2 ${active ? '' : 'text-slate-400'}`} />
-            <span className="font-bold">{title}</span>
-        </button>
-    );
-}
+        <div className="space-y-6">
+            <PageHeader 
+                title={`Análise KYC - ${subaccount.business_name}`}
+                subtitle={`CNPJ: ${subaccount.document} | Score: ${subaccount.kyc_score}`}
+                breadcrumbs={[
+                    { label: 'Fila de Análise', page: 'AdminIntKYCQueue' },
+                    { label: 'Análise', page: '#' }
+                ]}
+            />
 
-function CheckboxItem({ label, checked, onCheckedChange }) {
-    return (
-        <div className="flex items-center space-x-2">
-            <Checkbox id={label} checked={checked} onCheckedChange={onCheckedChange} />
-            <Label htmlFor={label} className="cursor-pointer">{label}</Label>
+            <InsightBanner score={subaccount.kyc_score} redFlags={subaccount.ai_red_flags} />
+
+            <Tabs defaultValue="summary" className="w-full">
+                <TabsList className="w-full justify-start border-b border-slate-200 dark:border-slate-800 bg-transparent rounded-none h-auto p-0 gap-4 overflow-x-auto">
+                    <TabsTrigger value="summary" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Resumo HELENA</TabsTrigger>
+                    <TabsTrigger value="registration" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Cadastrais</TabsTrigger>
+                    <TabsTrigger value="partners" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Sócios/UBOs</TabsTrigger>
+                    <TabsTrigger value="documents" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Documentos</TabsTrigger>
+                    <TabsTrigger value="validations" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Validações</TabsTrigger>
+                    <TabsTrigger value="decision" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent font-bold text-indigo-600">Decisão</TabsTrigger>
+                </TabsList>
+
+                <div className="mt-6">
+                    <TabsContent value="summary">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <Card>
+                                <CardHeader><CardTitle>Análise HELENA</CardTitle></CardHeader>
+                                <CardContent className="space-y-6">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-24 h-24 rounded-full border-8 border-amber-400 flex items-center justify-center text-2xl font-bold text-amber-600">
+                                            {subaccount.kyc_score}
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-bold text-amber-600">ANÁLISE MANUAL</h3>
+                                            <p className="text-sm text-slate-500">Faixa 50-79: Requer revisão humana</p>
+                                            <p className="text-sm text-slate-500">Confiança: 87%</p>
+                                        </div>
+                                    </div>
+                                    <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg">
+                                        <h4 className="font-medium mb-2">Justificativa da IA</h4>
+                                        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                            {subaccount.ai_compliance_justification}
+                                        </p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader><CardTitle>Red Flags ({subaccount.ai_red_flags.length})</CardTitle></CardHeader>
+                                <CardContent>
+                                    <div className="space-y-3">
+                                        {subaccount.ai_red_flags.map((flag, idx) => (
+                                            <div key={idx} className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-lg">
+                                                <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                                                <span className="text-sm font-medium text-red-700 dark:text-red-300">{flag}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="partners">
+                        <Card>
+                            <CardHeader><CardTitle>Estrutura Societária</CardTitle></CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    {[
+                                        { name: 'João da Silva', cpf: '123.456.789-00', share: '60%', pep: true, sanctions: false },
+                                        { name: 'Maria Santos', cpf: '987.654.321-00', share: '40%', pep: false, sanctions: false },
+                                    ].map((partner, idx) => (
+                                        <div key={idx} className="flex items-center justify-between p-4 border border-slate-200 dark:border-slate-800 rounded-lg">
+                                            <div>
+                                                <p className="font-medium">{partner.name}</p>
+                                                <p className="text-sm text-slate-500">CPF: {partner.cpf} • Participação: {partner.share}</p>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                {partner.pep && <Badge variant="destructive">PEP</Badge>}
+                                                {!partner.sanctions && <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50">Sanções: OK</Badge>}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    <TabsContent value="documents">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <Card className="md:col-span-1">
+                                <CardHeader><CardTitle>Lista de Documentos</CardTitle></CardHeader>
+                                <CardContent className="space-y-2">
+                                    {['Cartão CNPJ', 'Contrato Social', 'RG João da Silva', 'Selfie João c/ Doc'].map((doc, idx) => (
+                                        <Button key={idx} variant="ghost" className="w-full justify-start text-left font-normal">
+                                            <FileText className="w-4 h-4 mr-2 text-slate-400" />
+                                            {doc}
+                                            <Badge className="ml-auto" variant="success">OK</Badge>
+                                        </Button>
+                                    ))}
+                                </CardContent>
+                            </Card>
+                            <Card className="md:col-span-1">
+                                <CardHeader><CardTitle>Visualização</CardTitle></CardHeader>
+                                <CardContent>
+                                    <DocumentViewer doc={{ name: 'Contrato Social' }} />
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="decision">
+                        <Card className="border-indigo-200 dark:border-indigo-900 shadow-lg">
+                            <CardHeader className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
+                                <CardTitle className="text-indigo-700 dark:text-indigo-400">Decisão Final</CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-6 space-y-8">
+                                <div className="space-y-4">
+                                    <Label className="text-base font-semibold">Selecione a Decisão:</Label>
+                                    <RadioGroup value={decision} onValueChange={setDecision} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className={`flex items-center space-x-2 border p-4 rounded-lg cursor-pointer ${decision === 'approve' ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : 'border-slate-200'}`}>
+                                            <RadioGroupItem value="approve" id="r1" />
+                                            <Label htmlFor="r1" className="flex items-center gap-2 cursor-pointer font-medium">
+                                                <CheckCircle2 className="w-5 h-5 text-emerald-600" /> Aprovar
+                                            </Label>
+                                        </div>
+                                        <div className={`flex items-center space-x-2 border p-4 rounded-lg cursor-pointer ${decision === 'reject' ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-slate-200'}`}>
+                                            <RadioGroupItem value="reject" id="r2" />
+                                            <Label htmlFor="r2" className="flex items-center gap-2 cursor-pointer font-medium">
+                                                <XCircle className="w-5 h-5 text-red-600" /> Reprovar
+                                            </Label>
+                                        </div>
+                                        <div className={`flex items-center space-x-2 border p-4 rounded-lg cursor-pointer ${decision === 'docs' ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20' : 'border-slate-200'}`}>
+                                            <RadioGroupItem value="docs" id="r3" />
+                                            <Label htmlFor="r3" className="flex items-center gap-2 cursor-pointer font-medium">
+                                                <PauseCircle className="w-5 h-5 text-amber-600" /> Solicitar Documentos
+                                            </Label>
+                                        </div>
+                                    </RadioGroup>
+                                </div>
+
+                                {decision === 'approve' && (
+                                    <div className="space-y-4 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                                        <Label className="font-semibold">Condições Especiais:</Label>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox id="c1" onCheckedChange={(c) => c ? setConditions([...conditions, 'monitoramento']) : setConditions(conditions.filter(i => i !== 'monitoramento'))} />
+                                                <Label htmlFor="c1">Monitoramento reforçado (90 dias)</Label>
+                                            </div>
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox id="c2" />
+                                                <Label htmlFor="c2">Limite inicial reduzido</Label>
+                                            </div>
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox id="c3" />
+                                                <Label htmlFor="c3">Revisão EDD em 6 meses</Label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="space-y-2">
+                                    <Label className="font-semibold">Justificativa (Obrigatória):</Label>
+                                    <Textarea 
+                                        placeholder="Descreva o motivo da decisão..." 
+                                        className="h-32"
+                                        value={justification}
+                                        onChange={(e) => setJustification(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                                    <Button variant="ghost">Cancelar</Button>
+                                    <Button 
+                                        onClick={decision === 'approve' ? handleApprove : handleReject}
+                                        disabled={!decision || !justification}
+                                        className={decision === 'approve' ? "bg-emerald-600 hover:bg-emerald-700" : decision === 'reject' ? "bg-red-600 hover:bg-red-700" : ""}
+                                    >
+                                        <Save className="w-4 h-4 mr-2" /> Confirmar Decisão
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                </div>
+            </Tabs>
         </div>
     );
 }
