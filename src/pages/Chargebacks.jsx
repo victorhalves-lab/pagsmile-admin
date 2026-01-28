@@ -375,7 +375,7 @@ export default function Chargebacks() {
             <DialogTitle>Detalhes do Chargeback</DialogTitle>
           </DialogHeader>
 
-          {selectedDispute && (
+          {selectedDispute ? (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -445,7 +445,7 @@ export default function Chargebacks() {
                 )}
               </DialogFooter>
             </div>
-          )}
+          ) : null}
         </DialogContent>
       </Dialog>
     </div>
