@@ -811,11 +811,11 @@ export default function Layout({ children, currentPageName }) {
               >
                 <Menu className="w-5 h-5" />
               </Button>
-              {currentModule === 'admin-sub' && (
+              {(currentModule === 'admin-sub' || currentModule === 'admin-interno') && (
                 <div className="relative hidden sm:block group">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
                   <Input
-                    placeholder="Buscar transações, clientes, (⌘K)"
+                    placeholder={currentModule === 'admin-interno' ? "Buscar universal... (⌘K)" : "Buscar transações, clientes, (⌘K)"}
                     className="w-64 lg:w-96 pl-10 bg-slate-50 border-slate-200 focus:bg-white transition-all shadow-sm"
                   />
                 </div>

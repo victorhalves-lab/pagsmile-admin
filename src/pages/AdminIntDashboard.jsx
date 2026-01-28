@@ -16,6 +16,7 @@ import OperationalView from '@/components/admin-interno/dashboard/OperationalVie
 import FinancialView from '@/components/admin-interno/dashboard/FinancialView';
 import RiskView from '@/components/admin-interno/dashboard/RiskView';
 import CommercialView from '@/components/admin-interno/dashboard/CommercialView';
+import TechnicalView from '@/components/admin-interno/dashboard/TechnicalView';
 
 export default function AdminIntDashboard() {
   const [activeTab, setActiveTab] = useState('operational');
@@ -128,11 +129,7 @@ export default function AdminIntDashboard() {
         </TabsContent>
 
         <TabsContent value="technical" className="animate-in fade-in-50 duration-300">
-           {/* Placeholder for Technical View as I haven't implemented full detail for it yet */}
-           <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed rounded-xl">
-             <Server className="w-12 h-12 text-slate-300 mb-4" />
-             <h3 className="text-lg font-medium text-slate-500">Monitoramento Técnico em Desenvolvimento</h3>
-           </div>
+          <TechnicalView />
         </TabsContent>
       </Tabs>
     </div>
