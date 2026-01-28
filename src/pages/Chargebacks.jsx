@@ -369,7 +369,7 @@ export default function Chargebacks() {
       />
 
       {/* Dispute Detail Dialog */}
-      <Dialog open={!!selectedDispute} onOpenChange={(open) => !open && setSelectedDispute(null)}>
+      <Dialog open={selectedDispute !== null} onOpenChange={(open) => { if (!open) setSelectedDispute(null); }}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Detalhes do Chargeback</DialogTitle>
@@ -399,9 +399,9 @@ export default function Chargebacks() {
               <div className="border-t pt-4">
                 <p className="text-xs text-gray-500 mb-2">Reason Code</p>
                 <Badge className={reasonCategoryConfig[selectedDispute?.reason_category]?.color || 'bg-gray-100'}>
-                  {selectedDispute.reason_code}
+                  {selectedDispute?.reason_code || '-'}
                 </Badge>
-                <p className="text-sm mt-2">{selectedDispute.reason_description}</p>
+                <p className="text-sm mt-2">{selectedDispute?.reason_description || '-'}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4 border-t pt-4">
