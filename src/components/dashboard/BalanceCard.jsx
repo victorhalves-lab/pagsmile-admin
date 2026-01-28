@@ -6,6 +6,7 @@ import {
   Clock, 
   Lock, 
   ArrowUpRight,
+  DollarSign,
   Eye,
   EyeOff
 } from 'lucide-react';

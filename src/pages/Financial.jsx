@@ -9,6 +9,7 @@ import {
   TrendingDown,
   ArrowUpRight,
   ArrowDownLeft,
+  DollarSign,
   Calendar,
   Download,
   Eye,

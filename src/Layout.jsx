@@ -10,6 +10,7 @@ import {
   Repeat,
   ShieldAlert,
   Wallet,
+  DollarSign,
   ArrowUpFromLine,
   Users,
   UserCircle,
