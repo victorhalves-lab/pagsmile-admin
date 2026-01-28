@@ -67,6 +67,9 @@ export default function AccountCreationStep3() {
         }
       });
 
+      // Marcar para mostrar alerta de compliance no Dashboard
+      localStorage.setItem('showComplianceAlert', 'true');
+      
       navigate(createPageUrl('Dashboard'));
     } catch (error) {
       console.error('Erro ao criar conta:', error);

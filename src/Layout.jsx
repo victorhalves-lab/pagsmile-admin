@@ -536,7 +536,10 @@ const [showComplianceAlert, setShowComplianceAlert] = useState(() => {
                       Completar Compliance
                     </Button>
                   </Link>
-                  <Button size="sm" variant="ghost" onClick={() => setShowComplianceAlert(false)} className="text-amber-600 hover:text-amber-800">
+                  <Button size="sm" variant="ghost" onClick={() => {
+                    setShowComplianceAlert(false);
+                    localStorage.removeItem('showComplianceAlert');
+                  }} className="text-amber-600 hover:text-amber-800">
                     Depois
                   </Button>
                 </div>
