@@ -252,7 +252,8 @@ const adminInternoMenuItems = [
     icon: Store,
     page: 'AdminIntMerchants',
     submenu: [
-      { label: 'Lista de Merchants', page: 'AdminIntMerchants' },
+      { label: 'Dashboard', page: 'AdminIntMerchants' },
+      { label: 'Lista de Merchants', page: 'AdminIntMerchantsList' },
       { label: 'Perfil 360°', page: 'AdminIntMerchantProfile' },
       { label: 'Subcontas', page: 'AdminIntSubaccounts' },
     ]
