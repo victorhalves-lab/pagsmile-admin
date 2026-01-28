@@ -1,10 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
 import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import KPICard from '@/components/dashboard/KPICard';
-import { ShoppingBag, Users, Clock, AlertTriangle } from 'lucide-react';
+import { ShoppingBag, Users, Clock, AlertTriangle, Eye } from 'lucide-react';
+import { mockSubaccounts } from '@/components/mockData/adminInternoMocks';
 
 export default function AdminIntSubaccounts() {
     const marketplaces = [
@@ -13,10 +17,25 @@ export default function AdminIntSubaccounts() {
         { id: 'M-003', name: 'Marketplace C', subaccounts: 215, active: 200, pending: 5, gmv: 2300000, status: 'warning' },
     ];
 
-    const subaccounts = [
-        { id: 'S-001', name: 'Vendedor 1', marketplace: 'Marketplace A', mcc: '5732', status: 'active', gmv: 15000, cb_ratio: 0.1 },
-        { id: 'S-002', name: 'Vendedor 2', marketplace: 'Marketplace A', mcc: '5651', status: 'pending', gmv: 0, cb_ratio: 0 },
-        { id: 'S-003', name: 'Vendedor 3', marketplace: 'Marketplace B', mcc: '5999', status: 'blocked', gmv: 5000, cb_ratio: 2.5 },
+    const subaccounts = mockSubaccounts;
+
+    const marketplaceColumns = [
+        { header: 'Marketplace', accessorKey: 'name' },
+        { header: 'Subcontas', accessorKey: 'subaccounts' },
+        { header: 'Ativas', accessorKey: 'active' },
+        { header: 'Pendentes', accessorKey: 'pending' },
+        { header: 'GMV', accessorKey: 'gmv', cell: info => `R$ ${(info.getValue()/1000000).toFixed(1)}M` },
+        { header: 'Status', accessorKey: 'status', cell: info => <StatusBadge status={info.getValue()} /> },
+        { header: 'Ações', id: 'actions', cell: () => <Button variant="ghost" size="sm"><Eye className="w-4 h-4" /></Button> }
+    ];
+
+    const subaccountColumns = [
+        { header: 'Vendedor', accessorKey: 'name' },
+        { header: 'Marketplace', accessorKey: 'marketplace' },
+        { header: 'MCC', accessorKey: 'mcc' },
+        { header: 'GMV', accessorKey: 'gmv', cell: info => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(info.getValue()) },
+        { header: 'CB %', accessorKey: 'cb_ratio', cell: info => <span className={info.getValue() > 0.5 ? 'text-red-600 font-bold' : ''}>{info.getValue()}%</span> },
+        { header: 'Status', accessorKey: 'status', cell: info => <StatusBadge status={info.getValue()} /> }
     ];
 
     return (
@@ -26,6 +45,7 @@ export default function AdminIntSubaccounts() {
                 subtitle="Gestão de Sellers e Splits"
                 breadcrumbs={[
                     { label: 'Admin Interno', page: 'AdminIntDashboard' },
+                    { label: 'Merchants', page: 'AdminIntMerchants' },
                     { label: 'Subcontas', page: 'AdminIntSubaccounts' }
                 ]}
             />
@@ -46,14 +66,7 @@ export default function AdminIntSubaccounts() {
                         <CardContent>
                             <DataTable 
                                 data={marketplaces}
-                                columns={[
-                                    { header: 'Marketplace', accessorKey: 'name' },
-                                    { header: 'Subcontas', accessorKey: 'subaccounts' },
-                                    { header: 'Ativas', accessorKey: 'active' },
-                                    { header: 'Pendentes', accessorKey: 'pending' },
-                                    { header: 'GMV', accessorKey: 'gmv', cell: info => `R$ ${(info.getValue()/1000000).toFixed(1)}M` },
-                                    { header: 'Status', accessorKey: 'status', cell: info => <StatusBadge status={info.getValue()} /> }
-                                ]}
+                                columns={marketplaceColumns}
                             />
                         </CardContent>
                     </Card>
@@ -67,11 +80,7 @@ export default function AdminIntSubaccounts() {
                         <CardContent>
                              <DataTable 
                                 data={subaccounts}
-                                columns={[
-                                    { header: 'Vendedor', accessorKey: 'name' },
-                                    { header: 'Marketplace', accessorKey: 'marketplace' },
-                                    { header: 'Status', accessorKey: 'status', cell: info => <StatusBadge status={info.getValue()} /> }
-                                ]}
+                                columns={subaccountColumns}
                             />
                         </CardContent>
                     </Card>

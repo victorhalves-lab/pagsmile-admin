@@ -7,8 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { Search, Filter, Eye, Settings, BarChart2, Plus, Download } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
 import FilterPanel from '@/components/common/FilterPanel';
 import { mockMerchants } from '@/components/mockData/adminInternoMocks';
 
@@ -19,37 +17,44 @@ export default function AdminIntMerchantsList() {
     // Use centralized mock data
     const mockData = mockMerchants;
 
+    // Filter by search term
+    const filteredData = mockData.filter(m => 
+        m.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.document.includes(searchTerm) ||
+        m.id.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     const columns = [
         { header: 'ID', accessorKey: 'id', cell: (info) => <span className="font-mono text-xs">{info.getValue()}</span> },
         { header: 'Empresa', accessorKey: 'business_name', cell: (info) => (
             <div>
-                <div className="font-medium text-slate-900">{info.getValue()}</div>
+                <div className="font-medium text-slate-900 dark:text-slate-100">{info.getValue()}</div>
                 <div className="text-xs text-slate-500">{info.row.original.document}</div>
             </div>
         )},
-        { header: 'MCC', accessorKey: 'mcc', cell: (info) => <span className="text-xs px-2 py-1 bg-slate-100 rounded-full">{info.getValue()}</span> },
+        { header: 'MCC', accessorKey: 'mcc', cell: (info) => <span className="text-xs px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-full">{info.getValue()}</span> },
         { header: 'Status', accessorKey: 'status', cell: (info) => <StatusBadge status={info.getValue()} /> },
         { header: 'TPV (Mês)', accessorKey: 'tpv_month', cell: (info) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(info.getValue()) },
         { header: 'Aprovação', accessorKey: 'approval_rate', cell: (info) => (
             <div className="flex items-center gap-2">
-                <div className="w-16 h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="w-16 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div className="h-full bg-green-500" style={{ width: `${info.getValue()}%` }}></div>
                 </div>
                 <span className="text-xs">{info.getValue()}%</span>
             </div>
         )},
-        { header: 'CB %', accessorKey: 'cb_ratio', cell: (info) => <span className={info.getValue() > 0.5 ? "text-red-600 font-bold" : "text-slate-600"}>{info.getValue()}%</span> },
+        { header: 'CB %', accessorKey: 'cb_ratio', cell: (info) => <span className={info.getValue() > 0.5 ? "text-red-600 font-bold" : "text-slate-600 dark:text-slate-300"}>{info.getValue()}%</span> },
         { header: 'Saldo', accessorKey: 'balance', cell: (info) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(info.getValue()) },
         { header: 'Plano', accessorKey: 'plan_name' },
         { header: 'Vendedor', accessorKey: 'commercial_agent' },
-        { header: '💡 Insight DIA', accessorKey: 'dia_insight', cell: (info) => <span className="text-xs text-indigo-600 italic">{info.getValue()}</span> },
+        { header: '💡 Insight DIA', accessorKey: 'dia_insight', cell: (info) => <span className="text-xs text-indigo-600 dark:text-indigo-400 italic max-w-[200px] truncate block">{info.getValue()}</span> },
         {
             header: 'Ações',
             id: 'actions',
             cell: (info) => (
                 <div className="flex items-center gap-1">
                     <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                        <Link to={createPageUrl('AdminIntMerchantProfile', { id: info.row.original.id })}>
+                        <Link to={createPageUrl('AdminIntMerchantProfile') + '?id=' + info.row.original.id}>
                             <Eye className="w-4 h-4" />
                         </Link>
                     </Button>
@@ -82,7 +87,7 @@ export default function AdminIntMerchantsList() {
                 }
             />
 
-            <div className="bg-white p-4 rounded-xl border shadow-sm space-y-4">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border shadow-sm space-y-4">
                 <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
                     <div className="relative w-full md:w-96">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -105,7 +110,7 @@ export default function AdminIntMerchantsList() {
                 {showFilters && (
                     <FilterPanel 
                         filters={[
-                            { id: 'status', label: 'Status', type: 'select', options: [{label: 'Ativo', value: 'active'}, {label: 'Suspenso', value: 'suspended'}] },
+                            { id: 'status', label: 'Status', type: 'select', options: [{label: 'Ativo', value: 'active'}, {label: 'Suspenso', value: 'suspended'}, {label: 'Bloqueado', value: 'blocked'}] },
                             { id: 'mcc', label: 'MCC', type: 'text' },
                             { id: 'tpv', label: 'TPV Mensal', type: 'select', options: [{label: '> 1M', value: 'high'}, {label: '< 10k', value: 'low'}] },
                             { id: 'risk', label: 'Risco', type: 'select', options: [{label: 'Alto', value: 'high'}, {label: 'Baixo', value: 'low'}] },
@@ -116,7 +121,7 @@ export default function AdminIntMerchantsList() {
 
                 <DataTable 
                     columns={columns} 
-                    data={mockData} 
+                    data={filteredData} 
                 />
             </div>
         </div>

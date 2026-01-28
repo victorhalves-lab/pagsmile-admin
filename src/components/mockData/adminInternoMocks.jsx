@@ -22,6 +22,7 @@ export const mockMerchants = [
     commercial_agent: "João Silva",
     compliance_status: "compliant",
     kyc_score: 95,
+    kyc_decision: "approved",
     risk_level: "low",
     created_at: "2025-11-15T10:00:00Z",
     dia_insight: "Crescimento de 25% no TPV, oportunidade de upgrade.",
@@ -92,6 +93,8 @@ export const mockMerchants = [
     commercial_agent: "Pedro Costa",
     compliance_status: "non_compliant",
     kyc_score: 45,
+    kyc_decision: "rejected",
+    ai_red_flags: ["Chargeback ratio elevado", "Documentos vencidos"],
     risk_level: "high",
     created_at: "2025-12-05T09:15:00Z",
     dia_insight: "⚠️ CB alto, próximo do limite de monitoramento VDMP.",
@@ -119,11 +122,17 @@ export const mockMerchants = [
     commercial_agent: "João Silva",
     compliance_status: "compliant",
     kyc_score: 88,
+    kyc_decision: "approved",
     risk_level: "low",
     created_at: "2025-10-20T11:00:00Z",
     dia_insight: "Estabilidade operacional, baixo risco.",
-    partners: [],
-    documents: []
+    partners: [
+        { name: 'Ana Café', cpf: '555.666.777-88', share: '100%', pep: false, sanctions: false }
+    ],
+    documents: [
+        { name: 'Contrato Social', status: 'approved', url: '#' },
+        { name: 'Cartão CNPJ', status: 'approved', url: '#' }
+    ]
   },
   {
     id: "sub_mock_005",
@@ -146,11 +155,19 @@ export const mockMerchants = [
     commercial_agent: "Maria Santos",
     compliance_status: "compliant",
     kyc_score: 91,
+    kyc_decision: "approved",
     risk_level: "medium",
     created_at: "2025-08-15T16:45:00Z",
     dia_insight: "Volume alto, monitorar chargebacks.",
-    partners: [],
-    documents: []
+    partners: [
+        { name: 'Roberto Eletro', cpf: '222.333.444-55', share: '70%', pep: false, sanctions: false },
+        { name: 'Paula Tech', cpf: '333.444.555-66', share: '30%', pep: false, sanctions: false }
+    ],
+    documents: [
+        { name: 'Contrato Social', status: 'approved', url: '#' },
+        { name: 'Cartão CNPJ', status: 'approved', url: '#' },
+        { name: 'Licença de Importação', status: 'approved', url: '#' }
+    ]
   },
   {
       id: "sub_mock_006",
@@ -173,12 +190,33 @@ export const mockMerchants = [
       commercial_agent: "Pedro Costa",
       compliance_status: "non_compliant",
       kyc_score: 20,
+      kyc_decision: "rejected",
+      ai_red_flags: ["Fraude confirmada", "CB ratio crítico", "Documentos falsos"],
       risk_level: "critical",
       created_at: "2026-01-25T08:00:00Z",
       dia_insight: "🚨 Fraude confirmada, conta bloqueada.",
       partners: [],
       documents: []
   }
+];
+
+export const mockTransactions = [
+  { id: 'TXN-12345678', date: '2026-01-28T14:32:00Z', merchant: 'Loja Teste Online', merchant_id: 'sub_mock_001', amount: 1250.00, method: 'credit_card', brand: 'Visa', status: 'approved', installments: 3, client_card: '**** 4567', arn: '74012345678901234', customer: { name: 'João Cliente', document: '***789' } },
+  { id: 'TXN-12345677', date: '2026-01-28T14:30:00Z', merchant: 'Tech Solutions', merchant_id: 'sub_mock_002', amount: 89.90, method: 'pix', brand: null, status: 'approved', installments: 1, client_card: null, arn: 'E12345678901234567890123456789012', customer: { name: 'Maria Cliente', document: '***456' } },
+  { id: 'TXN-12345676', date: '2026-01-28T14:28:00Z', merchant: 'Moda Express', merchant_id: 'sub_mock_003', amount: 450.00, method: 'credit_card', brand: 'Mastercard', status: 'refused', installments: 1, client_card: '**** 1234', arn: '-', refusal_reason: '51 - Saldo Insuficiente', customer: { name: 'Pedro Cliente', document: '***123' } },
+  { id: 'TXN-12345675', date: '2026-01-28T14:25:00Z', merchant: 'Loja Teste Online', merchant_id: 'sub_mock_001', amount: 2300.00, method: 'credit_card', brand: 'Visa', status: 'refunded', installments: 10, client_card: '**** 9876', arn: '74098765432109876', customer: { name: 'Ana Cliente', document: '***321' } },
+  { id: 'TXN-12345674', date: '2026-01-28T14:20:00Z', merchant: 'Café Gourmet', merchant_id: 'sub_mock_004', amount: 45.00, method: 'pix', brand: null, status: 'approved', installments: 1, client_card: null, arn: 'E98765432109876543210987654321098', customer: { name: 'Lucas Cliente', document: '***654' } },
+  { id: 'TXN-12345673', date: '2026-01-28T14:15:00Z', merchant: 'Eletrônicos Baratos', merchant_id: 'sub_mock_005', amount: 3500.00, method: 'credit_card', brand: 'Elo', status: 'approved', installments: 12, client_card: '**** 5555', arn: '74055555555555555', customer: { name: 'Fernanda Cliente', document: '***987' } },
+  { id: 'TXN-12345672', date: '2026-01-28T14:10:00Z', merchant: 'Eletrônicos Baratos', merchant_id: 'sub_mock_005', amount: 890.00, method: 'debit_card', brand: 'Visa', status: 'approved', installments: 1, client_card: '**** 3333', arn: '74033333333333333', customer: { name: 'Ricardo Cliente', document: '***111' } },
+  { id: 'TXN-12345671', date: '2026-01-28T14:05:00Z', merchant: 'Tech Solutions', merchant_id: 'sub_mock_002', amount: 199.00, method: 'pix', brand: null, status: 'approved', installments: 1, client_card: null, arn: 'E11111111111111111111111111111111', customer: { name: 'Carla Cliente', document: '***222' } },
+];
+
+export const mockSubaccounts = [
+  { id: 'SA-001', name: 'Vendedor Premium', marketplace: 'Marketplace A', marketplace_id: 'M-001', mcc: '5732', status: 'active', gmv: 150000, cb_ratio: 0.1, created_at: '2025-10-01' },
+  { id: 'SA-002', name: 'Loja Fashion', marketplace: 'Marketplace A', marketplace_id: 'M-001', mcc: '5651', status: 'pending', gmv: 0, cb_ratio: 0, created_at: '2026-01-25' },
+  { id: 'SA-003', name: 'Tech Store', marketplace: 'Marketplace B', marketplace_id: 'M-002', mcc: '5999', status: 'blocked', gmv: 5000, cb_ratio: 2.5, created_at: '2025-12-01' },
+  { id: 'SA-004', name: 'Vendedor Express', marketplace: 'Marketplace A', marketplace_id: 'M-001', mcc: '5411', status: 'active', gmv: 85000, cb_ratio: 0.2, created_at: '2025-09-15' },
+  { id: 'SA-005', name: 'Artesanato Brasil', marketplace: 'Marketplace C', marketplace_id: 'M-003', mcc: '5999', status: 'active', gmv: 25000, cb_ratio: 0.05, created_at: '2025-11-20' },
 ];
 
 export const mockKycQueue = mockMerchants.filter(m => ['pending_compliance', 'under_review'].includes(m.compliance_status) || m.kyc_score < 70);
@@ -216,3 +254,20 @@ export const mockMetrics = {
         { name: 'Outros', value: 46, color: '#64748B' }
     ]
 };
+
+export const mockDisputes = [
+  { id: 'CB-001', transaction_id: 'TXN-12345678', merchant: 'Loja Teste Online', merchant_id: 'sub_mock_001', amount: 1250.00, reason: '13.1 - Mercadoria não recebida', status: 'open', deadline: '2026-02-15', created_at: '2026-01-20' },
+  { id: 'CB-002', transaction_id: 'TXN-12345000', merchant: 'Moda Express', merchant_id: 'sub_mock_003', amount: 450.00, reason: '10.4 - Crédito não processado', status: 'pending_docs', deadline: '2026-02-10', created_at: '2026-01-18' },
+  { id: 'CB-003', transaction_id: 'TXN-12344000', merchant: 'Eletrônicos Baratos', merchant_id: 'sub_mock_005', amount: 2800.00, reason: '13.3 - Produto diferente', status: 'won', deadline: '2026-01-25', created_at: '2026-01-10' },
+];
+
+export const mockPreChargebacks = [
+  { id: 'PCB-001', transaction_id: 'TXN-12340001', merchant: 'Eletrônicos Baratos', merchant_id: 'sub_mock_005', amount: 890.00, provider: 'ethoca', status: 'pending', deadline: '2026-01-30', received_at: '2026-01-27' },
+  { id: 'PCB-002', transaction_id: 'TXN-12340002', merchant: 'Loja Teste Online', merchant_id: 'sub_mock_001', amount: 350.00, provider: 'verifi', status: 'refunded', deadline: '2026-01-28', received_at: '2026-01-25' },
+];
+
+export const mockSettlements = [
+  { id: 'SET-001', merchant: 'Loja Teste Online', merchant_id: 'sub_mock_001', amount_gross: 45230, amount_net: 43996, status: 'paid', date: '2026-01-27', bank: 'Itaú' },
+  { id: 'SET-002', merchant: 'Tech Solutions', merchant_id: 'sub_mock_002', amount_gross: 28500, amount_net: 27610, status: 'processing', date: '2026-01-27', bank: 'Nubank' },
+  { id: 'SET-003', merchant: 'Café Gourmet', merchant_id: 'sub_mock_004', amount_gross: 8450, amount_net: 8138, status: 'failed', date: '2026-01-27', bank: 'Inter' },
+];
