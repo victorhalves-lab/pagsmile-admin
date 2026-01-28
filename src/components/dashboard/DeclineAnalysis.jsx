@@ -111,7 +111,7 @@ export default function DeclineAnalysis({ transactions = [] }) {
           <h3 className="font-semibold text-gray-900">Análise de Recusas</h3>
           <p className="text-sm text-gray-500">{declined.length} transações recusadas</p>
         </div>
-        <Button variant="outline" size="sm" className="text-[#00D26A] border-[#00D26A]/30">
+        <Button variant="outline" size="sm" className="text-[#2bc196] border-[#2bc196]/30">
           Payment Recovery AI
         </Button>
       </div>
