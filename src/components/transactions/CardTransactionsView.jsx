@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from '@/components/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,7 @@ import {
   Shield,
   BarChart3
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import TransactionAdvancedFilters from './TransactionAdvancedFilters';
 import TransactionMassActions from './TransactionMassActions';
 import TransactionDataTable from './TransactionDataTable';
@@ -34,12 +34,7 @@ export default function CardTransactionsView() {
     queryFn: () => base44.entities.Transaction.filter({ type: 'card' }, '-created_date', 500),
   });
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value || 0);
-  };
+
 
   // Card-specific metrics
   const metrics = useMemo(() => {

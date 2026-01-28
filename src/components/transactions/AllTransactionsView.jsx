@@ -6,7 +6,7 @@ import TransactionAdvancedFilters from './TransactionAdvancedFilters';
 import TransactionMassActions from './TransactionMassActions';
 import TransactionDataTable from './TransactionDataTable';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from '@/components/utils';
 
 export default function AllTransactionsView() {
   const navigate = useNavigate();

@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '../utils';
+import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
 import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
@@ -54,10 +54,7 @@ import {
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
-};
+import { formatCurrency } from '@/components/utils';
 
 const statusConfig = {
   draft: { label: 'Rascunho', color: 'bg-gray-100 text-gray-700' },
@@ -320,7 +317,7 @@ export default function SubaccountsList() {
         title="Subcontas"
         subtitle="Gerencie as subcontas do seu marketplace"
         breadcrumbs={[
-          { label: 'Subcontas', href: 'SubaccountsDashboard' },
+          { label: 'Subcontas', page: 'SubaccountsDashboard' },
           { label: 'Lista' }
         ]}
         actions={

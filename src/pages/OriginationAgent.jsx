@@ -22,7 +22,8 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
 
 import PageHeader from '@/components/common/PageHeader';
 import KPICard from '@/components/dashboard/KPICard';
@@ -40,12 +41,7 @@ export default function OriginationAgent() {
     queryFn: () => base44.entities.Subaccount.list('-created_date', 100),
   });
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value || 0);
-  };
+
 
   // Calculate metrics
   const processed = subaccounts.length;

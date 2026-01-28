@@ -19,7 +19,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
 
 import PageHeader from '@/components/common/PageHeader';
 import KPICard from '@/components/dashboard/KPICard';
@@ -28,12 +29,7 @@ export default function ConverterAgent() {
   const [agentEnabled, setAgentEnabled] = useState(true);
   const [testTraffic, setTestTraffic] = useState(10);
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value || 0);
-  };
+
 
   // Mock A/B tests
   const activeTests = [

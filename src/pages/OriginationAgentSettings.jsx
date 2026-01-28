@@ -33,12 +33,10 @@ import {
   Target,
   BarChart3
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { toast } from 'sonner';
 
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
-};
+
 
 const mccCategories = [
   { value: '5411', label: 'Supermercados e Mercearias', risk: 'low' },
@@ -130,7 +128,7 @@ export default function OriginationAgentSettings() {
         title="Agent Origination"
         subtitle="Configure o agente de IA para onboarding inteligente de subcontas"
         breadcrumbs={[
-          { label: 'Subcontas', href: 'SubaccountsDashboard' },
+          { label: 'Subcontas', page: 'SubaccountsDashboard' },
           { label: 'Agent Origination' }
         ]}
       />

@@ -30,12 +30,11 @@ import {
   Clock,
   Users
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
-};
+
 
 export default function DisputeAgentSettings() {
   const queryClient = useQueryClient();
