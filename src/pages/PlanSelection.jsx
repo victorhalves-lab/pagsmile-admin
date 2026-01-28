@@ -70,8 +70,8 @@ export default function PlanSelection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-12 px-4 pb-32 md:pb-12">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
           <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-6 hover:opacity-80 transition-opacity">
@@ -119,7 +119,7 @@ export default function PlanSelection() {
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between items-center max-w-lg mx-auto">
+        <div className="flex justify-between items-center max-w-lg mx-auto fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-0">
           <Button variant="ghost" asChild>
             <Link to={createPageUrl('AccountCreationStep1')}>
               <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
