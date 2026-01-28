@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { useQuery } from '@tanstack/react-query';
@@ -33,7 +33,14 @@ import {
   Webhook,
   Store,
   PanelLeftClose,
-  PanelLeft
+  PanelLeft,
+  Home,
+  Receipt,
+  Send,
+  KeyRound,
+  Gauge,
+  Check,
+  Landmark
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -52,7 +59,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 
-const menuItems = [
+// Menu items for Admin Sub module
+const adminSubMenuItems = [
   {
     id: 'dashboard',
     label: 'Dashboard',
@@ -189,6 +197,46 @@ const menuItems = [
   },
 ];
 
+// Menu items for Internet Banking module
+const internetBankingMenuItems = [
+  {
+    id: 'ib-home',
+    label: 'Home',
+    icon: Home,
+    page: 'IBHome',
+  },
+  {
+    id: 'ib-extrato',
+    label: 'Extrato',
+    icon: Receipt,
+    page: 'IBExtract',
+  },
+  {
+    id: 'ib-pix',
+    label: 'Pix',
+    icon: QrCode,
+    page: 'IBPixSend',
+    submenu: [
+      { label: 'Enviar Pix', page: 'IBPixSend', icon: Send },
+      { label: 'Receber Pix', page: 'IBPixReceive', icon: QrCode },
+      { label: 'Minhas Chaves', page: 'IBPixKeys', icon: KeyRound },
+      { label: 'Limites', page: 'IBPixLimits', icon: Gauge },
+    ]
+  },
+  {
+    id: 'ib-comprovantes',
+    label: 'Comprovantes',
+    icon: FileText,
+    page: 'IBProofs',
+  },
+  {
+    id: 'ib-config',
+    label: 'Configurações',
+    icon: Settings,
+    page: 'IBSettings',
+  },
+];
+
 const aiAgents = [
   { id: 'dia', label: 'DIA Copilot', description: 'Assistente inteligente', page: 'DIACopilot' },
   { id: 'recovery', label: 'Recovery Agent', description: 'Recuperação de pagamentos', page: 'RecoveryAgent' },
@@ -204,22 +252,62 @@ const noLayoutPages = [
   'LivenessFacematchStep', 'LivenessSimulation', 'DocumentUploadPix', 'DocumentUploadFull'
 ];
 
+// Internet Banking pages (to auto-detect module)
+const internetBankingPages = [
+  'IBHome', 'IBExtract', 'IBPixSend', 'IBPixReceive', 'IBPixKeys', 'IBPixLimits',
+  'IBProofs', 'IBSettings', 'IBSettingsAccount', 'IBSettingsSecurity', 'IBSettingsNotifications'
+];
+
 import { Sun, Moon } from 'lucide-react';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedMenus, setExpandedMenus] = useState(['transactions', 'financial']);
+  const [expandedMenus, setExpandedMenus] = useState(['transactions', 'financial', 'ib-pix']);
   const [showAIPanel, setShowAIPanel] = useState(false);
   const [dismissedComplianceAlertForSession, setDismissedComplianceAlertForSession] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  
+  // Module state - auto-detect from current page
+  const [currentModule, setCurrentModule] = useState(() => {
+    const savedModule = localStorage.getItem('currentModule');
+    return savedModule || 'admin-sub';
+  });
+
+  // Auto-detect module based on current page
+  useEffect(() => {
+    if (internetBankingPages.includes(currentPageName)) {
+      setCurrentModule('internet-banking');
+      localStorage.setItem('currentModule', 'internet-banking');
+    } else if (!noLayoutPages.includes(currentPageName) && currentPageName && !currentPageName.startsWith('IB')) {
+      // Only switch to admin-sub if we're on a non-IB page and not a no-layout page
+      if (currentModule === 'internet-banking' && !internetBankingPages.includes(currentPageName)) {
+        setCurrentModule('admin-sub');
+        localStorage.setItem('currentModule', 'admin-sub');
+      }
+    }
+  }, [currentPageName]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
   };
+
+  const handleModuleChange = (module) => {
+    setCurrentModule(module);
+    localStorage.setItem('currentModule', module);
+    // Navigate to the default page of the module
+    if (module === 'internet-banking') {
+      window.location.href = createPageUrl('IBHome');
+    } else {
+      window.location.href = createPageUrl('Dashboard');
+    }
+  };
+
+  // Get current menu items based on module
+  const menuItems = currentModule === 'internet-banking' ? internetBankingMenuItems : adminSubMenuItems;
 
   // Buscar usuário autenticado e sua subconta para verificar status de compliance
   const { data: user } = useQuery({
@@ -274,38 +362,115 @@ export default function Layout({ children, currentPageName }) {
         mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         <div className="flex flex-col h-full">
-          {/* Logo */}
+          {/* Logo & Module Selector */}
           <div className={cn(
-            "flex items-center h-16 px-4 border-b border-slate-800/50",
-            sidebarOpen ? "justify-between" : "justify-center"
+            "flex flex-col border-b border-slate-800/50",
+            sidebarOpen ? "p-4" : "p-3"
           )}>
-            {sidebarOpen ? (
-              <>
-                <div className="flex items-center gap-3">
-                  <img
-                    src={getLogoUrlByTheme(theme)}
-                    alt="PagSmile Logo"
-                    className="h-8 w-auto"
-                  />
-                </div>
+            {/* Logo Row */}
+            <div className={cn(
+              "flex items-center",
+              sidebarOpen ? "justify-between mb-3" : "justify-center"
+            )}>
+              {sidebarOpen ? (
+                <>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={getLogoUrlByTheme(theme)}
+                      alt="PagSmile Logo"
+                      className="h-8 w-auto"
+                    />
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white/60 hover:text-white hover:bg-white/10 hidden lg:flex"
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <PanelLeftClose className="w-5 h-5" />
+                  </Button>
+                </>
+              ) : (
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-white/60 hover:text-white hover:bg-white/10 hidden lg:flex"
-                  onClick={() => setSidebarOpen(false)}
+                  className="text-white/60 hover:text-white hover:bg-white/10"
+                  onClick={() => setSidebarOpen(true)}
                 >
-                  <PanelLeftClose className="w-5 h-5" />
+                  <PanelLeft className="w-5 h-5" />
                 </Button>
-              </>
-            ) : (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white/60 hover:text-white hover:bg-white/10"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <PanelLeft className="w-5 h-5" />
-              </Button>
+              )}
+            </div>
+
+            {/* Module Selector */}
+            {sidebarOpen && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "w-8 h-8 rounded-lg flex items-center justify-center",
+                        currentModule === 'internet-banking' 
+                          ? "bg-[#00D26A]/20" 
+                          : "bg-blue-500/20"
+                      )}>
+                        {currentModule === 'internet-banking' ? (
+                          <Landmark className="w-4 h-4 text-[#00D26A]" />
+                        ) : (
+                          <Store className="w-4 h-4 text-blue-400" />
+                        )}
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm font-medium text-white">
+                          {currentModule === 'internet-banking' ? 'Internet Banking' : 'Admin Sub'}
+                        </p>
+                        <p className="text-[10px] text-slate-400">
+                          {currentModule === 'internet-banking' ? 'Conta Digital' : 'Gestão de Pagamentos'}
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  <DropdownMenuLabel className="text-xs text-slate-500 uppercase">Módulos</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={() => handleModuleChange('admin-sub')}
+                    className="cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                        <Store className="w-4 h-4 text-blue-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">Admin Sub</p>
+                        <p className="text-xs text-slate-500">Gestão de Pagamentos</p>
+                      </div>
+                      {currentModule === 'admin-sub' && (
+                        <Check className="w-4 h-4 text-[#00D26A]" />
+                      )}
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => handleModuleChange('internet-banking')}
+                    className="cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                        <Landmark className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">Internet Banking</p>
+                        <p className="text-xs text-slate-500">Conta Digital</p>
+                      </div>
+                      {currentModule === 'internet-banking' && (
+                        <Check className="w-4 h-4 text-[#00D26A]" />
+                      )}
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
 
@@ -315,62 +480,63 @@ export default function Layout({ children, currentPageName }) {
               {menuItems.map((item) => (
                 <div key={item.id}>
                   {item.submenu ? (
-                                            <>
-                                              <button
-                                                onClick={() => toggleSubmenu(item.id)}
-                                                className={cn(
-                                                  "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
-                                                  isActiveSection(item)
-                                                    ? "bg-[#00D26A]/10 text-[#00D26A] shadow-[0_0_20px_rgba(0,210,106,0.15)]"
-                                                    : "text-slate-400 hover:text-slate-100 hover:bg-white/5",
-                                                  !sidebarOpen && "justify-center"
-                                                )}
-                                              >
-                                                {isActiveSection(item) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#00D26A] rounded-r-full" />}
-                                                <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-[#00D26A]" : "text-slate-500 group-hover:text-slate-300")} />
-                                                {sidebarOpen && (
-                                                  <>
-                                                    <span className="flex-1 text-left truncate">{item.label}</span>
-                                                    {item.badge && (
-                                                      <Badge 
-                                                        variant={item.badgeVariant || "secondary"} 
-                                                        className={cn(
-                                                          "h-5 px-1.5 text-[10px] rounded-full",
-                                                          item.badgeVariant === 'destructive' 
-                                                            ? "bg-red-500/20 text-red-400 border-0" 
-                                                            : "bg-white/10 text-white border-0"
-                                                        )}
-                                                      >
-                                                        {item.badge}
-                                                      </Badge>
-                                                    )}
-                                                    <ChevronDown className={cn(
-                                                      "w-4 h-4 transition-transform duration-200 text-slate-500",
-                                                      expandedMenus.includes(item.id) && "rotate-180 text-[#00D26A]"
-                                                    )} />
-                                                  </>
-                                                )}
-                                              </button>
-                                              {sidebarOpen && expandedMenus.includes(item.id) && (
-                                                <div className="ml-4 mt-1 pl-4 border-l border-slate-700 space-y-1">
-                                                  {item.submenu.map((sub, idx) => (
-                                                    <Link
-                                                      key={idx}
-                                                      to={createPageUrl(sub.page)}
-                                                      className={cn(
-                                                        "flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-all relative",
-                                                        isActivePage(sub.page)
-                                                          ? "bg-[#00D26A] text-white font-medium shadow-lg shadow-[#00D26A]/20"
-                                                          : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
-                                                      )}
-                                                    >
-                                                      {sub.label}
-                                                    </Link>
-                                                  ))}
-                                                </div>
-                                              )}
-                                            </>
-                                          ) : (
+                    <>
+                      <button
+                        onClick={() => toggleSubmenu(item.id)}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
+                          isActiveSection(item)
+                            ? "bg-[#00D26A]/10 text-[#00D26A] shadow-[0_0_20px_rgba(0,210,106,0.15)]"
+                            : "text-slate-400 hover:text-slate-100 hover:bg-white/5",
+                          !sidebarOpen && "justify-center"
+                        )}
+                      >
+                        {isActiveSection(item) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#00D26A] rounded-r-full" />}
+                        <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-[#00D26A]" : "text-slate-500 group-hover:text-slate-300")} />
+                        {sidebarOpen && (
+                          <>
+                            <span className="flex-1 text-left truncate">{item.label}</span>
+                            {item.badge && (
+                              <Badge 
+                                variant={item.badgeVariant || "secondary"} 
+                                className={cn(
+                                  "h-5 px-1.5 text-[10px] rounded-full",
+                                  item.badgeVariant === 'destructive' 
+                                    ? "bg-red-500/20 text-red-400 border-0" 
+                                    : "bg-white/10 text-white border-0"
+                                )}
+                              >
+                                {item.badge}
+                              </Badge>
+                            )}
+                            <ChevronDown className={cn(
+                              "w-4 h-4 transition-transform duration-200 text-slate-500",
+                              expandedMenus.includes(item.id) && "rotate-180 text-[#00D26A]"
+                            )} />
+                          </>
+                        )}
+                      </button>
+                      {sidebarOpen && expandedMenus.includes(item.id) && (
+                        <div className="ml-4 mt-1 pl-4 border-l border-slate-700 space-y-1">
+                          {item.submenu.map((sub, idx) => (
+                            <Link
+                              key={idx}
+                              to={createPageUrl(sub.page)}
+                              className={cn(
+                                "flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-all relative",
+                                isActivePage(sub.page)
+                                  ? "bg-[#00D26A] text-white font-medium shadow-lg shadow-[#00D26A]/20"
+                                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                              )}
+                            >
+                              {sub.icon && <sub.icon className="w-4 h-4" />}
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
                     <Link
                       to={createPageUrl(item.page)}
                       className={cn(
@@ -407,8 +573,8 @@ export default function Layout({ children, currentPageName }) {
               ))}
             </nav>
 
-            {/* AI Agents Section */}
-            {sidebarOpen && (
+            {/* AI Agents Section - Only for Admin Sub */}
+            {sidebarOpen && currentModule === 'admin-sub' && (
               <div className="px-3 mt-8">
                 <div className="px-3 mb-3 flex items-center gap-2">
                   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
@@ -502,13 +668,21 @@ export default function Layout({ children, currentPageName }) {
               >
                 <Menu className="w-5 h-5" />
               </Button>
-              <div className="relative hidden sm:block group">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
-                <Input
-                  placeholder="Buscar transações, clientes, (⌘K)"
-                  className="w-64 lg:w-96 pl-10 bg-slate-50 border-slate-200 focus:bg-white transition-all shadow-sm"
-                />
-              </div>
+              {currentModule === 'admin-sub' && (
+                <div className="relative hidden sm:block group">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
+                  <Input
+                    placeholder="Buscar transações, clientes, (⌘K)"
+                    className="w-64 lg:w-96 pl-10 bg-slate-50 border-slate-200 focus:bg-white transition-all shadow-sm"
+                  />
+                </div>
+              )}
+              {currentModule === 'internet-banking' && (
+                <div className="flex items-center gap-2">
+                  <Landmark className="w-5 h-5 text-[#00D26A]" />
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">Internet Banking</span>
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-3">
@@ -522,18 +696,20 @@ export default function Layout({ children, currentPageName }) {
                 {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
               </Button>
 
-              {/* AI Assistant Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                className="hidden sm:flex items-center gap-2 border-[#00D26A]/20 text-[#00D26A] hover:bg-[#00D26A]/5 hover:border-[#00D26A]/40 shadow-sm dark:bg-[#00D26A]/10"
-                onClick={() => setShowAIPanel(!showAIPanel)}
-              >
-                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#00D26A] to-emerald-600 flex items-center justify-center">
-                  <Sparkles className="w-3 h-3 text-white" />
-                </div>
-                <span className="font-medium">DIA Copilot</span>
-              </Button>
+              {/* AI Assistant Button - Only for Admin Sub */}
+              {currentModule === 'admin-sub' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hidden sm:flex items-center gap-2 border-[#00D26A]/20 text-[#00D26A] hover:bg-[#00D26A]/5 hover:border-[#00D26A]/40 shadow-sm dark:bg-[#00D26A]/10"
+                  onClick={() => setShowAIPanel(!showAIPanel)}
+                >
+                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#00D26A] to-emerald-600 flex items-center justify-center">
+                    <Sparkles className="w-3 h-3 text-white" />
+                  </div>
+                  <span className="font-medium">DIA Copilot</span>
+                </Button>
+              )}
 
               <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
 
