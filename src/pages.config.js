@@ -51,6 +51,8 @@ import CompliancePixOnly from './pages/CompliancePixOnly';
 import LivenessFacematchStep from './pages/LivenessFacematchStep';
 import LivenessSimulation from './pages/LivenessSimulation';
 import ComplianceFullKYC from './pages/ComplianceFullKYC';
+import DocumentUploadPix from './pages/DocumentUploadPix';
+import DocumentUploadFull from './pages/DocumentUploadFull';
 import __Layout from './Layout.jsx';
 
 
@@ -108,6 +110,8 @@ export const PAGES = {
     "LivenessFacematchStep": LivenessFacematchStep,
     "LivenessSimulation": LivenessSimulation,
     "ComplianceFullKYC": ComplianceFullKYC,
+    "DocumentUploadPix": DocumentUploadPix,
+    "DocumentUploadFull": DocumentUploadFull,
 }
 
 export const pagesConfig = {
