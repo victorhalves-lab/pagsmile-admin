@@ -2,8 +2,12 @@ import AccountCreationStep1 from './pages/AccountCreationStep1';
 import AccountCreationStep3 from './pages/AccountCreationStep3';
 import Anticipation from './pages/Anticipation';
 import ApiKeys from './pages/ApiKeys';
+import CardTransactions from './pages/CardTransactions';
 import Chargebacks from './pages/Chargebacks';
+import CheckoutAnalytics from './pages/CheckoutAnalytics';
 import CheckoutBuilder from './pages/CheckoutBuilder';
+import Checkouts from './pages/Checkouts';
+import CheckoutTemplates from './pages/CheckoutTemplates';
 import ComplianceFullKYC from './pages/ComplianceFullKYC';
 import ComplianceOnboardingStart from './pages/ComplianceOnboardingStart';
 import CompliancePixOnly from './pages/CompliancePixOnly';
@@ -53,11 +57,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import CardTransactions from './pages/CardTransactions';
-import PixTransactions from './pages/PixTransactions';
-import Checkouts from './pages/Checkouts';
-import CheckoutTemplates from './pages/CheckoutTemplates';
-import CheckoutAnalytics from './pages/CheckoutAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -117,11 +116,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "CardTransactions": CardTransactions,
-    "PixTransactions": PixTransactions,
-    "Checkouts": Checkouts,
-    "CheckoutTemplates": CheckoutTemplates,
-    "CheckoutAnalytics": CheckoutAnalytics,
 }
 
 export const pagesConfig = {
