@@ -30,6 +30,17 @@ import Fees from './pages/Fees';
 import Financial from './pages/Financial';
 import FinancialOverview from './pages/FinancialOverview';
 import FinancialStatement from './pages/FinancialStatement';
+import IBExtract from './pages/IBExtract';
+import IBHome from './pages/IBHome';
+import IBPixKeys from './pages/IBPixKeys';
+import IBPixLimits from './pages/IBPixLimits';
+import IBPixReceive from './pages/IBPixReceive';
+import IBPixSend from './pages/IBPixSend';
+import IBProofs from './pages/IBProofs';
+import IBSettings from './pages/IBSettings';
+import IBSettingsAccount from './pages/IBSettingsAccount';
+import IBSettingsNotifications from './pages/IBSettingsNotifications';
+import IBSettingsSecurity from './pages/IBSettingsSecurity';
 import LandingPage from './pages/LandingPage';
 import LivenessFacematchStep from './pages/LivenessFacematchStep';
 import LivenessSimulation from './pages/LivenessSimulation';
@@ -58,17 +69,8 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import IBHome from './pages/IBHome';
-import IBExtract from './pages/IBExtract';
-import IBPixSend from './pages/IBPixSend';
-import IBPixReceive from './pages/IBPixReceive';
-import IBPixKeys from './pages/IBPixKeys';
-import IBPixLimits from './pages/IBPixLimits';
-import IBProofs from './pages/IBProofs';
-import IBSettings from './pages/IBSettings';
-import IBSettingsAccount from './pages/IBSettingsAccount';
-import IBSettingsSecurity from './pages/IBSettingsSecurity';
-import IBSettingsNotifications from './pages/IBSettingsNotifications';
+import Recurrence from './pages/Recurrence';
+import FeesAnalysis from './pages/FeesAnalysis';
 import __Layout from './Layout.jsx';
 
 
@@ -105,6 +107,17 @@ export const PAGES = {
     "Financial": Financial,
     "FinancialOverview": FinancialOverview,
     "FinancialStatement": FinancialStatement,
+    "IBExtract": IBExtract,
+    "IBHome": IBHome,
+    "IBPixKeys": IBPixKeys,
+    "IBPixLimits": IBPixLimits,
+    "IBPixReceive": IBPixReceive,
+    "IBPixSend": IBPixSend,
+    "IBProofs": IBProofs,
+    "IBSettings": IBSettings,
+    "IBSettingsAccount": IBSettingsAccount,
+    "IBSettingsNotifications": IBSettingsNotifications,
+    "IBSettingsSecurity": IBSettingsSecurity,
     "LandingPage": LandingPage,
     "LivenessFacematchStep": LivenessFacematchStep,
     "LivenessSimulation": LivenessSimulation,
@@ -133,17 +146,8 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "IBHome": IBHome,
-    "IBExtract": IBExtract,
-    "IBPixSend": IBPixSend,
-    "IBPixReceive": IBPixReceive,
-    "IBPixKeys": IBPixKeys,
-    "IBPixLimits": IBPixLimits,
-    "IBProofs": IBProofs,
-    "IBSettings": IBSettings,
-    "IBSettingsAccount": IBSettingsAccount,
-    "IBSettingsSecurity": IBSettingsSecurity,
-    "IBSettingsNotifications": IBSettingsNotifications,
+    "Recurrence": Recurrence,
+    "FeesAnalysis": FeesAnalysis,
 }
 
 export const pagesConfig = {
