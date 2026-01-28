@@ -61,7 +61,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import {
   LineChart,
   Line,
@@ -103,12 +103,7 @@ export default function PaymentRecoveryAgentView() {
     queryFn: () => base44.entities.Transaction.filter({ status: 'declined' }, '-created_date', 100),
   });
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value || 0);
-  };
+
 
   // Mock metrics
   const metrics = useMemo(() => {

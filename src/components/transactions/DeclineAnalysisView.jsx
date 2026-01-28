@@ -44,7 +44,7 @@ import {
   Line,
   Legend
 } from 'recharts';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 
 const DECLINE_CATEGORIES = {
   nsf: { label: 'Saldo Insuficiente', icon: DollarSign, color: '#EF4444', description: 'Cliente sem saldo ou limite disponível' },
@@ -71,12 +71,7 @@ export default function DeclineAnalysisView() {
     queryFn: () => base44.entities.Transaction.list('-created_date', 1000),
   });
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value || 0);
-  };
+
 
   // Calculate metrics
   const metrics = useMemo(() => {
