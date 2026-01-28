@@ -1,6 +1,82 @@
 import React from 'react';
-import AdminIntPlaceholder from '@/components/admin-interno/Placeholder';
+import PageHeader from '@/components/common/PageHeader';
+import DataTable from '@/components/common/DataTable';
+import StatusBadge from '@/components/common/StatusBadge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import KPICard from '@/components/dashboard/KPICard';
+import { ShoppingBag, Users, Clock, AlertTriangle } from 'lucide-react';
 
 export default function AdminIntSubaccounts() {
-  return <AdminIntPlaceholder title="Subcontas & Marketplaces" description="Gestão da hierarquia de contas e splits de pagamento." />;
+    const marketplaces = [
+        { id: 'M-001', name: 'Marketplace A', subaccounts: 350, active: 320, pending: 15, gmv: 8500000, status: 'active' },
+        { id: 'M-002', name: 'Marketplace B', subaccounts: 280, active: 265, pending: 8, gmv: 4200000, status: 'active' },
+        { id: 'M-003', name: 'Marketplace C', subaccounts: 215, active: 200, pending: 5, gmv: 2300000, status: 'warning' },
+    ];
+
+    const subaccounts = [
+        { id: 'S-001', name: 'Vendedor 1', marketplace: 'Marketplace A', mcc: '5732', status: 'active', gmv: 15000, cb_ratio: 0.1 },
+        { id: 'S-002', name: 'Vendedor 2', marketplace: 'Marketplace A', mcc: '5651', status: 'pending', gmv: 0, cb_ratio: 0 },
+        { id: 'S-003', name: 'Vendedor 3', marketplace: 'Marketplace B', mcc: '5999', status: 'blocked', gmv: 5000, cb_ratio: 2.5 },
+    ];
+
+    return (
+        <div className="space-y-6">
+            <PageHeader
+                title="Subcontas & Marketplaces"
+                subtitle="Gestão de Sellers e Splits"
+                breadcrumbs={[
+                    { label: 'Admin Interno', page: 'AdminIntDashboard' },
+                    { label: 'Subcontas', page: 'AdminIntSubaccounts' }
+                ]}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <KPICard title="Marketplaces" value="12" icon={ShoppingBag} />
+                <KPICard title="Subcontas Total" value="845" icon={Users} />
+                <KPICard title="Aguard. Aprovação" value="28" icon={Clock} className="border-l-4 border-l-amber-500" />
+                <KPICard title="GMV Subcontas" value="15M" prefix="R$ " icon={AlertTriangle} />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Marketplaces</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <DataTable 
+                                data={marketplaces}
+                                columns={[
+                                    { header: 'Marketplace', accessorKey: 'name' },
+                                    { header: 'Subcontas', accessorKey: 'subaccounts' },
+                                    { header: 'Ativas', accessorKey: 'active' },
+                                    { header: 'Pendentes', accessorKey: 'pending' },
+                                    { header: 'GMV', accessorKey: 'gmv', cell: info => `R$ ${(info.getValue()/1000000).toFixed(1)}M` },
+                                    { header: 'Status', accessorKey: 'status', cell: info => <StatusBadge status={info.getValue()} /> }
+                                ]}
+                            />
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Últimas Subcontas</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                             <DataTable 
+                                data={subaccounts}
+                                columns={[
+                                    { header: 'Vendedor', accessorKey: 'name' },
+                                    { header: 'Marketplace', accessorKey: 'marketplace' },
+                                    { header: 'Status', accessorKey: 'status', cell: info => <StatusBadge status={info.getValue()} /> }
+                                ]}
+                            />
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        </div>
+    );
 }
