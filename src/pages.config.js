@@ -116,6 +116,10 @@ import AdminIntMerchantsList from './pages/AdminIntMerchantsList';
 import AdminIntTransactionsDashboard from './pages/AdminIntTransactionsDashboard';
 import AdminIntTransactionsList from './pages/AdminIntTransactionsList';
 import AdminIntTransactionDetail from './pages/AdminIntTransactionDetail';
+import AdminIntMCCDetail from './pages/AdminIntMCCDetail';
+import AdminIntMccIrregularities from './pages/AdminIntMccIrregularities';
+import AdminIntPartnerDetail from './pages/AdminIntPartnerDetail';
+import AdminIntFinancialHealth from './pages/AdminIntFinancialHealth';
 import __Layout from './Layout.jsx';
 
 
@@ -238,6 +242,10 @@ export const PAGES = {
     "AdminIntTransactionsDashboard": AdminIntTransactionsDashboard,
     "AdminIntTransactionsList": AdminIntTransactionsList,
     "AdminIntTransactionDetail": AdminIntTransactionDetail,
+    "AdminIntMCCDetail": AdminIntMCCDetail,
+    "AdminIntMccIrregularities": AdminIntMccIrregularities,
+    "AdminIntPartnerDetail": AdminIntPartnerDetail,
+    "AdminIntFinancialHealth": AdminIntFinancialHealth,
 }
 
 export const pagesConfig = {

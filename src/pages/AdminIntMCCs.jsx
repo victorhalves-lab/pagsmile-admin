@@ -1,117 +1,128 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PageHeader from '@/components/common/PageHeader';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import KPICard from '@/components/dashboard/KPICard';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, CheckCircle, HelpCircle, ArrowRight } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
+import { 
+    Tag, ShoppingCart, Percent, AlertTriangle, TrendingUp, Search, Filter, 
+    MoreHorizontal, Eye, Settings, BarChart2 
+} from 'lucide-react';
 
 export default function AdminIntMCCs() {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const kpis = [
+        { title: 'MCCs Ativos', value: '45', icon: Tag, change: 0 },
+        { title: 'Top MCC (TPV)', value: '5411', sub: 'Supermercados', icon: ShoppingCart },
+        { title: 'TPV Total', value: '85M', prefix: 'R$ ', icon: TrendingUp, change: 12 },
+        { title: 'Margem Média', value: '0.95', suffix: '%', icon: Percent, change: -5, trend: 'down' },
+        { title: 'Irregularidades', value: '5', icon: AlertTriangle, className: 'border-l-4 border-l-amber-500' },
+        { title: 'Alto Risco', value: '3', icon: AlertTriangle, className: 'border-l-4 border-l-red-500' }
+    ];
+
+    const mccs = [
+        { code: '5411', desc: 'Supermercados e Mercearias', merchants: 68, risk: 'low', status: 'active', interchange: '1.65%', tpv: '15.2M' },
+        { code: '5734', desc: 'Software e Computadores', merchants: 52, risk: 'low', status: 'active', interchange: '1.85%', tpv: '12.8M' },
+        { code: '5812', desc: 'Restaurantes', merchants: 45, risk: 'low', status: 'active', interchange: '1.70%', tpv: '10.5M' },
+        { code: '5651', desc: 'Loja de Roupas (Família)', merchants: 38, risk: 'medium', status: 'active', interchange: '1.90%', tpv: '8.9M' },
+        { code: '7995', desc: 'Apostas e Loterias', merchants: 8, risk: 'high', status: 'restricted', interchange: '2.50%', tpv: '5.0M' },
+    ];
+
+    const getRiskBadge = (risk) => {
+        const config = {
+            low: { color: 'bg-green-100 text-green-700', label: 'Baixo' },
+            medium: { color: 'bg-yellow-100 text-yellow-700', label: 'Médio' },
+            high: { color: 'bg-red-100 text-red-700', label: 'Alto' },
+        }[risk] || { color: 'bg-gray-100 text-gray-700', label: risk };
+        return <Badge className={config.color}>{config.label}</Badge>;
+    };
+
     return (
         <div className="space-y-6">
-            <PageHeader
-                title="Análise de MCC"
-                subtitle="Loja ABC Ltda"
-                breadcrumbs={[
-                    { label: 'Admin Interno', page: 'AdminIntDashboard' },
-                    { label: 'Merchants', page: 'AdminIntMerchants' },
-                    { label: 'Perfil', page: '#' },
-                    { label: 'MCC', page: 'AdminIntMCCs' }
-                ]}
+            <PageHeader 
+                title="MCCs (Merchant Category Codes)" 
+                subtitle="Gestão de Categorias e Custos"
+                breadcrumbs={[{ label: 'Administração', page: '#' }, { label: 'MCCs', page: 'AdminIntMCCs' }]}
+                actions={<Button><Tag className="w-4 h-4 mr-2" /> Novo MCC</Button>}
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Análise de Compatibilidade</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="mb-6 p-4 bg-slate-50 rounded-lg border flex justify-between items-center">
-                                <div>
-                                    <p className="text-sm text-slate-500">MCC Atual</p>
-                                    <p className="text-xl font-bold">5411 - Supermercados e Mercearias</p>
-                                </div>
-                                <Button variant="outline">Alterar</Button>
-                            </div>
-
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Critério</TableHead>
-                                        <TableHead>Esperado (5411)</TableHead>
-                                        <TableHead>Observado</TableHead>
-                                        <TableHead>Status</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell>Ticket Médio</TableCell>
-                                        <TableCell>R$ 80 - R$ 200</TableCell>
-                                        <TableCell>R$ 162</TableCell>
-                                        <TableCell><CheckCircle className="w-4 h-4 text-green-500" /></TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Frequência</TableCell>
-                                        <TableCell>2-4x/mês</TableCell>
-                                        <TableCell>3.2x/mês</TableCell>
-                                        <TableCell><CheckCircle className="w-4 h-4 text-green-500" /></TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Parcelamento</TableCell>
-                                        <TableCell>Baixo ({'<'} 20%)</TableCell>
-                                        <TableCell>55%</TableCell>
-                                        <TableCell><AlertTriangle className="w-4 h-4 text-amber-500" /></TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Tipo Produto</TableCell>
-                                        <TableCell>Alimentos</TableCell>
-                                        <TableCell>"Roupas"</TableCell>
-                                        <TableCell><AlertTriangle className="w-4 h-4 text-red-500" /></TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-                </div>
-
+            {/* Insights */}
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl p-4 flex gap-4 items-start">
+                <div className="p-2 bg-blue-100 dark:bg-blue-800 rounded-lg"><Tag className="w-5 h-5 text-blue-600 dark:text-blue-300" /></div>
                 <div>
-                    <Card className="bg-indigo-50 border-indigo-100 dark:bg-slate-800 dark:border-slate-700">
-                        <CardHeader>
-                            <CardTitle className="text-indigo-900 dark:text-white flex items-center gap-2">
-                                💡 Análise do DIA
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-indigo-100 dark:border-slate-600">
-                                <h4 className="font-semibold text-amber-600 flex items-center gap-2 mb-2">
-                                    <AlertTriangle className="w-4 h-4" /> Inconsistência Detectada
-                                </h4>
-                                <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">
-                                    O comportamento transacional e o site indicam atividade de vestuário, não supermercado.
-                                </p>
-                                <p className="text-sm font-medium">MCC Sugerido: 5651 - Lojas de Roupas</p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <h5 className="text-sm font-semibold">Impacto da Mudança</h5>
-                                <div className="flex justify-between text-sm">
-                                    <span>Custo Interchange</span>
-                                    <span className="text-red-500">+0.20%</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                    <span>Margem Atual</span>
-                                    <span className="text-red-500">-0.20%</span>
-                                </div>
-                            </div>
-
-                            <div className="pt-4 space-y-2">
-                                <Button className="w-full bg-indigo-600 hover:bg-indigo-700">Solicitar Esclarecimento</Button>
-                                <Button variant="outline" className="w-full">Alterar MCC</Button>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-100 text-sm mb-1">INSIGHTS DO DIA</h3>
+                    <div className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                        <p>🏷️ 5 merchants podem estar com MCC incorreto - <Link to={createPageUrl('AdminIntMccIrregularities')} className="underline font-medium">Revisar</Link></p>
+                        <p>📊 MCC 5411 (Supermercados) tem margem 15% abaixo do esperado.</p>
+                        <p>💰 MCC 5734 (Software) é o mais rentável: margem média 1.45%.</p>
+                    </div>
                 </div>
             </div>
+
+            {/* KPIs */}
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {kpis.map((kpi, idx) => (
+                    <KPICard key={idx} {...kpi} />
+                ))}
+            </div>
+
+            {/* Catalog */}
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Catálogo de MCCs</CardTitle>
+                    <div className="flex gap-2">
+                        <div className="relative w-64">
+                            <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-400" />
+                            <Input placeholder="Buscar por código ou descrição..." className="pl-8" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                        </div>
+                        <Button variant="outline"><Filter className="w-4 h-4 mr-2" /> Filtros</Button>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Código</TableHead>
+                                <TableHead>Descrição</TableHead>
+                                <TableHead>Merchants</TableHead>
+                                <TableHead>Risco</TableHead>
+                                <TableHead>Interchange (Visa 1x)</TableHead>
+                                <TableHead>TPV Mês</TableHead>
+                                <TableHead className="text-right">Ações</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {mccs.map((mcc) => (
+                                <TableRow key={mcc.code}>
+                                    <TableCell className="font-mono font-medium">{mcc.code}</TableCell>
+                                    <TableCell>{mcc.desc}</TableCell>
+                                    <TableCell>{mcc.merchants}</TableCell>
+                                    <TableCell>{getRiskBadge(mcc.risk)}</TableCell>
+                                    <TableCell>{mcc.interchange}</TableCell>
+                                    <TableCell>R$ {mcc.tpv}</TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <Button variant="ghost" size="icon" title="Detalhes" asChild>
+                                                <Link to={createPageUrl('AdminIntMCCDetail', { code: mcc.code })}>
+                                                    <Eye className="w-4 h-4" />
+                                                </Link>
+                                            </Button>
+                                            <Button variant="ghost" size="icon" title="Configurar">
+                                                <Settings className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
         </div>
     );
 }
