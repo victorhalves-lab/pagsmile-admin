@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 const COLORS = {
   card: '#3B82F6',
-  pix: '#00D26A',
+  pix: '#2bc196',
 };
 
 export default function PaymentMethodsChart({ data = [], className }) {
@@ -27,7 +27,7 @@ export default function PaymentMethodsChart({ data = [], className }) {
         <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-100">
           <p className="font-medium text-gray-900">{payload[0].name}</p>
           <p className="text-sm text-gray-600">{payload[0].value}% das vendas</p>
-          <p className="text-sm font-semibold text-[#00D26A]">
+          <p className="text-sm font-semibold text-[#2bc196]">
             {formatCurrency(payload[0].payload.amount)}
           </p>
         </div>

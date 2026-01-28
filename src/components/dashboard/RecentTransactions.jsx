@@ -64,7 +64,7 @@ export default function RecentTransactions({ transactions = [], loading = false,
       <div className="flex items-center justify-between p-5 border-b border-gray-100">
         <h3 className="font-semibold text-gray-900">Transações Recentes</h3>
         <Link to={createPageUrl('Transactions')}>
-          <Button variant="ghost" size="sm" className="text-[#00D26A] hover:text-[#00A854] hover:bg-[#00D26A]/10">
+          <Button variant="ghost" size="sm" className="text-[#2bc196] hover:text-[#239b7a] hover:bg-[#2bc196]/10">
             Ver todas
             <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
