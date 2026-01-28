@@ -125,6 +125,15 @@ import AdminIntPriceSimulator from './pages/AdminIntPriceSimulator';
 import AdminIntRetention from './pages/AdminIntRetention';
 import AdminIntRollingReserve from './pages/AdminIntRollingReserve';
 import AdminIntBlockages from './pages/AdminIntBlockages';
+import AdminIntUsers from './pages/AdminIntUsers';
+import AdminIntUserDetail from './pages/AdminIntUserDetail';
+import AdminIntProfiles from './pages/AdminIntProfiles';
+import AdminIntGlobalParams from './pages/AdminIntGlobalParams';
+import AdminIntAudit from './pages/AdminIntAudit';
+import AdminIntSystemLogs from './pages/AdminIntSystemLogs';
+import AdminIntIntegrations from './pages/AdminIntIntegrations';
+import AdminIntIntegrationDetail from './pages/AdminIntIntegrationDetail';
+import AdminIntWebhooks from './pages/AdminIntWebhooks';
 import __Layout from './Layout.jsx';
 
 
@@ -256,6 +265,15 @@ export const PAGES = {
     "AdminIntRetention": AdminIntRetention,
     "AdminIntRollingReserve": AdminIntRollingReserve,
     "AdminIntBlockages": AdminIntBlockages,
+    "AdminIntUsers": AdminIntUsers,
+    "AdminIntUserDetail": AdminIntUserDetail,
+    "AdminIntProfiles": AdminIntProfiles,
+    "AdminIntGlobalParams": AdminIntGlobalParams,
+    "AdminIntAudit": AdminIntAudit,
+    "AdminIntSystemLogs": AdminIntSystemLogs,
+    "AdminIntIntegrations": AdminIntIntegrations,
+    "AdminIntIntegrationDetail": AdminIntIntegrationDetail,
+    "AdminIntWebhooks": AdminIntWebhooks,
 }
 
 export const pagesConfig = {
