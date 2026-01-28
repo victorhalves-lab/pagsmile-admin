@@ -1,182 +1,230 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import PageHeader from '@/components/common/PageHeader';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { Plus, Upload, Download, Settings, FileSpreadsheet, FileText, File } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
-import PageHeader from '@/components/common/PageHeader';
-import StatusBadge from '@/components/common/StatusBadge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow
-} from '@/components/ui/table';
-import { Search, Filter, Eye, Settings, BarChart2, Plus, Download, MoreVertical } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { mockMerchants } from '@/components/mockData/adminInternoMocks';
+
+import MerchantFilters from '@/components/admin-interno/merchants/MerchantFilters';
+import MerchantTable from '@/components/admin-interno/merchants/MerchantTable';
+import MerchantBulkActions from '@/components/admin-interno/merchants/MerchantBulkActions';
+import MerchantSummary from '@/components/admin-interno/merchants/MerchantSummary';
+import MerchantPagination from '@/components/admin-interno/merchants/MerchantPagination';
+
+// Mock data
+const mockMerchants = [
+  { id: '12345', trade_name: 'E-commerce XYZ', business_name: 'E-commerce XYZ Ltda', document: '12345678000190', status: 'active', methods: ['card', 'pix', 'boleto'], tpv_30d: 2340000, tpv_change: 12, cb_ratio: 0.82, segment: 'E-commerce', last_access: new Date(Date.now() - 3600000) },
+  { id: '12346', trade_name: 'Loja ABC', business_name: 'Loja ABC Ltda', document: '98765432000100', status: 'active', methods: ['card', 'pix'], tpv_30d: 1870000, tpv_change: -5, cb_ratio: 0.95, segment: 'Varejo', last_access: new Date(Date.now() - 86400000) },
+  { id: '12347', trade_name: 'Tech Store', business_name: 'Tech Store S.A.', document: '11222333000144', status: 'kyc_pending', methods: ['card'], tpv_30d: 0, cb_ratio: 0, segment: 'Eletrônicos', last_access: null },
+  { id: '12348', trade_name: 'Fashion Online', business_name: 'Fashion Online Ltda', document: '44555666000155', status: 'blocked', methods: ['card', 'pix', 'boleto'], tpv_30d: 567000, tpv_change: 0, cb_ratio: 2.34, segment: 'Moda', last_access: new Date('2026-01-15T09:12:00') },
+  { id: '12349', trade_name: 'SaaS Cloud', business_name: 'SaaS Cloud Tecnologia', document: '77888999000166', status: 'active', methods: ['card', 'pix'], tpv_30d: 890000, tpv_change: 25, cb_ratio: 0.45, segment: 'SaaS/Digital', last_access: new Date(Date.now() - 1800000) },
+  { id: '12350', trade_name: 'Educação Plus', business_name: 'Educação Plus Ltda', document: '33444555000177', status: 'active', methods: ['card', 'pix', 'boleto'], tpv_30d: 1250000, tpv_change: 8, cb_ratio: 0.68, segment: 'Educação', last_access: new Date(Date.now() - 7200000) },
+  { id: '12351', trade_name: 'Marketplace Pro', business_name: 'Marketplace Pro S.A.', document: '66777888000188', status: 'suspended', methods: ['card', 'pix'], tpv_30d: 450000, tpv_change: -15, cb_ratio: 1.12, segment: 'Marketplace', last_access: new Date('2026-01-20T14:30:00') },
+  { id: '12352', trade_name: 'Saúde Total', business_name: 'Saúde Total Serviços', document: '99000111000199', status: 'kyc_incomplete', methods: ['pix'], tpv_30d: 0, cb_ratio: 0, segment: 'Saúde', last_access: new Date('2026-01-25T10:00:00') },
+  { id: '12353', trade_name: 'Games Universe', business_name: 'Games Universe Digital', document: '22333444000100', status: 'active', methods: ['card', 'pix'], tpv_30d: 780000, tpv_change: 45, cb_ratio: 0.55, segment: 'Games', last_access: new Date(Date.now() - 300000) },
+  { id: '12354', trade_name: 'Viagens Online', business_name: 'Viagens Online Turismo', document: '55666777000111', status: 'active', methods: ['card', 'pix', 'boleto'], tpv_30d: 2100000, tpv_change: 18, cb_ratio: 0.78, segment: 'Viagens', last_access: new Date(Date.now() - 5400000) },
+  { id: '12355', trade_name: 'Fintech Pay', business_name: 'Fintech Pay Ltda', document: '88999000000122', status: 'lead', methods: [], tpv_30d: 0, cb_ratio: 0, segment: 'Financeiro', last_access: null },
+  { id: '12356', trade_name: 'Serviços Express', business_name: 'Serviços Express Ltda', document: '11000222000133', status: 'active', methods: ['pix'], tpv_30d: 320000, tpv_change: 5, cb_ratio: 0.12, segment: 'Serviços', last_access: new Date(Date.now() - 43200000) },
+];
+
+const mockStats = {
+  total: 1234,
+  active: 987,
+  kyc_pending: 78,
+  kyc_incomplete: 45,
+  blocked: 22,
+  suspended: 23,
+  lead: 45,
+  inactive: 12,
+  cancelled: 22
+};
 
 export default function AdminIntMerchantsList() {
+  const [filters, setFilters] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [sortField, setSortField] = useState('trade_name');
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
 
-  // Filter by search term
-  const filteredData = mockMerchants.filter(m =>
-    m.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    m.document.includes(searchTerm) ||
-    m.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter merchants
+  const filteredMerchants = useMemo(() => {
+    let result = [...mockMerchants];
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    // Apply search
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(m =>
+        m.trade_name?.toLowerCase().includes(term) ||
+        m.business_name?.toLowerCase().includes(term) ||
+        m.document?.includes(term) ||
+        m.id?.includes(term)
+      );
+    }
+
+    // Apply status filter
+    if (filters.status?.length > 0) {
+      result = result.filter(m => filters.status.includes(m.status));
+    }
+
+    // Apply method filter
+    if (filters.methods?.length > 0) {
+      result = result.filter(m =>
+        filters.methods.some(method => m.methods?.includes(method))
+      );
+    }
+
+    // Apply segment filter
+    if (filters.segment) {
+      result = result.filter(m => 
+        m.segment?.toLowerCase() === filters.segment.toLowerCase()
+      );
+    }
+
+    // Apply TPV filters
+    if (filters.tpvMin) {
+      result = result.filter(m => (m.tpv_30d || 0) >= Number(filters.tpvMin));
+    }
+    if (filters.tpvMax) {
+      result = result.filter(m => (m.tpv_30d || 0) <= Number(filters.tpvMax));
+    }
+
+    // Apply CB Ratio filter
+    if (filters.cbRatioMax) {
+      result = result.filter(m => (m.cb_ratio || 0) <= Number(filters.cbRatioMax));
+    }
+
+    // Apply sorting
+    result.sort((a, b) => {
+      let aVal = a[sortField];
+      let bVal = b[sortField];
+
+      if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+      if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+
+      if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return result;
+  }, [mockMerchants, filters, searchTerm, sortField, sortDirection]);
+
+  // Paginate
+  const paginatedMerchants = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredMerchants.slice(start, start + itemsPerPage);
+  }, [filteredMerchants, currentPage, itemsPerPage]);
+
+  const totalPages = Math.ceil(filteredMerchants.length / itemsPerPage);
+
+  const handleSort = (field, direction) => {
+    setSortField(field);
+    setSortDirection(direction);
+  };
+
+  const handleFilterByStatus = (statuses) => {
+    setFilters({ ...filters, status: statuses });
+  };
+
+  const handleBulkAction = (action, data) => {
+    console.log('Bulk action:', action, data);
+    setSelectedIds([]);
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Lista de Merchants"
-        subtitle="Gestão da Base de Clientes"
-        breadcrumbs={[
-          { label: 'Admin Interno', page: 'AdminIntDashboard' },
-          { label: 'Merchants', page: 'AdminIntMerchants' },
-          { label: 'Lista', page: 'AdminIntMerchantsList' }
-        ]}
-        actions={
-          <div className="flex gap-2">
-            <Button variant="outline"><Download className="w-4 h-4 mr-2" /> Exportar</Button>
-            <Link to={createPageUrl('AdminIntNewMerchant')}>
-              <Button className="bg-[#00D26A] hover:bg-[#00b059]"><Plus className="w-4 h-4 mr-2" /> Novo Merchant</Button>
-            </Link>
-          </div>
-        }
+    <div className="space-y-6 pb-20">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <PageHeader
+          title="Merchants"
+          subtitle="Gestão completa de clientes"
+          breadcrumbs={[
+            { label: 'Admin Interno', page: 'AdminIntDashboard' },
+            { label: 'Merchants', page: 'AdminIntMerchantsList' }
+          ]}
+        />
+
+        <div className="flex items-center gap-2">
+          <Link to={createPageUrl('AdminIntNewMerchant')}>
+            <Button className="gap-2">
+              <Plus className="w-4 h-4" /> Novo Merchant
+            </Button>
+          </Link>
+          
+          <Button variant="outline" className="gap-2">
+            <Upload className="w-4 h-4" /> Importar
+          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Download className="w-4 h-4" /> Exportar
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <FileSpreadsheet className="w-4 h-4 mr-2" /> Excel (.xlsx)
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <File className="w-4 h-4 mr-2" /> CSV (.csv)
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <FileText className="w-4 h-4 mr-2" /> PDF (Relatório)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button variant="outline" size="icon">
+            <Settings className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <MerchantSummary stats={mockStats} onFilterByStatus={handleFilterByStatus} />
+
+      {/* Filters */}
+      <MerchantFilters
+        filters={filters}
+        onFiltersChange={setFilters}
+        onSearch={setSearchTerm}
       />
 
-      {/* Search */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-            <div className="relative w-full md:w-96">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <Input
-                placeholder="Buscar por nome, CNPJ, ID..."
-                className="pl-10"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-slate-600">
-                {filteredData.length} merchants
-              </Badge>
-              <Button variant="outline" size="sm">
-                <Filter className="w-4 h-4 mr-2" /> Filtros
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Bulk Actions */}
+      <MerchantBulkActions
+        selectedCount={selectedIds.length}
+        selectedIds={selectedIds}
+        onClearSelection={() => setSelectedIds([])}
+        onAction={handleBulkAction}
+      />
 
       {/* Table */}
-      <Card>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-50 dark:bg-slate-800">
-                  <TableHead className="font-semibold">ID</TableHead>
-                  <TableHead className="font-semibold">Empresa</TableHead>
-                  <TableHead className="font-semibold">MCC</TableHead>
-                  <TableHead className="font-semibold">Status</TableHead>
-                  <TableHead className="font-semibold">TPV (Mês)</TableHead>
-                  <TableHead className="font-semibold">Aprovação</TableHead>
-                  <TableHead className="font-semibold">CB %</TableHead>
-                  <TableHead className="font-semibold">Saldo</TableHead>
-                  <TableHead className="font-semibold">Plano</TableHead>
-                  <TableHead className="font-semibold">Vendedor</TableHead>
-                  <TableHead className="font-semibold text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredData.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={11} className="h-32 text-center text-slate-500">
-                      Nenhum merchant encontrado
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredData.map((merchant) => (
-                    <TableRow key={merchant.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                      <TableCell className="font-mono text-xs text-slate-500">{merchant.id}</TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium text-slate-900 dark:text-slate-100">{merchant.business_name}</div>
-                          <div className="text-xs text-slate-500">{merchant.document}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-xs px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-full">
-                          {merchant.mcc}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <StatusBadge status={merchant.status} />
-                      </TableCell>
-                      <TableCell className="font-medium">{formatCurrency(merchant.tpv_month)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div className="w-16 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-green-500"
-                              style={{ width: `${merchant.approval_rate}%` }}
-                            />
-                          </div>
-                          <span className="text-xs">{merchant.approval_rate}%</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <span className={merchant.cb_ratio > 0.5 ? "text-red-600 font-bold" : "text-slate-600"}>
-                          {merchant.cb_ratio}%
-                        </span>
-                      </TableCell>
-                      <TableCell className="font-medium">{formatCurrency(merchant.balance)}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{merchant.plan_name}</Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-slate-600">{merchant.commercial_agent}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <Link to={createPageUrl('AdminIntMerchantProfile') + '?id=' + merchant.id}>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                          </Link>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreVertical className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
-                                <Settings className="w-4 h-4 mr-2" /> Configurações
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <BarChart2 className="w-4 h-4 mr-2" /> Analytics
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+      <MerchantTable
+        merchants={paginatedMerchants}
+        selectedIds={selectedIds}
+        onSelectionChange={setSelectedIds}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSort={handleSort}
+      />
+
+      {/* Pagination */}
+      <MerchantPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={filteredMerchants.length}
+        itemsPerPage={itemsPerPage}
+        onPageChange={setCurrentPage}
+        onItemsPerPageChange={(value) => {
+          setItemsPerPage(value);
+          setCurrentPage(1);
+        }}
+      />
     </div>
   );
 }
