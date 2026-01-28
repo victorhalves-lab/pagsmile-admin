@@ -1,64 +1,64 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import FormSection from '@/components/compliance/FormSection';
 import { Contact, Plus, Trash2 } from 'lucide-react';
+import SelectionButton from '@/components/ui/selection-button';
 
 export default function Section6Responsaveis({ formData, handleChange, handleArrayChange, handleAddArrayItem, handleRemoveArrayItem }) {
   const canais = formData.canaisAtendimento || [];
 
   return (
-    <FormSection title="6. Responsáveis, Canais de Atendimento e Reputação" subtitle="Informe os responsáveis e canais" icon={Contact}>
+    <FormSection title="Responsáveis e Canais" subtitle="Informe os responsáveis e canais" icon={Contact}>
       <div className="space-y-6">
         {/* Responsável pela Contabilidade */}
-        <div className="p-4 bg-slate-50 rounded-lg space-y-4">
-          <h4 className="font-medium text-gray-800">Responsável pela Contabilidade e Faturamento</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2"><Label>Nome Completo *</Label><Input placeholder="Nome" value={formData.respContabilidadeNome || ''} onChange={(e) => handleChange('respContabilidadeNome', e.target.value)} /></div>
-            <div className="space-y-2"><Label>E-mail *</Label><Input type="email" placeholder="email@empresa.com" value={formData.respContabilidadeEmail || ''} onChange={(e) => handleChange('respContabilidadeEmail', e.target.value)} /></div>
-            <div className="space-y-2"><Label>CRC</Label><Input placeholder="Registro no Conselho de Contabilidade" value={formData.respContabilidadeCRC || ''} onChange={(e) => handleChange('respContabilidadeCRC', e.target.value)} /></div>
-            <div className="space-y-2"><Label>Telefone *</Label><Input placeholder="(11) 99999-9999" value={formData.respContabilidadeTelefone || ''} onChange={(e) => handleChange('respContabilidadeTelefone', e.target.value)} /></div>
+        <div className="p-3 bg-slate-50 rounded-lg space-y-3 border border-slate-100">
+          <h4 className="font-medium text-gray-800 text-xs uppercase tracking-wider">Contabilidade e Faturamento</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="space-y-1"><Label className="text-xs font-semibold">Nome Completo *</Label><Input className="h-8 text-xs" placeholder="Nome" value={formData.respContabilidadeNome || ''} onChange={(e) => handleChange('respContabilidadeNome', e.target.value)} /></div>
+            <div className="space-y-1"><Label className="text-xs font-semibold">E-mail *</Label><Input className="h-8 text-xs" type="email" placeholder="email@empresa.com" value={formData.respContabilidadeEmail || ''} onChange={(e) => handleChange('respContabilidadeEmail', e.target.value)} /></div>
+            <div className="space-y-1"><Label className="text-xs font-semibold">CRC</Label><Input className="h-8 text-xs" placeholder="Registro CRC" value={formData.respContabilidadeCRC || ''} onChange={(e) => handleChange('respContabilidadeCRC', e.target.value)} /></div>
+            <div className="space-y-1"><Label className="text-xs font-semibold">Telefone *</Label><Input className="h-8 text-xs" placeholder="(11) 99999-9999" value={formData.respContabilidadeTelefone || ''} onChange={(e) => handleChange('respContabilidadeTelefone', e.target.value)} /></div>
           </div>
         </div>
 
         {/* Responsável pelo Atendimento (SAC) */}
-        <div className="p-4 bg-slate-50 rounded-lg space-y-4">
-          <h4 className="font-medium text-gray-800">Responsável pelo Atendimento ao Cliente (SAC)</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2"><Label>Nome Completo *</Label><Input placeholder="Nome" value={formData.respSACNome || ''} onChange={(e) => handleChange('respSACNome', e.target.value)} /></div>
-            <div className="space-y-2"><Label>E-mail *</Label><Input type="email" placeholder="email@empresa.com" value={formData.respSACEmail || ''} onChange={(e) => handleChange('respSACEmail', e.target.value)} /></div>
-            <div className="space-y-2"><Label>Telefone Celular *</Label><Input placeholder="(11) 99999-9999" value={formData.respSACTelefone || ''} onChange={(e) => handleChange('respSACTelefone', e.target.value)} /></div>
+        <div className="p-3 bg-slate-50 rounded-lg space-y-3 border border-slate-100">
+          <h4 className="font-medium text-gray-800 text-xs uppercase tracking-wider">Atendimento ao Cliente (SAC)</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="space-y-1"><Label className="text-xs font-semibold">Nome Completo *</Label><Input className="h-8 text-xs" placeholder="Nome" value={formData.respSACNome || ''} onChange={(e) => handleChange('respSACNome', e.target.value)} /></div>
+            <div className="space-y-1"><Label className="text-xs font-semibold">E-mail *</Label><Input className="h-8 text-xs" type="email" placeholder="email@empresa.com" value={formData.respSACEmail || ''} onChange={(e) => handleChange('respSACEmail', e.target.value)} /></div>
+            <div className="space-y-1"><Label className="text-xs font-semibold">Telefone Celular *</Label><Input className="h-8 text-xs" placeholder="(11) 99999-9999" value={formData.respSACTelefone || ''} onChange={(e) => handleChange('respSACTelefone', e.target.value)} /></div>
           </div>
         </div>
 
         {/* Responsável pelo Compliance */}
-        <div className="p-4 bg-slate-50 rounded-lg space-y-4">
-          <h4 className="font-medium text-gray-800">Responsável pela Área de Compliance</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2"><Label>Nome Completo *</Label><Input placeholder="Nome" value={formData.respComplianceNome || ''} onChange={(e) => handleChange('respComplianceNome', e.target.value)} /></div>
-            <div className="space-y-2"><Label>CPF *</Label><Input placeholder="000.000.000-00" value={formData.respComplianceCPF || ''} onChange={(e) => handleChange('respComplianceCPF', e.target.value)} /></div>
-            <div className="space-y-2"><Label>E-mail *</Label><Input type="email" placeholder="email@empresa.com" value={formData.respComplianceEmail || ''} onChange={(e) => handleChange('respComplianceEmail', e.target.value)} /></div>
-            <div className="space-y-2"><Label>Telefone Celular *</Label><Input placeholder="(11) 99999-9999" value={formData.respComplianceTelefone || ''} onChange={(e) => handleChange('respComplianceTelefone', e.target.value)} /></div>
+        <div className="p-3 bg-slate-50 rounded-lg space-y-3 border border-slate-100">
+          <h4 className="font-medium text-gray-800 text-xs uppercase tracking-wider">Compliance</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="space-y-1"><Label className="text-xs font-semibold">Nome Completo *</Label><Input className="h-8 text-xs" placeholder="Nome" value={formData.respComplianceNome || ''} onChange={(e) => handleChange('respComplianceNome', e.target.value)} /></div>
+            <div className="space-y-1"><Label className="text-xs font-semibold">CPF *</Label><Input className="h-8 text-xs" placeholder="000.000.000-00" value={formData.respComplianceCPF || ''} onChange={(e) => handleChange('respComplianceCPF', e.target.value)} /></div>
+            <div className="space-y-1"><Label className="text-xs font-semibold">E-mail *</Label><Input className="h-8 text-xs" type="email" placeholder="email@empresa.com" value={formData.respComplianceEmail || ''} onChange={(e) => handleChange('respComplianceEmail', e.target.value)} /></div>
+            <div className="space-y-1"><Label className="text-xs font-semibold">Telefone Celular *</Label><Input className="h-8 text-xs" placeholder="(11) 99999-9999" value={formData.respComplianceTelefone || ''} onChange={(e) => handleChange('respComplianceTelefone', e.target.value)} /></div>
           </div>
         </div>
 
         {/* Canais de Atendimento */}
-        <div className="space-y-4">
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label className="text-base font-medium">Canais de Atendimento *</Label>
-            <Button type="button" variant="outline" size="sm" onClick={() => handleAddArrayItem('canaisAtendimento', { tipo: '', contato: '' })}>
-              <Plus className="w-4 h-4 mr-1" /> Adicionar Canal
+            <Label className="text-xs font-medium">Canais de Atendimento *</Label>
+            <Button type="button" variant="outline" size="sm" className="h-7 text-xs px-2" onClick={() => handleAddArrayItem('canaisAtendimento', { tipo: '', contato: '' })}>
+              <Plus className="w-3 h-3 mr-1" /> Adicionar Canal
             </Button>
           </div>
+          <div className="space-y-2 max-h-[150px] overflow-y-auto pr-1">
           {canais.map((canal, idx) => (
-            <div key={idx} className="flex gap-3 items-end p-3 bg-slate-50 rounded-lg">
-              <div className="flex-1 space-y-1">
-                <Label className="text-xs">Tipo</Label>
+            <div key={idx} className="flex gap-2 items-center p-2 bg-slate-50 rounded-lg border border-slate-100">
+              <div className="w-1/3">
                 <Select value={canal.tipo} onValueChange={(v) => handleArrayChange('canaisAtendimento', idx, 'tipo', v)}>
-                  <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                  <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Tipo" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="email">Email</SelectItem>
                     <SelectItem value="whatsapp">WhatsApp</SelectItem>
@@ -67,28 +67,38 @@ export default function Section6Responsaveis({ formData, handleChange, handleArr
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex-1 space-y-1">
-                <Label className="text-xs">Contato</Label>
-                <Input placeholder="Endereço/Número" value={canal.contato} onChange={(e) => handleArrayChange('canaisAtendimento', idx, 'contato', e.target.value)} />
+              <div className="flex-1">
+                <Input className="h-8 text-xs" placeholder="Contato" value={canal.contato} onChange={(e) => handleArrayChange('canaisAtendimento', idx, 'contato', e.target.value)} />
               </div>
-              <Button type="button" variant="ghost" size="icon" className="text-red-500" onClick={() => handleRemoveArrayItem('canaisAtendimento', idx)}><Trash2 className="w-4 h-4" /></Button>
+              <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-700" onClick={() => handleRemoveArrayItem('canaisAtendimento', idx)}><Trash2 className="w-3 h-3" /></Button>
             </div>
           ))}
+          </div>
         </div>
 
         {/* Reclame Aqui */}
-        <div className="space-y-4 pt-4 border-t">
-          <div className="space-y-3">
-            <Label>A empresa possui canal no Reclame Aqui? *</Label>
-            <RadioGroup value={formData.temReclameAqui || ''} onValueChange={(v) => handleChange('temReclameAqui', v)} className="flex gap-6">
-              <div className="flex items-center space-x-2"><RadioGroupItem value="sim" id="ra-sim" /><Label htmlFor="ra-sim" className="font-normal">Sim</Label></div>
-              <div className="flex items-center space-x-2"><RadioGroupItem value="nao" id="ra-nao" /><Label htmlFor="ra-nao" className="font-normal">Não</Label></div>
-            </RadioGroup>
+        <div className="space-y-2 pt-2 border-t border-slate-100">
+          <Label className="text-xs font-semibold mb-2 block">Canal no Reclame Aqui? *</Label>
+          <div className="flex gap-2">
+            <SelectionButton
+              className="flex-1 py-1 px-3 text-xs h-8"
+              selected={formData.temReclameAqui === 'sim'}
+              onClick={() => handleChange('temReclameAqui', 'sim')}
+            >
+              Sim
+            </SelectionButton>
+            <SelectionButton
+              className="flex-1 py-1 px-3 text-xs h-8"
+              selected={formData.temReclameAqui === 'nao'}
+              onClick={() => handleChange('temReclameAqui', 'nao')}
+            >
+              Não
+            </SelectionButton>
           </div>
           {formData.temReclameAqui === 'sim' && (
-            <div className="space-y-2 p-3 bg-slate-50 rounded-lg">
-              <Label>Link do canal no Reclame Aqui *</Label>
-              <Input type="url" placeholder="https://www.reclameaqui.com.br/empresa/..." value={formData.linkReclameAqui || ''} onChange={(e) => handleChange('linkReclameAqui', e.target.value)} />
+            <div className="mt-2">
+              <Label className="text-xs font-semibold mb-1 block">Link do Reclame Aqui *</Label>
+              <Input className="h-8 text-xs" type="url" placeholder="https://..." value={formData.linkReclameAqui || ''} onChange={(e) => handleChange('linkReclameAqui', e.target.value)} />
             </div>
           )}
         </div>
