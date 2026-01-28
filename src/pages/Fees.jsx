@@ -60,6 +60,20 @@ import FeeSimulator from '@/components/fees/FeeSimulator';
 export default function Fees() {
   const [showValues, setShowValues] = useState(true);
   const [period, setPeriod] = useState('30d');
+  
+  // Taxas Mockadas para Tabela
+  const allFees = [
+    { name: 'MDR Crédito à Vista', value: '2.99%', type: 'percentage' },
+    { name: 'MDR Crédito Parcelado (2-6x)', value: '3.49%', type: 'percentage' },
+    { name: 'MDR Crédito Parcelado (7-12x)', value: '3.99%', type: 'percentage' },
+    { name: 'MDR Débito', value: '1.99%', type: 'percentage' },
+    { name: 'PIX', value: '0.99%', type: 'percentage' },
+    { name: 'Tarifa Fixa (Gateway)', value: 'R$ 0,49', type: 'fixed' },
+    { name: 'Antifraude', value: 'R$ 0,70', type: 'fixed' },
+    { name: 'Antecipação Automática', value: '1.99% a.m.', type: 'percentage' },
+    { name: 'Antecipação Pontual', value: '2.49% a.m.', type: 'percentage' },
+    { name: 'Saque', value: 'R$ 3,90', type: 'fixed' },
+  ];
   const [insightsLoading, setInsightsLoading] = useState(false);
 
   const { data: transactions = [], isLoading } = useQuery({
@@ -248,11 +262,11 @@ export default function Fees() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Análise de Tarifas"
-        subtitle="Central de Otimização de Custos"
+        title="Tarifas e Taxas"
+        subtitle="Visualize suas taxas negociadas e simule custos"
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
-          { label: 'Tarifas', page: 'Fees' }
+          { label: 'Tarifas e Taxas', page: 'Fees' }
         ]}
         actions={
           <div className="flex items-center gap-2">
@@ -570,17 +584,30 @@ export default function Fees() {
         </div>
       </div>
 
-      {/* Fee Simulator */}
-      <FeeSimulator
-        currentData={{
-          totalVolume: metrics.totalVolume,
-          totalFees: metrics.totalFees,
-          pixPercentage: metrics.pixPercentage,
-          pixRate: 0.99,
-          cardRate: 2.49
-        }}
-        formatCurrency={formatCurrency}
-      />
+      {/* Fee Table & Simulator */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Minhas Taxas Negociadas</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-0 divide-y">
+              {allFees.map((fee, idx) => (
+                <div key={idx} className="flex justify-between py-3">
+                  <span className="text-sm font-medium text-gray-700">{fee.name}</span>
+                  <Badge variant="secondary" className="font-mono">{fee.value}</Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <FeeSimulator
+          currentData={{}}
+          formatCurrency={formatCurrency}
+          className="h-full"
+        />
+      </div>
 
       {/* Detailed Table */}
       <Card>

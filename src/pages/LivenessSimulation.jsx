@@ -13,6 +13,9 @@ export default function LivenessSimulation() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionId = urlParams.get('session');
 
+  // Ajuste 1: Ignorar erro de autenticação visualmente e permitir fluxo de simulação
+  // A simulação não deve depender de estar logado se for um link externo
+  
   const stages = {
     welcome: { title: 'Verificação de Identidade', progress: 0 },
     liveness_instructions: { title: 'Prova de Vida', progress: 15 },

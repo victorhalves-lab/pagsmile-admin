@@ -122,7 +122,7 @@ export default function Chargebacks() {
   const filteredDisputes = disputes.filter(d => {
     if (filters.status !== 'all' && d.status !== filters.status) return false;
     if (filters.brand !== 'all' && d.card_brand !== filters.brand) return false;
-    if (filters.category !== 'all' && d.reason_category !== filters.category) return false;
+    if (filters.category !== 'all' && d?.reason_category !== filters.category) return false;
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       return (
@@ -176,10 +176,10 @@ export default function Chargebacks() {
       key: 'reason',
       label: 'Reason Code',
       render: (row) => {
-        const category = reasonCategoryConfig[row.reason_category] || {};
+        const category = reasonCategoryConfig[row.reason_category] || { label: 'Desconhecido', color: 'bg-gray-100 text-gray-700' };
         return (
           <div>
-            <Badge className={category.color || 'bg-gray-100 text-gray-700'}>
+            <Badge className={category.color}>
               {row.reason_code || '-'}
             </Badge>
             <p className="text-xs text-gray-500 mt-1 max-w-[150px] truncate">
@@ -398,7 +398,7 @@ export default function Chargebacks() {
 
               <div className="border-t pt-4">
                 <p className="text-xs text-gray-500 mb-2">Reason Code</p>
-                <Badge className={reasonCategoryConfig[selectedDispute.reason_category]?.color || 'bg-gray-100'}>
+                <Badge className={reasonCategoryConfig[selectedDispute?.reason_category]?.color || 'bg-gray-100'}>
                   {selectedDispute.reason_code}
                 </Badge>
                 <p className="text-sm mt-2">{selectedDispute.reason_description}</p>

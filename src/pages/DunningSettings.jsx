@@ -25,6 +25,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { toast } from 'sonner';
+import SelectionButton from '@/components/ui/selection-button';
 
 import PageHeader from '@/components/common/PageHeader';
 
@@ -155,16 +156,19 @@ export default function DunningSettings() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <Label>Número de Retentativas: {formData.retry_count}</Label>
-                <Slider
-                  value={[formData.retry_count]}
-                  onValueChange={([v]) => setFormData({ ...formData, retry_count: v })}
-                  min={1}
-                  max={10}
-                  step={1}
-                  className="mt-3"
-                />
-                <p className="text-xs text-gray-500 mt-1">Recomendado: 4-6 tentativas</p>
+                <Label className="mb-3 block">Número de Retentativas</Label>
+                <div className="grid grid-cols-6 gap-2">
+                  {[1, 2, 3, 4, 5, 6].map((count) => (
+                    <SelectionButton
+                      key={count}
+                      selected={formData.retry_count === count}
+                      onClick={() => setFormData({ ...formData, retry_count: count })}
+                      className="h-10"
+                    >
+                      {count}x
+                    </SelectionButton>
+                  ))}
+                </div>
               </div>
 
               <div>
@@ -191,20 +195,27 @@ export default function DunningSettings() {
               </div>
 
               <div>
-                <Label>Estratégia de Horário</Label>
-                <Select
-                  value={formData.retry_time_strategy}
-                  onValueChange={(v) => setFormData({ ...formData, retry_time_strategy: v })}
-                >
-                  <SelectTrigger className="mt-1.5">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="same_time">Mesmo horário da falha</SelectItem>
-                    <SelectItem value="optimized">Horário otimizado (maior aprovação)</SelectItem>
-                    <SelectItem value="specific">Horário específico</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label className="mb-3 block">Estratégia de Horário</Label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <SelectionButton
+                    selected={formData.retry_time_strategy === 'same_time'}
+                    onClick={() => setFormData({ ...formData, retry_time_strategy: 'same_time' })}
+                  >
+                    Mesmo horário
+                  </SelectionButton>
+                  <SelectionButton
+                    selected={formData.retry_time_strategy === 'optimized'}
+                    onClick={() => setFormData({ ...formData, retry_time_strategy: 'optimized' })}
+                  >
+                    Inteligente (IA)
+                  </SelectionButton>
+                  <SelectionButton
+                    selected={formData.retry_time_strategy === 'specific'}
+                    onClick={() => setFormData({ ...formData, retry_time_strategy: 'specific' })}
+                  >
+                    Horário Fixo
+                  </SelectionButton>
+                </div>
               </div>
 
               {formData.retry_time_strategy === 'specific' && (

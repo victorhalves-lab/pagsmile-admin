@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import { CreditCard, QrCode, GripVertical } from 'lucide-react';
+import SelectionButton from '@/components/ui/selection-button';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const cardBrands = [
@@ -73,24 +74,27 @@ export default function PaymentMethodSettings({ paymentMethods, onChange }) {
             {/* Brands */}
             <div>
               <Label className="text-xs text-gray-500 mb-3 block">Bandeiras Aceitas</Label>
-              <div className="grid grid-cols-4 gap-3">
-                {cardBrands.map(brand => (
-                  <div key={brand.id} className="flex items-center space-x-2">
-                    <Checkbox 
-                      id={`brand-${brand.id}`}
-                      checked={(card.brands || ['visa', 'mastercard', 'elo', 'amex', 'hipercard']).includes(brand.id)}
-                      onCheckedChange={(checked) => {
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {cardBrands.map(brand => {
+                  const isSelected = (card.brands || ['visa', 'mastercard', 'elo', 'amex', 'hipercard']).includes(brand.id);
+                  return (
+                    <SelectionButton
+                      key={brand.id}
+                      selected={isSelected}
+                      onClick={() => {
                         const brands = card.brands || ['visa', 'mastercard', 'elo', 'amex', 'hipercard'];
-                        if (checked) {
+                        if (!isSelected) {
                           updatePayment('card.brands', [...brands, brand.id]);
                         } else {
                           updatePayment('card.brands', brands.filter(b => b !== brand.id));
                         }
                       }}
-                    />
-                    <Label htmlFor={`brand-${brand.id}`} className="text-sm">{brand.name}</Label>
-                  </div>
-                ))}
+                      className="h-12"
+                    >
+                      {brand.name}
+                    </SelectionButton>
+                  );
+                })}
               </div>
             </div>
 

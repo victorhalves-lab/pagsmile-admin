@@ -1,17 +1,16 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Wallet,
   Clock,
   Lock,
   Truck,
   DollarSign,
-  ArrowUpRight,
-  TrendingUp,
+  ChevronRight,
   Info,
-  ChevronRight
+  ArrowUpRight,
+  Download
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -23,84 +22,6 @@ import {
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
-};
-
-const BalanceCard = ({ 
-  title, 
-  amount, 
-  icon: Icon, 
-  color, 
-  description, 
-  action, 
-  onAction,
-  breakdown,
-  isLoading 
-}) => {
-  const colorClasses = {
-    green: 'bg-green-50 text-green-600 border-green-200',
-    blue: 'bg-blue-50 text-blue-600 border-blue-200',
-    orange: 'bg-orange-50 text-orange-600 border-orange-200',
-    purple: 'bg-purple-50 text-purple-600 border-purple-200',
-    gray: 'bg-gray-50 text-gray-600 border-gray-200',
-  };
-
-  const iconBgClasses = {
-    green: 'bg-green-100',
-    blue: 'bg-blue-100',
-    orange: 'bg-orange-100',
-    purple: 'bg-purple-100',
-    gray: 'bg-gray-100',
-  };
-
-  return (
-    <Card className={cn("border", colorClasses[color])}>
-      <CardContent className="p-5">
-        <div className="flex items-start justify-between mb-3">
-          <div className={cn("p-2 rounded-lg", iconBgClasses[color])}>
-            <Icon className="w-5 h-5" />
-          </div>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Info className="w-4 h-4 text-gray-400" />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="max-w-xs">{description}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-
-        <p className="text-sm text-gray-600 mb-1">{title}</p>
-        <p className={cn("text-2xl font-bold", isLoading && "animate-pulse")}>
-          {isLoading ? '---' : formatCurrency(amount)}
-        </p>
-
-        {breakdown && breakdown.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-dashed space-y-1">
-            {breakdown.map((item, idx) => (
-              <div key={idx} className="flex justify-between text-xs">
-                <span className="text-gray-500">{item.label}</span>
-                <span className="font-medium">{formatCurrency(item.value)}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {action && (
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="mt-3 w-full justify-between text-xs"
-            onClick={onAction}
-          >
-            {action}
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        )}
-      </CardContent>
-    </Card>
-  );
 };
 
 export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
@@ -117,60 +38,172 @@ export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-      <BalanceCard
-        title="Saldo Disponível"
-        amount={available}
-        icon={Wallet}
-        color="green"
-        description="Valor que pode ser sacado imediatamente. Já liquidado e sem bloqueios."
-        action="Sacar"
-        onAction={() => onAction?.('withdraw')}
-        isLoading={isLoading}
-      />
+      {/* 1. Saldo Disponível - Destaque Principal */}
+      <Card className="border-emerald-200 bg-emerald-50/50 shadow-sm relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+          <Wallet className="w-16 h-16 text-emerald-600" />
+        </div>
+        <CardContent className="p-5 flex flex-col justify-between h-full">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="p-1.5 bg-emerald-100 rounded-md">
+                <Wallet className="w-4 h-4 text-emerald-600" />
+              </div>
+              <p className="text-sm font-medium text-emerald-800">Saldo Disponível</p>
+            </div>
+            <p className="text-2xl font-bold text-emerald-700 mt-1">{formatCurrency(available)}</p>
+          </div>
+          <Button 
+            className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+            onClick={() => onAction?.('withdraw')}
+          >
+            Sacar Agora
+            <ArrowUpRight className="w-4 h-4 ml-2" />
+          </Button>
+        </CardContent>
+      </Card>
 
-      <BalanceCard
-        title="Saldo a Liberar"
-        amount={pending}
-        icon={Clock}
-        color="blue"
-        description="Valores futuros que ainda não foram liquidados. Aguardando prazo D+X."
-        action="Ver Agenda"
-        onAction={() => onAction?.('receivables')}
-        breakdown={pendingBreakdown}
-        isLoading={isLoading}
-      />
+      {/* 2. Saldo a Liberar - Informativo com Breakdown */}
+      <Card className="border-blue-100 bg-white shadow-sm">
+        <CardContent className="p-5 flex flex-col justify-between h-full">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-blue-50 rounded-md">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                </div>
+                <p className="text-sm font-medium text-gray-600">A Liberar</p>
+              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger><Info className="w-3.5 h-3.5 text-gray-400" /></TooltipTrigger>
+                  <TooltipContent>Recebíveis futuros agendados</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">{formatCurrency(pending)}</p>
+            
+            <div className="mt-3 space-y-1">
+              {pendingBreakdown.slice(0, 2).map((item, i) => (
+                <div key={i} className="flex justify-between text-xs text-gray-500">
+                  <span>{item.label}</span>
+                  <span className="font-medium text-gray-700">{formatCurrency(item.value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="w-full mt-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 justify-between px-0"
+            onClick={() => onAction?.('receivables')}
+          >
+            Ver Agenda
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </CardContent>
+      </Card>
 
-      <BalanceCard
-        title="Saldo Bloqueado"
-        amount={blocked}
-        icon={Lock}
-        color="orange"
-        description="Valores retidos por reserva de chargeback, disputas em aberto ou compliance."
-        action="Ver Detalhes"
-        onAction={() => onAction?.('blocked')}
-        breakdown={blockedBreakdown}
-        isLoading={isLoading}
-      />
+      {/* 3. Saldo Bloqueado - Alerta */}
+      <Card className="border-orange-100 bg-white shadow-sm">
+        <CardContent className="p-5 flex flex-col justify-between h-full">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-orange-50 rounded-md">
+                  <Lock className="w-4 h-4 text-orange-500" />
+                </div>
+                <p className="text-sm font-medium text-gray-600">Bloqueado</p>
+              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger><Info className="w-3.5 h-3.5 text-gray-400" /></TooltipTrigger>
+                  <TooltipContent>Retenções por disputa ou risco</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">{formatCurrency(blocked)}</p>
+            
+            <div className="mt-3 space-y-1">
+              {blockedBreakdown.slice(0, 2).map((item, i) => (
+                <div key={i} className="flex justify-between text-xs text-gray-500">
+                  <span>{item.label}</span>
+                  <span className="font-medium text-gray-700">{formatCurrency(item.value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="w-full mt-2 text-orange-600 hover:text-orange-700 hover:bg-orange-50 justify-between px-0"
+            onClick={() => onAction?.('blocked')}
+          >
+            Ver Detalhes
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </CardContent>
+      </Card>
 
-      <BalanceCard
-        title="Saldo em Trânsito"
-        amount={inTransit}
-        icon={Truck}
-        color="purple"
-        description="Saques já solicitados mas ainda não creditados na conta bancária."
-        action="Ver Saques"
-        onAction={() => onAction?.('withdrawals')}
-        isLoading={isLoading}
-      />
+      {/* 4. Em Trânsito - Status de Saque */}
+      <Card className="border-purple-100 bg-purple-50/30 shadow-sm">
+        <CardContent className="p-5 flex flex-col justify-between h-full">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-purple-100 rounded-md">
+                  <Truck className="w-4 h-4 text-purple-600" />
+                </div>
+                <p className="text-sm font-medium text-gray-600">Em Trânsito</p>
+              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger><Info className="w-3.5 h-3.5 text-gray-400" /></TooltipTrigger>
+                  <TooltipContent>Saques solicitados aguardando compensação bancária</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">{formatCurrency(inTransit)}</p>
+            <p className="text-xs text-purple-600 mt-2 bg-purple-100 inline-block px-2 py-0.5 rounded-full font-medium">
+              Aguardando Banco
+            </p>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="w-full mt-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 justify-between px-0"
+            onClick={() => onAction?.('withdrawals')}
+          >
+            Acompanhar Saques
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </CardContent>
+      </Card>
 
-      <BalanceCard
-        title="Saldo Total"
-        amount={total}
-        icon={DollarSign}
-        color="gray"
-        description="Soma de todos os saldos (disponível + a liberar + bloqueado + em trânsito)."
-        isLoading={isLoading}
-      />
+      {/* 5. Saldo Total - Visão Geral */}
+      <Card className="border-gray-200 bg-gray-50/50 shadow-sm">
+        <CardContent className="p-5 flex flex-col justify-center h-full">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="p-1.5 bg-gray-200 rounded-md">
+              <DollarSign className="w-4 h-4 text-gray-600" />
+            </div>
+            <p className="text-sm font-medium text-gray-600">Saldo Total</p>
+          </div>
+          <p className="text-2xl font-bold text-gray-900 mb-1">{formatCurrency(total)}</p>
+          <p className="text-xs text-gray-500">Soma de todos os saldos</p>
+          <div className="mt-4 pt-4 border-t border-gray-200">
+             <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full text-xs h-8"
+                onClick={() => onAction?.('receivables')}
+             >
+                <Download className="w-3 h-3 mr-2" />
+                Relatório Geral
+             </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
