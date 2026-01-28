@@ -193,11 +193,11 @@ export default function Chargebacks() {
       key: 'brand',
       label: 'Bandeira',
       render: (row) => {
-        const brand = cardBrandConfig[row.card_brand] || {};
+        const brand = cardBrandConfig[row?.card_brand] || {};
         return (
           <Badge className={cn(brand.bg, brand.color)}>
             <CreditCard className="w-3 h-3 mr-1" />
-            {brand.label || row.card_brand}
+            {brand.label || row?.card_brand || '-'}
           </Badge>
         );
       }
