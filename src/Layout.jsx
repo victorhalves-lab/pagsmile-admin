@@ -469,7 +469,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className={cn("min-h-screen font-sans antialiased selection:bg-[#00D26A]/20 selection:text-[#00D26A]", theme)}>
+    <div className={cn("min-h-screen font-sans antialiased selection:bg-[#2bc196]/20 selection:text-[#2bc196]", theme)}>
       <div className="min-h-screen bg-slate-50 dark:bg-[#101F3E] text-slate-900 dark:text-slate-100 transition-colors duration-300">
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
@@ -481,7 +481,7 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 left-0 z-50 h-full bg-[#101F3E] text-slate-300 transition-all duration-300 shadow-2xl border-r border-slate-800/50 dark:border-slate-700/30",
+        "fixed top-0 left-0 z-50 h-full bg-[#002443] text-slate-300 transition-all duration-300 shadow-2xl border-r border-slate-800/50 dark:border-slate-700/30",
         sidebarOpen ? "w-64" : "w-20",
         mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
@@ -535,17 +535,17 @@ export default function Layout({ children, currentPageName }) {
                       <div className={cn(
                         "w-8 h-8 rounded-lg flex items-center justify-center",
                         currentModule === 'internet-banking' 
-                          ? "bg-[#00D26A]/20" 
+                          ? "bg-[#2bc196]/20" 
                           : currentModule === 'admin-interno'
                             ? "bg-purple-500/20"
-                            : "bg-blue-500/20"
+                            : "bg-[#2bc196]/20"
                       )}>
                         {currentModule === 'internet-banking' ? (
-                          <Landmark className="w-4 h-4 text-[#00D26A]" />
+                          <Landmark className="w-4 h-4 text-[#2bc196]" />
                         ) : currentModule === 'admin-interno' ? (
                           <ShieldCheck className="w-4 h-4 text-purple-400" />
                         ) : (
-                          <Store className="w-4 h-4 text-blue-400" />
+                          <Store className="w-4 h-4 text-[#2bc196]" />
                         )}
                       </div>
                       <div className="text-left">
@@ -576,7 +576,7 @@ export default function Layout({ children, currentPageName }) {
                         <p className="text-xs text-slate-500">Gestão de Pagamentos</p>
                       </div>
                       {currentModule === 'admin-sub' && (
-                        <Check className="w-4 h-4 text-[#00D26A]" />
+                        <Check className="w-4 h-4 text-[#2bc196]" />
                       )}
                     </div>
                   </DropdownMenuItem>
@@ -593,7 +593,7 @@ export default function Layout({ children, currentPageName }) {
                         <p className="text-xs text-slate-500">Conta Digital</p>
                       </div>
                       {currentModule === 'internet-banking' && (
-                        <Check className="w-4 h-4 text-[#00D26A]" />
+                        <Check className="w-4 h-4 text-[#2bc196]" />
                       )}
                     </div>
                   </DropdownMenuItem>
@@ -610,7 +610,7 @@ export default function Layout({ children, currentPageName }) {
                         <p className="text-xs text-slate-500">Gestão Interna</p>
                       </div>
                       {currentModule === 'admin-interno' && (
-                        <Check className="w-4 h-4 text-[#00D26A]" />
+                        <Check className="w-4 h-4 text-[#2bc196]" />
                       )}
                     </div>
                   </DropdownMenuItem>
@@ -631,13 +631,13 @@ export default function Layout({ children, currentPageName }) {
                         className={cn(
                           "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
                           isActiveSection(item)
-                            ? "bg-[#00D26A]/10 text-[#00D26A] shadow-[0_0_20px_rgba(0,210,106,0.15)]"
+                            ? "bg-[#2bc196]/10 text-[#2bc196] shadow-[0_0_20px_rgba(43,193,150,0.15)]"
                             : "text-slate-400 hover:text-slate-100 hover:bg-white/5",
                           !sidebarOpen && "justify-center"
                         )}
                       >
-                        {isActiveSection(item) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#00D26A] rounded-r-full" />}
-                        <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-[#00D26A]" : "text-slate-500 group-hover:text-slate-300")} />
+                        {isActiveSection(item) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#2bc196] rounded-r-full" />}
+                        <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-[#2bc196]" : "text-slate-500 group-hover:text-slate-300")} />
                         {sidebarOpen && (
                           <>
                             <span className="flex-1 text-left truncate">{item.label}</span>
@@ -656,7 +656,7 @@ export default function Layout({ children, currentPageName }) {
                             )}
                             <ChevronDown className={cn(
                               "w-4 h-4 transition-transform duration-200 text-slate-500",
-                              expandedMenus.includes(item.id) && "rotate-180 text-[#00D26A]"
+                              expandedMenus.includes(item.id) && "rotate-180 text-[#2bc196]"
                             )} />
                           </>
                         )}
@@ -670,7 +670,7 @@ export default function Layout({ children, currentPageName }) {
                               className={cn(
                                 "flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-all relative",
                                 isActivePage(sub.page)
-                                  ? "bg-[#00D26A] text-white font-medium shadow-lg shadow-[#00D26A]/20"
+                                  ? "bg-[#2bc196] text-white font-medium shadow-lg shadow-[#2bc196]/20"
                                   : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
                               )}
                             >
@@ -687,13 +687,13 @@ export default function Layout({ children, currentPageName }) {
                       className={cn(
                         "flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
                         isActivePage(item.page)
-                          ? "bg-[#00D26A]/10 text-[#00D26A] shadow-[0_0_20px_rgba(0,210,106,0.15)]"
+                          ? "bg-[#2bc196]/10 text-[#2bc196] shadow-[0_0_20px_rgba(43,193,150,0.15)]"
                           : "text-slate-400 hover:text-slate-100 hover:bg-white/5",
                         !sidebarOpen && "justify-center"
                       )}
                     >
-                      {isActivePage(item.page) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#00D26A] rounded-r-full" />}
-                      <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActivePage(item.page) ? "text-[#00D26A]" : "text-slate-500 group-hover:text-slate-300")} />
+                      {isActivePage(item.page) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#2bc196] rounded-r-full" />}
+                      <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActivePage(item.page) ? "text-[#2bc196]" : "text-slate-500 group-hover:text-slate-300")} />
                       {sidebarOpen && (
                         <>
                           <span className="flex-1 truncate">{item.label}</span>
@@ -764,7 +764,7 @@ export default function Layout({ children, currentPageName }) {
 
           {/* User Profile */}
           {sidebarOpen && (
-            <div className="p-4 border-t border-slate-800/50 bg-[#0B1121]">
+            <div className="p-4 border-t border-slate-800/50 bg-[#001a33]">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all duration-200 border border-transparent hover:border-slate-700/50 group">
@@ -773,7 +773,7 @@ export default function Layout({ children, currentPageName }) {
                           <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" />
                           <AvatarFallback className="bg-primary text-white font-bold">JD</AvatarFallback>
                       </Avatar>
-                      <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#0B1121] rounded-full"></span>
+                      <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#2bc196] border-2 border-[#001a33] rounded-full"></span>
                     </div>
                     <div className="flex-1 text-left overflow-hidden">
                       <p className="text-sm font-semibold text-slate-200 truncate group-hover:text-white transition-colors">João Silva</p>
@@ -824,7 +824,7 @@ export default function Layout({ children, currentPageName }) {
               )}
               {currentModule === 'internet-banking' && (
                 <div className="flex items-center gap-2">
-                  <Landmark className="w-5 h-5 text-[#00D26A]" />
+                  <Landmark className="w-5 h-5 text-[#2bc196]" />
                   <span className="font-semibold text-slate-700 dark:text-slate-200">Internet Banking</span>
                 </div>
               )}
@@ -856,7 +856,7 @@ export default function Layout({ children, currentPageName }) {
                     "hidden sm:flex items-center gap-2 shadow-sm",
                     currentModule === 'admin-interno' 
                       ? "border-purple-500/20 text-purple-600 hover:bg-purple-500/5 hover:border-purple-500/40 dark:text-purple-400 dark:bg-purple-500/10"
-                      : "border-[#00D26A]/20 text-[#00D26A] hover:bg-[#00D26A]/5 hover:border-[#00D26A]/40 dark:bg-[#00D26A]/10"
+                      : "border-[#2bc196]/20 text-[#2bc196] hover:bg-[#2bc196]/5 hover:border-[#2bc196]/40 dark:bg-[#2bc196]/10"
                   )}
                   onClick={() => setShowAIPanel(!showAIPanel)}
                 >
@@ -864,7 +864,7 @@ export default function Layout({ children, currentPageName }) {
                     "w-5 h-5 rounded-full flex items-center justify-center",
                     currentModule === 'admin-interno'
                       ? "bg-gradient-to-br from-purple-500 to-indigo-600"
-                      : "bg-gradient-to-br from-[#00D26A] to-emerald-600"
+                      : "bg-gradient-to-br from-[#2bc196] to-[#5cf7cf]"
                   )}>
                     <Sparkles className="w-3 h-3 text-white" />
                   </div>
@@ -894,7 +894,7 @@ export default function Layout({ children, currentPageName }) {
               {/* Mobile User Avatar */}
               <Avatar className="h-8 w-8 lg:hidden">
                 <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" />
-                <AvatarFallback className="bg-[#00D26A] text-white text-xs">JD</AvatarFallback>
+                <AvatarFallback className="bg-[#2bc196] text-white text-xs">JD</AvatarFallback>
               </Avatar>
             </div>
           </div>
@@ -938,7 +938,7 @@ export default function Layout({ children, currentPageName }) {
                 "w-8 h-8 rounded-lg flex items-center justify-center",
                 currentModule === 'admin-interno' 
                   ? "bg-gradient-to-br from-purple-500 to-indigo-600"
-                  : "bg-gradient-to-br from-[#00D26A] to-emerald-600"
+                  : "bg-gradient-to-br from-[#2bc196] to-[#5cf7cf]"
               )}>
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
@@ -980,13 +980,13 @@ export default function Layout({ children, currentPageName }) {
                 </>
               ) : (
                 <>
-                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#00D26A] hover:bg-[#00D26A]/5 dark:hover:bg-[#00D26A]/10 transition-colors text-sm dark:text-slate-200">
+                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#2bc196] hover:bg-[#2bc196]/5 dark:hover:bg-[#2bc196]/10 transition-colors text-sm dark:text-slate-200">
                     📊 Analisar taxa de aprovação do mês
                   </button>
-                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#00D26A] hover:bg-[#00D26A]/5 dark:hover:bg-[#00D26A]/10 transition-colors text-sm dark:text-slate-200">
+                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#2bc196] hover:bg-[#2bc196]/5 dark:hover:bg-[#2bc196]/10 transition-colors text-sm dark:text-slate-200">
                     💰 Ver oportunidades de recuperação
                   </button>
-                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#00D26A] hover:bg-[#00D26A]/5 dark:hover:bg-[#00D26A]/10 transition-colors text-sm dark:text-slate-200">
+                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#2bc196] hover:bg-[#2bc196]/5 dark:hover:bg-[#2bc196]/10 transition-colors text-sm dark:text-slate-200">
                     ⚠️ Disputas que precisam de atenção
                   </button>
                 </>
@@ -1006,7 +1006,7 @@ export default function Layout({ children, currentPageName }) {
                   "absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7",
                   currentModule === 'admin-interno'
                     ? "bg-purple-600 hover:bg-purple-700"
-                    : "bg-[#00D26A] hover:bg-emerald-600"
+                    : "bg-[#2bc196] hover:bg-[#239b7a]"
                 )}
               >
                 <ChevronRight className="w-4 h-4" />
@@ -1019,30 +1019,30 @@ export default function Layout({ children, currentPageName }) {
       </div>
       <style>{`
         :root {
-          --primary: #00D26A;
+          --primary: #2bc196;
           --primary-foreground: #FFFFFF;
           --radius: 0.75rem;
         }
         .dark {
-          --background: #101F3E;
+          --background: #002443;
           --foreground: #F1F5F9;
-          --card: #1E293B;
+          --card: #003459;
           --card-foreground: #F1F5F9;
-          --popover: #1E293B;
+          --popover: #003459;
           --popover-foreground: #F1F5F9;
-          --primary: #00D26A;
+          --primary: #2bc196;
           --primary-foreground: #FFFFFF;
-          --secondary: #334155;
+          --secondary: #004D73;
           --secondary-foreground: #F1F5F9;
-          --muted: #334155;
+          --muted: #004D73;
           --muted-foreground: #94A3B8;
-          --accent: #334155;
+          --accent: #004D73;
           --accent-foreground: #F1F5F9;
           --destructive: #EF4444;
           --destructive-foreground: #F1F5F9;
-          --border: #334155;
-          --input: #334155;
-          --ring: #00D26A;
+          --border: #004D73;
+          --input: #004D73;
+          --ring: #2bc196;
         }
       `}</style>
     </div>
