@@ -113,6 +113,9 @@ import AdminIntSubaccountDetail from './pages/AdminIntSubaccountDetail';
 import AdminIntKYCQueue from './pages/AdminIntKYCQueue';
 import AdminIntKycAnalysis from './pages/AdminIntKycAnalysis';
 import AdminIntMerchantsList from './pages/AdminIntMerchantsList';
+import AdminIntTransactionsDashboard from './pages/AdminIntTransactionsDashboard';
+import AdminIntTransactionsList from './pages/AdminIntTransactionsList';
+import AdminIntTransactionDetail from './pages/AdminIntTransactionDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -232,6 +235,9 @@ export const PAGES = {
     "AdminIntKYCQueue": AdminIntKYCQueue,
     "AdminIntKycAnalysis": AdminIntKycAnalysis,
     "AdminIntMerchantsList": AdminIntMerchantsList,
+    "AdminIntTransactionsDashboard": AdminIntTransactionsDashboard,
+    "AdminIntTransactionsList": AdminIntTransactionsList,
+    "AdminIntTransactionDetail": AdminIntTransactionDetail,
 }
 
 export const pagesConfig = {
