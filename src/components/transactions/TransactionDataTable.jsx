@@ -264,8 +264,8 @@ export default function TransactionDataTable({
       case 'customer':
         return (
           <div className="min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">{row.customer_name || 'N/A'}</p>
-            <p className="text-xs text-gray-500 truncate">{row.customer_email}</p>
+            <p className="text-sm font-medium text-gray-900 truncate">{row?.customer_name || 'N/A'}</p>
+            <p className="text-xs text-gray-500 truncate">{row?.customer_email || ''}</p>
           </div>
         );
 
