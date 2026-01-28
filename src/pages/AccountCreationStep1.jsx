@@ -43,9 +43,9 @@ export default function AccountCreationStep1() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-4 md:p-8">
-      <Card className="w-full max-w-lg rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#1E293B]/80 backdrop-blur-sm">
-        <CardHeader className="text-center pb-6 pt-8 space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-4 md:p-8 pb-32 md:pb-8">
+      <Card className="w-full max-w-5xl rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#1E293B]/80 backdrop-blur-sm">
+        <CardHeader className="text-center pb-2 pt-6 space-y-2 md:space-y-4">
           <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-2 hover:opacity-80 transition-opacity">
             <img
               src={getLogoUrlByTheme('light')}
@@ -83,87 +83,83 @@ export default function AccountCreationStep1() {
         <CardContent className="space-y-6 pt-2">
           {!showVerification ? (
             <>
-              <div className="grid gap-4">
-                <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <div className="space-y-2 md:col-span-6">
                   <Label htmlFor="fullName">Nome Completo</Label>
                   <Input id="fullName" placeholder="Seu nome completo" value={formData.fullName} onChange={handleChange} />
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="cpf">CPF</Label>
-                    <Input id="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Telefone</Label>
-                    <Input id="phone" placeholder="(11) 99999-9999" value={formData.phone} onChange={handleChange} />
-                  </div>
+                <div className="space-y-2 md:col-span-3">
+                  <Label htmlFor="cpf">CPF</Label>
+                  <Input id="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} />
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-2 md:col-span-3">
+                  <Label htmlFor="phone">Telefone</Label>
+                  <Input id="phone" placeholder="(11) 99999-9999" value={formData.phone} onChange={handleChange} />
+                </div>
+                
+                <div className="space-y-2 md:col-span-6">
                   <Label htmlFor="email">E-mail</Label>
                   <Input id="email" type="email" placeholder="seu@email.com" value={formData.email} onChange={handleChange} />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 md:col-span-3">
                   <Label htmlFor="birthDate">Data de Nascimento</Label>
                   <Input id="birthDate" type="date" value={formData.birthDate} onChange={handleChange} />
                 </div>
                 
-                <div className="space-y-3">
-                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-200">Você é representante legal da empresa?</Label>
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2 md:col-span-3">
+                  <Label className="text-sm font-bold text-[#00c295]">Representante Legal?</Label>
+                  <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => setFormData(p => ({...p, isRepresentative: 'yes'}))}
                       className={cn(
-                        "flex items-center justify-center px-6 py-3 rounded-full border transition-all duration-200 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-[#00c295] focus:ring-offset-2",
+                        "flex-1 flex items-center justify-center px-2 py-2.5 rounded-xl border transition-all duration-200 font-bold text-sm",
                         formData.isRepresentative === 'yes'
-                          ? "bg-[#00c295] border-[#00c295] text-white shadow-md shadow-[#00c295]/20"
-                          : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
+                          ? "bg-[#00c295] border-[#00c295] text-white"
+                          : "bg-white border-[#00c295] text-slate-600 hover:bg-[#00c295]/5"
                       )}
                     >
-                      {formData.isRepresentative === 'yes' && <Check className="w-4 h-4 mr-2" />}
+                      {formData.isRepresentative === 'yes' && <Check className="w-3 h-3 mr-1" />}
                       Sim
                     </button>
                     <button
                       type="button"
                       onClick={() => setFormData(p => ({...p, isRepresentative: 'no'}))}
                       className={cn(
-                        "flex items-center justify-center px-6 py-3 rounded-full border transition-all duration-200 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-[#00c295] focus:ring-offset-2",
+                        "flex-1 flex items-center justify-center px-2 py-2.5 rounded-xl border transition-all duration-200 font-bold text-sm",
                         formData.isRepresentative === 'no'
-                          ? "bg-[#00c295] border-[#00c295] text-white shadow-md shadow-[#00c295]/20"
-                          : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
+                          ? "bg-[#00c295] border-[#00c295] text-white"
+                          : "bg-white border-[#00c295] text-slate-600 hover:bg-[#00c295]/5"
                       )}
                     >
-                      {formData.isRepresentative === 'no' && <Check className="w-4 h-4 mr-2" />}
+                      {formData.isRepresentative === 'no' && <Check className="w-3 h-3 mr-1" />}
                       Não
                     </button>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Senha</Label>
-                    <Input id="password" type="password" placeholder="••••••••" value={formData.password} onChange={handleChange} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirmar Senha</Label>
-                    <Input id="confirmPassword" type="password" placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} />
-                  </div>
+                <div className="space-y-2 md:col-span-6">
+                  <Label htmlFor="password">Senha</Label>
+                  <Input id="password" type="password" placeholder="••••••••" value={formData.password} onChange={handleChange} />
                 </div>
-              </div>
-              
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+                <div className="space-y-2 md:col-span-6">
+                  <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+                  <Input id="confirmPassword" type="password" placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} />
+                </div>
+
+                <div className="md:col-span-12 pt-2">
                   <div className="flex flex-col sm:flex-row items-center gap-3 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700">
                       <button
                           type="button"
                           onClick={() => setFormData(p => ({...p, agreeToTerms: !p.agreeToTerms}))}
                           className={cn(
-                              "flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border",
+                              "flex-shrink-0 flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-200 border",
                               formData.agreeToTerms
-                                  ? "bg-[#00c295]/10 text-[#00c295] border-[#00c295]/20"
-                                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100 hover:border-slate-300"
+                                  ? "bg-[#00c295] text-white border-[#00c295]"
+                                  : "bg-white text-slate-600 border-[#00c295] hover:bg-[#00c295]/5"
                           )}
                       >
                           {formData.agreeToTerms ? (
@@ -173,7 +169,6 @@ export default function AccountCreationStep1() {
                               </>
                           ) : (
                               <>
-                                  <div className="w-4 h-4 rounded-full border-2 border-slate-300" />
                                   Aceitar Termos
                               </>
                           )}
@@ -182,6 +177,7 @@ export default function AccountCreationStep1() {
                           Ao continuar, você concorda com nossos <Link to="#" className="text-[#00c295] font-semibold hover:underline">Termos de Uso</Link> e <Link to="#" className="text-[#00c295] font-semibold hover:underline">Política de Privacidade</Link>.
                       </p>
                   </div>
+                </div>
               </div>
             </>
           ) : (
@@ -265,7 +261,7 @@ export default function AccountCreationStep1() {
           )}
         </CardContent>
         
-        <CardFooter className="flex justify-between pt-6 pb-8 px-8">
+        <CardFooter className="flex justify-between pt-6 pb-8 px-8 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-8">
           {!showVerification ? (
             <>
               <Button variant="ghost" className="text-slate-500 hover:text-slate-900 hover:bg-slate-100" asChild>
