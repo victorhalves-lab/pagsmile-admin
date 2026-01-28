@@ -257,6 +257,9 @@ const adminInternoMenuItems = [
       { label: 'Lista de Merchants', page: 'AdminIntMerchantsList' },
       { label: 'Perfil 360°', page: 'AdminIntMerchantProfile' },
       { label: 'Subcontas', page: 'AdminIntSubaccounts' },
+      { label: 'Grupos', page: 'AdminIntMerchantGroups' },
+      { label: 'Tags', page: 'AdminIntMerchantTags' },
+      { label: 'Relatórios', page: 'AdminIntMerchantReports' },
     ]
   },
   {
@@ -367,8 +370,8 @@ const adminInternoPages = [
   'AdminIntDashboard', 'AdminIntComercial', 'AdminIntLeads', 'AdminIntPipeline', 'AdminIntProposals', 'AdminIntQuestionnaires',
   'AdminIntOnboardingDash', 'AdminIntOnboardingQueue', 'AdminIntSelfService', 'AdminIntActivation',
   'AdminIntKYC', 'AdminIntPLD', 'AdminIntDocs', 'AdminIntSubaccountDetail', 'AdminIntKYCQueue', 'AdminIntKycAnalysis',
-  'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts',
-  'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation',
+  'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts', 'AdminIntMerchantsList', 'AdminIntNewMerchant', 'AdminIntMerchantGroups', 'AdminIntMerchantTags', 'AdminIntMerchantReports',
+  'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
   'AdminIntMCCs', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
 ];
