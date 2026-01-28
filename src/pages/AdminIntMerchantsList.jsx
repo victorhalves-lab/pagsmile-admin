@@ -82,7 +82,9 @@ export default function AdminIntMerchantsList() {
                 actions={
                     <div className="flex gap-2">
                         <Button variant="outline"><Download className="w-4 h-4 mr-2" /> Exportar</Button>
-                        <Button className="bg-[#00D26A] hover:bg-[#00b059]"><Plus className="w-4 h-4 mr-2" /> Novo Merchant</Button>
+                        <Link to={createPageUrl('AdminIntNewMerchant')}>
+                            <Button className="bg-[#00D26A] hover:bg-[#00b059]"><Plus className="w-4 h-4 mr-2" /> Novo Merchant</Button>
+                        </Link>
                     </div>
                 }
             />

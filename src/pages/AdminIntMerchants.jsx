@@ -62,9 +62,11 @@ export default function AdminIntMerchants() {
                 <List className="w-4 h-4 mr-2" /> Ver Lista
               </Button>
             </Link>
-            <Button className="bg-[#00D26A] hover:bg-[#00b059]">
-              <Plus className="w-4 h-4 mr-2" /> Novo Merchant
-            </Button>
+            <Link to={createPageUrl('AdminIntNewMerchant')}>
+              <Button className="bg-[#00D26A] hover:bg-[#00b059]">
+                <Plus className="w-4 h-4 mr-2" /> Novo Merchant
+              </Button>
+            </Link>
           </div>
         }
       />

@@ -183,6 +183,7 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
+import AdminIntNewMerchant from './pages/AdminIntNewMerchant';
 import __Layout from './Layout.jsx';
 
 
@@ -323,6 +324,7 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
+    "AdminIntNewMerchant": AdminIntNewMerchant,
 }
 
 export const pagesConfig = {
