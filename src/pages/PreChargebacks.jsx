@@ -4,36 +4,30 @@ import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/common/PageHeader';
 import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from '@/components/utils';
 import {
   AlertTriangle,
   Clock,
   DollarSign,
-  RefreshCcw,
   Eye,
   Undo2,
   Ban,
-  MessageSquare,
-  Shield,
-  Zap,
   Settings,
-  ExternalLink,
-  AlertCircle
+  AlertCircle,
+  Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { format, differenceInHours, differenceInDays } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { differenceInHours, differenceInDays } from 'date-fns';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
@@ -99,7 +93,7 @@ export default function PreChargebacks() {
     queryFn: () => base44.entities.AutoReimburseConfig.list()
   });
 
-  const autoConfig = autoConfigs[0] || {};
+  const autoConfig = autoConfigs?.[0] || {};
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Dispute.update(id, data),
@@ -112,7 +106,7 @@ export default function PreChargebacks() {
 
   const saveAutoConfigMutation = useMutation({
     mutationFn: (data) => {
-      if (autoConfig.id) {
+      if (autoConfig?.id) {
         return base44.entities.AutoReimburseConfig.update(autoConfig.id, data);
       }
       return base44.entities.AutoReimburseConfig.create(data);
@@ -122,7 +116,10 @@ export default function PreChargebacks() {
     }
   });
 
-  const filteredDisputes = disputes.filter(d => {
+  const safeDisputes = disputes || [];
+
+  const filteredDisputes = safeDisputes.filter(d => {
+    if (!d) return false;
     if (filters.status !== 'all') {
       if (filters.status === 'pending' && !['received', 'pending'].includes(d.status)) return false;
       if (filters.status === 'resolved' && !['reimbursed', 'won', 'lost'].includes(d.status)) return false;
@@ -131,10 +128,10 @@ export default function PreChargebacks() {
     return true;
   });
 
-  const pendingAlerts = disputes.filter(d => ['received', 'pending'].includes(d.status));
-  const totalPendingValue = pendingAlerts.reduce((sum, d) => sum + (d.amount || 0), 0);
+  const pendingAlerts = safeDisputes.filter(d => d && ['received', 'pending'].includes(d.status));
+  const totalPendingValue = pendingAlerts.reduce((sum, d) => sum + (d?.amount || 0), 0);
   const urgentAlerts = pendingAlerts.filter(d => {
-    if (!d.alert_deadline) return false;
+    if (!d?.alert_deadline) return false;
     return differenceInHours(new Date(d.alert_deadline), new Date()) < 24;
   });
 
@@ -179,10 +176,10 @@ export default function PreChargebacks() {
       label: 'Transação',
       render: (row) => (
         <Link 
-          to={createPageUrl(`TransactionDetail?id=${row.transaction_id}`)}
+          to={createPageUrl(`TransactionDetail?id=${row?.transaction_id || ''}`)}
           className="text-blue-600 hover:underline font-mono text-sm"
         >
-          {row.transaction_id}
+          {row?.transaction_id || '-'}
         </Link>
       )
     },
@@ -191,8 +188,8 @@ export default function PreChargebacks() {
       label: 'Cliente',
       render: (row) => (
         <div>
-          <p className="font-medium text-sm">{row.customer_name || '-'}</p>
-          <p className="text-xs text-gray-500">{row.customer_email}</p>
+          <p className="font-medium text-sm">{row?.customer_name || '-'}</p>
+          <p className="text-xs text-gray-500">{row?.customer_email || '-'}</p>
         </div>
       )
     },
@@ -200,7 +197,7 @@ export default function PreChargebacks() {
       key: 'amount',
       label: 'Valor',
       render: (row) => (
-        <span className="font-semibold">{formatCurrency(row.amount)}</span>
+        <span className="font-semibold">{formatCurrency(row?.amount)}</span>
       )
     },
     {
@@ -208,19 +205,19 @@ export default function PreChargebacks() {
       label: 'Motivo',
       render: (row) => (
         <div className="max-w-[200px]">
-          <p className="text-sm truncate">{row.reason_description || row.reason_code || '-'}</p>
+          <p className="text-sm truncate">{row?.reason_description || row?.reason_code || '-'}</p>
         </div>
       )
     },
     {
       key: 'deadline',
       label: 'Prazo',
-      render: (row) => <DeadlineCountdown deadline={row.alert_deadline} />
+      render: (row) => <DeadlineCountdown deadline={row?.alert_deadline} />
     },
     {
       key: 'status',
       label: 'Status',
-      render: (row) => <StatusBadge status={row.status} />
+      render: (row) => <StatusBadge status={row?.status} />
     },
     {
       key: 'actions',
@@ -234,7 +231,7 @@ export default function PreChargebacks() {
           >
             <Eye className="w-4 h-4" />
           </Button>
-          {['received', 'pending'].includes(row.status) && (
+          {row && ['received', 'pending'].includes(row.status) && (
             <>
               <Button 
                 variant="ghost" 
@@ -327,7 +324,7 @@ export default function PreChargebacks() {
               <div>
                 <p className="text-xs text-gray-500">Auto-Reembolso</p>
                 <p className="text-2xl font-bold text-green-600">
-                  {autoConfig.is_enabled ? 'Ativo' : 'Inativo'}
+                  {autoConfig?.is_enabled ? 'Ativo' : 'Inativo'}
                 </p>
               </div>
               <Zap className="w-8 h-8 text-green-200" />
@@ -396,11 +393,7 @@ export default function PreChargebacks() {
               {actionDialog.type === 'contact' && 'Contatar Cliente'}
             </DialogTitle>
             <DialogDescription>
-              {selectedAlert && (
-                <span>
-                  Transação: {selectedAlert.transaction_id} | Valor: {formatCurrency(selectedAlert.amount)}
-                </span>
-              )}
+              Transação: {selectedAlert?.transaction_id || '-'} | Valor: {formatCurrency(selectedAlert?.amount)}
             </DialogDescription>
           </DialogHeader>
 
@@ -486,7 +479,7 @@ export default function PreChargebacks() {
                 <p className="text-xs text-gray-500">Reembolsar automaticamente alertas que atendam aos critérios</p>
               </div>
               <Switch 
-                checked={autoConfig.is_enabled || false}
+                checked={autoConfig?.is_enabled || false}
                 onCheckedChange={(checked) => saveAutoConfigMutation.mutate({ ...autoConfig, is_enabled: checked })}
               />
             </div>
@@ -495,7 +488,7 @@ export default function PreChargebacks() {
               <Label>Valor Máximo para Auto-Reembolso</Label>
               <Input
                 type="number"
-                defaultValue={autoConfig.value_threshold || 100}
+                defaultValue={autoConfig?.value_threshold || 100}
                 onBlur={(e) => saveAutoConfigMutation.mutate({ 
                   ...autoConfig, 
                   value_threshold: parseFloat(e.target.value) 
@@ -513,7 +506,7 @@ export default function PreChargebacks() {
                     <input
                       type="checkbox"
                       id={reason}
-                      defaultChecked={autoConfig.reason_codes_to_auto_reimburse?.includes(reason)}
+                      defaultChecked={autoConfig?.reason_codes_to_auto_reimburse?.includes(reason)}
                       className="rounded"
                     />
                     <label htmlFor={reason} className="text-sm">
@@ -532,7 +525,7 @@ export default function PreChargebacks() {
                 <p className="text-xs text-gray-500">Receber e-mail quando ocorrer auto-reembolso</p>
               </div>
               <Switch 
-                checked={autoConfig.notification_email_enabled || false}
+                checked={autoConfig?.notification_email_enabled || false}
                 onCheckedChange={(checked) => saveAutoConfigMutation.mutate({ 
                   ...autoConfig, 
                   notification_email_enabled: checked 

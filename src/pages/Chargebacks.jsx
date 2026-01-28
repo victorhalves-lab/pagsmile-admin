@@ -1,37 +1,30 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/common/PageHeader';
 import DataTable from '@/components/common/DataTable';
-import StatusBadge from '@/components/common/StatusBadge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from '@/components/utils';
 import {
-  Shield,
   Search,
-  Filter,
   Eye,
   FileText,
   CheckCircle2,
   XCircle,
   Clock,
-  AlertTriangle,
   CreditCard,
   TrendingUp,
-  ArrowRight,
   Bot
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, differenceInDays } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
@@ -102,7 +95,6 @@ function DeadlineBadge({ deadline }) {
 }
 
 export default function Chargebacks() {
-  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     status: 'all',
@@ -119,28 +111,30 @@ export default function Chargebacks() {
     )
   });
 
-  const filteredDisputes = disputes.filter(d => {
+  const filteredDisputes = (disputes || []).filter(d => {
+    if (!d) return false;
     if (filters.status !== 'all' && d.status !== filters.status) return false;
     if (filters.brand !== 'all' && d.card_brand !== filters.brand) return false;
-    if (filters.category !== 'all' && d?.reason_category !== filters.category) return false;
+    if (filters.category !== 'all' && d.reason_category !== filters.category) return false;
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       return (
-        d.dispute_id?.toLowerCase().includes(term) ||
-        d.transaction_id?.toLowerCase().includes(term) ||
-        d.arn?.toLowerCase().includes(term) ||
-        d.customer_name?.toLowerCase().includes(term) ||
-        d.customer_email?.toLowerCase().includes(term)
+        (d.dispute_id || '').toLowerCase().includes(term) ||
+        (d.transaction_id || '').toLowerCase().includes(term) ||
+        (d.arn || '').toLowerCase().includes(term) ||
+        (d.customer_name || '').toLowerCase().includes(term) ||
+        (d.customer_email || '').toLowerCase().includes(term)
       );
     }
     return true;
   });
 
-  // Calculate KPIs
-  const openDisputes = disputes.filter(d => ['received', 'in_analysis'].includes(d.status));
-  const inContestation = disputes.filter(d => d.status === 'in_contestation');
-  const won = disputes.filter(d => d.status === 'won');
-  const lost = disputes.filter(d => d.status === 'lost' || d.status === 'accepted');
+  // Calculate KPIs safely
+  const safeDisputes = disputes || [];
+  const openDisputes = safeDisputes.filter(d => d && ['received', 'in_analysis'].includes(d.status));
+  const inContestation = safeDisputes.filter(d => d && d.status === 'in_contestation');
+  const won = safeDisputes.filter(d => d && d.status === 'won');
+  const lost = safeDisputes.filter(d => d && (d.status === 'lost' || d.status === 'accepted'));
   const winRate = (won.length + lost.length) > 0 
     ? ((won.length / (won.length + lost.length)) * 100).toFixed(1) 
     : 0;
@@ -150,7 +144,7 @@ export default function Chargebacks() {
       key: 'dispute_id',
       label: 'ID CB',
       render: (row) => (
-        <span className="font-mono text-sm">{row.dispute_id}</span>
+        <span className="font-mono text-sm">{row?.dispute_id || '-'}</span>
       )
     },
     {
@@ -158,10 +152,10 @@ export default function Chargebacks() {
       label: 'Transação',
       render: (row) => (
         <Link 
-          to={createPageUrl(`TransactionDetail?id=${row.transaction_id}`)}
+          to={createPageUrl(`TransactionDetail?id=${row?.transaction_id || ''}`)}
           className="text-blue-600 hover:underline font-mono text-sm"
         >
-          {row.transaction_id}
+          {row?.transaction_id || '-'}
         </Link>
       )
     },
@@ -169,7 +163,7 @@ export default function Chargebacks() {
       key: 'amount',
       label: 'Valor',
       render: (row) => (
-        <span className="font-semibold">{formatCurrency(row.amount)}</span>
+        <span className="font-semibold">{formatCurrency(row?.amount)}</span>
       )
     },
     {
@@ -193,11 +187,11 @@ export default function Chargebacks() {
       key: 'brand',
       label: 'Bandeira',
       render: (row) => {
-        const brand = cardBrandConfig[row?.card_brand] || {};
+        const brand = cardBrandConfig[row?.card_brand] || { bg: 'bg-gray-50', color: 'text-gray-600', label: row?.card_brand };
         return (
           <Badge className={cn(brand.bg, brand.color)}>
             <CreditCard className="w-3 h-3 mr-1" />
-            {brand.label || row?.card_brand || '-'}
+            {brand.label || '-'}
           </Badge>
         );
       }
@@ -207,7 +201,7 @@ export default function Chargebacks() {
       label: 'Data',
       render: (row) => (
         <span className="text-sm">
-          {row.opened_date ? format(new Date(row.opened_date), 'dd/MM/yy') : '-'}
+          {row?.opened_date ? format(new Date(row.opened_date), 'dd/MM/yy') : '-'}
         </span>
       )
     },
@@ -220,12 +214,12 @@ export default function Chargebacks() {
       key: 'status',
       label: 'Status',
       render: (row) => {
-        const status = statusConfig[row.status] || {};
+        const status = statusConfig[row?.status] || { color: 'bg-gray-100 text-gray-600', label: row?.status || '-', icon: Clock };
         const Icon = status.icon || Clock;
         return (
           <Badge className={status.color}>
             <Icon className="w-3 h-3 mr-1" />
-            {status.label || row.status}
+            {status.label}
           </Badge>
         );
       }
@@ -233,7 +227,7 @@ export default function Chargebacks() {
     {
       key: 'probability',
       label: 'Prob. Ganho',
-      render: (row) => <WinProbabilityBadge probability={row.win_probability} />
+      render: (row) => <WinProbabilityBadge probability={row?.win_probability} />
     },
     {
       key: 'actions',
@@ -247,7 +241,7 @@ export default function Chargebacks() {
           >
             <Eye className="w-4 h-4" />
           </Button>
-          {['received', 'in_analysis'].includes(row.status) && (
+          {row && ['received', 'in_analysis'].includes(row.status) && (
             <Link to={createPageUrl(`DisputeContestation?id=${row.id}`)}>
               <Button variant="ghost" size="icon" className="text-purple-600">
                 <FileText className="w-4 h-4" />
@@ -276,28 +270,28 @@ export default function Chargebacks() {
           <CardContent className="p-4">
             <p className="text-xs text-gray-500">Abertos</p>
             <p className="text-2xl font-bold">{openDisputes.length}</p>
-            <p className="text-xs text-gray-500">{formatCurrency(openDisputes.reduce((s, d) => s + (d.amount || 0), 0))}</p>
+            <p className="text-xs text-gray-500">{formatCurrency(openDisputes.reduce((s, d) => s + (d?.amount || 0), 0))}</p>
           </CardContent>
         </Card>
         <Card className="border-purple-200">
           <CardContent className="p-4">
             <p className="text-xs text-gray-500">Em Contestação</p>
             <p className="text-2xl font-bold text-purple-600">{inContestation.length}</p>
-            <p className="text-xs text-gray-500">{formatCurrency(inContestation.reduce((s, d) => s + (d.amount || 0), 0))}</p>
+            <p className="text-xs text-gray-500">{formatCurrency(inContestation.reduce((s, d) => s + (d?.amount || 0), 0))}</p>
           </CardContent>
         </Card>
         <Card className="border-green-200">
           <CardContent className="p-4">
             <p className="text-xs text-gray-500">Ganhos</p>
             <p className="text-2xl font-bold text-green-600">{won.length}</p>
-            <p className="text-xs text-green-600">{formatCurrency(won.reduce((s, d) => s + (d.amount || 0), 0))}</p>
+            <p className="text-xs text-green-600">{formatCurrency(won.reduce((s, d) => s + (d?.amount || 0), 0))}</p>
           </CardContent>
         </Card>
         <Card className="border-red-200">
           <CardContent className="p-4">
             <p className="text-xs text-gray-500">Perdidos</p>
             <p className="text-2xl font-bold text-red-600">{lost.length}</p>
-            <p className="text-xs text-red-600">{formatCurrency(lost.reduce((s, d) => s + (d.amount || 0), 0))}</p>
+            <p className="text-xs text-red-600">{formatCurrency(lost.reduce((s, d) => s + (d?.amount || 0), 0))}</p>
           </CardContent>
         </Card>
         <Card>
@@ -375,24 +369,24 @@ export default function Chargebacks() {
             <DialogTitle>Detalhes do Chargeback</DialogTitle>
           </DialogHeader>
 
-          {selectedDispute ? (
+          {selectedDispute && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-gray-500">ID do Chargeback</p>
-                  <p className="font-mono font-semibold">{selectedDispute.dispute_id}</p>
+                  <p className="font-mono font-semibold">{selectedDispute?.dispute_id || '-'}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Transação</p>
-                  <p className="font-mono">{selectedDispute.transaction_id}</p>
+                  <p className="font-mono">{selectedDispute?.transaction_id || '-'}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">ARN</p>
-                  <p className="font-mono text-sm">{selectedDispute.arn || '-'}</p>
+                  <p className="font-mono text-sm">{selectedDispute?.arn || '-'}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Valor</p>
-                  <p className="font-semibold text-lg">{formatCurrency(selectedDispute.amount)}</p>
+                  <p className="font-semibold text-lg">{formatCurrency(selectedDispute?.amount)}</p>
                 </div>
               </div>
 
@@ -412,20 +406,20 @@ export default function Chargebacks() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Probabilidade de Ganho</p>
-                  <WinProbabilityBadge probability={selectedDispute.win_probability} />
+                  <WinProbabilityBadge probability={selectedDispute?.win_probability} />
                 </div>
               </div>
 
-              {selectedDispute.ai_recommendation && (
+              {selectedDispute?.ai_recommendation && (
                 <div className="border-t pt-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Bot className="w-4 h-4 text-purple-600" />
                     <p className="text-sm font-medium text-purple-600">Recomendação da IA</p>
                   </div>
-                  <Badge className={selectedDispute.ai_recommendation === 'contest' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}>
-                    {selectedDispute.ai_recommendation === 'contest' ? 'Contestar' : 'Aceitar'}
+                  <Badge className={selectedDispute?.ai_recommendation === 'contest' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}>
+                    {selectedDispute?.ai_recommendation === 'contest' ? 'Contestar' : 'Aceitar'}
                   </Badge>
-                  {selectedDispute.ai_recommendation_reason && (
+                  {selectedDispute?.ai_recommendation_reason && (
                     <p className="text-sm text-gray-600 mt-2">{selectedDispute.ai_recommendation_reason}</p>
                   )}
                 </div>
@@ -435,7 +429,7 @@ export default function Chargebacks() {
                 <Button variant="outline" onClick={() => setSelectedDispute(null)}>
                   Fechar
                 </Button>
-                {['received', 'in_analysis'].includes(selectedDispute.status) && (
+                {selectedDispute && ['received', 'in_analysis'].includes(selectedDispute.status) && (
                   <Link to={createPageUrl(`DisputeContestation?id=${selectedDispute.id}`)}>
                     <Button className="bg-purple-600 hover:bg-purple-700">
                       <FileText className="w-4 h-4 mr-2" />
@@ -445,7 +439,7 @@ export default function Chargebacks() {
                 )}
               </DialogFooter>
             </div>
-          ) : null}
+          )}
         </DialogContent>
       </Dialog>
     </div>
