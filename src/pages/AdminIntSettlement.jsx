@@ -5,19 +5,22 @@ import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, DollarSign, CheckCircle, Clock, AlertTriangle, FileText, Play } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Calendar, DollarSign, CheckCircle, Clock, AlertTriangle, FileText, Play, CreditCard } from 'lucide-react';
 
 export default function AdminIntSettlement() {
     const liquidations = [
         { id: '1', merchant: 'Loja ABC', amount: 45230, fees: 1234, net: 43996, status: 'paid', date: '27/01/2026', bank: 'Itaú' },
         { id: '2', merchant: 'Tech Solutions', amount: 28500, fees: 890, net: 27610, status: 'processing', date: '27/01/2026', bank: 'Nubank' },
         { id: '3', merchant: 'E-commerce XYZ', amount: 8450, fees: 312, net: 8138, status: 'failed', date: '27/01/2026', bank: 'Inter' },
+        { id: '4', merchant: 'Moda Express', amount: 15780, fees: 520, net: 15260, status: 'paid', date: '27/01/2026', bank: 'Bradesco' },
+        { id: '5', merchant: 'Café Gourmet', amount: 6200, fees: 180, net: 6020, status: 'processing', date: '27/01/2026', bank: 'Caixa' },
     ];
 
     const columns = [
         { header: 'Merchant', accessorKey: 'merchant' },
-        { header: 'Bruto', accessorKey: 'amount', cell: info => `R$ ${info.getValue()}` },
-        { header: 'Líquido', accessorKey: 'net', cell: info => `R$ ${info.getValue()}` },
+        { header: 'Bruto', accessorKey: 'amount', cell: info => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(info.getValue()) },
+        { header: 'Líquido', accessorKey: 'net', cell: info => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(info.getValue()) },
         { header: 'Banco', accessorKey: 'bank' },
         { header: 'Status', accessorKey: 'status', cell: info => <StatusBadge status={info.getValue()} /> },
         { header: 'Ações', id: 'actions', cell: () => <Button size="sm" variant="ghost">Detalhes</Button> }
@@ -29,7 +32,7 @@ export default function AdminIntSettlement() {
                 title="Liquidação & Conciliação"
                 subtitle="Gestão de Pagamentos aos Merchants"
                 breadcrumbs={[
-                    { label: 'Financeiro', page: '#' },
+                    { label: 'Financeiro', page: 'AdminIntTransactionsDashboard' },
                     { label: 'Liquidação', page: 'AdminIntSettlement' }
                 ]}
                 actions={<Button className="bg-[#00D26A]"><Play className="w-4 h-4 mr-2" /> Processar Liquidação</Button>}

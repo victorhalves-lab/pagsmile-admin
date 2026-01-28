@@ -10,13 +10,26 @@ import {
   Search, Filter, Plus, User, MoreVertical, Calendar, DollarSign 
 } from 'lucide-react';
 import PageHeader from '@/components/common/PageHeader';
-import { format } from 'date-fns';
 
 export default function AdminIntLeads() {
   const leads = [
     { id: 1, company: 'Tech Solutions', cnpj: '12.345.678/0001-90', tpv: 'R$ 500k', status: 'new', score: 78, owner: 'João S.', lastActivity: 'Há 2 dias' },
     { id: 2, company: 'E-commerce ABC', cnpj: '98.765.432/0001-99', tpv: 'R$ 1.2M', status: 'analysis', score: 85, owner: 'Maria S.', lastActivity: 'Há 5 horas' },
+    { id: 3, company: 'Moda Express', cnpj: '11.222.333/0001-50', tpv: 'R$ 320k', status: 'qualified', score: 72, owner: 'Pedro C.', lastActivity: 'Há 1 dia' },
+    { id: 4, company: 'Café Gourmet', cnpj: '44.555.666/0001-22', tpv: 'R$ 150k', status: 'new', score: 65, owner: 'João S.', lastActivity: 'Há 3 horas' },
+    { id: 5, company: 'Eletrônicos Plus', cnpj: '77.888.999/0001-33', tpv: 'R$ 2.1M', status: 'proposal', score: 92, owner: 'Maria S.', lastActivity: 'Agora' },
   ];
+
+  const getStatusBadge = (status) => {
+    const statusConfig = {
+      new: { label: 'Novo', className: 'bg-blue-100 text-blue-700' },
+      analysis: { label: 'Em Análise', className: 'bg-amber-100 text-amber-700' },
+      qualified: { label: 'Qualificado', className: 'bg-green-100 text-green-700' },
+      proposal: { label: 'Proposta', className: 'bg-purple-100 text-purple-700' },
+    };
+    const config = statusConfig[status] || { label: status, className: 'bg-slate-100 text-slate-700' };
+    return <Badge className={config.className}>{config.label}</Badge>;
+  };
 
   return (
     <div className="space-y-6">
@@ -25,9 +38,9 @@ export default function AdminIntLeads() {
         subtitle="Base completa de leads comerciais"
         breadcrumbs={[
           { label: 'Comercial', page: 'AdminIntComercial' },
-          { label: 'Leads', page: '#' }
+          { label: 'Leads', page: 'AdminIntLeads' }
         ]}
-        action={
+        actions={
           <Button className="bg-[#00c295] hover:bg-[#00a880]">
             <Plus className="w-4 h-4 mr-2" /> Novo Lead
           </Button>
@@ -68,7 +81,7 @@ export default function AdminIntLeads() {
                   <TableCell>{lead.cnpj}</TableCell>
                   <TableCell>{lead.tpv}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className="uppercase text-[10px]">{lead.status}</Badge>
+                    {getStatusBadge(lead.status)}
                   </TableCell>
                   <TableCell className={lead.score >= 80 ? 'text-green-600 font-bold' : 'text-yellow-600'}>
                     {lead.score}

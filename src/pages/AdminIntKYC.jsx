@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
 import KPICard from '@/components/dashboard/KPICard';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { 
   ShieldCheck, AlertTriangle, UserCheck, UserX, 
-  Search, FileText
+  Search, FileText, Clock, PlayCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
@@ -51,6 +53,17 @@ export default function AdminIntKYC() {
       <PageHeader 
         title="KYC/KYB & Compliance" 
         subtitle="Dashboard de Conformidade"
+        breadcrumbs={[
+          { label: 'Admin Interno', page: 'AdminIntDashboard' },
+          { label: 'KYC & Compliance', page: 'AdminIntKYC' }
+        ]}
+        actions={
+          <Link to={createPageUrl('AdminIntKYCQueue')}>
+            <Button className="bg-purple-600 hover:bg-purple-700">
+              <PlayCircle className="w-4 h-4 mr-2" /> Fila de Análise
+            </Button>
+          </Link>
+        }
       />
 
       {/* KPIs */}
@@ -69,7 +82,7 @@ export default function AdminIntKYC() {
         />
         <KPICard 
             title="Auto Aprovado" 
-            value={`${metrics.auto_approved}%`} // Mock percentage logic
+            value={`${metrics.auto_approved}%`}
             icon={ShieldCheck} 
             trend="up"
             change="Meta: 70%"
@@ -164,6 +177,3 @@ export default function AdminIntKYC() {
     </div>
   );
 }
-
-// Helper icon import
-import { Clock } from 'lucide-react';
