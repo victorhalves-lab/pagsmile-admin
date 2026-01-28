@@ -9,7 +9,8 @@ import {
   Building2,
   CreditCard,
   Lock,
-  Smartphone
+  Smartphone,
+  Users
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -41,6 +42,15 @@ export default function IBSettings() {
       iconBg: 'bg-amber-100 dark:bg-amber-900/30',
       iconColor: 'text-amber-600',
       page: 'IBSettingsNotifications'
+    },
+    {
+      id: 'access',
+      title: 'Perfis de Acesso',
+      description: 'Gerenciar usuários e permissões',
+      icon: Users,
+      iconBg: 'bg-purple-100 dark:bg-purple-900/30',
+      iconColor: 'text-purple-600',
+      page: 'IBSettingsAccess'
     },
   ];
 

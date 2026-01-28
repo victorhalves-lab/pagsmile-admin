@@ -63,87 +63,84 @@ export default function IBHome() {
         </div>
       </div>
 
-      {/* Balance Card */}
-      <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white border-0 shadow-2xl overflow-hidden relative">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
-        <CardContent className="p-6 relative z-10">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#00D26A]/20 flex items-center justify-center">
-                <Wallet className="w-6 h-6 text-[#00D26A]" />
+      {/* Compact Balance & Actions Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Compact Balance Card */}
+        <div className="md:col-span-2">
+          <Card className="bg-gradient-to-br from-[#101F3E] via-[#101F3E] to-[#1a2c52] text-white border-0 shadow-xl overflow-hidden relative h-full">
+            <div className="absolute top-0 right-0 p-32 bg-[#00D26A] opacity-[0.03] blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
+            <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-slate-400 text-xs font-medium uppercase tracking-wide">Saldo em Conta</p>
+                    <button onClick={() => setShowBalance(!showBalance)} className="text-slate-500 hover:text-white transition-colors">
+                      {showBalance ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                  <p className="text-3xl font-bold tracking-tight text-white">
+                    {formatCurrency(balance.available)}
+                  </p>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-[#00D26A]/10 flex items-center justify-center">
+                  <Wallet className="w-5 h-5 text-[#00D26A]" />
+                </div>
               </div>
-              <div>
-                <p className="text-slate-400 text-sm font-medium">Saldo Disponível</p>
-                <p className="text-3xl font-bold mt-1">{formatCurrency(balance.available)}</p>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowBalance(!showBalance)}
-              className="text-slate-400 hover:text-white hover:bg-white/10"
-            >
-              {showBalance ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
-            </Button>
-          </div>
 
-          <div className="flex items-center gap-6 pt-4 border-t border-white/10">
-            <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-amber-400" />
-              <div>
-                <p className="text-xs text-slate-400">Bloqueado</p>
-                <p className="text-sm font-semibold text-amber-400">{formatCurrency(balance.blocked)}</p>
+              <div className="mt-6 flex items-center gap-6 pt-4 border-t border-white/5">
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-slate-400 uppercase">Bloqueado</span>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <Lock className="w-3 h-3 text-amber-400" />
+                    <span className="text-sm font-medium text-amber-400">{formatCurrency(balance.blocked)}</span>
+                  </div>
+                </div>
+                <div className="w-px h-8 bg-white/10" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-slate-400 uppercase">Total</span>
+                  <span className="text-sm font-medium text-slate-200 mt-0.5">{formatCurrency(balance.total)}</span>
+                </div>
               </div>
-            </div>
-            <div className="h-8 w-px bg-white/10" />
-            <div>
-              <p className="text-xs text-slate-400">Saldo Total</p>
-              <p className="text-sm font-semibold">{formatCurrency(balance.total)}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Quick Actions */}
-      <div>
-        <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">
-          Ações Rápidas
-        </h2>
-        <div className="grid grid-cols-3 gap-4">
+        {/* Compact Quick Actions */}
+        <div className="flex flex-col gap-3 justify-center">
           <Link to={createPageUrl('IBPixSend')}>
-            <Card className="hover:shadow-lg hover:border-[#00D26A]/30 transition-all cursor-pointer group">
-              <CardContent className="p-6 flex flex-col items-center text-center">
-                <div className="w-14 h-14 rounded-2xl bg-[#00D26A]/10 flex items-center justify-center mb-3 group-hover:bg-[#00D26A]/20 transition-colors">
-                  <Send className="w-6 h-6 text-[#00D26A]" />
-                </div>
-                <p className="font-semibold text-slate-900 dark:text-white">Enviar Pix</p>
-                <p className="text-xs text-slate-500 mt-1">Transferir agora</p>
-              </CardContent>
-            </Card>
+            <Button variant="outline" className="w-full justify-start h-12 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm relative overflow-hidden group">
+              <div className="w-8 h-8 rounded-lg bg-[#00D26A]/10 flex items-center justify-center mr-3 group-hover:bg-[#00D26A] transition-colors">
+                <Send className="w-4 h-4 text-[#00D26A] group-hover:text-white transition-colors" />
+              </div>
+              <div className="text-left">
+                <p className="font-semibold text-sm">Enviar Pix</p>
+              </div>
+              <ChevronRight className="w-4 h-4 ml-auto text-slate-300" />
+            </Button>
           </Link>
-
+          
           <Link to={createPageUrl('IBPixReceive')}>
-            <Card className="hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer group">
-              <CardContent className="p-6 flex flex-col items-center text-center">
-                <div className="w-14 h-14 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
-                  <QrCode className="w-6 h-6 text-blue-600" />
-                </div>
-                <p className="font-semibold text-slate-900 dark:text-white">Receber Pix</p>
-                <p className="text-xs text-slate-500 mt-1">QR Code e chaves</p>
-              </CardContent>
-            </Card>
+            <Button variant="outline" className="w-full justify-start h-12 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm relative overflow-hidden group">
+              <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mr-3 group-hover:bg-blue-500 transition-colors">
+                <QrCode className="w-4 h-4 text-blue-600 group-hover:text-white transition-colors" />
+              </div>
+              <div className="text-left">
+                <p className="font-semibold text-sm">Receber Pix</p>
+              </div>
+              <ChevronRight className="w-4 h-4 ml-auto text-slate-300" />
+            </Button>
           </Link>
-
+          
           <Link to={createPageUrl('IBPixKeys')}>
-            <Card className="hover:shadow-lg hover:border-purple-300 transition-all cursor-pointer group">
-              <CardContent className="p-6 flex flex-col items-center text-center">
-                <div className="w-14 h-14 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-3 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
-                  <Key className="w-6 h-6 text-purple-600" />
-                </div>
-                <p className="font-semibold text-slate-900 dark:text-white">Minhas Chaves</p>
-                <p className="text-xs text-slate-500 mt-1">Gerenciar chaves</p>
-              </CardContent>
-            </Card>
+            <Button variant="outline" className="w-full justify-start h-12 bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm relative overflow-hidden group">
+              <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center mr-3 group-hover:bg-purple-500 transition-colors">
+                <Key className="w-4 h-4 text-purple-600 group-hover:text-white transition-colors" />
+              </div>
+              <div className="text-left">
+                <p className="font-semibold text-sm">Minhas Chaves</p>
+              </div>
+              <ChevronRight className="w-4 h-4 ml-auto text-slate-300" />
+            </Button>
           </Link>
         </div>
       </div>

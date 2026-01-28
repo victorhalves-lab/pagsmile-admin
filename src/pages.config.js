@@ -71,6 +71,7 @@ import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
 import Recurrence from './pages/Recurrence';
 import FeesAnalysis from './pages/FeesAnalysis';
+import IBSettingsAccess from './pages/IBSettingsAccess';
 import __Layout from './Layout.jsx';
 
 
@@ -148,6 +149,7 @@ export const PAGES = {
     "Withdrawals": Withdrawals,
     "Recurrence": Recurrence,
     "FeesAnalysis": FeesAnalysis,
+    "IBSettingsAccess": IBSettingsAccess,
 }
 
 export const pagesConfig = {
