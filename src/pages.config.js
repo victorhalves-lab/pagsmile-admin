@@ -120,6 +120,11 @@ import AdminIntMCCDetail from './pages/AdminIntMCCDetail';
 import AdminIntMccIrregularities from './pages/AdminIntMccIrregularities';
 import AdminIntPartnerDetail from './pages/AdminIntPartnerDetail';
 import AdminIntFinancialHealth from './pages/AdminIntFinancialHealth';
+import AdminIntFeePlanDetail from './pages/AdminIntFeePlanDetail';
+import AdminIntPriceSimulator from './pages/AdminIntPriceSimulator';
+import AdminIntRetention from './pages/AdminIntRetention';
+import AdminIntRollingReserve from './pages/AdminIntRollingReserve';
+import AdminIntBlockages from './pages/AdminIntBlockages';
 import __Layout from './Layout.jsx';
 
 
@@ -246,6 +251,11 @@ export const PAGES = {
     "AdminIntMccIrregularities": AdminIntMccIrregularities,
     "AdminIntPartnerDetail": AdminIntPartnerDetail,
     "AdminIntFinancialHealth": AdminIntFinancialHealth,
+    "AdminIntFeePlanDetail": AdminIntFeePlanDetail,
+    "AdminIntPriceSimulator": AdminIntPriceSimulator,
+    "AdminIntRetention": AdminIntRetention,
+    "AdminIntRollingReserve": AdminIntRollingReserve,
+    "AdminIntBlockages": AdminIntBlockages,
 }
 
 export const pagesConfig = {
