@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/common/PageHeader';
-import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,8 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import {
@@ -24,17 +25,24 @@ import {
   Ban,
   Settings,
   AlertCircle,
-  Zap
+  Zap,
+  User,
+  Hash,
+  CheckCircle2,
+  XCircle,
+  MessageSquare,
+  Shield,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { differenceInHours, differenceInDays } from 'date-fns';
+import { differenceInHours, differenceInDays, format } from 'date-fns';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
 };
 
 function DeadlineCountdown({ deadline }) {
-  if (!deadline) return <span className="text-gray-400">-</span>;
+  if (!deadline) return <span className="text-slate-400 text-sm">-</span>;
   
   const now = new Date();
   const deadlineDate = new Date(deadline);
@@ -42,13 +50,18 @@ function DeadlineCountdown({ deadline }) {
   const daysLeft = differenceInDays(deadlineDate, now);
   
   if (hoursLeft < 0) {
-    return <Badge className="bg-gray-100 text-gray-600">Expirado</Badge>;
+    return (
+      <Badge variant="outline" className="bg-slate-50 text-slate-500 border-slate-200">
+        <Clock className="w-3 h-3 mr-1" />
+        Expirado
+      </Badge>
+    );
   }
   
   if (hoursLeft < 24) {
     return (
-      <Badge className="bg-red-100 text-red-700 animate-pulse">
-        <Clock className="w-3 h-3 mr-1" />
+      <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 animate-pulse">
+        <AlertTriangle className="w-3 h-3 mr-1" />
         {hoursLeft}h restantes
       </Badge>
     );
@@ -56,7 +69,7 @@ function DeadlineCountdown({ deadline }) {
   
   if (daysLeft <= 3) {
     return (
-      <Badge className="bg-yellow-100 text-yellow-700">
+      <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
         <Clock className="w-3 h-3 mr-1" />
         {daysLeft} dias
       </Badge>
@@ -64,10 +77,76 @@ function DeadlineCountdown({ deadline }) {
   }
   
   return (
-    <Badge className="bg-green-100 text-green-700">
+    <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
       <Clock className="w-3 h-3 mr-1" />
       {daysLeft} dias
     </Badge>
+  );
+}
+
+function KPICard({ title, value, subValue, icon: Icon, color }) {
+  const colorClasses = {
+    default: 'bg-white border-slate-200',
+    orange: 'bg-gradient-to-br from-orange-50 to-white border-orange-200',
+    red: 'bg-gradient-to-br from-red-50 to-white border-red-200',
+    green: 'bg-gradient-to-br from-emerald-50 to-white border-emerald-200',
+    amber: 'bg-gradient-to-br from-amber-50 to-white border-amber-200'
+  };
+
+  const iconColorClasses = {
+    default: 'bg-slate-100 text-slate-600',
+    orange: 'bg-orange-100 text-orange-600',
+    red: 'bg-red-100 text-red-600',
+    green: 'bg-emerald-100 text-emerald-600',
+    amber: 'bg-amber-100 text-amber-600'
+  };
+
+  return (
+    <Card className={cn("border shadow-sm hover:shadow-md transition-shadow", colorClasses[color || 'default'])}>
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{title}</p>
+            <p className="text-2xl font-bold text-slate-900">{value}</p>
+            {subValue && <p className="text-sm text-slate-500">{subValue}</p>}
+          </div>
+          <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", iconColorClasses[color || 'default'])}>
+            <Icon className="w-5 h-5" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 px-4">
+      <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
+        <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+      </div>
+      <h3 className="text-lg font-semibold text-slate-700 mb-2">Nenhum pré-chargeback pendente</h3>
+      <p className="text-slate-500 text-center max-w-md">
+        Ótimo! Você não tem alertas Ethoca ou Verifi no momento. Quando receber, eles aparecerão aqui.
+      </p>
+    </div>
+  );
+}
+
+function TableSkeleton() {
+  return (
+    <div className="space-y-3 p-4">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div key={i} className="flex items-center gap-4 p-4 bg-white rounded-lg border">
+          <Skeleton className="h-6 w-20 rounded-full" />
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-6 w-24 rounded-full" />
+          <Skeleton className="h-8 w-20" />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -79,6 +158,7 @@ export default function PreChargebacks() {
   const [contactNotes, setContactNotes] = useState('');
   const [filters, setFilters] = useState({ status: 'all', source: 'all' });
   const [showAutoConfig, setShowAutoConfig] = useState(false);
+  const [detailsDialog, setDetailsDialog] = useState({ open: false, alert: null });
 
   const { data: disputes = [], isLoading } = useQuery({
     queryKey: ['pre-chargebacks'],
@@ -157,110 +237,14 @@ export default function PreChargebacks() {
     updateMutation.mutate({ id: selectedAlert.id, data: updates });
   };
 
-  const columns = [
-    {
-      key: 'source',
-      label: 'Origem',
-      render: (row) => (
-        <Badge className={cn(
-          row?.type === 'alert_ethoca' 
-            ? 'bg-orange-100 text-orange-700' 
-            : 'bg-blue-100 text-blue-700'
-        )}>
-          {row?.type === 'alert_ethoca' ? 'Ethoca' : row?.type === 'alert_verifi' ? 'Verifi' : '-'}
-        </Badge>
-      )
-    },
-    {
-      key: 'transaction_id',
-      label: 'Transação',
-      render: (row) => (
-        <Link 
-          to={createPageUrl(`TransactionDetail?id=${row?.transaction_id || ''}`)}
-          className="text-blue-600 hover:underline font-mono text-sm"
-        >
-          {row?.transaction_id || '-'}
-        </Link>
-      )
-    },
-    {
-      key: 'customer',
-      label: 'Cliente',
-      render: (row) => (
-        <div>
-          <p className="font-medium text-sm">{row?.customer_name || '-'}</p>
-          <p className="text-xs text-gray-500">{row?.customer_email || '-'}</p>
-        </div>
-      )
-    },
-    {
-      key: 'amount',
-      label: 'Valor',
-      render: (row) => (
-        <span className="font-semibold">{formatCurrency(row?.amount)}</span>
-      )
-    },
-    {
-      key: 'reason',
-      label: 'Motivo',
-      render: (row) => (
-        <div className="max-w-[200px]">
-          <p className="text-sm truncate">{row?.reason_description || row?.reason_code || '-'}</p>
-        </div>
-      )
-    },
-    {
-      key: 'deadline',
-      label: 'Prazo',
-      render: (row) => <DeadlineCountdown deadline={row?.alert_deadline} />
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      render: (row) => <StatusBadge status={row?.status} />
-    },
-    {
-      key: 'actions',
-      label: 'Ações',
-      render: (row) => (
-        <div className="flex gap-1">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setSelectedAlert(row)}
-          >
-            <Eye className="w-4 h-4" />
-          </Button>
-          {row && ['received', 'pending'].includes(row.status) && (
-            <>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                onClick={() => {
-                  setSelectedAlert(row);
-                  setActionDialog({ open: true, type: 'refund' });
-                }}
-              >
-                <Undo2 className="w-4 h-4" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="text-gray-600 hover:text-gray-700"
-                onClick={() => {
-                  setSelectedAlert(row);
-                  setActionDialog({ open: true, type: 'ignore' });
-                }}
-              >
-                <Ban className="w-4 h-4" />
-              </Button>
-            </>
-          )}
-        </div>
-      )
-    }
-  ];
+  const handleViewDetails = (alert) => {
+    setDetailsDialog({ open: true, alert });
+  };
+
+  const handleOpenActionDialog = (alert, type) => {
+    setSelectedAlert(alert);
+    setActionDialog({ open: true, type });
+  };
 
   return (
     <div className="space-y-6">
@@ -276,8 +260,9 @@ export default function PreChargebacks() {
             variant="outline" 
             size="sm"
             onClick={() => setShowAutoConfig(true)}
+            className="gap-2"
           >
-            <Settings className="w-4 h-4 mr-2" />
+            <Settings className="w-4 h-4" />
             Auto-Reembolso
           </Button>
         }
@@ -285,125 +270,375 @@ export default function PreChargebacks() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border-orange-200">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-500">Alertas Pendentes</p>
-                <p className="text-2xl font-bold text-orange-600">{pendingAlerts.length}</p>
-              </div>
-              <AlertTriangle className="w-8 h-8 text-orange-200" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-red-200">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-500">Urgentes (&lt;24h)</p>
-                <p className="text-2xl font-bold text-red-600">{urgentAlerts.length}</p>
-              </div>
-              <Clock className="w-8 h-8 text-red-200" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-500">Valor em Risco</p>
-                <p className="text-2xl font-bold">{formatCurrency(totalPendingValue)}</p>
-              </div>
-              <DollarSign className="w-8 h-8 text-gray-200" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-green-200">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-500">Auto-Reembolso</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {autoConfig?.is_enabled ? 'Ativo' : 'Inativo'}
-                </p>
-              </div>
-              <Zap className="w-8 h-8 text-green-200" />
-            </div>
-          </CardContent>
-        </Card>
+        <KPICard
+          title="Alertas Pendentes"
+          value={pendingAlerts.length}
+          icon={AlertTriangle}
+          color="orange"
+        />
+        <KPICard
+          title="Urgentes (<24h)"
+          value={urgentAlerts.length}
+          icon={Clock}
+          color="red"
+        />
+        <KPICard
+          title="Valor em Risco"
+          value={formatCurrency(totalPendingValue)}
+          icon={DollarSign}
+          color="amber"
+        />
+        <KPICard
+          title="Auto-Reembolso"
+          value={autoConfig?.is_enabled ? 'Ativo' : 'Inativo'}
+          icon={Zap}
+          color="green"
+        />
       </div>
 
-      {/* Urgent Alert */}
+      {/* Urgent Alert Banner */}
       {urgentAlerts.length > 0 && (
-        <Card className="border-red-300 bg-red-50">
+        <Card className="border-red-300 bg-gradient-to-r from-red-50 to-orange-50 shadow-sm">
           <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <AlertCircle className="w-6 h-6 text-red-600" />
-              <div>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                <AlertCircle className="w-6 h-6 text-red-600" />
+              </div>
+              <div className="flex-1">
                 <p className="font-semibold text-red-900">Atenção: {urgentAlerts.length} alerta(s) com prazo crítico!</p>
                 <p className="text-sm text-red-700">
-                  Esses alertas expiram em menos de 24 horas. Tome uma ação imediatamente.
+                  Esses alertas expiram em menos de 24 horas. Tome uma ação imediatamente para evitar chargebacks.
                 </p>
               </div>
+              <Button className="bg-red-600 hover:bg-red-700 text-white">
+                Ver Urgentes
+              </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4">
-        <Select value={filters.status} onValueChange={(v) => setFilters(f => ({ ...f, status: v }))}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos Status</SelectItem>
-            <SelectItem value="pending">Pendentes</SelectItem>
-            <SelectItem value="resolved">Resolvidos</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={filters.source} onValueChange={(v) => setFilters(f => ({ ...f, source: v }))}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Origem" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas Origens</SelectItem>
-            <SelectItem value="alert_ethoca">Ethoca</SelectItem>
-            <SelectItem value="alert_verifi">Verifi</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <Card className="border shadow-sm">
+        <CardContent className="p-4">
+          <div className="flex flex-wrap gap-4">
+            <Select value={filters.status} onValueChange={(v) => setFilters(f => ({ ...f, status: v }))}>
+              <SelectTrigger className="w-44 bg-slate-50 border-slate-200">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos Status</SelectItem>
+                <SelectItem value="pending">Pendentes</SelectItem>
+                <SelectItem value="resolved">Resolvidos</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={filters.source} onValueChange={(v) => setFilters(f => ({ ...f, source: v }))}>
+              <SelectTrigger className="w-44 bg-slate-50 border-slate-200">
+                <SelectValue placeholder="Origem" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas Origens</SelectItem>
+                <SelectItem value="alert_ethoca">Ethoca</SelectItem>
+                <SelectItem value="alert_verifi">Verifi</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Data Table */}
-      <DataTable
-        columns={columns}
-        data={filteredDisputes}
-        isLoading={isLoading}
-        emptyMessage="Nenhum pré-chargeback encontrado"
-      />
+      <Card className="border shadow-sm overflow-hidden">
+        {isLoading ? (
+          <TableSkeleton />
+        ) : filteredDisputes.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-slate-50 hover:bg-slate-50">
+                <TableHead className="font-semibold text-slate-700">Origem</TableHead>
+                <TableHead className="font-semibold text-slate-700">Transação</TableHead>
+                <TableHead className="font-semibold text-slate-700">Cliente</TableHead>
+                <TableHead className="font-semibold text-slate-700">Valor</TableHead>
+                <TableHead className="font-semibold text-slate-700">Motivo</TableHead>
+                <TableHead className="font-semibold text-slate-700">Prazo</TableHead>
+                <TableHead className="font-semibold text-slate-700">Status</TableHead>
+                <TableHead className="font-semibold text-slate-700 text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredDisputes.map((row) => (
+                <TableRow key={row?.id} className="hover:bg-slate-50/50">
+                  <TableCell>
+                    <Badge variant="outline" className={cn(
+                      "text-xs font-medium",
+                      row?.type === 'alert_ethoca' 
+                        ? 'bg-orange-50 text-orange-700 border-orange-200' 
+                        : 'bg-blue-50 text-blue-700 border-blue-200'
+                    )}>
+                      {row?.type === 'alert_ethoca' ? 'Ethoca' : row?.type === 'alert_verifi' ? 'Verifi' : '-'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Link 
+                      to={createPageUrl(`TransactionDetail?id=${row?.transaction_id || ''}`)}
+                      className="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                    >
+                      {row?.transaction_id || '-'}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      <p className="font-medium text-sm text-slate-900">{row?.customer_name || '-'}</p>
+                      <p className="text-xs text-slate-500">{row?.customer_email || '-'}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-semibold text-slate-900">
+                    {formatCurrency(row?.amount)}
+                  </TableCell>
+                  <TableCell>
+                    <p className="text-sm text-slate-600 max-w-[150px] truncate">
+                      {row?.reason_description || row?.reason_code || '-'}
+                    </p>
+                  </TableCell>
+                  <TableCell>
+                    <DeadlineCountdown deadline={row?.alert_deadline} />
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge status={row?.status} />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="h-8 w-8 p-0 hover:bg-slate-100"
+                        onClick={() => handleViewDetails(row)}
+                      >
+                        <Eye className="w-4 h-4 text-slate-500" />
+                      </Button>
+                      {row && ['received', 'pending'].includes(row.status) && (
+                        <>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="h-8 w-8 p-0 hover:bg-emerald-50"
+                            onClick={() => handleOpenActionDialog(row, 'refund')}
+                          >
+                            <Undo2 className="w-4 h-4 text-emerald-600" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="h-8 w-8 p-0 hover:bg-slate-100"
+                            onClick={() => handleOpenActionDialog(row, 'ignore')}
+                          >
+                            <Ban className="w-4 h-4 text-slate-500" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </Card>
+
+      {/* Details Dialog */}
+      <Dialog open={detailsDialog.open} onOpenChange={(open) => setDetailsDialog({ open, alert: open ? detailsDialog.alert : null })}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3">
+              <div className={cn(
+                "w-10 h-10 rounded-xl flex items-center justify-center",
+                detailsDialog.alert?.type === 'alert_ethoca' ? 'bg-orange-100' : 'bg-blue-100'
+              )}>
+                <Shield className={cn(
+                  "w-5 h-5",
+                  detailsDialog.alert?.type === 'alert_ethoca' ? 'text-orange-600' : 'text-blue-600'
+                )} />
+              </div>
+              <div>
+                <p className="text-lg font-semibold">Detalhes do Pré-Chargeback</p>
+                <p className="text-sm font-normal text-slate-500">
+                  {detailsDialog.alert?.type === 'alert_ethoca' ? 'Alerta Ethoca' : 'Alerta Verifi'}
+                </p>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+
+          {detailsDialog.alert && (
+            <div className="space-y-6 mt-4">
+              {/* Main Info */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-slate-50 rounded-xl space-y-1">
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <Hash className="w-4 h-4" />
+                    <span className="text-xs font-medium uppercase">Transação</span>
+                  </div>
+                  <p className="font-mono font-semibold text-slate-900">{detailsDialog.alert?.transaction_id || '-'}</p>
+                </div>
+                <div className="p-4 bg-slate-50 rounded-xl space-y-1">
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <DollarSign className="w-4 h-4" />
+                    <span className="text-xs font-medium uppercase">Valor</span>
+                  </div>
+                  <p className="text-xl font-bold text-slate-900">{formatCurrency(detailsDialog.alert?.amount)}</p>
+                </div>
+              </div>
+
+              {/* Customer Info */}
+              <div className="p-4 border rounded-xl space-y-3">
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm font-semibold text-slate-700">Cliente</span>
+                </div>
+                <div>
+                  <p className="font-medium text-slate-900">{detailsDialog.alert?.customer_name || '-'}</p>
+                  <p className="text-sm text-slate-500">{detailsDialog.alert?.customer_email || '-'}</p>
+                </div>
+              </div>
+
+              {/* Reason */}
+              <div className="p-4 border rounded-xl space-y-3">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                  <span className="text-sm font-semibold text-slate-700">Motivo do Alerta</span>
+                </div>
+                <p className="text-slate-600">{detailsDialog.alert?.reason_description || detailsDialog.alert?.reason_code || '-'}</p>
+              </div>
+
+              {/* Deadline */}
+              <div className="p-4 border rounded-xl space-y-3">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-red-500" />
+                  <span className="text-sm font-semibold text-slate-700">Prazo para Ação</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <DeadlineCountdown deadline={detailsDialog.alert?.alert_deadline} />
+                  {detailsDialog.alert?.alert_deadline && (
+                    <span className="text-sm text-slate-500">
+                      ({format(new Date(detailsDialog.alert.alert_deadline), 'dd/MM/yyyy HH:mm')})
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Tip */}
+              <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl space-y-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-emerald-600" />
+                  <span className="text-sm font-semibold text-emerald-700">Dica</span>
+                </div>
+                <p className="text-sm text-emerald-700">
+                  Reembolsar preventivamente evita que esse alerta se torne um chargeback real, 
+                  protegendo seu ratio e evitando taxas adicionais das bandeiras.
+                </p>
+              </div>
+
+              <DialogFooter className="gap-2">
+                <Button variant="outline" onClick={() => setDetailsDialog({ open: false, alert: null })}>
+                  Fechar
+                </Button>
+                {detailsDialog.alert && ['received', 'pending'].includes(detailsDialog.alert.status) && (
+                  <>
+                    <Button 
+                      variant="outline"
+                      className="border-slate-300"
+                      onClick={() => {
+                        setDetailsDialog({ open: false, alert: null });
+                        handleOpenActionDialog(detailsDialog.alert, 'ignore');
+                      }}
+                    >
+                      <Ban className="w-4 h-4 mr-2" />
+                      Ignorar
+                    </Button>
+                    <Button 
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                      onClick={() => {
+                        setDetailsDialog({ open: false, alert: null });
+                        handleOpenActionDialog(detailsDialog.alert, 'refund');
+                      }}
+                    >
+                      <Undo2 className="w-4 h-4 mr-2" />
+                      Reembolsar
+                    </Button>
+                  </>
+                )}
+              </DialogFooter>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Action Dialog */}
-      <Dialog open={actionDialog.open} onOpenChange={(open) => setActionDialog({ open, type: null })}>
+      <Dialog open={actionDialog.open} onOpenChange={(open) => setActionDialog({ open, type: open ? actionDialog.type : null })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {actionDialog.type === 'refund' && 'Reembolsar Preventivamente'}
-              {actionDialog.type === 'partial_refund' && 'Reembolso Parcial'}
-              {actionDialog.type === 'ignore' && 'Ignorar Alerta'}
-              {actionDialog.type === 'contact' && 'Contatar Cliente'}
+            <DialogTitle className="flex items-center gap-3">
+              {actionDialog.type === 'refund' && (
+                <>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                    <Undo2 className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <span>Reembolsar Preventivamente</span>
+                </>
+              )}
+              {actionDialog.type === 'partial_refund' && (
+                <>
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <DollarSign className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <span>Reembolso Parcial</span>
+                </>
+              )}
+              {actionDialog.type === 'ignore' && (
+                <>
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                    <Ban className="w-5 h-5 text-slate-600" />
+                  </div>
+                  <span>Ignorar Alerta</span>
+                </>
+              )}
+              {actionDialog.type === 'contact' && (
+                <>
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <MessageSquare className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <span>Contatar Cliente</span>
+                </>
+              )}
             </DialogTitle>
-            <DialogDescription>
-              Transação: {selectedAlert?.transaction_id || '-'} | Valor: {formatCurrency(selectedAlert?.amount)}
+            <DialogDescription className="pt-2">
+              <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-lg">
+                <div>
+                  <p className="text-xs text-slate-500">Transação</p>
+                  <p className="font-mono font-medium text-slate-900">{selectedAlert?.transaction_id || '-'}</p>
+                </div>
+                <div className="h-8 w-px bg-slate-200" />
+                <div>
+                  <p className="text-xs text-slate-500">Valor</p>
+                  <p className="font-semibold text-slate-900">{formatCurrency(selectedAlert?.amount)}</p>
+                </div>
+              </div>
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             {actionDialog.type === 'refund' && (
-              <div className="p-4 bg-green-50 rounded-lg">
-                <p className="text-sm text-green-800">
-                  Ao reembolsar, o valor de <strong>{formatCurrency(selectedAlert?.amount)}</strong> será 
-                  estornado e o alerta será marcado como resolvido. Isso evita que vire um chargeback.
-                </p>
+              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-emerald-800">Reembolso preventivo recomendado</p>
+                    <p className="text-sm text-emerald-700 mt-1">
+                      O valor de <strong>{formatCurrency(selectedAlert?.amount)}</strong> será 
+                      estornado e o alerta será marcado como resolvido. Isso evita que vire um chargeback.
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -417,18 +652,24 @@ export default function PreChargebacks() {
                   placeholder="0,00"
                   max={selectedAlert?.amount}
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-slate-500">
                   Valor original: {formatCurrency(selectedAlert?.amount)}
                 </p>
               </div>
             )}
 
             {actionDialog.type === 'ignore' && (
-              <div className="p-4 bg-yellow-50 rounded-lg">
-                <p className="text-sm text-yellow-800">
-                  <strong>Atenção:</strong> Ao ignorar, o alerta pode se tornar um chargeback real 
-                  se o cliente prosseguir. Isso impactará seu ratio.
-                </p>
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-amber-800">Atenção!</p>
+                    <p className="text-sm text-amber-700 mt-1">
+                      Ao ignorar, o alerta pode se tornar um chargeback real 
+                      se o cliente prosseguir. Isso impactará seu ratio de disputas.
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -451,12 +692,13 @@ export default function PreChargebacks() {
             </Button>
             <Button 
               onClick={() => handleAction(actionDialog.type)}
+              disabled={updateMutation.isPending}
               className={cn(
-                actionDialog.type === 'refund' && 'bg-green-600 hover:bg-green-700',
-                actionDialog.type === 'ignore' && 'bg-gray-600 hover:bg-gray-700'
+                actionDialog.type === 'refund' && 'bg-emerald-600 hover:bg-emerald-700',
+                actionDialog.type === 'ignore' && 'bg-slate-600 hover:bg-slate-700'
               )}
             >
-              Confirmar
+              {updateMutation.isPending ? 'Processando...' : 'Confirmar'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -466,17 +708,22 @@ export default function PreChargebacks() {
       <Dialog open={showAutoConfig} onOpenChange={setShowAutoConfig}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Configuração de Auto-Reembolso</DialogTitle>
-            <DialogDescription>
-              Configure regras para reembolsar automaticamente certos alertas
-            </DialogDescription>
+            <DialogTitle className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                <Zap className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-lg font-semibold">Auto-Reembolso</p>
+                <p className="text-sm font-normal text-slate-500">Configure regras automáticas</p>
+              </div>
+            </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
-            <div className="flex items-center justify-between">
+          <div className="space-y-6 py-4">
+            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
               <div>
-                <Label>Habilitar Auto-Reembolso</Label>
-                <p className="text-xs text-gray-500">Reembolsar automaticamente alertas que atendam aos critérios</p>
+                <Label className="text-base">Habilitar Auto-Reembolso</Label>
+                <p className="text-sm text-slate-500">Reembolsar automaticamente alertas que atendam aos critérios</p>
               </div>
               <Switch 
                 checked={autoConfig?.is_enabled || false}
@@ -484,7 +731,7 @@ export default function PreChargebacks() {
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Valor Máximo para Auto-Reembolso</Label>
               <Input
                 type="number"
@@ -495,21 +742,21 @@ export default function PreChargebacks() {
                 })}
                 placeholder="100"
               />
-              <p className="text-xs text-gray-500">Alertas acima deste valor não serão reembolsados automaticamente</p>
+              <p className="text-xs text-slate-500">Alertas acima deste valor não serão reembolsados automaticamente</p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label>Motivos para Auto-Reembolsar</Label>
               <div className="space-y-2">
                 {['fraud', 'not_recognized', 'unauthorized'].map((reason) => (
-                  <div key={reason} className="flex items-center gap-2">
+                  <div key={reason} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                     <input
                       type="checkbox"
                       id={reason}
                       defaultChecked={autoConfig?.reason_codes_to_auto_reimburse?.includes(reason)}
-                      className="rounded"
+                      className="rounded border-slate-300"
                     />
-                    <label htmlFor={reason} className="text-sm">
+                    <label htmlFor={reason} className="text-sm font-medium text-slate-700">
                       {reason === 'fraud' && 'Fraude confirmada'}
                       {reason === 'not_recognized' && 'Não reconhece a compra'}
                       {reason === 'unauthorized' && 'Transação não autorizada'}
@@ -519,10 +766,10 @@ export default function PreChargebacks() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
               <div>
                 <Label>Notificação por E-mail</Label>
-                <p className="text-xs text-gray-500">Receber e-mail quando ocorrer auto-reembolso</p>
+                <p className="text-sm text-slate-500">Receber e-mail quando ocorrer auto-reembolso</p>
               </div>
               <Switch 
                 checked={autoConfig?.notification_email_enabled || false}
