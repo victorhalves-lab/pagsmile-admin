@@ -407,8 +407,8 @@ export default function Chargebacks() {
               <div className="grid grid-cols-2 gap-4 border-t pt-4">
                 <div>
                   <p className="text-xs text-gray-500">Cliente</p>
-                  <p className="font-medium">{selectedDispute.customer_name}</p>
-                  <p className="text-sm text-gray-500">{selectedDispute.customer_email}</p>
+                  <p className="font-medium">{selectedDispute?.customer_name || '-'}</p>
+                  <p className="text-sm text-gray-500">{selectedDispute?.customer_email || '-'}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Probabilidade de Ganho</p>
