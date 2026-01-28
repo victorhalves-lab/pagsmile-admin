@@ -4,14 +4,11 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Mail, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
 import { cn } from "@/lib/utils";
-import { Checkbox } from "@/components/ui/checkbox"; // keep existing code (imports)
 
 export default function AccountCreationStep1() {
   const navigate = useNavigate();
