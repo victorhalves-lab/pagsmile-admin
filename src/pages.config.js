@@ -2,8 +2,12 @@ import AccountCreationStep1 from './pages/AccountCreationStep1';
 import AccountCreationStep3 from './pages/AccountCreationStep3';
 import Anticipation from './pages/Anticipation';
 import ApiKeys from './pages/ApiKeys';
+import CardTransactions from './pages/CardTransactions';
 import Chargebacks from './pages/Chargebacks';
+import CheckoutAnalytics from './pages/CheckoutAnalytics';
 import CheckoutBuilder from './pages/CheckoutBuilder';
+import CheckoutTemplates from './pages/CheckoutTemplates';
+import Checkouts from './pages/Checkouts';
 import ComplianceFullKYC from './pages/ComplianceFullKYC';
 import ComplianceOnboardingStart from './pages/ComplianceOnboardingStart';
 import CompliancePixOnly from './pages/CompliancePixOnly';
@@ -33,6 +37,7 @@ import OriginationAgent from './pages/OriginationAgent';
 import OriginationAgentSettings from './pages/OriginationAgentSettings';
 import PaymentLinkCreate from './pages/PaymentLinkCreate';
 import PaymentLinks from './pages/PaymentLinks';
+import PixTransactions from './pages/PixTransactions';
 import PlanSelection from './pages/PlanSelection';
 import Plugins from './pages/Plugins';
 import PreChargebacks from './pages/PreChargebacks';
@@ -53,11 +58,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import CardTransactions from './pages/CardTransactions';
-import PixTransactions from './pages/PixTransactions';
-import Checkouts from './pages/Checkouts';
-import CheckoutTemplates from './pages/CheckoutTemplates';
-import CheckoutAnalytics from './pages/CheckoutAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -66,8 +66,12 @@ export const PAGES = {
     "AccountCreationStep3": AccountCreationStep3,
     "Anticipation": Anticipation,
     "ApiKeys": ApiKeys,
+    "CardTransactions": CardTransactions,
     "Chargebacks": Chargebacks,
+    "CheckoutAnalytics": CheckoutAnalytics,
     "CheckoutBuilder": CheckoutBuilder,
+    "CheckoutTemplates": CheckoutTemplates,
+    "Checkouts": Checkouts,
     "ComplianceFullKYC": ComplianceFullKYC,
     "ComplianceOnboardingStart": ComplianceOnboardingStart,
     "CompliancePixOnly": CompliancePixOnly,
@@ -97,6 +101,7 @@ export const PAGES = {
     "OriginationAgentSettings": OriginationAgentSettings,
     "PaymentLinkCreate": PaymentLinkCreate,
     "PaymentLinks": PaymentLinks,
+    "PixTransactions": PixTransactions,
     "PlanSelection": PlanSelection,
     "Plugins": Plugins,
     "PreChargebacks": PreChargebacks,
@@ -117,11 +122,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "CardTransactions": CardTransactions,
-    "PixTransactions": PixTransactions,
-    "Checkouts": Checkouts,
-    "CheckoutTemplates": CheckoutTemplates,
-    "CheckoutAnalytics": CheckoutAnalytics,
 }
 
 export const pagesConfig = {

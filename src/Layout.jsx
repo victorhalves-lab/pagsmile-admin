@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -207,10 +209,22 @@ export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState(['transactions', 'financial']);
   const [showAIPanel, setShowAIPanel] = useState(false);
-  // Verificar se usuário acabou de criar conta (via localStorage)
-const [showComplianceAlert, setShowComplianceAlert] = useState(() => {
-  return localStorage.getItem('showComplianceAlert') === 'true';
-});
+  const [dismissedComplianceAlertForSession, setDismissedComplianceAlertForSession] = useState(false);
+
+  // Buscar usuário autenticado e sua subconta para verificar status de compliance
+  const { data: user } = useQuery({
+    queryKey: ['authenticatedUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const { data: subaccounts = [] } = useQuery({
+    queryKey: ['userSubaccount', user?.email],
+    queryFn: () => base44.entities.Subaccount.filter({ created_by: user?.email }),
+    enabled: !!user?.email,
+  });
+
+  const userSubaccount = subaccounts?.[0];
+  const showComplianceAlert = userSubaccount?.status === 'pending_compliance' && !dismissedComplianceAlertForSession;
 
   // Se for uma página sem layout, renderiza apenas o conteúdo
   if (noLayoutPages.includes(currentPageName)) {
@@ -540,10 +554,7 @@ const [showComplianceAlert, setShowComplianceAlert] = useState(() => {
                       Completar Compliance
                     </Button>
                   </Link>
-                  <Button size="sm" variant="ghost" onClick={() => {
-                    setShowComplianceAlert(false);
-                    localStorage.removeItem('showComplianceAlert');
-                  }} className="text-amber-600 hover:text-amber-800">
+                  <Button size="sm" variant="ghost" onClick={() => setDismissedComplianceAlertForSession(true)} className="text-amber-600 hover:text-amber-800">
                     Depois
                   </Button>
                 </div>
