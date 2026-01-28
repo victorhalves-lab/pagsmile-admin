@@ -74,9 +74,11 @@ export default function PlanSelection() {
         {/* Header */}
         <div className="text-center mb-12">
           <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-6">
-            <div className="w-10 h-10 rounded-xl bg-[#00D26A] flex items-center justify-center">
-              <span className="text-white font-bold text-lg">PS</span>
-            </div>
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
+              alt="PagSmile Logo"
+              className="h-10"
+            />
           </Link>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Escolha seu Plano</h1>
           <p className="text-gray-500">Etapa 2 de 3 - Selecione o plano ideal para seu negócio</p>

@@ -83,9 +83,11 @@ export default function AccountCreationStep3() {
       <Card className="w-full max-w-2xl shadow-xl border-0">
         <CardHeader className="text-center pb-2">
           <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-4">
-            <div className="w-10 h-10 rounded-xl bg-[#00D26A] flex items-center justify-center">
-              <span className="text-white font-bold text-lg">PS</span>
-            </div>
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
+              alt="PagSmile Logo"
+              className="h-10"
+            />
           </Link>
           <CardTitle className="text-2xl font-bold text-gray-800">Dados da Empresa</CardTitle>
           <CardDescription className="text-gray-500">Etapa 3 de 3 - Informações do seu negócio</CardDescription>

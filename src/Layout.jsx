@@ -256,10 +256,11 @@ const [showComplianceAlert, setShowComplianceAlert] = useState(() => {
             {sidebarOpen ? (
               <>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#00D26A] flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">PS</span>
-                  </div>
-                  <span className="text-white font-semibold">PagSmile Sub</span>
+                  <img
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
+                    alt="PagSmile Logo"
+                    className="h-8 w-auto"
+                  />
                 </div>
                 <Button
                   variant="ghost"
