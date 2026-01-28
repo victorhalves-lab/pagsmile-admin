@@ -58,6 +58,12 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
+import IBHome from './pages/IBHome';
+import IBExtract from './pages/IBExtract';
+import IBPixSend from './pages/IBPixSend';
+import IBPixReceive from './pages/IBPixReceive';
+import IBPixKeys from './pages/IBPixKeys';
+import IBPixLimits from './pages/IBPixLimits';
 import __Layout from './Layout.jsx';
 
 
@@ -122,6 +128,12 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
+    "IBHome": IBHome,
+    "IBExtract": IBExtract,
+    "IBPixSend": IBPixSend,
+    "IBPixReceive": IBPixReceive,
+    "IBPixKeys": IBPixKeys,
+    "IBPixLimits": IBPixLimits,
 }
 
 export const pagesConfig = {
