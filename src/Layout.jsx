@@ -127,6 +127,7 @@ const adminSubMenuItems = [
       { label: 'Dashboard', page: 'DisputeDashboard' },
       { label: 'Pré-Chargebacks', page: 'PreChargebacks' },
       { label: 'Chargebacks', page: 'Chargebacks' },
+      { label: 'MEDs', page: 'MEDDashboard' },
     ]
   },
   {

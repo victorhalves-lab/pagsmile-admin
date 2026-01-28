@@ -184,6 +184,7 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
+import MEDDashboard from './pages/MEDDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -325,6 +326,7 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
+    "MEDDashboard": MEDDashboard,
 }
 
 export const pagesConfig = {
