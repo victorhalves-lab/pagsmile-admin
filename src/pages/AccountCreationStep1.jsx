@@ -7,9 +7,11 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Mail, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
+import { cn } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox"; // keep existing code (imports)
 
 export default function AccountCreationStep1() {
   const navigate = useNavigate();
@@ -63,10 +65,10 @@ export default function AccountCreationStep1() {
           <div className="flex items-center justify-center gap-3 mt-6">
             <div className="flex flex-col items-center gap-2">
               <div className="relative">
-                <div className="w-3 h-3 rounded-full bg-white border-2 border-[#00D26A] z-10 relative shadow-[0_0_10px_rgba(0,210,106,0.4)]" />
-                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#00D26A]" />
+                <div className="w-3 h-3 rounded-full bg-white border-2 border-[#00c295] z-10 relative shadow-[0_0_10px_rgba(0,194,149,0.4)]" />
+                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#00c295]" />
               </div>
-              <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-[#00D26A] to-emerald-500 shadow-sm" />
+              <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-[#00c295] to-emerald-500 shadow-sm" />
             </div>
             
             <div className="flex flex-col items-center gap-2 opacity-30">
@@ -112,21 +114,35 @@ export default function AccountCreationStep1() {
                 </div>
                 
                 <div className="space-y-3">
-                  <Label className="text-base font-medium text-slate-700 dark:text-slate-200">Você é representante legal da empresa?</Label>
-                  <RadioGroup 
-                    value={formData.isRepresentative} 
-                    onValueChange={(v) => setFormData(p => ({...p, isRepresentative: v}))} 
-                    className="flex gap-4"
-                  >
-                    <div className={`flex items-center space-x-2 border rounded-xl px-4 py-3 w-full transition-all duration-200 ${formData.isRepresentative === 'yes' ? 'border-[#00D26A] bg-[#00D26A]/5' : 'border-slate-200 hover:border-slate-300'}`}>
-                      <RadioGroupItem value="yes" id="rep-yes" />
-                      <Label htmlFor="rep-yes" className="font-medium cursor-pointer flex-1">Sim</Label>
-                    </div>
-                    <div className={`flex items-center space-x-2 border rounded-xl px-4 py-3 w-full transition-all duration-200 ${formData.isRepresentative === 'no' ? 'border-[#00D26A] bg-[#00D26A]/5' : 'border-slate-200 hover:border-slate-300'}`}>
-                      <RadioGroupItem value="no" id="rep-no" />
-                      <Label htmlFor="rep-no" className="font-medium cursor-pointer flex-1">Não</Label>
-                    </div>
-                  </RadioGroup>
+                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-200">Você é representante legal da empresa?</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setFormData(p => ({...p, isRepresentative: 'yes'}))}
+                      className={cn(
+                        "flex items-center justify-center px-6 py-3 rounded-full border transition-all duration-200 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-[#00c295] focus:ring-offset-2",
+                        formData.isRepresentative === 'yes'
+                          ? "bg-[#00c295] border-[#00c295] text-white shadow-md shadow-[#00c295]/20"
+                          : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
+                      )}
+                    >
+                      {formData.isRepresentative === 'yes' && <Check className="w-4 h-4 mr-2" />}
+                      Sim
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFormData(p => ({...p, isRepresentative: 'no'}))}
+                      className={cn(
+                        "flex items-center justify-center px-6 py-3 rounded-full border transition-all duration-200 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-[#00c295] focus:ring-offset-2",
+                        formData.isRepresentative === 'no'
+                          ? "bg-[#00c295] border-[#00c295] text-white shadow-md shadow-[#00c295]/20"
+                          : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
+                      )}
+                    >
+                      {formData.isRepresentative === 'no' && <Check className="w-4 h-4 mr-2" />}
+                      Não
+                    </button>
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -141,23 +157,41 @@ export default function AccountCreationStep1() {
                 </div>
               </div>
               
-              <div className="flex items-start space-x-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                <Checkbox 
-                  id="agreeToTerms" 
-                  checked={formData.agreeToTerms} 
-                  onCheckedChange={(c) => setFormData(p => ({...p, agreeToTerms: c}))} 
-                  className="mt-0.5"
-                />
-                <label htmlFor="agreeToTerms" className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed cursor-pointer select-none">
-                  Li e concordo com os <a href="#" className="text-[#00D26A] font-medium hover:underline hover:text-[#00A854] transition-colors">Termos de Uso</a> e a <a href="#" className="text-[#00D26A] font-medium hover:underline hover:text-[#00A854] transition-colors">Política de Privacidade</a> da PagSmile.
-                </label>
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <div className="flex flex-col sm:flex-row items-center gap-3 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700">
+                      <button
+                          type="button"
+                          onClick={() => setFormData(p => ({...p, agreeToTerms: !p.agreeToTerms}))}
+                          className={cn(
+                              "flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border",
+                              formData.agreeToTerms
+                                  ? "bg-[#00c295]/10 text-[#00c295] border-[#00c295]/20"
+                                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100 hover:border-slate-300"
+                          )}
+                      >
+                          {formData.agreeToTerms ? (
+                              <>
+                                  <CheckCircle2 className="w-4 h-4" />
+                                  Concordo
+                              </>
+                          ) : (
+                              <>
+                                  <div className="w-4 h-4 rounded-full border-2 border-slate-300" />
+                                  Aceitar Termos
+                              </>
+                          )}
+                      </button>
+                      <p className="text-sm text-slate-500 text-center sm:text-left">
+                          Ao continuar, você concorda com nossos <Link to="#" className="text-[#00c295] font-semibold hover:underline">Termos de Uso</Link> e <Link to="#" className="text-[#00c295] font-semibold hover:underline">Política de Privacidade</Link>.
+                      </p>
+                  </div>
               </div>
             </>
           ) : (
             <div className="space-y-8 py-6">
               <div className="text-center space-y-4">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#00D26A]/20 to-emerald-500/20 flex items-center justify-center mx-auto mb-6 shadow-inner ring-4 ring-white dark:ring-[#1E293B]">
-                  <Check className="w-10 h-10 text-[#00D26A] drop-shadow-md" />
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#00c295]/20 to-emerald-500/20 flex items-center justify-center mx-auto mb-6 shadow-inner ring-4 ring-white dark:ring-[#1E293B]">
+                  <Check className="w-10 h-10 text-[#00c295] drop-shadow-md" />
                 </div>
                 
                 <div className="space-y-2">
@@ -167,32 +201,51 @@ export default function AccountCreationStep1() {
                   </p>
                 </div>
 
-                <div className="flex gap-3 justify-center p-1 bg-slate-100 dark:bg-slate-800 rounded-xl w-fit mx-auto">
-                  <Button 
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className={`rounded-lg transition-all duration-300 ${verificationMethod === 'email' ? 'bg-white dark:bg-slate-700 text-[#00D26A] shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700'}`}
-                    onClick={() => setVerificationMethod('email')}
-                  >
-                    E-mail
-                  </Button>
-                  <Button 
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className={`rounded-lg transition-all duration-300 ${verificationMethod === 'sms' ? 'bg-white dark:bg-slate-700 text-[#00D26A] shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700'}`}
-                    onClick={() => setVerificationMethod('sms')}
-                  >
-                    SMS
-                  </Button>
+                <div className="grid grid-cols-2 gap-4 w-full max-w-sm mx-auto">
+                    <button
+                        type="button"
+                        onClick={() => setVerificationMethod('email')}
+                        className={cn(
+                            "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-200 h-24 gap-2",
+                            verificationMethod === 'email'
+                                ? "border-[#00c295] bg-[#00c295]/5 text-[#00c295]"
+                                : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
+                        )}
+                    >
+                        <div className={cn(
+                            "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
+                            verificationMethod === 'email' ? "bg-[#00c295] text-white" : "bg-slate-100 text-slate-400"
+                        )}>
+                            <Mail className="w-4 h-4" />
+                        </div>
+                        <span className="font-semibold text-sm">Via E-mail</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => setVerificationMethod('sms')}
+                        className={cn(
+                            "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-200 h-24 gap-2",
+                            verificationMethod === 'sms'
+                                ? "border-[#00c295] bg-[#00c295]/5 text-[#00c295]"
+                                : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
+                        )}
+                    >
+                        <div className={cn(
+                            "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
+                            verificationMethod === 'sms' ? "bg-[#00c295] text-white" : "bg-slate-100 text-slate-400"
+                        )}>
+                            <Smartphone className="w-4 h-4" />
+                        </div>
+                        <span className="font-semibold text-sm">Via SMS</span>
+                    </button>
                 </div>
 
-                <div className="bg-[#00D26A]/5 border border-[#00D26A]/10 rounded-lg p-3 max-w-xs mx-auto">
-                  <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Código enviado para</p>
-                  <p className="font-mono font-medium text-slate-700 dark:text-slate-300 truncate">
-                    {verificationMethod === 'email' ? formData.email : formData.phone}
-                  </p>
+                <div className="bg-[#00c295]/5 border border-[#00c295]/10 rounded-lg p-3 max-w-xs mx-auto">
+                <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Código enviado para</p>
+                <p className="font-mono font-medium text-slate-700 dark:text-slate-300 truncate">
+                  {verificationMethod === 'email' ? formData.email : formData.phone}
+                </p>
                 </div>
               </div>
 
@@ -203,13 +256,13 @@ export default function AccountCreationStep1() {
                   placeholder="000 000" 
                   value={verificationCode} 
                   onChange={(e) => setVerificationCode(e.target.value)}
-                  className="text-center text-2xl tracking-[0.5em] font-mono font-bold h-14 border-slate-300 focus:border-[#00D26A] focus:ring-[#00D26A]/20"
+                  className="text-center text-2xl tracking-[0.5em] font-mono font-bold h-14 border-slate-300 focus:border-[#00c295] focus:ring-[#00c295]/20"
                   maxLength={6}
                 />
               </div>
 
               <p className="text-sm text-slate-500 text-center">
-                Não recebeu o código? <button className="text-[#00D26A] font-semibold hover:underline hover:text-[#00A854] transition-colors ml-1">Reenviar agora</button>
+                Não recebeu o código? <button className="text-[#00c295] font-semibold hover:underline hover:text-[#00a880] transition-colors ml-1">Reenviar agora</button>
               </p>
             </div>
           )}
@@ -221,7 +274,7 @@ export default function AccountCreationStep1() {
               <Button variant="ghost" className="text-slate-500 hover:text-slate-900 hover:bg-slate-100" asChild>
                 <Link to={createPageUrl('LandingPage')}><ArrowLeft className="mr-2 h-4 w-4" /> Voltar</Link>
               </Button>
-              <Button onClick={handleNext} className="bg-[#00D26A] hover:bg-[#00A854] text-white font-bold px-8 shadow-lg shadow-[#00D26A]/20 hover:shadow-[#00D26A]/40 transition-all hover:-translate-y-0.5">
+              <Button onClick={handleNext} size="lg" className="bg-[#00c295] hover:bg-[#00a880] text-white font-bold px-10 rounded-full shadow-lg shadow-[#00c295]/20 hover:shadow-[#00c295]/40 transition-all hover:-translate-y-0.5">
                 Continuar <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </>
@@ -230,7 +283,7 @@ export default function AccountCreationStep1() {
               <Button variant="ghost" onClick={() => setShowVerification(false)} className="text-slate-500 hover:text-slate-900 hover:bg-slate-100">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
               </Button>
-              <Button onClick={handleVerify} className="bg-[#00D26A] hover:bg-[#00A854] text-white font-bold px-8 shadow-lg shadow-[#00D26A]/20 hover:shadow-[#00D26A]/40 transition-all hover:-translate-y-0.5">
+              <Button onClick={handleVerify} size="lg" className="bg-[#00c295] hover:bg-[#00a880] text-white font-bold px-10 rounded-full shadow-lg shadow-[#00c295]/20 hover:shadow-[#00c295]/40 transition-all hover:-translate-y-0.5">
                 Confirmar e Avançar <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </>

@@ -80,30 +80,39 @@ export default function AccountCreationStep3() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-      <Card className="w-full max-w-3xl shadow-2xl border-0 rounded-3xl overflow-hidden">
-        <div className="h-2 bg-gradient-to-r from-[#00D26A] to-emerald-600 w-full" />
-        <CardHeader className="text-center pb-6 pt-8 bg-slate-50/50">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-4">
+      <Card className="w-full max-w-3xl shadow-2xl border border-slate-100 rounded-2xl overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-[#00c295] to-emerald-600 w-full" />
+        <CardHeader className="text-center pb-6 pt-8 bg-white">
           <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-6 hover:opacity-80 transition-opacity">
             <img
               src={getLogoUrlByTheme('light')}
               alt="PagSmile Logo"
-              className="h-10 transition-all duration-300 hover:scale-105"
+              className="h-12 transition-all duration-300 hover:scale-105"
             />
           </Link>
-          <CardTitle className="text-3xl font-bold text-slate-900 tracking-tight">Dados da Empresa</CardTitle>
-          <CardDescription className="text-slate-500 text-lg mt-2">Etapa 3 de 3 - Informações do seu negócio</CardDescription>
-          <div className="w-full flex items-center justify-center gap-2 mt-8">
-             {[1, 2, 3].map((step) => (
-                <div key={step} className={cn(
-                  "h-2 rounded-full transition-all duration-500 relative",
-                  step === 3 ? "bg-[#00D26A] w-24 shadow-[0_0_15px_rgba(0,210,106,0.3)]" : "bg-[#00D26A] w-24 shadow-[0_0_15px_rgba(0,210,106,0.3)] opacity-60"
-                )}>
-                  {step === 3 && (
-                      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full border-2 border-[#00D26A]" />
-                  )}
-                </div>
-             ))}
+          <CardTitle className="text-3xl font-extrabold text-slate-900 tracking-tight">Dados da Empresa</CardTitle>
+          <CardDescription className="text-slate-500 text-base mt-2">Etapa 3 de 3 - Informações do seu negócio</CardDescription>
+          
+          {/* Enhanced Progress Bar */}
+          <div className="flex items-center justify-center gap-3 mt-8">
+             <div className="flex flex-col items-center gap-2">
+               <div className="w-3 h-3 rounded-full bg-[#00c295] border-2 border-[#00c295]" />
+               <div className="w-24 h-1.5 rounded-full bg-[#00c295]" />
+             </div>
+             
+             <div className="flex flex-col items-center gap-2">
+               <div className="w-3 h-3 rounded-full bg-[#00c295] border-2 border-[#00c295]" />
+               <div className="w-24 h-1.5 rounded-full bg-[#00c295]" />
+             </div>
+             
+             <div className="flex flex-col items-center gap-2">
+              <div className="relative">
+                <div className="w-3 h-3 rounded-full bg-white border-2 border-[#00c295] z-10 relative shadow-[0_0_10px_rgba(0,194,149,0.4)]" />
+                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#00c295]" />
+              </div>
+              <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-[#00c295] to-emerald-500 shadow-sm" />
+            </div>
           </div>
         </CardHeader>
         
@@ -230,7 +239,12 @@ export default function AccountCreationStep3() {
               <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
             </Link>
           </Button>
-          <Button onClick={handleFinish} disabled={loading} className="bg-[#00D26A] hover:bg-[#00A854]">
+          <Button 
+            onClick={handleFinish} 
+            disabled={loading} 
+            size="lg"
+            className="bg-[#00c295] hover:bg-[#00a880] text-white shadow-lg shadow-[#00c295]/20 hover:shadow-[#00c295]/40 px-10 rounded-full font-bold transition-all transform hover:-translate-y-0.5"
+          >
             {loading ? 'Criando...' : 'Finalizar Cadastro'} <Building2 className="ml-2 h-4 w-4" />
           </Button>
         </CardFooter>
