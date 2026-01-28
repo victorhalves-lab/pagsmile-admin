@@ -72,6 +72,37 @@ import Withdrawals from './pages/Withdrawals';
 import Recurrence from './pages/Recurrence';
 import FeesAnalysis from './pages/FeesAnalysis';
 import IBSettingsAccess from './pages/IBSettingsAccess';
+import AdminIntDashboard from './pages/AdminIntDashboard';
+import AdminIntComercial from './pages/AdminIntComercial';
+import AdminIntLeads from './pages/AdminIntLeads';
+import AdminIntPipeline from './pages/AdminIntPipeline';
+import AdminIntProposals from './pages/AdminIntProposals';
+import AdminIntQuestionnaires from './pages/AdminIntQuestionnaires';
+import AdminIntOnboardingDash from './pages/AdminIntOnboardingDash';
+import AdminIntOnboardingQueue from './pages/AdminIntOnboardingQueue';
+import AdminIntSelfService from './pages/AdminIntSelfService';
+import AdminIntActivation from './pages/AdminIntActivation';
+import AdminIntKYC from './pages/AdminIntKYC';
+import AdminIntPLD from './pages/AdminIntPLD';
+import AdminIntDocs from './pages/AdminIntDocs';
+import AdminIntMerchants from './pages/AdminIntMerchants';
+import AdminIntMerchantProfile from './pages/AdminIntMerchantProfile';
+import AdminIntSubaccounts from './pages/AdminIntSubaccounts';
+import AdminIntTransactions from './pages/AdminIntTransactions';
+import AdminIntSettlement from './pages/AdminIntSettlement';
+import AdminIntReconciliation from './pages/AdminIntReconciliation';
+import AdminIntAnticipation from './pages/AdminIntAnticipation';
+import AdminIntRisk from './pages/AdminIntRisk';
+import AdminIntPreChargebacks from './pages/AdminIntPreChargebacks';
+import AdminIntChargebacks from './pages/AdminIntChargebacks';
+import AdminIntAntifraud from './pages/AdminIntAntifraud';
+import AdminIntMCCs from './pages/AdminIntMCCs';
+import AdminIntPartners from './pages/AdminIntPartners';
+import AdminIntFeePlans from './pages/AdminIntFeePlans';
+import AdminIntAiAgents from './pages/AdminIntAiAgents';
+import AdminIntSupport from './pages/AdminIntSupport';
+import AdminIntReports from './pages/AdminIntReports';
+import AdminIntSettings from './pages/AdminIntSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -150,6 +181,37 @@ export const PAGES = {
     "Recurrence": Recurrence,
     "FeesAnalysis": FeesAnalysis,
     "IBSettingsAccess": IBSettingsAccess,
+    "AdminIntDashboard": AdminIntDashboard,
+    "AdminIntComercial": AdminIntComercial,
+    "AdminIntLeads": AdminIntLeads,
+    "AdminIntPipeline": AdminIntPipeline,
+    "AdminIntProposals": AdminIntProposals,
+    "AdminIntQuestionnaires": AdminIntQuestionnaires,
+    "AdminIntOnboardingDash": AdminIntOnboardingDash,
+    "AdminIntOnboardingQueue": AdminIntOnboardingQueue,
+    "AdminIntSelfService": AdminIntSelfService,
+    "AdminIntActivation": AdminIntActivation,
+    "AdminIntKYC": AdminIntKYC,
+    "AdminIntPLD": AdminIntPLD,
+    "AdminIntDocs": AdminIntDocs,
+    "AdminIntMerchants": AdminIntMerchants,
+    "AdminIntMerchantProfile": AdminIntMerchantProfile,
+    "AdminIntSubaccounts": AdminIntSubaccounts,
+    "AdminIntTransactions": AdminIntTransactions,
+    "AdminIntSettlement": AdminIntSettlement,
+    "AdminIntReconciliation": AdminIntReconciliation,
+    "AdminIntAnticipation": AdminIntAnticipation,
+    "AdminIntRisk": AdminIntRisk,
+    "AdminIntPreChargebacks": AdminIntPreChargebacks,
+    "AdminIntChargebacks": AdminIntChargebacks,
+    "AdminIntAntifraud": AdminIntAntifraud,
+    "AdminIntMCCs": AdminIntMCCs,
+    "AdminIntPartners": AdminIntPartners,
+    "AdminIntFeePlans": AdminIntFeePlans,
+    "AdminIntAiAgents": AdminIntAiAgents,
+    "AdminIntSupport": AdminIntSupport,
+    "AdminIntReports": AdminIntReports,
+    "AdminIntSettings": AdminIntSettings,
 }
 
 export const pagesConfig = {
