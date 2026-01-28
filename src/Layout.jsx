@@ -262,9 +262,10 @@ const adminInternoMenuItems = [
     id: 'financial',
     label: 'Financeiro',
     icon: DollarSign,
-    page: 'AdminIntTransactions',
+    page: 'AdminIntTransactionsDashboard',
     submenu: [
-      { label: 'Transações', page: 'AdminIntTransactions' },
+      { label: 'Dashboard Transações', page: 'AdminIntTransactionsDashboard' },
+      { label: 'Lista de Transações', page: 'AdminIntTransactionsList' },
       { label: 'Liquidação', page: 'AdminIntSettlement' },
       { label: 'Conciliação', page: 'AdminIntReconciliation' },
       { label: 'Antecipações', page: 'AdminIntAnticipation' },
