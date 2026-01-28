@@ -30,8 +30,15 @@ import {
   Clock,
   Users
 } from 'lucide-react';
-import { cn, formatCurrency } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value || 0);
+};
 import { toast } from 'sonner';
 
 

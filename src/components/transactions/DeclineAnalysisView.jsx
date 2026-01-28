@@ -44,7 +44,14 @@ import {
   Line,
   Legend
 } from 'recharts';
-import { cn, formatCurrency } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value || 0);
+};
 
 const DECLINE_CATEGORIES = {
   nsf: { label: 'Saldo Insuficiente', icon: DollarSign, color: '#EF4444', description: 'Cliente sem saldo ou limite disponível' },

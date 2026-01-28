@@ -16,7 +16,14 @@ import {
   Shield,
   BarChart3
 } from 'lucide-react';
-import { cn, formatCurrency } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value || 0);
+};
 import TransactionAdvancedFilters from './TransactionAdvancedFilters';
 import TransactionMassActions from './TransactionMassActions';
 import TransactionDataTable from './TransactionDataTable';
