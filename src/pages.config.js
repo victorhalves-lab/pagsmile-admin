@@ -103,6 +103,12 @@ import AdminIntAiAgents from './pages/AdminIntAiAgents';
 import AdminIntSupport from './pages/AdminIntSupport';
 import AdminIntReports from './pages/AdminIntReports';
 import AdminIntSettings from './pages/AdminIntSettings';
+import AdminIntLeadProfile from './pages/AdminIntLeadProfile';
+import AdminIntCreateProposal from './pages/AdminIntCreateProposal';
+import AdminIntCentralLinks from './pages/AdminIntCentralLinks';
+import AdminIntGoalsPerformance from './pages/AdminIntGoalsPerformance';
+import AdminIntCommercialInsights from './pages/AdminIntCommercialInsights';
+import AdminIntProposalDetails from './pages/AdminIntProposalDetails';
 import __Layout from './Layout.jsx';
 
 
@@ -212,6 +218,12 @@ export const PAGES = {
     "AdminIntSupport": AdminIntSupport,
     "AdminIntReports": AdminIntReports,
     "AdminIntSettings": AdminIntSettings,
+    "AdminIntLeadProfile": AdminIntLeadProfile,
+    "AdminIntCreateProposal": AdminIntCreateProposal,
+    "AdminIntCentralLinks": AdminIntCentralLinks,
+    "AdminIntGoalsPerformance": AdminIntGoalsPerformance,
+    "AdminIntCommercialInsights": AdminIntCommercialInsights,
+    "AdminIntProposalDetails": AdminIntProposalDetails,
 }
 
 export const pagesConfig = {
