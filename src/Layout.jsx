@@ -40,7 +40,11 @@ import {
   KeyRound,
   Gauge,
   Check,
-  Landmark
+  Landmark,
+  Briefcase,
+  UserPlus,
+  ShieldCheck,
+  AlertTriangle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -199,6 +203,102 @@ const adminSubMenuItems = [
   },
 ];
 
+// Menu items for Admin Interno module
+const adminInternoMenuItems = [
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: LayoutDashboard,
+    page: 'AdminIntDashboard',
+  },
+  {
+    id: 'comercial',
+    label: 'Comercial',
+    icon: Briefcase,
+    page: 'AdminIntComercial',
+    submenu: [
+      { label: 'Dashboard Comercial', page: 'AdminIntComercial' },
+      { label: 'Gestão de Leads', page: 'AdminIntLeads' },
+      { label: 'Pipeline de Vendas', page: 'AdminIntPipeline' },
+      { label: 'Propostas', page: 'AdminIntProposals' },
+      { label: 'Questionários', page: 'AdminIntQuestionnaires' },
+    ]
+  },
+  {
+    id: 'onboarding',
+    label: 'Onboarding',
+    icon: UserPlus,
+    page: 'AdminIntOnboardingDash',
+    submenu: [
+      { label: 'Dashboard', page: 'AdminIntOnboardingDash' },
+      { label: 'Fila de Onboarding', page: 'AdminIntOnboardingQueue' },
+      { label: 'Contas Self-Service', page: 'AdminIntSelfService' },
+      { label: 'Workflow', page: 'AdminIntActivation' },
+    ]
+  },
+  {
+    id: 'kyc',
+    label: 'KYC & Compliance',
+    icon: ShieldCheck,
+    page: 'AdminIntKYC',
+    submenu: [
+      { label: 'Análise de KYC', page: 'AdminIntKYC' },
+      { label: 'PLD/AML', page: 'AdminIntPLD' },
+      { label: 'Documentação', page: 'AdminIntDocs' },
+    ]
+  },
+  {
+    id: 'merchants',
+    label: 'Merchants',
+    icon: Store,
+    page: 'AdminIntMerchants',
+    submenu: [
+      { label: 'Lista de Merchants', page: 'AdminIntMerchants' },
+      { label: 'Perfil 360°', page: 'AdminIntMerchantProfile' },
+      { label: 'Subcontas', page: 'AdminIntSubaccounts' },
+    ]
+  },
+  {
+    id: 'financial',
+    label: 'Financeiro',
+    icon: DollarSign,
+    page: 'AdminIntTransactions',
+    submenu: [
+      { label: 'Transações', page: 'AdminIntTransactions' },
+      { label: 'Liquidação', page: 'AdminIntSettlement' },
+      { label: 'Conciliação', page: 'AdminIntReconciliation' },
+      { label: 'Antecipações', page: 'AdminIntAnticipation' },
+    ]
+  },
+  {
+    id: 'risk',
+    label: 'Risco & Disputas',
+    icon: AlertTriangle,
+    page: 'AdminIntRisk',
+    submenu: [
+      { label: 'Monitoramento', page: 'AdminIntRisk' },
+      { label: 'Pré-Chargebacks', page: 'AdminIntPreChargebacks' },
+      { label: 'Chargebacks', page: 'AdminIntChargebacks' },
+      { label: 'Antifraude', page: 'AdminIntAntifraud' },
+    ]
+  },
+  {
+    id: 'admin',
+    label: 'Administração',
+    icon: Settings,
+    page: 'AdminIntSettings',
+    submenu: [
+      { label: 'MCCs', page: 'AdminIntMCCs' },
+      { label: 'Parceiros & Custos', page: 'AdminIntPartners' },
+      { label: 'Planos de Taxas', page: 'AdminIntFeePlans' },
+      { label: 'Agentes IA', page: 'AdminIntAiAgents' },
+      { label: 'Suporte', page: 'AdminIntSupport' },
+      { label: 'Relatórios', page: 'AdminIntReports' },
+      { label: 'Configurações', page: 'AdminIntSettings' },
+    ]
+  }
+];
+
 // Menu items for Internet Banking module
 const internetBankingMenuItems = [
   {
@@ -257,7 +357,18 @@ const noLayoutPages = [
 // Internet Banking pages (to auto-detect module)
 const internetBankingPages = [
   'IBHome', 'IBExtract', 'IBPixSend', 'IBPixReceive', 'IBPixKeys', 'IBPixLimits',
-  'IBProofs', 'IBSettings', 'IBSettingsAccount', 'IBSettingsSecurity', 'IBSettingsNotifications'
+  'IBProofs', 'IBSettings', 'IBSettingsAccount', 'IBSettingsSecurity', 'IBSettingsNotifications', 'IBSettingsAccess'
+];
+
+// Admin Interno pages
+const adminInternoPages = [
+  'AdminIntDashboard', 'AdminIntComercial', 'AdminIntLeads', 'AdminIntPipeline', 'AdminIntProposals', 'AdminIntQuestionnaires',
+  'AdminIntOnboardingDash', 'AdminIntOnboardingQueue', 'AdminIntSelfService', 'AdminIntActivation',
+  'AdminIntKYC', 'AdminIntPLD', 'AdminIntDocs',
+  'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts',
+  'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation',
+  'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
+  'AdminIntMCCs', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
 ];
 
 import { Sun, Moon } from 'lucide-react';
@@ -282,9 +393,12 @@ export default function Layout({ children, currentPageName }) {
     if (internetBankingPages.includes(currentPageName)) {
       setCurrentModule('internet-banking');
       localStorage.setItem('currentModule', 'internet-banking');
-    } else if (!noLayoutPages.includes(currentPageName) && currentPageName && !currentPageName.startsWith('IB')) {
-      // Only switch to admin-sub if we're on a non-IB page and not a no-layout page
-      if (currentModule === 'internet-banking' && !internetBankingPages.includes(currentPageName)) {
+    } else if (adminInternoPages.includes(currentPageName)) {
+      setCurrentModule('admin-interno');
+      localStorage.setItem('currentModule', 'admin-interno');
+    } else if (!noLayoutPages.includes(currentPageName) && currentPageName && !currentPageName.startsWith('IB') && !currentPageName.startsWith('AdminInt')) {
+      // Only switch to admin-sub if we're on a non-IB page, non-AdminInt page, and not a no-layout page
+      if (currentModule !== 'admin-sub') {
         setCurrentModule('admin-sub');
         localStorage.setItem('currentModule', 'admin-sub');
       }
@@ -303,13 +417,19 @@ export default function Layout({ children, currentPageName }) {
     // Navigate to the default page of the module
     if (module === 'internet-banking') {
       window.location.href = createPageUrl('IBHome');
+    } else if (module === 'admin-interno') {
+      window.location.href = createPageUrl('AdminIntDashboard');
     } else {
       window.location.href = createPageUrl('Dashboard');
     }
   };
 
   // Get current menu items based on module
-  const menuItems = currentModule === 'internet-banking' ? internetBankingMenuItems : adminSubMenuItems;
+  const menuItems = currentModule === 'internet-banking' 
+    ? internetBankingMenuItems 
+    : currentModule === 'admin-interno' 
+      ? adminInternoMenuItems 
+      : adminSubMenuItems;
 
   // Buscar usuário autenticado e sua subconta para verificar status de compliance
   const { data: user } = useQuery({
@@ -414,20 +534,24 @@ export default function Layout({ children, currentPageName }) {
                         "w-8 h-8 rounded-lg flex items-center justify-center",
                         currentModule === 'internet-banking' 
                           ? "bg-[#00D26A]/20" 
-                          : "bg-blue-500/20"
+                          : currentModule === 'admin-interno'
+                            ? "bg-purple-500/20"
+                            : "bg-blue-500/20"
                       )}>
                         {currentModule === 'internet-banking' ? (
                           <Landmark className="w-4 h-4 text-[#00D26A]" />
+                        ) : currentModule === 'admin-interno' ? (
+                          <ShieldCheck className="w-4 h-4 text-purple-400" />
                         ) : (
                           <Store className="w-4 h-4 text-blue-400" />
                         )}
                       </div>
                       <div className="text-left">
                         <p className="text-sm font-medium text-white">
-                          {currentModule === 'internet-banking' ? 'Internet Banking' : 'Admin Sub'}
+                          {currentModule === 'internet-banking' ? 'Internet Banking' : currentModule === 'admin-interno' ? 'Admin Interno' : 'Admin Sub'}
                         </p>
                         <p className="text-[10px] text-slate-400">
-                          {currentModule === 'internet-banking' ? 'Conta Digital' : 'Gestão de Pagamentos'}
+                          {currentModule === 'internet-banking' ? 'Conta Digital' : currentModule === 'admin-interno' ? 'Gestão Interna' : 'Gestão de Pagamentos'}
                         </p>
                       </div>
                     </div>
@@ -467,6 +591,23 @@ export default function Layout({ children, currentPageName }) {
                         <p className="text-xs text-slate-500">Conta Digital</p>
                       </div>
                       {currentModule === 'internet-banking' && (
+                        <Check className="w-4 h-4 text-[#00D26A]" />
+                      )}
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => handleModuleChange('admin-interno')}
+                    className="cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+                        <ShieldCheck className="w-4 h-4 text-purple-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">Admin Interno</p>
+                        <p className="text-xs text-slate-500">Gestão Interna</p>
+                      </div>
+                      {currentModule === 'admin-interno' && (
                         <Check className="w-4 h-4 text-[#00D26A]" />
                       )}
                     </div>
@@ -683,6 +824,12 @@ export default function Layout({ children, currentPageName }) {
                 <div className="flex items-center gap-2">
                   <Landmark className="w-5 h-5 text-[#00D26A]" />
                   <span className="font-semibold text-slate-700 dark:text-slate-200">Internet Banking</span>
+                </div>
+              )}
+              {currentModule === 'admin-interno' && (
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-purple-600" />
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">Admin Interno</span>
                 </div>
               )}
             </div>
