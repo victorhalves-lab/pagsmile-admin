@@ -226,7 +226,7 @@ export default function Fees() {
         <Badge variant="outline" className={cn(
           value === 'pix' ? 'border-blue-200 text-blue-700 bg-blue-50' : 'border-orange-200 text-orange-700 bg-orange-50'
         )}>
-          {value === 'pix' ? 'PIX' : 'Cartão'}
+          {value === 'pix' ? 'PIX' : value === 'card' ? 'Cartão' : value || '-'}
         </Badge>
       )
     },
@@ -239,7 +239,7 @@ export default function Fees() {
       key: 'fee_amount',
       label: 'Tarifa',
       render: (value, row) => {
-        const fee = value || row.amount * (row.type === 'pix' ? 0.0099 : 0.0249);
+        const fee = value || (row?.amount || 0) * (row?.type === 'pix' ? 0.0099 : 0.0249);
         return <span className="text-red-600 font-medium">-{formatCurrency(fee)}</span>;
       }
     },
@@ -247,8 +247,8 @@ export default function Fees() {
       key: 'net_amount',
       label: 'Valor Líquido',
       render: (value, row) => {
-        const fee = row.fee_amount || row.amount * (row.type === 'pix' ? 0.0099 : 0.0249);
-        const net = row.amount - fee;
+        const fee = row?.fee_amount || (row?.amount || 0) * (row?.type === 'pix' ? 0.0099 : 0.0249);
+        const net = (row?.amount || 0) - fee;
         return <span className="text-emerald-600 font-semibold">{formatCurrency(net)}</span>;
       }
     },
