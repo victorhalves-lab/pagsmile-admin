@@ -6,8 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
-import { cn } from '@/lib/utils';
-import { getLogoUrlByTheme } from '@/components/utils/branding';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -90,22 +88,22 @@ export default function AccountCreationStep3() {
             <img
               src={getLogoUrlByTheme('light')}
               alt="PagSmile Logo"
-              className="h-12"
+              className="h-10 transition-all duration-300 hover:scale-105"
             />
           </Link>
           <CardTitle className="text-3xl font-bold text-slate-900 tracking-tight">Dados da Empresa</CardTitle>
           <CardDescription className="text-slate-500 text-lg mt-2">Etapa 3 de 3 - Informações do seu negócio</CardDescription>
-          <div className="flex gap-3 justify-center mt-8">
-            <div className="w-full flex items-center justify-center gap-2">
-               {[1, 2, 3].map((step) => (
-                  <div key={step} className={cn(
-                    "h-2 rounded-full transition-all duration-500 relative",
-                    "bg-[#00D26A] w-24 shadow-[0_0_15px_rgba(0,210,106,0.3)]"
-                  )}>
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full border-2 border-[#00D26A]" />
-                  </div>
-               ))}
-            </div>
+          <div className="w-full flex items-center justify-center gap-2 mt-8">
+             {[1, 2, 3].map((step) => (
+                <div key={step} className={cn(
+                  "h-2 rounded-full transition-all duration-500 relative",
+                  step === 3 ? "bg-[#00D26A] w-24 shadow-[0_0_15px_rgba(0,210,106,0.3)]" : "bg-[#00D26A] w-24 shadow-[0_0_15px_rgba(0,210,106,0.3)] opacity-60"
+                )}>
+                  {step === 3 && (
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full border-2 border-[#00D26A]" />
+                  )}
+                </div>
+             ))}
           </div>
         </CardHeader>
         
