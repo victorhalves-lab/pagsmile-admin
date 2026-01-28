@@ -93,15 +93,15 @@ export default function CompliancePixOnly() {
 
         <div className="p-4 md:p-6 space-y-4">
           <div className="overflow-y-auto max-h-[70vh] px-1">
-          {currentSection === 1 && <Section1Cadastrais formData={formData} handleChange={handleChange} />}
-          {currentSection === 2 && <Section2Atividade formData={formData} handleChange={handleChange} />}
-          {currentSection === 3 && <Section3Canais formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
-          {currentSection === 4 && <Section4Licenciamento formData={formData} handleChange={handleChange} />}
-          {currentSection === 5 && <Section5Beneficiarios formData={formData} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
-          {currentSection === 6 && <Section6Socios formData={formData} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
-          {currentSection === 7 && <Section7Responsaveis formData={formData} handleChange={handleChange} />}
-          {currentSection === 8 && <Section8PldFt formData={formData} handleChange={handleChange} />}
-          {currentSection === 9 && <Section9RepresentanteFinal formData={formData} handleChange={handleChange} />}
+            {currentSection === 1 && <Section1Cadastrais formData={formData} handleChange={handleChange} />}
+            {currentSection === 2 && <Section2Atividade formData={formData} handleChange={handleChange} />}
+            {currentSection === 3 && <Section3Canais formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
+            {currentSection === 4 && <Section4Licenciamento formData={formData} handleChange={handleChange} />}
+            {currentSection === 5 && <Section5Beneficiarios formData={formData} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
+            {currentSection === 6 && <Section6Socios formData={formData} handleArrayChange={handleArrayChange} handleAddArrayItem={handleAddArrayItem} handleRemoveArrayItem={handleRemoveArrayItem} />}
+            {currentSection === 7 && <Section7Responsaveis formData={formData} handleChange={handleChange} />}
+            {currentSection === 8 && <Section8PldFt formData={formData} handleChange={handleChange} />}
+            {currentSection === 9 && <Section9RepresentanteFinal formData={formData} handleChange={handleChange} />}
           </div>
 
           {/* Navigation */}
