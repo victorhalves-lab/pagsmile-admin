@@ -372,6 +372,7 @@ const adminInternoPages = [
 
 import { Sun, Moon } from 'lucide-react';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
+import DIAWidget from '@/components/admin-interno/DIAWidget';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -916,7 +917,10 @@ export default function Layout({ children, currentPageName }) {
         </main>
       </div>
 
-      {/* AI Assistant Panel */}
+      {/* DIA Widget - Global Copilot */}
+      <DIAWidget />
+
+      {/* AI Assistant Panel - Legacy/Admin Sub Specific */}
       {showAIPanel && (
         <div className="fixed right-0 top-0 h-full w-96 bg-white border-l border-gray-200 shadow-xl z-50">
           <div className="flex items-center justify-between p-4 border-b">
