@@ -1,224 +1,206 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
+import KPICard from '@/components/dashboard/KPICard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRight, ArrowDownRight, Users, CheckCircle, AlertTriangle, DollarSign, Store, Activity, AlertCircle } from 'lucide-react';
-import KPICard from '@/components/dashboard/KPICard';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, Legend } from 'recharts';
-import { base44 } from '@/api/base44Client';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Store, Users, AlertTriangle, DollarSign, TrendingUp, Plus, List, Activity
+} from 'lucide-react';
+import { 
+  ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid 
+} from 'recharts';
+import { mockMetrics, mockMerchants } from '@/components/mockData/adminInternoMocks';
 
 const InsightBanner = () => (
-    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 border border-indigo-100 dark:border-indigo-900 rounded-xl p-4 mb-6 shadow-sm">
-        <div className="flex items-start gap-4">
-            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
-                <Activity className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-            </div>
-            <div className="flex-1">
-                <h3 className="text-sm font-semibold text-indigo-900 dark:text-indigo-200 mb-1">
-                    💡 INSIGHTS DO DIA SOBRE A BASE DE MERCHANTS
-                </h3>
-                <div className="space-y-1">
-                    <p className="text-sm text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
-                        <ArrowUpRight className="w-4 h-4 text-green-500" />
-                        Top 3 merchants cresceram 45% no TPV - considere upgrade taxas
-                    </p>
-                    <p className="text-sm text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4 text-amber-500" />
-                        5 merchants com ratio CB {'>'} 0.5% - monitorar proximidade VDMP
-                    </p>
-                    <p className="text-sm text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-blue-500" />
-                        R$ 2.3M em saldo parado há {'>'} 7 dias - verificar liquidações
-                    </p>
-                </div>
-            </div>
-            <Button variant="outline" size="sm" className="bg-white dark:bg-slate-800 text-indigo-600 border-indigo-200 hover:bg-indigo-50">
-                Ver Análise Completa
-            </Button>
+  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-100 dark:border-blue-900 rounded-xl p-4 mb-6">
+    <div className="flex items-start gap-4">
+      <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+        <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+      </div>
+      <div className="flex-1">
+        <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">
+          💡 INSIGHTS DO DIA - Merchants
+        </h3>
+        <div className="space-y-1">
+          <p className="text-sm text-blue-700 dark:text-blue-300">
+            📈 3 merchants com crescimento {'>'} 50% no mês - oportunidade de upgrade
+          </p>
+          <p className="text-sm text-blue-700 dark:text-blue-300">
+            ⚠️ 2 merchants com ratio de chargeback próximo do limite
+          </p>
+          <p className="text-sm text-blue-700 dark:text-blue-300">
+            🆕 23 novos merchants ativados nos últimos 30 dias
+          </p>
         </div>
+      </div>
+      <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+        Ver Análise Completa
+      </Button>
     </div>
+  </div>
 );
 
-import { mockMetrics } from '@/components/mockData/adminInternoMocks';
-
 export default function AdminIntMerchants() {
-    // Mock Data from centralized file
-    const dataDistribution = mockMetrics.statusDistribution;
-    
-    // Transform top merchants for chart
-    const dataTopMerchants = mockMetrics.topMerchants;
+  const { statusDistribution, mccDistribution, topMerchants } = mockMetrics;
 
-    const dataMCC = mockMetrics.mccDistribution;
+  return (
+    <div className="space-y-6">
+      <PageHeader 
+        title="Dashboard de Merchants"
+        subtitle="Visão Geral da Base de Clientes"
+        breadcrumbs={[
+          { label: 'Admin Interno', page: 'AdminIntDashboard' },
+          { label: 'Merchants', page: 'AdminIntMerchants' }
+        ]}
+        actions={
+          <div className="flex gap-2">
+            <Link to={createPageUrl('AdminIntMerchantsList')}>
+              <Button variant="outline">
+                <List className="w-4 h-4 mr-2" /> Ver Lista
+              </Button>
+            </Link>
+            <Button className="bg-[#00D26A] hover:bg-[#00b059]">
+              <Plus className="w-4 h-4 mr-2" /> Novo Merchant
+            </Button>
+          </div>
+        }
+      />
 
-    const dataMargin = [
-        { name: 'SaaS', value: 1.25 },
-        { name: 'E-commerce', value: 0.95 },
-        { name: 'Varejo', value: 0.78 },
-        { name: 'Serviços', value: 1.10 },
-        { name: 'Infoprod', value: 1.45 },
-    ];
+      <InsightBanner />
 
-    return (
-        <div className="space-y-6">
-            <PageHeader
-                title="Merchants"
-                subtitle="Dashboard de Clientes Ativos"
-                breadcrumbs={[
-                    { label: 'Admin Interno', page: 'AdminIntDashboard' },
-                    { label: 'Merchants', page: 'AdminIntMerchants' }
-                ]}
-                actions={
-                    <div className="flex gap-2">
-                        <Button variant="outline">🗓️ Este mês</Button>
-                        <Button variant="ghost" size="icon"><Activity className="w-4 h-4" /></Button>
-                    </div>
-                }
-            />
+      {/* KPIs */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <KPICard title="Total Merchants" value={mockMetrics.totalMerchants} icon={Store} />
+        <KPICard title="Ativos" value={mockMetrics.activeMerchants} icon={Users} trend="up" change="+5%" />
+        <KPICard title="Suspensos" value={mockMetrics.suspendedMerchants} icon={AlertTriangle} className="border-l-4 border-l-amber-500" />
+        <KPICard title="TPV Mês" value={mockMetrics.tpvMonth} prefix="R$ " icon={DollarSign} trend="up" change="+18%" />
+        <KPICard title="Receita Mês" value={mockMetrics.revenueMonth} prefix="R$ " icon={TrendingUp} trend="up" change="+12%" />
+        <KPICard title="Novos (30d)" value={mockMetrics.newMerchants} icon={Plus} trend="up" change="+15%" />
+      </div>
 
-            <InsightBanner />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-                <KPICard
-                    title="Total Merchants"
-                    value="456"
-                    icon={Store}
-                    className="bg-white dark:bg-slate-800"
-                />
-                <KPICard
-                    title="Ativos Mês"
-                    value="398"
-                    change={5.2}
-                    icon={CheckCircle}
-                    trend="up"
-                />
-                <KPICard
-                    title="Suspensos/Bloq"
-                    value="12"
-                    change={-2.1}
-                    icon={AlertCircle}
-                    trend="down"
-                    prefix=""
-                    suffix=""
-                    className="border-l-4 border-l-red-500"
-                />
-                <KPICard
-                    title="TPV Mês"
-                    value="85M"
-                    change={18}
-                    prefix="R$ "
-                    icon={DollarSign}
-                    trend="up"
-                />
-                <KPICard
-                    title="Receita Mês"
-                    value="2.5M"
-                    change={22}
-                    prefix="R$ "
-                    icon={DollarSign}
-                    trend="up"
-                />
-                <KPICard
-                    title="Novos Mês"
-                    value="23"
-                    suffix="/30"
-                    icon={Users}
-                    className="border-l-4 border-l-green-500"
-                />
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Distribuição por Status</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[300px] flex items-center">
+            <ResponsiveContainer width="60%" height="100%">
+              <PieChart>
+                <Pie 
+                  data={statusDistribution} 
+                  dataKey="value" 
+                  nameKey="name" 
+                  cx="50%" 
+                  cy="50%" 
+                  innerRadius={60} 
+                  outerRadius={80}
+                >
+                  {statusDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="w-[40%] space-y-2">
+              {statusDistribution.map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
+                    <span className="text-sm">{item.name}</span>
+                  </div>
+                  <span className="font-bold">{item.value}</span>
+                </div>
+              ))}
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Distribuição por Status</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={dataDistribution}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={100}
-                                    paddingAngle={5}
-                                    dataKey="value"
-                                >
-                                    {dataDistribution.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                                <Tooltip 
-                                    formatter={(value) => [value, 'Merchants']}
-                                    contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-                                />
-                                <Legend verticalAlign="bottom" height={36} />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Top 5 por TPV (Mês)</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={dataTopMerchants} layout="vertical" margin={{ left: 20 }}>
-                                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                                <XAxis type="number" hide />
-                                <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 12 }} />
-                                <Tooltip 
-                                    formatter={(value) => [`R$ ${(value/1000000).toFixed(1)}M`, 'TPV']}
-                                    cursor={{ fill: 'transparent' }}
-                                />
-                                <Bar dataKey="value" fill="#00D26A" radius={[0, 4, 4, 0]} barSize={30} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Distribuição por MCC</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                         <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={dataMCC}
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={100}
-                                    dataKey="value"
-                                >
-                                    {dataMCC.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Margem Média por Segmento (%)</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={dataMargin} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                                <XAxis dataKey="name" />
-                                <YAxis unit="%" />
-                                <Tooltip />
-                                <Bar dataKey="value" fill="#6366f1" radius={[4, 4, 0, 0]} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Distribuição por MCC</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[300px] flex items-center">
+            <ResponsiveContainer width="60%" height="100%">
+              <PieChart>
+                <Pie 
+                  data={mccDistribution} 
+                  dataKey="value" 
+                  nameKey="name" 
+                  cx="50%" 
+                  cy="50%" 
+                  innerRadius={60} 
+                  outerRadius={80}
+                >
+                  {mccDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="w-[40%] space-y-2">
+              {mccDistribution.map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
+                    <span className="text-sm">{item.name}</span>
+                  </div>
+                  <span className="font-bold">{item.value}</span>
+                </div>
+              ))}
             </div>
-        </div>
-    );
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Top 5 Merchants por TPV</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={topMerchants} layout="vertical" margin={{ left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                <XAxis type="number" tickFormatter={(v) => `R$ ${(v/1000000).toFixed(1)}M`} />
+                <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 12 }} />
+                <Tooltip formatter={(v) => `R$ ${(v/1000000).toFixed(2)}M`} />
+                <Bar dataKey="value" fill="#3B82F6" radius={[0, 4, 4, 0]} barSize={25} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Últimos Merchants</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {mockMerchants.slice(0, 5).map((merchant, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-slate-900 dark:text-slate-100">{merchant.business_name}</p>
+                    <p className="text-xs text-slate-500">{merchant.document}</p>
+                  </div>
+                  <div className="text-right">
+                    <Badge variant={merchant.status === 'active' ? 'default' : merchant.status === 'suspended' ? 'destructive' : 'secondary'}>
+                      {merchant.status === 'active' ? 'Ativo' : merchant.status === 'suspended' ? 'Suspenso' : merchant.status}
+                    </Badge>
+                    <p className="text-xs text-slate-500 mt-1">{merchant.plan_name}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Link to={createPageUrl('AdminIntMerchantsList')}>
+              <Button variant="link" className="w-full mt-4">Ver todos os merchants →</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 }

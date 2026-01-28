@@ -1,24 +1,29 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
 import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, PlayCircle, Eye, AlertCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/components/utils';
+import { Search, Filter, PlayCircle, Eye, AlertCircle, Clock } from 'lucide-react';
 import { mockMerchants } from '@/components/mockData/adminInternoMocks';
 
 export default function AdminIntKYCQueue() {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Filter mock merchants for those needing review
-  // Simulating async fetch
-  const queueItems = mockMerchants.filter(m => ['pending_compliance', 'under_review'].includes(m.compliance_status) || m.kyc_score < 70);
-  const isLoading = false;
+  const queueItems = mockMerchants.filter(m => 
+    ['pending_compliance', 'under_review'].includes(m.compliance_status) || 
+    m.kyc_score < 70
+  );
+
+  // Filter by search
+  const filteredQueue = queueItems.filter(m =>
+    m.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.document.includes(searchTerm)
+  );
 
   const columns = [
     {
@@ -32,9 +37,9 @@ export default function AdminIntKYCQueue() {
       )
     },
     {
-      accessorKey: "account_type",
+      accessorKey: "category",
       header: "Tipo",
-      cell: ({ row }) => <span className="capitalize text-xs">{row.original.account_type?.replace('_', ' ') || 'PJ'}</span>
+      cell: ({ row }) => <span className="capitalize text-xs bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">{row.original.category || 'PJ'}</span>
     },
     {
       accessorKey: "kyc_score",
@@ -48,11 +53,15 @@ export default function AdminIntKYCQueue() {
     {
       accessorKey: "kyc_decision",
       header: "Decisão IA",
-      cell: ({ row }) => (
-          <Badge variant={row.original.kyc_decision === 'approved' ? 'success' : 'outline'} className="capitalize">
-              {row.original.kyc_decision?.replace('_', ' ') || 'Pendente'}
+      cell: ({ row }) => {
+        const decision = row.original.kyc_decision;
+        const variant = decision === 'approved' ? 'default' : decision === 'rejected' ? 'destructive' : 'secondary';
+        return (
+          <Badge variant={variant} className="capitalize">
+            {decision?.replace('_', ' ') || 'Pendente'}
           </Badge>
-      )
+        );
+      }
     },
     {
       id: "red_flags",
@@ -70,22 +79,37 @@ export default function AdminIntKYCQueue() {
     {
       id: "time_in_queue",
       header: "Tempo Fila",
-      cell: () => <span className="text-xs text-slate-500">12h</span> // Mock
+      cell: ({ row }) => {
+        const created = new Date(row.original.created_at);
+        const now = new Date();
+        const days = Math.floor((now - created) / (1000 * 60 * 60 * 24));
+        return (
+          <span className="text-xs text-slate-500 flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            {days}d
+          </span>
+        );
+      }
     },
     {
       id: "priority",
       header: "Prioridade",
-      cell: () => <Badge variant="secondary" className="text-[10px]">Normal</Badge> // Mock
+      cell: ({ row }) => {
+        const score = row.original.kyc_score;
+        const priority = score < 50 ? 'Alta' : score < 70 ? 'Média' : 'Normal';
+        const className = score < 50 ? 'bg-red-100 text-red-700' : score < 70 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700';
+        return <Badge className={`text-[10px] ${className}`}>{priority}</Badge>;
+      }
     },
     {
       id: "actions",
       header: "",
       cell: ({ row }) => (
           <div className="flex gap-2">
-            <Link to={createPageUrl('AdminIntSubaccountDetail', { id: row.original.id })}>
+            <Link to={createPageUrl('AdminIntSubaccountDetail') + '?id=' + row.original.id}>
                  <Button variant="ghost" size="sm"><Eye className="w-4 h-4" /></Button>
             </Link>
-            <Link to={createPageUrl('AdminIntKycAnalysis', { id: row.original.id })}>
+            <Link to={createPageUrl('AdminIntKycAnalysis') + '?id=' + row.original.id}>
                  <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
                     <PlayCircle className="w-4 h-4 mr-2" /> Analisar
                  </Button>
@@ -100,9 +124,13 @@ export default function AdminIntKYCQueue() {
       <PageHeader 
         title="Fila de Análise KYC" 
         subtitle="Casos aguardando revisão manual"
+        breadcrumbs={[
+          { label: 'KYC & Compliance', page: 'AdminIntKYC' },
+          { label: 'Fila de Análise', page: 'AdminIntKYCQueue' }
+        ]}
       />
 
-      <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+      <div className="flex justify-between items-center bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
         <div className="relative w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input 
@@ -117,11 +145,30 @@ export default function AdminIntKYCQueue() {
         </Button>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border">
+          <div className="text-sm text-slate-500">Total na Fila</div>
+          <div className="text-2xl font-bold">{filteredQueue.length}</div>
+        </div>
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-l-4 border-l-red-500">
+          <div className="text-sm text-slate-500">Alta Prioridade</div>
+          <div className="text-2xl font-bold text-red-600">{filteredQueue.filter(m => m.kyc_score < 50).length}</div>
+        </div>
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-l-4 border-l-amber-500">
+          <div className="text-sm text-slate-500">Média Prioridade</div>
+          <div className="text-2xl font-bold text-amber-600">{filteredQueue.filter(m => m.kyc_score >= 50 && m.kyc_score < 70).length}</div>
+        </div>
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-l-4 border-l-purple-500">
+          <div className="text-sm text-slate-500">Com Red Flags</div>
+          <div className="text-2xl font-bold text-purple-600">{filteredQueue.filter(m => m.ai_red_flags?.length > 0).length}</div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
         <DataTable 
           columns={columns} 
-          data={queueItems || []} 
-          loading={isLoading}
+          data={filteredQueue} 
         />
       </div>
     </div>

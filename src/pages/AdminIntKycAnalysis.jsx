@@ -1,292 +1,400 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { Link, useSearchParams } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
-  ShieldCheck, AlertTriangle, FileText, CheckCircle2, 
-  XCircle, PauseCircle, Save, MessageSquare
+  ShieldCheck, AlertTriangle, FileText, User, Building2, 
+  CheckCircle, XCircle, Clock, Eye, Download, ExternalLink
 } from 'lucide-react';
-import { toast } from 'sonner';
+import { mockMerchants } from '@/components/mockData/adminInternoMocks';
 
-// --- Components ---
-
-const InsightBanner = ({ score, redFlags }) => (
-    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 border border-purple-100 dark:border-purple-900 rounded-xl p-4 mb-6">
-      <div className="flex items-start justify-between">
-          <div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="bg-purple-600 rounded-lg p-1.5">
-                  <ShieldCheck className="w-4 h-4 text-white" />
-                </div>
-                <h3 className="font-semibold text-purple-900 dark:text-purple-100">Insights do DIA para esta Análise</h3>
-              </div>
-              <ul className="space-y-1 text-sm text-purple-800 dark:text-purple-200 ml-8 list-disc">
-                  <li>Score {score} está na faixa de análise manual (50-79).</li>
-                  <li>{redFlags?.length || 0} red flags identificados.</li>
-                  <li>Documentação completa e validada.</li>
-                  <li><strong>Sugestão:</strong> Aprovar com monitoramento reforçado nos primeiros 90 dias.</li>
-              </ul>
-          </div>
-          <Button variant="outline" size="sm" className="gap-2">
-              <MessageSquare className="w-4 h-4" /> Perguntar ao DIA
-          </Button>
+const InsightBanner = ({ merchant }) => (
+  <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 border border-purple-100 dark:border-purple-900 rounded-xl p-4 mb-6">
+    <div className="flex items-start gap-4">
+      <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+        <ShieldCheck className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+      </div>
+      <div className="flex-1">
+        <h3 className="text-sm font-semibold text-purple-900 dark:text-purple-200 mb-1">
+          💡 Análise HELENA - Score: {merchant?.kyc_score || '-'}
+        </h3>
+        <div className="space-y-1">
+          <p className="text-sm text-purple-700 dark:text-purple-300">
+            Recomendação: <span className="font-semibold">{merchant?.kyc_decision === 'manual_review' ? 'Revisão Manual Necessária' : merchant?.kyc_decision}</span>
+          </p>
+          {merchant?.ai_red_flags?.length > 0 && (
+            <p className="text-sm text-purple-700 dark:text-purple-300">
+              Red Flags: {merchant.ai_red_flags.join(', ')}
+            </p>
+          )}
+        </div>
       </div>
     </div>
+  </div>
 );
 
 const DocumentViewer = ({ doc }) => (
-    <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-4 bg-slate-50 dark:bg-slate-900/50">
-        <div className="flex justify-between items-center mb-4">
-            <h4 className="font-medium">{doc.name}</h4>
-            <div className="flex gap-2">
-                <Button size="sm" variant="outline" className="text-red-500 border-red-200 hover:bg-red-50">Reprovar</Button>
-                <Button size="sm" variant="outline" className="text-emerald-500 border-emerald-200 hover:bg-emerald-50">Aprovar</Button>
-            </div>
-        </div>
-        <div className="aspect-[4/3] bg-slate-200 dark:bg-slate-800 rounded flex items-center justify-center text-slate-400">
-            [Visualização do PDF/Imagem]
-        </div>
+  <div className="border rounded-lg p-4 bg-slate-50 dark:bg-slate-800">
+    <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-2">
+        <FileText className="w-5 h-5 text-slate-500" />
+        <span className="font-medium">{doc.name}</span>
+      </div>
+      <Badge variant={doc.status === 'approved' ? 'default' : doc.status === 'pending' ? 'secondary' : 'destructive'}>
+        {doc.status === 'approved' ? 'Aprovado' : doc.status === 'pending' ? 'Pendente' : 'Rejeitado'}
+      </Badge>
     </div>
+    <div className="h-40 bg-slate-200 dark:bg-slate-700 rounded flex items-center justify-center text-slate-400">
+      <Eye className="w-8 h-8" />
+      <span className="ml-2">Preview do Documento</span>
+    </div>
+    <div className="flex gap-2 mt-3">
+      <Button variant="outline" size="sm" className="flex-1">
+        <Download className="w-4 h-4 mr-2" /> Baixar
+      </Button>
+      <Button variant="outline" size="sm">
+        <ExternalLink className="w-4 h-4" />
+      </Button>
+    </div>
+  </div>
 );
 
-// --- Page ---
-
-import { mockMerchants } from '@/components/mockData/adminInternoMocks';
-import { useSearchParams } from 'react-router-dom';
-
 export default function AdminIntKycAnalysis() {
-    const [searchParams] = useSearchParams();
-    const id = searchParams.get('id') || 'sub_mock_002'; // Default to one with manual review for demo
-    
-    // Find mock subaccount
-    const subaccount = mockMerchants.find(m => m.id === id) || mockMerchants[1];
+  const [searchParams] = useSearchParams();
+  const merchantId = searchParams.get('id');
+  const [activeTab, setActiveTab] = useState('summary');
+  const [decision, setDecision] = useState('');
+  const [justification, setJustification] = useState('');
+  const [conditions, setConditions] = useState([]);
 
-    const [decision, setDecision] = useState('');
-    const [justification, setJustification] = useState('');
-    const [conditions, setConditions] = useState([]);
+  // Find merchant from mock data
+  const merchant = mockMerchants.find(m => m.id === merchantId) || mockMerchants[1]; // Default to second one (pending)
 
-    const handleApprove = async () => {
-        try {
-            await base44.functions.invoke('approveKycManually', { 
-                subaccount_id: subaccount.subaccount_id,
-                notes: justification,
-                conditions: conditions
-            });
-            toast.success('KYC Aprovado com sucesso!');
-        } catch (e) {
-            toast.error('Erro ao aprovar KYC');
+  const handleApprove = () => {
+    alert('KYC Aprovado! (Mock)');
+  };
+
+  const handleReject = () => {
+    alert('KYC Rejeitado! (Mock)');
+  };
+
+  return (
+    <div className="space-y-6">
+      <PageHeader 
+        title={`Análise KYC - ${merchant?.business_name || 'Empresa'}`}
+        subtitle={`CNPJ: ${merchant?.document || '-'}`}
+        breadcrumbs={[
+          { label: 'KYC & Compliance', page: 'AdminIntKYC' },
+          { label: 'Fila de Análise', page: 'AdminIntKYCQueue' },
+          { label: 'Análise', page: 'AdminIntKycAnalysis' }
+        ]}
+        actions={
+          <div className="flex gap-2">
+            <Link to={createPageUrl('AdminIntMerchantProfile') + '?id=' + merchant?.id}>
+              <Button variant="outline">
+                <Building2 className="w-4 h-4 mr-2" /> Ver Perfil Completo
+              </Button>
+            </Link>
+          </div>
         }
-    };
+      />
 
-    const handleReject = async () => {
-         try {
-            await base44.functions.invoke('rejectKycManually', { 
-                subaccount_id: subaccount.subaccount_id,
-                reason: justification
-            });
-            toast.success('KYC Reprovado.');
-        } catch (e) {
-            toast.error('Erro ao reprovar KYC');
-        }
-    };
+      <InsightBanner merchant={merchant} />
 
-    return (
-        <div className="space-y-6">
-            <PageHeader 
-                title={`Análise KYC - ${subaccount.business_name}`}
-                subtitle={`CNPJ: ${subaccount.document} | Score: ${subaccount.kyc_score}`}
-                breadcrumbs={[
-                    { label: 'Admin Interno', page: 'AdminIntDashboard' },
-                    { label: 'Fila de Análise', page: 'AdminIntKYCQueue' },
-                    { label: 'Análise', page: '#' }
-                ]}
-            />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Content */}
+        <div className="lg:col-span-2">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="w-full justify-start mb-4">
+              <TabsTrigger value="summary">Resumo</TabsTrigger>
+              <TabsTrigger value="partners">Sócios</TabsTrigger>
+              <TabsTrigger value="documents">Documentos</TabsTrigger>
+              <TabsTrigger value="decision">Decisão</TabsTrigger>
+            </TabsList>
 
-            <InsightBanner score={subaccount.kyc_score} redFlags={subaccount.ai_red_flags} />
+            <TabsContent value="summary" className="space-y-4">
+              <Card>
+                <CardHeader><CardTitle>Dados da Empresa</CardTitle></CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-slate-500">Razão Social</Label>
+                      <p className="font-medium">{merchant?.legal_name || merchant?.business_name}</p>
+                    </div>
+                    <div>
+                      <Label className="text-slate-500">CNPJ</Label>
+                      <p className="font-medium">{merchant?.document}</p>
+                    </div>
+                    <div>
+                      <Label className="text-slate-500">MCC</Label>
+                      <p className="font-medium">{merchant?.mcc} - {merchant?.mcc_description}</p>
+                    </div>
+                    <div>
+                      <Label className="text-slate-500">Categoria</Label>
+                      <p className="font-medium">{merchant?.category}</p>
+                    </div>
+                    <div>
+                      <Label className="text-slate-500">TPV Estimado</Label>
+                      <p className="font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(merchant?.tpv_month || 0)}/mês</p>
+                    </div>
+                    <div>
+                      <Label className="text-slate-500">Vendedor</Label>
+                      <p className="font-medium">{merchant?.commercial_agent}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-            <Tabs defaultValue="summary" className="w-full">
-                <TabsList className="w-full justify-start border-b border-slate-200 dark:border-slate-800 bg-transparent rounded-none h-auto p-0 gap-4 overflow-x-auto">
-                    <TabsTrigger value="summary" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Resumo HELENA</TabsTrigger>
-                    <TabsTrigger value="registration" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Cadastrais</TabsTrigger>
-                    <TabsTrigger value="partners" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Sócios/UBOs</TabsTrigger>
-                    <TabsTrigger value="documents" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Documentos</TabsTrigger>
-                    <TabsTrigger value="validations" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent">Validações</TabsTrigger>
-                    <TabsTrigger value="decision" className="data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none px-4 py-3 bg-transparent font-bold text-indigo-600">Decisão</TabsTrigger>
-                </TabsList>
+              {merchant?.ai_red_flags?.length > 0 && (
+                <Card className="border-red-200">
+                  <CardHeader><CardTitle className="text-red-600 flex items-center gap-2"><AlertTriangle className="w-5 h-5" /> Red Flags Identificadas</CardTitle></CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {merchant.ai_red_flags.map((flag, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-red-700 dark:text-red-400">
+                          <XCircle className="w-4 h-4" />
+                          {flag}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
 
-                <div className="mt-6">
-                    <TabsContent value="summary">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Card>
-                                <CardHeader><CardTitle>Análise HELENA</CardTitle></CardHeader>
-                                <CardContent className="space-y-6">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-24 h-24 rounded-full border-8 border-amber-400 flex items-center justify-center text-2xl font-bold text-amber-600">
-                                            {subaccount.kyc_score}
-                                        </div>
-                                        <div>
-                                            <h3 className="text-lg font-bold text-amber-600">ANÁLISE MANUAL</h3>
-                                            <p className="text-sm text-slate-500">Faixa 50-79: Requer revisão humana</p>
-                                            <p className="text-sm text-slate-500">Confiança: 87%</p>
-                                        </div>
-                                    </div>
-                                    <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg">
-                                        <h4 className="font-medium mb-2">Justificativa da IA</h4>
-                                        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                                            {subaccount.ai_compliance_justification}
-                                        </p>
-                                    </div>
-                                </CardContent>
-                            </Card>
+              <Card>
+                <CardHeader><CardTitle>Justificativa da IA</CardTitle></CardHeader>
+                <CardContent>
+                  <p className="text-slate-600 dark:text-slate-300">
+                    {merchant?.ai_compliance_justification || 'Nenhuma justificativa disponível.'}
+                  </p>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-                            <Card>
-                                <CardHeader><CardTitle>Red Flags ({subaccount.ai_red_flags.length})</CardTitle></CardHeader>
-                                <CardContent>
-                                    <div className="space-y-3">
-                                        {subaccount.ai_red_flags.map((flag, idx) => (
-                                            <div key={idx} className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-lg">
-                                                <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                                                <span className="text-sm font-medium text-red-700 dark:text-red-300">{flag}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
+            <TabsContent value="partners" className="space-y-4">
+              <Card>
+                <CardHeader><CardTitle>Quadro Societário</CardTitle></CardHeader>
+                <CardContent>
+                  {merchant?.partners?.length > 0 ? (
+                    <div className="space-y-4">
+                      {merchant.partners.map((partner, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
+                              <User className="w-5 h-5 text-slate-500" />
+                            </div>
+                            <div>
+                              <p className="font-medium">{partner.name}</p>
+                              <p className="text-sm text-slate-500">CPF: {partner.cpf} • {partner.share}</p>
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            {partner.pep && <Badge variant="destructive">PEP</Badge>}
+                            {partner.sanctions && <Badge variant="destructive">Sanções</Badge>}
+                            {!partner.pep && !partner.sanctions && <Badge variant="outline" className="text-green-600">Limpo</Badge>}
+                          </div>
                         </div>
-                    </TabsContent>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-slate-500 text-center py-8">Nenhum sócio cadastrado.</p>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-                    <TabsContent value="partners">
-                        <Card>
-                            <CardHeader><CardTitle>Estrutura Societária</CardTitle></CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
-                                    {[
-                                        { name: 'João da Silva', cpf: '123.456.789-00', share: '60%', pep: true, sanctions: false },
-                                        { name: 'Maria Santos', cpf: '987.654.321-00', share: '40%', pep: false, sanctions: false },
-                                    ].map((partner, idx) => (
-                                        <div key={idx} className="flex items-center justify-between p-4 border border-slate-200 dark:border-slate-800 rounded-lg">
-                                            <div>
-                                                <p className="font-medium">{partner.name}</p>
-                                                <p className="text-sm text-slate-500">CPF: {partner.cpf} • Participação: {partner.share}</p>
-                                            </div>
-                                            <div className="flex gap-2">
-                                                {partner.pep && <Badge variant="destructive">PEP</Badge>}
-                                                {!partner.sanctions && <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50">Sanções: OK</Badge>}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    <TabsContent value="documents">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Card className="md:col-span-1">
-                                <CardHeader><CardTitle>Lista de Documentos</CardTitle></CardHeader>
-                                <CardContent className="space-y-2">
-                                    {['Cartão CNPJ', 'Contrato Social', 'RG João da Silva', 'Selfie João c/ Doc'].map((doc, idx) => (
-                                        <Button key={idx} variant="ghost" className="w-full justify-start text-left font-normal">
-                                            <FileText className="w-4 h-4 mr-2 text-slate-400" />
-                                            {doc}
-                                            <Badge className="ml-auto" variant="success">OK</Badge>
-                                        </Button>
-                                    ))}
-                                </CardContent>
-                            </Card>
-                            <Card className="md:col-span-1">
-                                <CardHeader><CardTitle>Visualização</CardTitle></CardHeader>
-                                <CardContent>
-                                    <DocumentViewer doc={{ name: 'Contrato Social' }} />
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </TabsContent>
-
-                    <TabsContent value="decision">
-                        <Card className="border-indigo-200 dark:border-indigo-900 shadow-lg">
-                            <CardHeader className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
-                                <CardTitle className="text-indigo-700 dark:text-indigo-400">Decisão Final</CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6 space-y-8">
-                                <div className="space-y-4">
-                                    <Label className="text-base font-semibold">Selecione a Decisão:</Label>
-                                    <RadioGroup value={decision} onValueChange={setDecision} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className={`flex items-center space-x-2 border p-4 rounded-lg cursor-pointer ${decision === 'approve' ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : 'border-slate-200'}`}>
-                                            <RadioGroupItem value="approve" id="r1" />
-                                            <Label htmlFor="r1" className="flex items-center gap-2 cursor-pointer font-medium">
-                                                <CheckCircle2 className="w-5 h-5 text-emerald-600" /> Aprovar
-                                            </Label>
-                                        </div>
-                                        <div className={`flex items-center space-x-2 border p-4 rounded-lg cursor-pointer ${decision === 'reject' ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-slate-200'}`}>
-                                            <RadioGroupItem value="reject" id="r2" />
-                                            <Label htmlFor="r2" className="flex items-center gap-2 cursor-pointer font-medium">
-                                                <XCircle className="w-5 h-5 text-red-600" /> Reprovar
-                                            </Label>
-                                        </div>
-                                        <div className={`flex items-center space-x-2 border p-4 rounded-lg cursor-pointer ${decision === 'docs' ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20' : 'border-slate-200'}`}>
-                                            <RadioGroupItem value="docs" id="r3" />
-                                            <Label htmlFor="r3" className="flex items-center gap-2 cursor-pointer font-medium">
-                                                <PauseCircle className="w-5 h-5 text-amber-600" /> Solicitar Documentos
-                                            </Label>
-                                        </div>
-                                    </RadioGroup>
-                                </div>
-
-                                {decision === 'approve' && (
-                                    <div className="space-y-4 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
-                                        <Label className="font-semibold">Condições Especiais:</Label>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div className="flex items-center space-x-2">
-                                                <Checkbox id="c1" onCheckedChange={(c) => c ? setConditions([...conditions, 'monitoramento']) : setConditions(conditions.filter(i => i !== 'monitoramento'))} />
-                                                <Label htmlFor="c1">Monitoramento reforçado (90 dias)</Label>
-                                            </div>
-                                            <div className="flex items-center space-x-2">
-                                                <Checkbox id="c2" />
-                                                <Label htmlFor="c2">Limite inicial reduzido</Label>
-                                            </div>
-                                            <div className="flex items-center space-x-2">
-                                                <Checkbox id="c3" />
-                                                <Label htmlFor="c3">Revisão EDD em 6 meses</Label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="space-y-2">
-                                    <Label className="font-semibold">Justificativa (Obrigatória):</Label>
-                                    <Textarea 
-                                        placeholder="Descreva o motivo da decisão..." 
-                                        className="h-32"
-                                        value={justification}
-                                        onChange={(e) => setJustification(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                                    <Button variant="ghost">Cancelar</Button>
-                                    <Button 
-                                        onClick={decision === 'approve' ? handleApprove : handleReject}
-                                        disabled={!decision || !justification}
-                                        className={decision === 'approve' ? "bg-emerald-600 hover:bg-emerald-700" : decision === 'reject' ? "bg-red-600 hover:bg-red-700" : ""}
-                                    >
-                                        <Save className="w-4 h-4 mr-2" /> Confirmar Decisão
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
+            <TabsContent value="documents" className="space-y-4">
+              {merchant?.documents?.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {merchant.documents.map((doc, idx) => (
+                    <DocumentViewer key={idx} doc={doc} />
+                  ))}
                 </div>
-            </Tabs>
+              ) : (
+                <Card>
+                  <CardContent className="py-12 text-center text-slate-500">
+                    <FileText className="w-12 h-12 mx-auto mb-4 text-slate-300" />
+                    <p>Nenhum documento enviado ainda.</p>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
+            <TabsContent value="decision" className="space-y-4">
+              <Card>
+                <CardHeader><CardTitle>Decisão Final</CardTitle></CardHeader>
+                <CardContent className="space-y-6">
+                  <RadioGroup value={decision} onValueChange={setDecision}>
+                    <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-green-50 dark:hover:bg-green-950/20">
+                      <RadioGroupItem value="approve" id="approve" />
+                      <Label htmlFor="approve" className="flex-1 cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="w-5 h-5 text-green-600" />
+                          <span className="font-medium">Aprovar KYC</span>
+                        </div>
+                        <p className="text-sm text-slate-500 mt-1">Cliente apto para operar normalmente</p>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-amber-50 dark:hover:bg-amber-950/20">
+                      <RadioGroupItem value="request_docs" id="request_docs" />
+                      <Label htmlFor="request_docs" className="flex-1 cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-5 h-5 text-amber-600" />
+                          <span className="font-medium">Solicitar Documentos</span>
+                        </div>
+                        <p className="text-sm text-slate-500 mt-1">Necessário documentação adicional</p>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20">
+                      <RadioGroupItem value="reject" id="reject" />
+                      <Label htmlFor="reject" className="flex-1 cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          <XCircle className="w-5 h-5 text-red-600" />
+                          <span className="font-medium">Rejeitar KYC</span>
+                        </div>
+                        <p className="text-sm text-slate-500 mt-1">Cliente não apto para operar</p>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+
+                  <div>
+                    <Label>Justificativa</Label>
+                    <Textarea 
+                      placeholder="Descreva o motivo da sua decisão..."
+                      value={justification}
+                      onChange={(e) => setJustification(e.target.value)}
+                      className="mt-2"
+                      rows={4}
+                    />
+                  </div>
+
+                  {decision === 'approve' && (
+                    <div className="space-y-3">
+                      <Label>Condições Especiais</Label>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox id="cond1" onCheckedChange={(c) => c ? setConditions([...conditions, 'monitoring']) : setConditions(conditions.filter(x => x !== 'monitoring'))} />
+                          <Label htmlFor="cond1">Monitoramento intensivo (30 dias)</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox id="cond2" onCheckedChange={(c) => c ? setConditions([...conditions, 'limit']) : setConditions(conditions.filter(x => x !== 'limit'))} />
+                          <Label htmlFor="cond2">Limite de TPV reduzido inicialmente</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox id="cond3" onCheckedChange={(c) => c ? setConditions([...conditions, 'reserve']) : setConditions(conditions.filter(x => x !== 'reserve'))} />
+                          <Label htmlFor="cond3">Rolling reserve aumentada (20%)</Label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-3 pt-4">
+                    {decision === 'approve' && (
+                      <Button onClick={handleApprove} className="flex-1 bg-green-600 hover:bg-green-700">
+                        <CheckCircle className="w-4 h-4 mr-2" /> Confirmar Aprovação
+                      </Button>
+                    )}
+                    {decision === 'reject' && (
+                      <Button onClick={handleReject} variant="destructive" className="flex-1">
+                        <XCircle className="w-4 h-4 mr-2" /> Confirmar Rejeição
+                      </Button>
+                    )}
+                    {decision === 'request_docs' && (
+                      <Button className="flex-1 bg-amber-600 hover:bg-amber-700">
+                        <FileText className="w-4 h-4 mr-2" /> Enviar Solicitação
+                      </Button>
+                    )}
+                    {!decision && (
+                      <p className="text-slate-500 text-sm">Selecione uma decisão acima</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
-    );
+
+        {/* Sidebar */}
+        <div className="space-y-4">
+          <Card>
+            <CardHeader><CardTitle className="text-lg">Score HELENA</CardTitle></CardHeader>
+            <CardContent>
+              <div className="flex flex-col items-center py-4">
+                <div className={`w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold ${
+                  merchant?.kyc_score >= 80 ? 'bg-green-100 text-green-600' :
+                  merchant?.kyc_score >= 50 ? 'bg-amber-100 text-amber-600' : 'bg-red-100 text-red-600'
+                }`}>
+                  {merchant?.kyc_score || '-'}
+                </div>
+                <p className="mt-3 font-medium">
+                  {merchant?.kyc_score >= 80 ? 'Baixo Risco' :
+                   merchant?.kyc_score >= 50 ? 'Risco Moderado' : 'Alto Risco'}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle className="text-lg">Checklist</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span className="text-sm">CNPJ validado na Receita</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span className="text-sm">Endereço confere</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {merchant?.partners?.some(p => p.pep) ? (
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                ) : (
+                  <CheckCircle className="w-4 h-4 text-green-500" />
+                )}
+                <span className="text-sm">Verificação PEP</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span className="text-sm">Sem sanções internacionais</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {merchant?.documents?.length > 0 ? (
+                  <CheckCircle className="w-4 h-4 text-green-500" />
+                ) : (
+                  <Clock className="w-4 h-4 text-amber-500" />
+                )}
+                <span className="text-sm">Documentos enviados</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle className="text-lg">Histórico</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              <div className="text-sm">
+                <p className="text-slate-500">Criado em</p>
+                <p className="font-medium">{new Date(merchant?.created_at || Date.now()).toLocaleDateString('pt-BR')}</p>
+              </div>
+              <div className="text-sm">
+                <p className="text-slate-500">Última atualização</p>
+                <p className="font-medium">Hoje às 14:30</p>
+              </div>
+              <div className="text-sm">
+                <p className="text-slate-500">Analista anterior</p>
+                <p className="font-medium">-</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
 }
