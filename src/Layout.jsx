@@ -243,7 +243,7 @@ const [showComplianceAlert, setShowComplianceAlert] = useState(() => {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 left-0 z-50 h-full bg-[#0F172A] text-slate-300 transition-all duration-300 shadow-2xl",
+        "fixed top-0 left-0 z-50 h-full bg-[#0B1121] text-slate-300 transition-all duration-300 shadow-2xl border-r border-slate-800/50",
         sidebarOpen ? "w-64" : "w-20",
         mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
@@ -291,18 +291,19 @@ const [showComplianceAlert, setShowComplianceAlert] = useState(() => {
                   {item.submenu ? (
                     <>
                       <button
-                        onClick={() => toggleSubmenu(item.id)}
-                        className={cn(
-                          "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group",
-                          isActiveSection(item)
-                            ? "bg-primary/10 text-primary shadow-[0_0_20px_rgba(0,210,106,0.15)]"
-                            : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
-                        )}
-                      >
-                        <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-primary" : "text-slate-500 group-hover:text-slate-300")} />
-                        {sidebarOpen && (
-                          <>
-                            <span className="flex-1 text-left">{item.label}</span>
+                          onClick={() => toggleSubmenu(item.id)}
+                          className={cn(
+                            "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
+                            isActiveSection(item)
+                              ? "bg-primary/10 text-primary shadow-[0_0_20px_rgba(0,210,106,0.15)]"
+                              : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
+                          )}
+                        >
+                          {isActiveSection(item) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-primary rounded-r-full" />}
+                          <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActiveSection(item) ? "text-primary" : "text-slate-500 group-hover:text-slate-300")} />
+                          {sidebarOpen && (
+                            <>
+                              <span className="flex-1 text-left truncate">{item.label}</span>
                             {item.badge && (
                               <Badge 
                                 variant={item.badgeVariant || "secondary"} 
@@ -346,16 +347,17 @@ const [showComplianceAlert, setShowComplianceAlert] = useState(() => {
                     <Link
                       to={createPageUrl(item.page)}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group",
+                        "flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
                         isActivePage(item.page)
                           ? "bg-primary/10 text-primary shadow-[0_0_20px_rgba(0,210,106,0.15)]"
                           : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
                       )}
                     >
+                      {isActivePage(item.page) && <div className="absolute left-0 top-2 bottom-2 w-1 bg-primary rounded-r-full" />}
                       <item.icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", isActivePage(item.page) ? "text-primary" : "text-slate-500 group-hover:text-slate-300")} />
                       {sidebarOpen && (
                         <>
-                          <span className="flex-1">{item.label}</span>
+                          <span className="flex-1 truncate">{item.label}</span>
                           {item.badge && (
                             <Badge 
                               variant={item.badgeVariant || "secondary"} 

@@ -1,7 +1,12 @@
+import AccountCreationStep1 from './pages/AccountCreationStep1';
+import AccountCreationStep3 from './pages/AccountCreationStep3';
 import Anticipation from './pages/Anticipation';
 import ApiKeys from './pages/ApiKeys';
 import Chargebacks from './pages/Chargebacks';
 import CheckoutBuilder from './pages/CheckoutBuilder';
+import ComplianceFullKYC from './pages/ComplianceFullKYC';
+import ComplianceOnboardingStart from './pages/ComplianceOnboardingStart';
+import CompliancePixOnly from './pages/CompliancePixOnly';
 import ConverterAgent from './pages/ConverterAgent';
 import CustomDashboards from './pages/CustomDashboards';
 import CustomerDetail from './pages/CustomerDetail';
@@ -14,15 +19,21 @@ import DisputeContestation from './pages/DisputeContestation';
 import DisputeDashboard from './pages/DisputeDashboard';
 import DisputeManager from './pages/DisputeManager';
 import Disputes from './pages/Disputes';
+import DocumentUploadFull from './pages/DocumentUploadFull';
+import DocumentUploadPix from './pages/DocumentUploadPix';
 import DunningSettings from './pages/DunningSettings';
 import Fees from './pages/Fees';
 import Financial from './pages/Financial';
 import FinancialOverview from './pages/FinancialOverview';
 import FinancialStatement from './pages/FinancialStatement';
+import LandingPage from './pages/LandingPage';
+import LivenessFacematchStep from './pages/LivenessFacematchStep';
+import LivenessSimulation from './pages/LivenessSimulation';
 import OriginationAgent from './pages/OriginationAgent';
 import OriginationAgentSettings from './pages/OriginationAgentSettings';
 import PaymentLinkCreate from './pages/PaymentLinkCreate';
 import PaymentLinks from './pages/PaymentLinks';
+import PlanSelection from './pages/PlanSelection';
 import Plugins from './pages/Plugins';
 import PreChargebacks from './pages/PreChargebacks';
 import ReceivablesAgenda from './pages/ReceivablesAgenda';
@@ -42,25 +53,19 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import LandingPage from './pages/LandingPage';
-import AccountCreationStep1 from './pages/AccountCreationStep1';
-import PlanSelection from './pages/PlanSelection';
-import AccountCreationStep3 from './pages/AccountCreationStep3';
-import ComplianceOnboardingStart from './pages/ComplianceOnboardingStart';
-import CompliancePixOnly from './pages/CompliancePixOnly';
-import LivenessFacematchStep from './pages/LivenessFacematchStep';
-import LivenessSimulation from './pages/LivenessSimulation';
-import ComplianceFullKYC from './pages/ComplianceFullKYC';
-import DocumentUploadPix from './pages/DocumentUploadPix';
-import DocumentUploadFull from './pages/DocumentUploadFull';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AccountCreationStep1": AccountCreationStep1,
+    "AccountCreationStep3": AccountCreationStep3,
     "Anticipation": Anticipation,
     "ApiKeys": ApiKeys,
     "Chargebacks": Chargebacks,
     "CheckoutBuilder": CheckoutBuilder,
+    "ComplianceFullKYC": ComplianceFullKYC,
+    "ComplianceOnboardingStart": ComplianceOnboardingStart,
+    "CompliancePixOnly": CompliancePixOnly,
     "ConverterAgent": ConverterAgent,
     "CustomDashboards": CustomDashboards,
     "CustomerDetail": CustomerDetail,
@@ -73,15 +78,21 @@ export const PAGES = {
     "DisputeDashboard": DisputeDashboard,
     "DisputeManager": DisputeManager,
     "Disputes": Disputes,
+    "DocumentUploadFull": DocumentUploadFull,
+    "DocumentUploadPix": DocumentUploadPix,
     "DunningSettings": DunningSettings,
     "Fees": Fees,
     "Financial": Financial,
     "FinancialOverview": FinancialOverview,
     "FinancialStatement": FinancialStatement,
+    "LandingPage": LandingPage,
+    "LivenessFacematchStep": LivenessFacematchStep,
+    "LivenessSimulation": LivenessSimulation,
     "OriginationAgent": OriginationAgent,
     "OriginationAgentSettings": OriginationAgentSettings,
     "PaymentLinkCreate": PaymentLinkCreate,
     "PaymentLinks": PaymentLinks,
+    "PlanSelection": PlanSelection,
     "Plugins": Plugins,
     "PreChargebacks": PreChargebacks,
     "ReceivablesAgenda": ReceivablesAgenda,
@@ -101,17 +112,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "LandingPage": LandingPage,
-    "AccountCreationStep1": AccountCreationStep1,
-    "PlanSelection": PlanSelection,
-    "AccountCreationStep3": AccountCreationStep3,
-    "ComplianceOnboardingStart": ComplianceOnboardingStart,
-    "CompliancePixOnly": CompliancePixOnly,
-    "LivenessFacematchStep": LivenessFacematchStep,
-    "LivenessSimulation": LivenessSimulation,
-    "ComplianceFullKYC": ComplianceFullKYC,
-    "DocumentUploadPix": DocumentUploadPix,
-    "DocumentUploadFull": DocumentUploadFull,
 }
 
 export const pagesConfig = {
