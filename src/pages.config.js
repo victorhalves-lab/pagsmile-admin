@@ -102,6 +102,7 @@ export const PAGES = {
     "PaymentLinkCreate": PaymentLinkCreate,
     "PaymentLinks": PaymentLinks,
     "PlanSelection": PlanSelection,
+    "PixTransactions": PixTransactions,
     "Plugins": Plugins,
     "PreChargebacks": PreChargebacks,
     "ReceivablesAgenda": ReceivablesAgenda,
