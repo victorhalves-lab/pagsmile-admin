@@ -17,8 +17,8 @@ export default function LandingPage() {
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800/20 via-gray-950/50 to-gray-950 pointer-events-none z-0" />
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0 opacity-40">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#00c295]/5 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#00c295]/5 blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#2bc196]/5 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#2bc196]/5 blur-[120px]" />
       </div>
 
       <div className="text-center space-y-10 max-w-md w-full relative z-10">
@@ -45,7 +45,7 @@ export default function LandingPage() {
           <Button 
             onClick={handleLogin} 
             size="lg" 
-            className="w-full py-7 text-lg font-bold rounded-full bg-[#00c295] hover:bg-[#00a880] text-white shadow-xl shadow-[#00c295]/20 hover:shadow-[#00c295]/40 transition-all duration-300 transform hover:-translate-y-1 border-0"
+            className="w-full py-7 text-lg font-bold rounded-full bg-[#2bc196] hover:bg-[#239b7a] text-white shadow-xl shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 transition-all duration-300 transform hover:-translate-y-1 border-0"
           >
             Fazer Login
           </Button>

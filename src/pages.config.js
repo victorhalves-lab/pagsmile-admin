@@ -80,6 +80,7 @@ import AdminIntMccIrregularities from './pages/AdminIntMccIrregularities';
 import AdminIntMerchantProfile from './pages/AdminIntMerchantProfile';
 import AdminIntMerchants from './pages/AdminIntMerchants';
 import AdminIntMerchantsList from './pages/AdminIntMerchantsList';
+import AdminIntNewMerchant from './pages/AdminIntNewMerchant';
 import AdminIntOnboardingDash from './pages/AdminIntOnboardingDash';
 import AdminIntOnboardingQueue from './pages/AdminIntOnboardingQueue';
 import AdminIntPLD from './pages/AdminIntPLD';
@@ -183,7 +184,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntNewMerchant from './pages/AdminIntNewMerchant';
 import __Layout from './Layout.jsx';
 
 
@@ -221,6 +221,7 @@ export const PAGES = {
     "AdminIntMerchantProfile": AdminIntMerchantProfile,
     "AdminIntMerchants": AdminIntMerchants,
     "AdminIntMerchantsList": AdminIntMerchantsList,
+    "AdminIntNewMerchant": AdminIntNewMerchant,
     "AdminIntOnboardingDash": AdminIntOnboardingDash,
     "AdminIntOnboardingQueue": AdminIntOnboardingQueue,
     "AdminIntPLD": AdminIntPLD,
@@ -324,7 +325,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntNewMerchant": AdminIntNewMerchant,
 }
 
 export const pagesConfig = {

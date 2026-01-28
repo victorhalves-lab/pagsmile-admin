@@ -45,7 +45,7 @@ export default function AccountCreationStep1() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-2 md:p-4 pb-24 md:pb-4">
-      <Card className="w-full max-w-5xl rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#1E293B]/80 backdrop-blur-sm">
+      <Card className="w-full max-w-5xl rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#003459]/80 backdrop-blur-sm">
         <CardHeader className="text-center pb-0 pt-4 space-y-1">
                         <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-1 hover:opacity-80 transition-opacity">
                           <img
@@ -63,10 +63,10 @@ export default function AccountCreationStep1() {
           <div className="flex items-center justify-center gap-3 mt-6">
             <div className="flex flex-col items-center gap-2">
               <div className="relative">
-                <div className="w-3 h-3 rounded-full bg-white border-2 border-[#00c295] z-10 relative shadow-[0_0_10px_rgba(0,194,149,0.4)]" />
-                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#00c295]" />
+                <div className="w-3 h-3 rounded-full bg-white border-2 border-[#2bc196] z-10 relative shadow-[0_0_10px_rgba(0,194,149,0.4)]" />
+                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#2bc196]" />
               </div>
-              <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-[#00c295] to-emerald-500 shadow-sm" />
+              <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-[#2bc196] to-emerald-500 shadow-sm" />
             </div>
             
             <div className="flex flex-col items-center gap-2 opacity-30">
@@ -111,7 +111,7 @@ export default function AccountCreationStep1() {
                 </div>
                 
                 <div className="space-y-2 md:col-span-3">
-                  <Label className="text-sm font-bold text-[#00c295]">Representante Legal?</Label>
+                  <Label className="text-sm font-bold text-[#2bc196]">Representante Legal?</Label>
                   <div className="flex gap-2">
                     <SelectionButton
                       className="flex-1"
@@ -147,8 +147,8 @@ export default function AccountCreationStep1() {
                           className={cn(
                               "flex-shrink-0 flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-200 border",
                               formData.agreeToTerms
-                                  ? "bg-[#00c295] text-white border-[#00c295]"
-                                  : "bg-white text-slate-600 border-[#00c295] hover:bg-[#00c295]/5"
+                                  ? "bg-[#2bc196] text-white border-[#2bc196]"
+                                  : "bg-white text-slate-600 border-[#2bc196] hover:bg-[#2bc196]/5"
                           )}
                       >
                           {formData.agreeToTerms ? (
@@ -163,7 +163,7 @@ export default function AccountCreationStep1() {
                           )}
                       </button>
                       <p className="text-sm text-slate-500 text-center sm:text-left">
-                          Ao continuar, você concorda com nossos <Link to="#" className="text-[#00c295] font-semibold hover:underline">Termos de Uso</Link> e <Link to="#" className="text-[#00c295] font-semibold hover:underline">Política de Privacidade</Link>.
+                          Ao continuar, você concorda com nossos <Link to="#" className="text-[#2bc196] font-semibold hover:underline">Termos de Uso</Link> e <Link to="#" className="text-[#2bc196] font-semibold hover:underline">Política de Privacidade</Link>.
                       </p>
                   </div>
                 </div>
@@ -172,8 +172,8 @@ export default function AccountCreationStep1() {
           ) : (
             <div className="space-y-4 py-2">
                                 <div className="text-center space-y-2">
-                                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00c295]/20 to-emerald-500/20 flex items-center justify-center mx-auto mb-2 shadow-inner ring-4 ring-white dark:ring-[#1E293B]">
-                                    <Check className="w-6 h-6 text-[#00c295] drop-shadow-md" />
+                                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#2bc196]/20 to-emerald-500/20 flex items-center justify-center mx-auto mb-2 shadow-inner ring-4 ring-white dark:ring-[#1E293B]">
+                                    <Check className="w-6 h-6 text-[#2bc196] drop-shadow-md" />
                                   </div>
 
                                   <div className="space-y-1">
@@ -190,13 +190,13 @@ export default function AccountCreationStep1() {
                                           className={cn(
                                               "flex flex-row items-center justify-center p-3 rounded-xl border-2 transition-all duration-200 h-14 gap-2",
                                               verificationMethod === 'email'
-                                                  ? "border-[#00c295] bg-[#00c295]/5 text-[#00c295]"
+                                                  ? "border-[#2bc196] bg-[#2bc196]/5 text-[#2bc196]"
                                                   : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
                                           )}
                                       >
                                           <div className={cn(
                                               "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
-                                              verificationMethod === 'email' ? "bg-[#00c295] text-white" : "bg-slate-100 text-slate-400"
+                                              verificationMethod === 'email' ? "bg-[#2bc196] text-white" : "bg-slate-100 text-slate-400"
                                           )}>
                                               <Mail className="w-3 h-3" />
                                           </div>
@@ -209,13 +209,13 @@ export default function AccountCreationStep1() {
                                           className={cn(
                                               "flex flex-row items-center justify-center p-3 rounded-xl border-2 transition-all duration-200 h-14 gap-2",
                                               verificationMethod === 'sms'
-                                                  ? "border-[#00c295] bg-[#00c295]/5 text-[#00c295]"
+                                                  ? "border-[#2bc196] bg-[#2bc196]/5 text-[#2bc196]"
                                                   : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
                                           )}
                                       >
                                           <div className={cn(
                                               "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
-                                              verificationMethod === 'sms' ? "bg-[#00c295] text-white" : "bg-slate-100 text-slate-400"
+                                              verificationMethod === 'sms' ? "bg-[#2bc196] text-white" : "bg-slate-100 text-slate-400"
                                           )}>
                                               <Smartphone className="w-3 h-3" />
                                           </div>
@@ -223,7 +223,7 @@ export default function AccountCreationStep1() {
                                       </button>
                                   </div>
 
-                <div className="bg-[#00c295]/5 border border-[#00c295]/10 rounded-lg p-3 max-w-xs mx-auto">
+                <div className="bg-[#2bc196]/5 border border-[#2bc196]/10 rounded-lg p-3 max-w-xs mx-auto">
                 <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Código enviado para</p>
                 <p className="font-mono font-medium text-slate-700 dark:text-slate-300 truncate">
                   {verificationMethod === 'email' ? formData.email : formData.phone}
@@ -238,13 +238,13 @@ export default function AccountCreationStep1() {
                   placeholder="000 000" 
                   value={verificationCode} 
                   onChange={(e) => setVerificationCode(e.target.value)}
-                  className="text-center text-2xl tracking-[0.5em] font-mono font-bold h-14 border-slate-300 focus:border-[#00c295] focus:ring-[#00c295]/20"
+                  className="text-center text-2xl tracking-[0.5em] font-mono font-bold h-14 border-slate-300 focus:border-[#2bc196] focus:ring-[#2bc196]/20"
                   maxLength={6}
                 />
               </div>
 
               <p className="text-sm text-slate-500 text-center">
-                Não recebeu o código? <button className="text-[#00c295] font-semibold hover:underline hover:text-[#00a880] transition-colors ml-1">Reenviar agora</button>
+                Não recebeu o código? <button className="text-[#2bc196] font-semibold hover:underline hover:text-[#239b7a] transition-colors ml-1">Reenviar agora</button>
               </p>
             </div>
           )}
@@ -256,7 +256,7 @@ export default function AccountCreationStep1() {
               <Button variant="ghost" className="text-slate-500 hover:text-slate-900 hover:bg-slate-100" asChild>
                 <Link to={createPageUrl('LandingPage')}><ArrowLeft className="mr-2 h-4 w-4" /> Voltar</Link>
               </Button>
-              <Button onClick={handleNext} size="lg" className="bg-[#00c295] hover:bg-[#00a880] text-white font-bold px-10 rounded-full shadow-lg shadow-[#00c295]/20 hover:shadow-[#00c295]/40 transition-all hover:-translate-y-0.5">
+              <Button onClick={handleNext} size="lg" className="bg-[#2bc196] hover:bg-[#239b7a] text-white font-bold px-10 rounded-full shadow-lg shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 transition-all hover:-translate-y-0.5">
                 Continuar <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </>
@@ -265,7 +265,7 @@ export default function AccountCreationStep1() {
               <Button variant="ghost" onClick={() => setShowVerification(false)} className="text-slate-500 hover:text-slate-900 hover:bg-slate-100">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
               </Button>
-              <Button onClick={handleVerify} size="lg" className="bg-[#00c295] hover:bg-[#00a880] text-white font-bold px-10 rounded-full shadow-lg shadow-[#00c295]/20 hover:shadow-[#00c295]/40 transition-all hover:-translate-y-0.5">
+              <Button onClick={handleVerify} size="lg" className="bg-[#2bc196] hover:bg-[#239b7a] text-white font-bold px-10 rounded-full shadow-lg shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 transition-all hover:-translate-y-0.5">
                 Confirmar e Avançar <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </>

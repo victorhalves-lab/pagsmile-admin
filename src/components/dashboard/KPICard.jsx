@@ -58,7 +58,7 @@ export default function KPICard({
           </div>
           <div className={cn(
             "p-2.5 rounded-xl transition-colors duration-300 group-hover:scale-110",
-            "bg-slate-50 text-slate-500 group-hover:bg-[#00D26A]/10 group-hover:text-[#00D26A]"
+            "bg-slate-50 text-slate-500 group-hover:bg-[#2bc196]/10 group-hover:text-[#2bc196]"
           )}>
             {Icon && <Icon className="w-5 h-5" />}
           </div>
@@ -79,14 +79,14 @@ export default function KPICard({
               <AreaChart data={data}>
                 <defs>
                   <linearGradient id={`gradient-${title}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00D26A" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#00D26A" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#2bc196" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#2bc196" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <Area 
                   type="monotone" 
                   dataKey="v" 
-                  stroke="#00D26A" 
+                  stroke="#2bc196" 
                   strokeWidth={2} 
                   fillOpacity={1} 
                   fill={`url(#gradient-${title})`} 
