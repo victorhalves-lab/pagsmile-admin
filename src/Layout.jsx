@@ -198,7 +198,7 @@ const aiAgents = [
 const noLayoutPages = [
   'LandingPage', 'AccountCreationStep1', 'PlanSelection', 'AccountCreationStep3',
   'ComplianceOnboardingStart', 'CompliancePixOnly', 'ComplianceFullKYC', 
-  'LivenessFacematchStep', 'LivenessSimulation'
+  'LivenessFacematchStep', 'LivenessSimulation', 'DocumentUploadPix', 'DocumentUploadFull'
 ];
 
 export default function Layout({ children, currentPageName }) {
