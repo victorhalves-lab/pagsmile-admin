@@ -363,7 +363,7 @@ const internetBankingPages = [
 const adminInternoPages = [
   'AdminIntDashboard', 'AdminIntComercial', 'AdminIntLeads', 'AdminIntPipeline', 'AdminIntProposals', 'AdminIntQuestionnaires',
   'AdminIntOnboardingDash', 'AdminIntOnboardingQueue', 'AdminIntSelfService', 'AdminIntActivation',
-  'AdminIntKYC', 'AdminIntPLD', 'AdminIntDocs',
+  'AdminIntKYC', 'AdminIntPLD', 'AdminIntDocs', 'AdminIntSubaccountDetail', 'AdminIntKYCQueue', 'AdminIntKycAnalysis',
   'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts',
   'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
