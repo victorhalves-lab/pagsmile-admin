@@ -13,24 +13,17 @@ import {
   PieChart, Pie, Cell 
 } from 'recharts';
 
-export default function AdminIntKYC() {
-  // Fetch Metrics
-  const { data: subaccounts, isLoading } = useQuery({
-    queryKey: ['compliance_metrics'],
-    queryFn: () => base44.entities.Subaccount.list(1000),
-  });
+import { mockMetrics } from '@/src/mockData/adminInternoMocks';
 
-  const metrics = React.useMemo(() => {
-      if (!subaccounts) return { pending: 0, auto_approved: 0, manual: 0, approved_month: 0, rejected_month: 0 };
-      const currentMonth = new Date().getMonth();
-      return {
-          pending: subaccounts.filter(s => ['kyc_submitted', 'kyc_in_analysis'].includes(s.status)).length,
-          auto_approved: subaccounts.filter(s => s.kyc_decision === 'approved' && !s.assigned_analyst_id).length, // Proxy for auto
-          manual: subaccounts.filter(s => s.status === 'manual_review').length,
-          approved_month: subaccounts.filter(s => s.status === 'kyc_approved' && new Date(s.kyc_approved_at).getMonth() === currentMonth).length,
-          rejected_month: subaccounts.filter(s => s.status === 'kyc_rejected' && new Date(s.last_activity_at).getMonth() === currentMonth).length,
-      }
-  }, [subaccounts]);
+export default function AdminIntKYC() {
+  // Use centralized mock metrics
+  const metrics = {
+      pending: mockMetrics.kycPending,
+      auto_approved: mockMetrics.kycAutoApproved,
+      manual: mockMetrics.kycManual,
+      approved_month: mockMetrics.kycApprovedMonth,
+      rejected_month: mockMetrics.kycRejectedMonth,
+  };
 
   // Mock Charts Data
   const decisionData = [

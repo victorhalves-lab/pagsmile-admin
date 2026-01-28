@@ -39,30 +39,16 @@ const InsightBanner = () => (
     </div>
 );
 
+import { mockMetrics } from '@/src/mockData/adminInternoMocks';
+
 export default function AdminIntMerchants() {
-    // Mock Data
-    const dataDistribution = [
-        { name: 'Ativo', value: 398, color: '#10B981' },
-        { name: 'Inativo', value: 46, color: '#94A3B8' },
-        { name: 'Suspenso', value: 8, color: '#F59E0B' },
-        { name: 'Bloqueado', value: 4, color: '#EF4444' },
-    ];
+    // Mock Data from centralized file
+    const dataDistribution = mockMetrics.statusDistribution;
+    
+    // Transform top merchants for chart
+    const dataTopMerchants = mockMetrics.topMerchants;
 
-    const dataTopMerchants = [
-        { name: 'Empresa A', value: 8500000 },
-        { name: 'Empresa B', value: 6200000 },
-        { name: 'Empresa C', value: 4800000 },
-        { name: 'Empresa D', value: 3100000 },
-        { name: 'Empresa E', value: 2900000 },
-    ];
-
-    const dataMCC = [
-        { name: 'Supermercados', value: 45, color: '#3B82F6' },
-        { name: 'Restaurantes', value: 38, color: '#8B5CF6' },
-        { name: 'Varejo', value: 52, color: '#EC4899' },
-        { name: 'Software', value: 68, color: '#10B981' },
-        { name: 'Outros', value: 253, color: '#64748B' },
-    ];
+    const dataMCC = mockMetrics.mccDistribution;
 
     const dataMargin = [
         { name: 'SaaS', value: 1.25 },

@@ -11,17 +11,14 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import FilterPanel from '@/components/common/FilterPanel';
 
+import { mockMerchants } from '@/src/mockData/adminInternoMocks';
+
 export default function AdminIntMerchantsList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [showFilters, setShowFilters] = useState(false);
     
-    // Mock Data for now as backend might not be fully populated
-    const mockData = [
-        { id: 'M-001', business_name: 'Loja ABC Ltda', cnpj: '12.345.678/0001-90', mcc: '5411', status: 'active', tpv_month: 850000, approval_rate: 89, cb_ratio: 0.3, balance: 45000, plan: 'Growth', agent: 'João Silva', dia_insight: 'Cresceu 25%, considere reduzir taxa' },
-        { id: 'M-002', business_name: 'Tech Solutions', cnpj: '98.765.432/0001-01', mcc: '5734', status: 'active', tpv_month: 1200000, approval_rate: 92, cb_ratio: 0.1, balance: 120000, plan: 'Pro', agent: 'Maria Santos', dia_insight: 'Cliente ideal, alto volume' },
-        { id: 'M-003', business_name: 'Moda Express', cnpj: '11.222.333/0001-50', mcc: '5651', status: 'suspended', tpv_month: 320000, approval_rate: 78, cb_ratio: 0.75, balance: 28000, plan: 'Starter', agent: 'Pedro Costa', dia_insight: '⚠️ CB alto, próximo VDMP' },
-        // ... more rows
-    ];
+    // Use centralized mock data
+    const mockData = mockMerchants;
 
     const columns = [
         { header: 'ID', accessorKey: 'id', cell: (info) => <span className="font-mono text-xs">{info.getValue()}</span> },

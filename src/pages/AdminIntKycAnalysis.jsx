@@ -60,18 +60,15 @@ const DocumentViewer = ({ doc }) => (
 
 // --- Page ---
 
+import { mockMerchants } from '@/src/mockData/adminInternoMocks';
+import { useSearchParams } from 'react-router-dom';
+
 export default function AdminIntKycAnalysis() {
-    // Mock Data
-    const subaccount = {
-        subaccount_id: '123',
-        business_name: 'Tech Solutions Ltda',
-        document: '98.765.432/0001-10',
-        account_type: 'pix_card',
-        kyc_score: 65,
-        kyc_decision: 'manual_review',
-        ai_red_flags: ['PEP na estrutura (sócio)', 'Empresa < 2 anos'],
-        ai_compliance_justification: 'A empresa apresenta score 65 devido à combinação de fatores de risco moderado...'
-    };
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get('id') || 'sub_mock_002'; // Default to one with manual review for demo
+    
+    // Find mock subaccount
+    const subaccount = mockMerchants.find(m => m.id === id) || mockMerchants[1];
 
     const [decision, setDecision] = useState('');
     const [justification, setJustification] = useState('');
@@ -108,6 +105,7 @@ export default function AdminIntKycAnalysis() {
                 title={`Análise KYC - ${subaccount.business_name}`}
                 subtitle={`CNPJ: ${subaccount.document} | Score: ${subaccount.kyc_score}`}
                 breadcrumbs={[
+                    { label: 'Admin Interno', page: 'AdminIntDashboard' },
                     { label: 'Fila de Análise', page: 'AdminIntKYCQueue' },
                     { label: 'Análise', page: '#' }
                 ]}

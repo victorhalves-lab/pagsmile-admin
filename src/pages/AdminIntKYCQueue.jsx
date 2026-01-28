@@ -9,18 +9,16 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, PlayCircle, Eye, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 
 export default function AdminIntKYCQueue() {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { data: queueItems, isLoading } = useQuery({
-    queryKey: ['kyc_queue'],
-    queryFn: async () => {
-        const all = await base44.entities.Subaccount.list(100);
-        // Filter for items needing manual review or in analysis
-        return all.filter(s => ['manual_review', 'kyc_in_analysis', 'reprove_review'].includes(s.status));
-    },
-  });
+import { mockMerchants } from '@/src/mockData/adminInternoMocks';
+
+// Filter mock merchants for those needing review
+const queueItems = mockMerchants.filter(m => ['pending_compliance', 'under_review'].includes(m.compliance_status) || m.kyc_score < 70);
+const isLoading = false;
 
   const columns = [
     {
@@ -84,10 +82,10 @@ export default function AdminIntKYCQueue() {
       header: "",
       cell: ({ row }) => (
           <div className="flex gap-2">
-            <Link to={`/AdminIntSubaccountDetail`}>
+            <Link to={createPageUrl('AdminIntSubaccountDetail', { id: row.original.id })}>
                  <Button variant="ghost" size="sm"><Eye className="w-4 h-4" /></Button>
             </Link>
-            <Link to={`/AdminIntKycAnalysis`}>
+            <Link to={createPageUrl('AdminIntKycAnalysis', { id: row.original.id })}>
                  <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
                     <PlayCircle className="w-4 h-4 mr-2" /> Analisar
                  </Button>
