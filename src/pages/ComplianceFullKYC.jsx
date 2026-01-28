@@ -6,8 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 
 // Novos componentes divididos (Full KYC)
-import Step1_Identificacao from '@/components/compliance/full/steps/Step1_Identificacao';
-import Step2_Detalhes from '@/components/compliance/full/steps/Step2_Detalhes';
+import Step1_DadosCadastrais from '@/components/compliance/full/steps/Step1_DadosCadastrais';
 import Step3_Enderecos from '@/components/compliance/full/steps/Step3_Enderecos';
 import Step4_Atividade from '@/components/compliance/full/steps/Step4_Atividade';
 import Step5_Volumetria from '@/components/compliance/full/steps/Step5_Volumetria';
@@ -39,7 +38,7 @@ import Section12Confirmacao from '@/components/compliance/full/Section12Confirma
 export default function ComplianceFullKYC() {
   const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState(1);
-  const totalSections = 23;
+  const totalSections = 22;
   const [formData, setFormData] = useState({});
 
   const handleChange = (field, value) => {
@@ -84,8 +83,7 @@ export default function ComplianceFullKYC() {
   const progressPercent = (currentSection / totalSections) * 100;
 
   const steps = [
-    { title: 'Identificação', Component: Step1_Identificacao },
-    { title: 'Detalhes', Component: Step2_Detalhes },
+    { title: 'Dados Cadastrais', Component: Step1_DadosCadastrais },
     { title: 'Localização', Component: Step3_Enderecos },
     { title: 'Atividade', Component: Step4_Atividade },
     { title: 'Volumetria', Component: Step5_Volumetria },

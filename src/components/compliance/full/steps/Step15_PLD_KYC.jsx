@@ -1,6 +1,5 @@
 import React from 'react';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import FormSection from '@/components/compliance/FormSection';
 import { FileCheck } from 'lucide-react';
@@ -13,11 +12,23 @@ export default function Step15_PLD_KYC({ formData, handleChange }) {
     <FormSection title="PLD/FT - KYC" subtitle="Conheça seu Cliente" icon={FileCheck}>
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label className="text-xs font-semibold">Realiza KYC/KYB dos clientes? *</Label>
-          <RadioGroup value={formData.realizaKYC || ''} onValueChange={(v) => handleChange('realizaKYC', v)} className="flex gap-4">
-            <div className="flex items-center space-x-2"><RadioGroupItem value="sim" id="kyc-sim" /><Label htmlFor="kyc-sim" className="font-normal text-xs">Sim</Label></div>
-            <div className="flex items-center space-x-2"><RadioGroupItem value="nao" id="kyc-nao" /><Label htmlFor="kyc-nao" className="font-normal text-xs">Não</Label></div>
-          </RadioGroup>
+          <Label className="text-xs font-semibold mb-2 block">Realiza KYC/KYB dos clientes? *</Label>
+          <div className="flex gap-2">
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.realizaKYC === 'sim'}
+                onClick={() => handleChange('realizaKYC', 'sim')}
+              >
+                Sim
+              </SelectionButton>
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.realizaKYC === 'nao'}
+                onClick={() => handleChange('realizaKYC', 'nao')}
+              >
+                Não
+              </SelectionButton>
+          </div>
         </div>
 
         {formData.realizaKYC === 'sim' && (

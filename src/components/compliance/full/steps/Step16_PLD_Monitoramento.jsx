@@ -1,9 +1,9 @@
 import React from 'react';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import FormSection from '@/components/compliance/FormSection';
 import { FileCheck } from 'lucide-react';
+import SelectionButton from '@/components/ui/selection-button';
 
 const alertas = ['Volume alto', 'Frequência', 'Horários', 'Geografia', 'Fracionamento', 'Outro'];
 
@@ -12,21 +12,45 @@ export default function Step16_PLD_Monitoramento({ formData, handleChange }) {
     <FormSection title="PLD/FT - Monitoramento" subtitle="Análise de transações" icon={FileCheck}>
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label className="text-xs font-semibold">Possui sistema de monitoramento? *</Label>
-          <RadioGroup value={formData.sistemaMonitoramento || ''} onValueChange={(v) => handleChange('sistemaMonitoramento', v)} className="flex gap-4">
-            <div className="flex items-center space-x-2"><RadioGroupItem value="sim" id="mon-sim" /><Label htmlFor="mon-sim" className="font-normal text-xs">Sim</Label></div>
-            <div className="flex items-center space-x-2"><RadioGroupItem value="nao" id="mon-nao" /><Label htmlFor="mon-nao" className="font-normal text-xs">Não</Label></div>
-          </RadioGroup>
+          <Label className="text-xs font-semibold mb-2 block">Possui sistema de monitoramento? *</Label>
+          <div className="flex gap-2">
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.sistemaMonitoramento === 'sim'}
+                onClick={() => handleChange('sistemaMonitoramento', 'sim')}
+              >
+                Sim
+              </SelectionButton>
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.sistemaMonitoramento === 'nao'}
+                onClick={() => handleChange('sistemaMonitoramento', 'nao')}
+              >
+                Não
+              </SelectionButton>
+          </div>
         </div>
 
         {formData.sistemaMonitoramento === 'sim' && (
           <>
             <div className="space-y-2">
-              <Label className="text-xs font-semibold">É automatizado?</Label>
-              <RadioGroup value={formData.monitoramentoAutomatizado || ''} onValueChange={(v) => handleChange('monitoramentoAutomatizado', v)} className="flex gap-4">
-                <div className="flex items-center space-x-2"><RadioGroupItem value="sim" id="auto-sim" /><Label htmlFor="auto-sim" className="font-normal text-xs">Sim</Label></div>
-                <div className="flex items-center space-x-2"><RadioGroupItem value="nao" id="auto-nao" /><Label htmlFor="auto-nao" className="font-normal text-xs">Não</Label></div>
-              </RadioGroup>
+              <Label className="text-xs font-semibold mb-2 block">É automatizado?</Label>
+              <div className="flex gap-2">
+                  <SelectionButton
+                    className="flex-1 py-1 px-3 text-xs h-8"
+                    selected={formData.monitoramentoAutomatizado === 'sim'}
+                    onClick={() => handleChange('monitoramentoAutomatizado', 'sim')}
+                  >
+                    Sim
+                  </SelectionButton>
+                  <SelectionButton
+                    className="flex-1 py-1 px-3 text-xs h-8"
+                    selected={formData.monitoramentoAutomatizado === 'nao'}
+                    onClick={() => handleChange('monitoramentoAutomatizado', 'nao')}
+                  >
+                    Não
+                  </SelectionButton>
+              </div>
             </div>
             
             <div className="space-y-2">

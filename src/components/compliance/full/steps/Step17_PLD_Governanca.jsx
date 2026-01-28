@@ -1,27 +1,51 @@
 import React from 'react';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import FormSection from '@/components/compliance/FormSection';
 import { FileCheck } from 'lucide-react';
+import SelectionButton from '@/components/ui/selection-button';
 
 export default function Step17_PLD_Governanca({ formData, handleChange }) {
   return (
     <FormSection title="PLD/FT - Governança" subtitle="Estrutura de controle" icon={FileCheck}>
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label className="text-xs font-semibold">Área/Pessoa dedicada a Compliance? *</Label>
-          <RadioGroup value={formData.areaDedicadaCompliance || ''} onValueChange={(v) => handleChange('areaDedicadaCompliance', v)} className="flex gap-4">
-            <div className="flex items-center space-x-2"><RadioGroupItem value="sim" id="area-sim" /><Label htmlFor="area-sim" className="font-normal text-xs">Sim</Label></div>
-            <div className="flex items-center space-x-2"><RadioGroupItem value="nao" id="area-nao" /><Label htmlFor="area-nao" className="font-normal text-xs">Não</Label></div>
-          </RadioGroup>
+          <Label className="text-xs font-semibold mb-2 block">Área/Pessoa dedicada a Compliance? *</Label>
+          <div className="flex gap-2">
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.areaDedicadaCompliance === 'sim'}
+                onClick={() => handleChange('areaDedicadaCompliance', 'sim')}
+              >
+                Sim
+              </SelectionButton>
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.areaDedicadaCompliance === 'nao'}
+                onClick={() => handleChange('areaDedicadaCompliance', 'nao')}
+              >
+                Não
+              </SelectionButton>
+          </div>
         </div>
 
         <div className="space-y-2">
-          <Label className="text-xs font-semibold">Realiza auditorias internas de PLD? *</Label>
-          <RadioGroup value={formData.auditoriasInternas || ''} onValueChange={(v) => handleChange('auditoriasInternas', v)} className="flex gap-4">
-            <div className="flex items-center space-x-2"><RadioGroupItem value="sim" id="aud-sim" /><Label htmlFor="aud-sim" className="font-normal text-xs">Sim</Label></div>
-            <div className="flex items-center space-x-2"><RadioGroupItem value="nao" id="aud-nao" /><Label htmlFor="aud-nao" className="font-normal text-xs">Não</Label></div>
-          </RadioGroup>
+          <Label className="text-xs font-semibold mb-2 block">Realiza auditorias internas de PLD? *</Label>
+          <div className="flex gap-2">
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.auditoriasInternas === 'sim'}
+                onClick={() => handleChange('auditoriasInternas', 'sim')}
+              >
+                Sim
+              </SelectionButton>
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.auditoriasInternas === 'nao'}
+                onClick={() => handleChange('auditoriasInternas', 'nao')}
+              >
+                Não
+              </SelectionButton>
+          </div>
         </div>
       </div>
     </FormSection>

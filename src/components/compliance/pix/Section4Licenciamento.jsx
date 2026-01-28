@@ -1,40 +1,43 @@
 import React from 'react';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import FormSection from '@/components/compliance/FormSection';
 import { Scale } from 'lucide-react';
+import SelectionButton from '@/components/ui/selection-button';
 
 export default function Section4Licenciamento({ formData, handleChange }) {
   return (
-    <FormSection title="4. Licenciamento e Regulação" subtitle="Licenças necessárias para operar" icon={Scale}>
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <Label>Sua empresa necessita de licença para operar? (Ex: Banco Central, CVM, ANVISA, etc.) *</Label>
-          <RadioGroup 
-            value={formData.necessitaLicenca || ''} 
-            onValueChange={(v) => handleChange('necessitaLicenca', v)} 
-            className="flex gap-6"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="sim" id="lic-sim" />
-              <Label htmlFor="lic-sim" className="font-normal">Sim</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="nao" id="lic-nao" />
-              <Label htmlFor="lic-nao" className="font-normal">Não</Label>
-            </div>
-          </RadioGroup>
+    <FormSection title="Licenciamento" subtitle="Licenças necessárias" icon={Scale}>
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label className="text-xs font-semibold mb-2 block">Necessita de licença para operar? *</Label>
+          <div className="flex gap-2">
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.necessitaLicenca === 'sim'}
+                onClick={() => handleChange('necessitaLicenca', 'sim')}
+              >
+                Sim
+              </SelectionButton>
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData.necessitaLicenca === 'nao'}
+                onClick={() => handleChange('necessitaLicenca', 'nao')}
+              >
+                Não
+              </SelectionButton>
+          </div>
         </div>
 
         {formData.necessitaLicenca === 'sim' && (
-          <div className="space-y-2 p-4 bg-slate-50 rounded-lg">
-            <Label>Se sim, especifique qual e qual órgão regulador: *</Label>
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold">Especifique (Qual e Órgão): *</Label>
             <Textarea 
-              placeholder="Ex: Licença para operar como Instituição de Pagamento, Banco Central do Brasil." 
+              className="min-h-[80px] text-xs"
+              placeholder="Ex: Licença IP, Banco Central..." 
               value={formData.especificacaoLicenca || ''} 
               onChange={(e) => handleChange('especificacaoLicenca', e.target.value)}
-              rows={3}
             />
           </div>
         )}

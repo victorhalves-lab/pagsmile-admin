@@ -1,9 +1,9 @@
 import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import FormSection from '@/components/compliance/FormSection';
 import { Shield } from 'lucide-react';
+import SelectionButton from '@/components/ui/selection-button';
 
 export default function Step13_PLD_Procedimentos({ formData, handleChange }) {
   return (
@@ -15,11 +15,23 @@ export default function Step13_PLD_Procedimentos({ formData, handleChange }) {
           { id: 'pld6', label: 'Possui programa de PLD/FT implementado? *', invertido: true }
         ].map((p) => (
           <div key={p.id} className="space-y-2 pb-2 border-b border-slate-100 last:border-0">
-            <Label className="text-xs font-medium leading-tight block">{p.label}</Label>
-            <RadioGroup value={formData[p.id] || ''} onValueChange={(v) => handleChange(p.id, v)} className="flex gap-4">
-              <div className="flex items-center space-x-2"><RadioGroupItem value="sim" id={`${p.id}-sim`} /><Label htmlFor={`${p.id}-sim`} className="font-normal text-xs">Sim</Label></div>
-              <div className="flex items-center space-x-2"><RadioGroupItem value="nao" id={`${p.id}-nao`} /><Label htmlFor={`${p.id}-nao`} className="font-normal text-xs">Não</Label></div>
-            </RadioGroup>
+            <Label className="text-xs font-medium leading-tight block mb-2">{p.label}</Label>
+            <div className="flex gap-2 mb-2">
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData[p.id] === 'sim'}
+                onClick={() => handleChange(p.id, 'sim')}
+              >
+                Sim
+              </SelectionButton>
+              <SelectionButton
+                className="flex-1 py-1 px-3 text-xs h-8"
+                selected={formData[p.id] === 'nao'}
+                onClick={() => handleChange(p.id, 'nao')}
+              >
+                Não
+              </SelectionButton>
+            </div>
             {((!p.invertido && formData[p.id] === 'sim') || (p.invertido && formData[p.id] === 'nao')) && (
               <Textarea 
                 placeholder="Especifique/Justifique..." 
