@@ -38,6 +38,7 @@ import OriginationAgentSettings from './pages/OriginationAgentSettings';
 import PaymentLinkCreate from './pages/PaymentLinkCreate';
 import PaymentLinks from './pages/PaymentLinks';
 import PlanSelection from './pages/PlanSelection';
+import PixTransactions from './pages/PixTransactions';
 import Plugins from './pages/Plugins';
 import PreChargebacks from './pages/PreChargebacks';
 import ReceivablesAgenda from './pages/ReceivablesAgenda';
