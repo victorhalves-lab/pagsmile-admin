@@ -20,10 +20,12 @@ export default function AccountCreationStep3() {
     address: '',
     avgMonthlyRevenue: '',
     businessType: '',
-    businessDescription: '',
+    businessModelDetails: '',
+    operationDetails: '',
     whatSells: '',
     websiteOrSocial: '',
     positionInCompany: '',
+    birthDate: '',
   });
 
   const handleChange = (e) => {
@@ -166,13 +168,35 @@ export default function AccountCreationStep3() {
             </div>
             
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="whatSells">O que você vende?</Label>
+              <Label htmlFor="whatSells">O que a empresa vende/transaciona</Label>
               <Textarea 
                 id="whatSells" 
-                placeholder="Descreva seus produtos ou serviços..."
+                placeholder="Ex: Roupas, cosméticos, brinquedos; assinaturas de serviços digitais como software ou demais serviços; cursos, infoprodutos; etc."
                 value={formData.whatSells} 
                 onChange={handleChange}
                 rows={2}
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="businessModelDetails">Detalhes do modelo de Negócio</Label>
+              <Textarea 
+                id="businessModelDetails" 
+                placeholder="Detalhe seu modelo de negócio"
+                value={formData.businessModelDetails} 
+                onChange={handleChange}
+                rows={2}
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="operationDetails">Detalhes da Operação</Label>
+              <Textarea 
+                id="operationDetails" 
+                placeholder="Conte sobre sua operação (Ex: Como funciona seu processo de venda? Qual o volume esperado de transações? Qual o perfil do seu cliente? Detalhes sobre a logística, entrega, etc.)"
+                value={formData.operationDetails} 
+                onChange={handleChange}
+                rows={3}
               />
             </div>
             
@@ -182,8 +206,13 @@ export default function AccountCreationStep3() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="positionInCompany">Seu Cargo</Label>
+              <Label htmlFor="positionInCompany">Cargo que ocupa na empresa</Label>
               <Input id="positionInCompany" placeholder="Ex: CEO, Diretor" value={formData.positionInCompany} onChange={handleChange} />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="birthDate">Data de Nascimento</Label>
+              <Input id="birthDate" type="date" value={formData.birthDate} onChange={handleChange} />
             </div>
           </div>
         </CardContent>

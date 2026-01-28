@@ -17,6 +17,7 @@ export default function AccountCreationStep1() {
     cpf: '',
     email: '',
     phone: '',
+    birthDate: '',
     isRepresentative: 'yes',
     password: '',
     confirmPassword: '',
@@ -24,6 +25,7 @@ export default function AccountCreationStep1() {
   });
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
+  const [verificationMethod, setVerificationMethod] = useState('email');
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -84,6 +86,11 @@ export default function AccountCreationStep1() {
                   <Label htmlFor="email">E-mail</Label>
                   <Input id="email" type="email" placeholder="seu@email.com" value={formData.email} onChange={handleChange} />
                 </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="birthDate">Data de Nascimento</Label>
+                  <Input id="birthDate" type="date" value={formData.birthDate} onChange={handleChange} />
+                </div>
                 
                 <div className="space-y-2">
                   <Label>Você é representante legal da empresa?</Label>
@@ -128,8 +135,29 @@ export default function AccountCreationStep1() {
                 <div className="w-16 h-16 rounded-full bg-[#00D26A]/10 flex items-center justify-center mx-auto mb-4">
                   <Check className="w-8 h-8 text-[#00D26A]" />
                 </div>
-                <p className="text-gray-600">Um código de verificação foi enviado para</p>
-                <p className="font-semibold text-gray-800">{formData.email}</p>
+                <p className="text-gray-600 mb-4">Escolha como deseja receber o código de verificação:</p>
+                <div className="flex gap-3 justify-center mb-4">
+                  <Button 
+                    type="button"
+                    variant={verificationMethod === 'email' ? 'default' : 'outline'}
+                    className={verificationMethod === 'email' ? 'bg-[#00D26A] hover:bg-[#00A854]' : ''}
+                    onClick={() => setVerificationMethod('email')}
+                  >
+                    E-mail
+                  </Button>
+                  <Button 
+                    type="button"
+                    variant={verificationMethod === 'sms' ? 'default' : 'outline'}
+                    className={verificationMethod === 'sms' ? 'bg-[#00D26A] hover:bg-[#00A854]' : ''}
+                    onClick={() => setVerificationMethod('sms')}
+                  >
+                    SMS
+                  </Button>
+                </div>
+                <p className="text-gray-600">Um código foi enviado para</p>
+                <p className="font-semibold text-gray-800">
+                  {verificationMethod === 'email' ? formData.email : formData.phone}
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="verificationCode">Código de Verificação</Label>

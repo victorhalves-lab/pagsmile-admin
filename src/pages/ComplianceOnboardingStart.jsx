@@ -51,9 +51,11 @@ export default function ComplianceOnboardingStart() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="w-12 h-12 rounded-xl bg-[#00D26A] flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-xl">PS</span>
-          </div>
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
+            alt="PagSmile Logo"
+            className="h-10 mx-auto mb-4"
+          />
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Complete seu Compliance</h1>
           <p className="text-gray-500">Escolha a modalidade de pagamento que deseja utilizar</p>
         </div>
