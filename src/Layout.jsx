@@ -205,6 +205,7 @@ const noLayoutPages = [
 ];
 
 import { Sun, Moon } from 'lucide-react';
+import { getLogoUrlByTheme } from '@/components/utils/branding';
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -282,7 +283,7 @@ export default function Layout({ children, currentPageName }) {
               <>
                 <div className="flex items-center gap-3">
                   <img
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
+                    src={getLogoUrlByTheme(theme)}
                     alt="PagSmile Logo"
                     className="h-8 w-auto"
                   />

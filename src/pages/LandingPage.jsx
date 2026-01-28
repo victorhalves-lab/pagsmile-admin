@@ -15,7 +15,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-[#0B1121] via-[#0F172A] to-[#1E293B] flex flex-col items-center justify-center p-6">
       <div className="text-center space-y-8 max-w-md w-full">
         <img
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/bc75d0787_Logo-modo-claro.png"
           alt="PagSmile Logo"
           className="mx-auto h-14"
         />
