@@ -17,6 +17,7 @@ import FinancialView from '@/components/admin-interno/dashboard/FinancialView';
 import RiskView from '@/components/admin-interno/dashboard/RiskView';
 import CommercialView from '@/components/admin-interno/dashboard/CommercialView';
 import TechnicalView from '@/components/admin-interno/dashboard/TechnicalView';
+import DIAInsightsView from '@/components/admin-interno/dashboard/DIAInsightsView';
 
 export default function AdminIntDashboard() {
   const [activeTab, setActiveTab] = useState('operational');
@@ -106,6 +107,9 @@ export default function AdminIntDashboard() {
           <TabsTrigger value="technical" className="gap-2 py-2">
             <Server className="w-4 h-4" /> Técnico
           </TabsTrigger>
+          <TabsTrigger value="dia" className="gap-2 py-2 text-purple-600 data-[state=active]:text-purple-700 data-[state=active]:bg-purple-50">
+            <Sparkles className="w-4 h-4" /> DIA Insights
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="executive" className="animate-in fade-in-50 duration-300">
@@ -130,6 +134,10 @@ export default function AdminIntDashboard() {
 
         <TabsContent value="technical" className="animate-in fade-in-50 duration-300">
           <TechnicalView />
+        </TabsContent>
+
+        <TabsContent value="dia" className="animate-in fade-in-50 duration-300">
+          <DIAInsightsView />
         </TabsContent>
       </Tabs>
     </div>
