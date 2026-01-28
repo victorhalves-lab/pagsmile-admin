@@ -214,7 +214,7 @@ export default function Chargebacks() {
     {
       key: 'deadline',
       label: 'Prazo',
-      render: (row) => <DeadlineBadge deadline={row.deadline_date} />
+      render: (row) => <DeadlineBadge deadline={row?.deadline_date} />
     },
     {
       key: 'status',
