@@ -10,7 +10,6 @@ import { Search, Filter, Eye, Settings, BarChart2, Plus, Download } from 'lucide
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import FilterPanel from '@/components/common/FilterPanel';
-
 import { mockMerchants } from '@/components/mockData/adminInternoMocks';
 
 export default function AdminIntMerchantsList() {
@@ -41,8 +40,8 @@ export default function AdminIntMerchantsList() {
         )},
         { header: 'CB %', accessorKey: 'cb_ratio', cell: (info) => <span className={info.getValue() > 0.5 ? "text-red-600 font-bold" : "text-slate-600"}>{info.getValue()}%</span> },
         { header: 'Saldo', accessorKey: 'balance', cell: (info) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(info.getValue()) },
-        { header: 'Plano', accessorKey: 'plan' },
-        { header: 'Vendedor', accessorKey: 'agent' },
+        { header: 'Plano', accessorKey: 'plan_name' },
+        { header: 'Vendedor', accessorKey: 'commercial_agent' },
         { header: '💡 Insight DIA', accessorKey: 'dia_insight', cell: (info) => <span className="text-xs text-indigo-600 italic">{info.getValue()}</span> },
         {
             header: 'Ações',

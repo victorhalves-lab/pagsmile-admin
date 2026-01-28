@@ -10,15 +10,15 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Filter, PlayCircle, Eye, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import { mockMerchants } from '@/components/mockData/adminInternoMocks';
 
 export default function AdminIntKYCQueue() {
   const [searchTerm, setSearchTerm] = useState('');
 
-import { mockMerchants } from '@/components/mockData/adminInternoMocks';
-
-// Filter mock merchants for those needing review
-const queueItems = mockMerchants.filter(m => ['pending_compliance', 'under_review'].includes(m.compliance_status) || m.kyc_score < 70);
-const isLoading = false;
+  // Filter mock merchants for those needing review
+  // Simulating async fetch
+  const queueItems = mockMerchants.filter(m => ['pending_compliance', 'under_review'].includes(m.compliance_status) || m.kyc_score < 70);
+  const isLoading = false;
 
   const columns = [
     {
@@ -34,7 +34,7 @@ const isLoading = false;
     {
       accessorKey: "account_type",
       header: "Tipo",
-      cell: ({ row }) => <span className="capitalize text-xs">{row.original.account_type?.replace('_', ' ')}</span>
+      cell: ({ row }) => <span className="capitalize text-xs">{row.original.account_type?.replace('_', ' ') || 'PJ'}</span>
     },
     {
       accessorKey: "kyc_score",
