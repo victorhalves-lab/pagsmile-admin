@@ -75,17 +75,19 @@ export default function PlanSelection() {
         <div className="text-center mb-12">
           <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-6">
             <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/bc75d0787_Logo-modo-claro.png"
               alt="PagSmile Logo"
               className="h-10"
             />
           </Link>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Escolha seu Plano</h1>
           <p className="text-gray-500">Etapa 2 de 3 - Selecione o plano ideal para seu negócio</p>
-          <div className="flex gap-2 justify-center mt-4">
-            <div className="w-20 h-1.5 rounded-full bg-[#00D26A]"></div>
-            <div className="w-20 h-1.5 rounded-full bg-[#00D26A]"></div>
-            <div className="w-20 h-1.5 rounded-full bg-gray-200"></div>
+          <div className="flex gap-2 justify-center mt-6">
+            <div className="w-24 h-2 rounded-full bg-[#00D26A] shadow-[0_0_15px_rgba(0,210,106,0.3)] relative"></div>
+            <div className="w-24 h-2 rounded-full bg-[#00D26A] shadow-[0_0_15px_rgba(0,210,106,0.3)] relative">
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full border-2 border-[#00D26A]" />
+            </div>
+            <div className="w-24 h-2 rounded-full bg-gray-200"></div>
           </div>
         </div>
 

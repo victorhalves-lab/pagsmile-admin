@@ -1,53 +1,69 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
-import { motion } from "framer-motion";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { Check } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-export const CardSelectionItem = ({ 
-  selected, 
-  onClick, 
-  children, 
-  className,
-  disabled = false
-}) => {
+export default function CardSelectionItem({ 
+  icon: Icon, 
+  title, 
+  description, 
+  details, 
+  isSelected, 
+  onClick,
+  className 
+}) {
   return (
-    <div
-      onClick={disabled ? undefined : onClick}
+    <motion.div
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      onClick={onClick}
       className={cn(
-        "relative group cursor-pointer rounded-2xl border-2 transition-all duration-300 ease-in-out overflow-hidden bg-white dark:bg-slate-800/50",
-        selected 
-          ? "border-[#00D26A] shadow-[0_4px_20px_-4px_rgba(0,210,106,0.25)] scale-[1.01]" 
-          : "border-slate-200 dark:border-slate-700 hover:border-[#00D26A]/50 hover:shadow-lg dark:hover:border-[#00D26A]/30",
-        disabled && "opacity-50 cursor-not-allowed grayscale",
+        "relative group cursor-pointer rounded-2xl border-2 p-4 transition-all duration-200 overflow-hidden",
+        isSelected 
+          ? "border-[#00D26A] bg-[#00D26A]/5 shadow-[0_0_20px_rgba(0,210,106,0.1)]" 
+          : "border-slate-100 bg-white hover:border-[#00D26A]/30 hover:shadow-lg hover:shadow-slate-200/50",
         className
       )}
     >
-      {/* Conteúdo */}
-      <div className="p-4 md:p-6 relative z-10">
-        {children}
+      <div className="flex items-start gap-4">
+        <div className={cn(
+          "w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-300",
+          isSelected 
+            ? "bg-[#00D26A] text-white shadow-lg shadow-[#00D26A]/30" 
+            : "bg-slate-50 text-slate-500 group-hover:bg-[#00D26A]/10 group-hover:text-[#00D26A]"
+        )}>
+          {Icon && <Icon className="w-6 h-6" />}
+        </div>
+        
+        <div className="flex-1">
+          <div className="flex justify-between items-start">
+            <h3 className={cn(
+              "text-lg font-bold transition-colors",
+              isSelected ? "text-slate-900" : "text-slate-700 group-hover:text-slate-900"
+            )}>
+              {title}
+            </h3>
+            {isSelected && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="bg-[#00D26A] rounded-full p-1"
+              >
+                <Check className="w-3 h-3 text-white" />
+              </motion.div>
+            )}
+          </div>
+          
+          <p className="text-slate-500 text-sm mt-1 font-medium">{description}</p>
+          
+          {details && (
+            <div className="mt-3 flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#00D26A]/50" />
+              <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">{details}</p>
+            </div>
+          )}
+        </div>
       </div>
-
-      {/* Indicador de Seleção (Check) */}
-      <div
-        className={cn(
-          "absolute top-0 right-0 p-1.5 rounded-bl-xl transition-all duration-300 transform",
-          selected 
-            ? "bg-[#00D26A] translate-y-0 translate-x-0" 
-            : "translate-x-full -translate-y-full"
-        )}
-      >
-        <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
-      </div>
-
-      {/* Overlay de Brilho no Hover (apenas se não selecionado) */}
-      {!selected && !disabled && (
-        <div className="absolute inset-0 bg-[#00D26A]/0 group-hover:bg-[#00D26A]/[0.02] transition-colors duration-300" />
-      )}
-      
-      {/* Borda animada interna (opcional para dar mais destaque) */}
-      {selected && (
-         <div className="absolute inset-0 border border-[#00D26A] rounded-[14px] opacity-50" />
-      )}
-    </div>
+    </motion.div>
   );
-};
+}
