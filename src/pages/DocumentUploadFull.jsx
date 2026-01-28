@@ -2,27 +2,24 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { 
-  ArrowLeft, ArrowRight, Upload, CheckCircle2, FileText, 
-  File, AlertCircle, X
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, Upload, CheckCircle2, FileText, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// Removed 'required: true' to make them optional as requested
 const requiredDocuments = [
-  { id: 'partners_id', name: 'RG ou CNH dos sócios / Representante Legal', description: 'Documento de identificação válido', required: true },
-  { id: 'company_address_proof', name: 'Comprovante de Endereço da Empresa', description: 'Conta de luz, água ou telefone (últimos 90 dias)', required: true },
-  { id: 'representative_address_proof', name: 'Comprovante de Endereço do Representante', description: 'Conta de luz, água ou telefone (últimos 90 dias)', required: true },
-  { id: 'cnpj_card', name: 'Cartão CNPJ', description: 'Documento emitido pela Receita Federal', required: true },
-  { id: 'social_contract', name: 'Contrato Social e Última Alteração', description: 'Documento de constituição da empresa atualizado', required: true },
-  { id: 'balance_sheet', name: 'Balanço Patrimonial', description: 'Demonstrativo contábil do último exercício', required: true },
-  { id: 'dre', name: 'DRE', description: 'Demonstração do Resultado do Exercício', required: true },
-  { id: 'kyc_policy', name: 'Política de KYC', description: 'Política de Know Your Customer da empresa', required: true },
-  { id: 'financial_statements', name: 'Demonstrativos financeiros dos últimos 3 exercícios', description: 'Preferencialmente auditados', required: true },
-  { id: 'balancete', name: 'Balancete mais recente', description: 'Balancete contábil atualizado', required: true },
-  { id: 'partners_selfie', name: 'Selfie dos sócios com o documento', description: 'Foto segurando o documento de identidade', required: false },
-  { id: 'pld_policy', name: 'Política de PLD/FT', description: 'Política de Prevenção à Lavagem de Dinheiro', required: true },
+  { id: 'partners_id', name: 'RG/CNH Sócios', description: 'Identificação' },
+  { id: 'company_address_proof', name: 'Endereço Empresa', description: 'Comprovante' },
+  { id: 'representative_address_proof', name: 'Endereço Repres.', description: 'Comprovante' },
+  { id: 'cnpj_card', name: 'Cartão CNPJ', description: 'Receita Federal' },
+  { id: 'social_contract', name: 'Contrato Social', description: 'Constituição' },
+  { id: 'balance_sheet', name: 'Balanço Patrimonial', description: 'Último exercício' },
+  { id: 'dre', name: 'DRE', description: 'Resultado' },
+  { id: 'kyc_policy', name: 'Política KYC', description: 'Know Your Customer' },
+  { id: 'financial_statements', name: 'Dem. Financeiros', description: 'Últimos 3 anos' },
+  { id: 'balancete', name: 'Balancete', description: 'Recente' },
+  { id: 'partners_selfie', name: 'Selfie com Doc', description: 'Opcional' },
+  { id: 'pld_policy', name: 'Política PLD/FT', description: 'Prevenção' },
 ];
 
 export default function DocumentUploadFull() {
@@ -33,7 +30,7 @@ export default function DocumentUploadFull() {
     // Simula upload
     setUploadedDocs(prev => ({
       ...prev,
-      [docId]: { name: `documento_${docId}.pdf`, uploaded: true }
+      [docId]: { name: `doc.pdf`, uploaded: true }
     }));
   };
 
@@ -46,131 +43,98 @@ export default function DocumentUploadFull() {
   };
 
   const uploadedCount = Object.keys(uploadedDocs).length;
-  const requiredCount = requiredDocuments.filter(d => d.required).length;
-  const allRequiredUploaded = requiredDocuments.filter(d => d.required).every(d => uploadedDocs[d.id]);
-  const progressPercent = (uploadedCount / requiredCount) * 100;
+  const totalCount = requiredDocuments.length;
+  const progressPercent = (uploadedCount / totalCount) * 100;
 
   const handleContinue = () => {
     navigate(createPageUrl('LivenessFacematchStep'));
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4 px-4 flex flex-col items-center">
+      <div className="w-full max-w-6xl">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6979104cafd6b02cfed66766/6bc1f8b3d_Logo-modo-escuro.png"
             alt="PagSmile Logo"
-            className="h-10 mx-auto mb-4"
+            className="h-8 mx-auto mb-2"
           />
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Upload de Documentos</h1>
-          <p className="text-gray-500">Compliance PIX + Cartão - Documentação completa</p>
-          <div className="max-w-md mx-auto mt-4">
-            <div className="flex justify-between text-sm text-gray-500 mb-1">
-              <span>{uploadedCount} de {requiredCount} documentos obrigatórios</span>
-              <span>{Math.round(progressPercent)}%</span>
-            </div>
-            <Progress value={progressPercent} className="h-2" />
+          <h1 className="text-xl font-bold text-gray-800">Upload de Documentos (Completo)</h1>
+          <div className="max-w-md mx-auto mt-2 flex items-center gap-3">
+             <Progress value={progressPercent} className="h-1.5 flex-1" />
+             <span className="text-xs text-gray-500 font-medium whitespace-nowrap">{uploadedCount} de {totalCount}</span>
           </div>
         </div>
 
-        {/* Documents List */}
-        <div className="space-y-3 mb-8">
+        {/* Documents Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-6">
           {requiredDocuments.map((doc) => {
             const isUploaded = uploadedDocs[doc.id];
             
             return (
-              <Card key={doc.id} className={cn(
-                "border transition-all",
-                isUploaded ? "border-green-200 bg-green-50/50" : "border-gray-200"
-              )}>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div className={cn(
-                      "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0",
-                      isUploaded ? "bg-green-100" : "bg-gray-100"
-                    )}>
-                      {isUploaded ? (
-                        <CheckCircle2 className="w-6 h-6 text-green-600" />
-                      ) : (
-                        <FileText className="w-6 h-6 text-gray-400" />
-                      )}
+              <div 
+                key={doc.id} 
+                className={cn(
+                  "relative flex flex-col items-center justify-between p-3 rounded-xl border transition-all h-36 bg-white group hover:shadow-md",
+                  isUploaded ? "border-green-200 bg-green-50/30" : "border-slate-200"
+                )}
+              >
+                {isUploaded && (
+                  <button 
+                    onClick={() => handleRemoveFile(doc.id)}
+                    className="absolute top-1 right-1 p-1 text-red-400 hover:text-red-600 rounded-full hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+
+                <div className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center mb-2 mt-1",
+                  isUploaded ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-400"
+                )}>
+                  {isUploaded ? <CheckCircle2 className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
+                </div>
+                
+                <div className="text-center w-full px-1">
+                  <h3 className="text-xs font-bold text-slate-800 leading-tight mb-0.5 line-clamp-2 min-h-[2.5em]">{doc.name}</h3>
+                  <p className="text-[10px] text-slate-400 truncate">{doc.description}</p>
+                </div>
+                
+                <div className="mt-2 w-full">
+                  {isUploaded ? (
+                    <div className="text-[10px] text-green-600 font-medium text-center bg-green-100/50 rounded py-1">
+                      Enviado
                     </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-medium text-gray-800">{doc.name}</h3>
-                        {doc.required ? (
-                          <span className="text-xs text-red-500 font-medium">*Obrigatório</span>
-                        ) : (
-                          <span className="text-xs text-gray-400 font-medium">Opcional</span>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-500 truncate">{doc.description}</p>
-                      {isUploaded && (
-                        <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                          <File className="w-3 h-3" />
-                          {uploadedDocs[doc.id].name}
-                        </p>
-                      )}
-                    </div>
-                    
-                    <div className="flex-shrink-0">
-                      {isUploaded ? (
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => handleRemoveFile(doc.id)}
-                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      ) : (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => handleFileSelect(doc.id)}
-                          className="gap-2"
-                        >
-                          <Upload className="w-4 h-4" />
-                          Enviar
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  ) : (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleFileSelect(doc.id)}
+                      className="w-full h-7 text-xs border-dashed border-slate-300 hover:border-[#00c295] hover:text-[#00c295]"
+                    >
+                      <Upload className="w-3 h-3 mr-1" /> Upload
+                    </Button>
+                  )}
+                </div>
+              </div>
             );
           })}
         </div>
 
-        {/* Alert */}
-        {!allRequiredUploaded && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm text-amber-800 font-medium">Documentos pendentes</p>
-              <p className="text-sm text-amber-700">
-                Envie todos os documentos obrigatórios para continuar com a verificação de identidade.
-              </p>
-            </div>
-          </div>
-        )}
-
         {/* Navigation */}
-        <div className="flex justify-between items-center">
-          <Button variant="ghost" asChild>
+        <div className="flex justify-between items-center max-w-4xl mx-auto">
+          <Button variant="ghost" asChild size="sm">
             <Link to={createPageUrl('ComplianceFullKYC')}>
-              <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
+              <ArrowLeft className="mr-2 h-3 w-3" /> Voltar
             </Link>
           </Button>
           <Button 
             onClick={handleContinue} 
-            disabled={!allRequiredUploaded}
-            className="bg-[#00D26A] hover:bg-[#00A854]"
+            size="sm"
+            className="bg-[#00D26A] hover:bg-[#00A854] px-8 rounded-full font-bold"
           >
-            Continuar para Verificação <ArrowRight className="ml-2 h-4 w-4" />
+            Continuar <ArrowRight className="ml-2 h-3 w-3" />
           </Button>
         </div>
       </div>
