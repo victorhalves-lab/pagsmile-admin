@@ -5,28 +5,24 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 
-// Novos componentes divididos
-import Step1_DadosCadastrais from '@/components/compliance/pix/steps/Step1_DadosCadastrais';
-import Step3_Enderecos from '@/components/compliance/pix/steps/Step3_Enderecos';
-import Step4_Atividade from '@/components/compliance/pix/steps/Step4_Atividade';
-import Step5_Volumetria from '@/components/compliance/pix/steps/Step5_Volumetria';
-import Step6_Clientes from '@/components/compliance/pix/steps/Step6_Clientes';
-// Componentes existentes reutilizados (pois já eram pequenos ou dinâmicos)
-import Section3Canais from '@/components/compliance/pix/Section3Canais';
+// Shared Components
+import Step1_DadosCadastrais from '@/components/compliance/shared/Step1_DadosCadastrais';
+import Step2_LocalizacaoAtividade from '@/components/compliance/shared/Step2_LocalizacaoAtividade';
+import Step3_VolumetriaClientes from '@/components/compliance/shared/Step3_VolumetriaClientes';
+import Step_ResponsaveisCanais from '@/components/compliance/shared/Step_ResponsaveisCanais';
+
+// PIX Specific Components
+import Step4_SociosUBO_Pix from '@/components/compliance/pix/steps/Step4_SociosUBO_Pix';
+import Step7_PLD_Sancoes from '@/components/compliance/pix/steps/Step7_PLD_Sancoes';
+import Step8_PLD_Riscos from '@/components/compliance/pix/steps/Step8_PLD_Riscos';
+import Step9_PLD_Operacao from '@/components/compliance/pix/steps/Step9_PLD_Operacao';
 import Section4Licenciamento from '@/components/compliance/pix/Section4Licenciamento';
-import Section5Beneficiarios from '@/components/compliance/pix/Section5Beneficiarios';
-import Section6Socios from '@/components/compliance/pix/Section6Socios';
-import Section7Responsaveis from '@/components/compliance/pix/Section7Responsaveis';
-// Novos componentes divididos de PLD
-import Step12_PLD_Politicas from '@/components/compliance/pix/steps/Step12_PLD_Politicas';
-import Step13_PLD_Procedimentos from '@/components/compliance/pix/steps/Step13_PLD_Procedimentos';
-import Step14_PLD_Monitoramento from '@/components/compliance/pix/steps/Step14_PLD_Monitoramento';
 import Section9RepresentanteFinal from '@/components/compliance/pix/Section9RepresentanteFinal';
 
 export default function CompliancePixOnly() {
   const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState(1);
-  const totalSections = 14;
+  const totalSections = 10;
   const [formData, setFormData] = useState({});
 
   const handleChange = (field, value) => {
@@ -72,18 +68,14 @@ export default function CompliancePixOnly() {
 
   const steps = [
     { title: 'Dados Cadastrais', Component: Step1_DadosCadastrais },
-    { title: 'Localização', Component: Step3_Enderecos },
-    { title: 'Atividade', Component: Step4_Atividade },
-    { title: 'Volumetria', Component: Step5_Volumetria },
-    { title: 'Clientes', Component: Step6_Clientes },
-    { title: 'Canais', Component: Section3Canais },
+    { title: 'Localização e Atividade', Component: Step2_LocalizacaoAtividade },
+    { title: 'Volumetria e Clientes', Component: Step3_VolumetriaClientes },
+    { title: 'Sócios e UBOs', Component: Step4_SociosUBO_Pix },
+    { title: 'Responsáveis e Canais', Component: Step_ResponsaveisCanais },
     { title: 'Licenciamento', Component: Section4Licenciamento },
-    { title: 'Beneficiários', Component: Section5Beneficiarios },
-    { title: 'Sócios', Component: Section6Socios },
-    { title: 'Responsáveis', Component: Section7Responsaveis },
-    { title: 'PLD - Sanções', Component: Step12_PLD_Politicas },
-    { title: 'PLD - Riscos', Component: Step13_PLD_Procedimentos },
-    { title: 'PLD - Operação', Component: Step14_PLD_Monitoramento },
+    { title: 'PLD - Sanções', Component: Step7_PLD_Sancoes },
+    { title: 'PLD - Riscos', Component: Step8_PLD_Riscos },
+    { title: 'PLD - Operação', Component: Step9_PLD_Operacao },
     { title: 'Finalização', Component: Section9RepresentanteFinal },
   ];
 

@@ -5,40 +5,33 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 
-// Novos componentes divididos (Full KYC)
-import Step1_DadosCadastrais from '@/components/compliance/full/steps/Step1_DadosCadastrais';
-import Step3_Enderecos from '@/components/compliance/full/steps/Step3_Enderecos';
-import Step4_Atividade from '@/components/compliance/full/steps/Step4_Atividade';
-import Step5_Volumetria from '@/components/compliance/full/steps/Step5_Volumetria';
-import Step6_Clientes from '@/components/compliance/full/steps/Step6_Clientes';
+// Shared Components
+import Step1_DadosCadastrais from '@/components/compliance/shared/Step1_DadosCadastrais';
+import Step2_LocalizacaoAtividade from '@/components/compliance/shared/Step2_LocalizacaoAtividade';
+import Step3_VolumetriaClientes from '@/components/compliance/shared/Step3_VolumetriaClientes';
+import Step_ResponsaveisCanais from '@/components/compliance/shared/Step_ResponsaveisCanais';
 
-// Componentes existentes reutilizados
-import Section3Licenciamento from '@/components/compliance/full/Section3Licenciamento';
+// Full KYC Specific Components
 import Section4UBO from '@/components/compliance/full/Section4UBO';
 import Section5Socios from '@/components/compliance/full/Section5Socios';
-import Section6Responsaveis from '@/components/compliance/full/Section6Responsaveis';
-
-// Novos componentes divididos de Compliance, PLD e Transacional
-import Step11_Compliance_Sancoes from '@/components/compliance/full/steps/Step11_Compliance_Sancoes';
-import Step12_Compliance_Riscos from '@/components/compliance/full/steps/Step12_Compliance_Riscos';
-import Step13_Compliance_Atividades from '@/components/compliance/full/steps/Step13_Compliance_Atividades';
-import Step14_PLD_Politicas from '@/components/compliance/full/steps/Step14_PLD_Politicas';
-import Step15_PLD_KYC from '@/components/compliance/full/steps/Step15_PLD_KYC';
-import Step16_PLD_Monitoramento from '@/components/compliance/full/steps/Step16_PLD_Monitoramento';
-import Step17_PLD_Governanca from '@/components/compliance/full/steps/Step17_PLD_Governanca';
-import Step18_Transacional_Perfil from '@/components/compliance/full/steps/Step18_Transacional_Perfil';
-import Step19_Transacional_Metricas from '@/components/compliance/full/steps/Step19_Transacional_Metricas';
-import Step20_Transacional_Reembolso from '@/components/compliance/full/steps/Step20_Transacional_Reembolso';
-
-// Componentes finais existentes
+import Section3Licenciamento from '@/components/compliance/full/Section3Licenciamento';
 import Section10Marketplace from '@/components/compliance/full/Section10Marketplace';
 import Section11SegurancaCartao from '@/components/compliance/full/Section11SegurancaCartao';
 import Section12Confirmacao from '@/components/compliance/full/Section12Confirmacao';
 
+// New Full KYC Components
+import Step13_PLD_Completo from '@/components/compliance/full/steps/Step13_PLD_Completo';
+import Step14_Transacional from '@/components/compliance/full/steps/Step14_Transacional';
+
+// Reused from PIX (for consistency and compactness)
+import Step7_PLD_Sancoes from '@/components/compliance/pix/steps/Step7_PLD_Sancoes';
+import Step8_PLD_Riscos from '@/components/compliance/pix/steps/Step8_PLD_Riscos';
+import Step9_PLD_Operacao from '@/components/compliance/pix/steps/Step9_PLD_Operacao';
+
 export default function ComplianceFullKYC() {
   const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState(1);
-  const totalSections = 22;
+  const totalSections = 15;
   const [formData, setFormData] = useState({});
 
   const handleChange = (field, value) => {
@@ -84,26 +77,19 @@ export default function ComplianceFullKYC() {
 
   const steps = [
     { title: 'Dados Cadastrais', Component: Step1_DadosCadastrais },
-    { title: 'Localização', Component: Step3_Enderecos },
-    { title: 'Atividade', Component: Step4_Atividade },
-    { title: 'Volumetria', Component: Step5_Volumetria },
-    { title: 'Clientes', Component: Step6_Clientes },
-    { title: 'Licenciamento', Component: Section3Licenciamento },
+    { title: 'Localização e Atividade', Component: Step2_LocalizacaoAtividade },
+    { title: 'Volumetria e Clientes', Component: Step3_VolumetriaClientes },
     { title: 'UBO', Component: Section4UBO },
     { title: 'Sócios', Component: Section5Socios },
-    { title: 'Responsáveis', Component: Section6Responsaveis },
-    { title: 'Sanções', Component: Step11_Compliance_Sancoes },
-    { title: 'Riscos', Component: Step12_Compliance_Riscos },
-    { title: 'Ativ. Sensíveis', Component: Step13_Compliance_Atividades },
-    { title: 'PLD Políticas', Component: Step14_PLD_Politicas },
-    { title: 'PLD KYC', Component: Step15_PLD_KYC },
-    { title: 'PLD Monitoramento', Component: Step16_PLD_Monitoramento },
-    { title: 'PLD Governança', Component: Step17_PLD_Governanca },
-    { title: 'Perfil Transacional', Component: Step18_Transacional_Perfil },
-    { title: 'Métricas', Component: Step19_Transacional_Metricas },
-    { title: 'Reembolsos', Component: Step20_Transacional_Reembolso },
+    { title: 'Responsáveis', Component: Step_ResponsaveisCanais },
+    { title: 'Licenciamento', Component: Section3Licenciamento },
     { title: 'Marketplace', Component: Section10Marketplace },
-    { title: 'Segurança', Component: Section11SegurancaCartao },
+    { title: 'Segurança Cartão', Component: Section11SegurancaCartao },
+    { title: 'PLD - Sanções', Component: Step7_PLD_Sancoes },
+    { title: 'PLD - Riscos', Component: Step8_PLD_Riscos },
+    { title: 'PLD - Operação', Component: Step9_PLD_Operacao },
+    { title: 'PLD - Completo', Component: Step13_PLD_Completo },
+    { title: 'Transacional', Component: Step14_Transacional },
     { title: 'Confirmação', Component: Section12Confirmacao },
   ];
 
@@ -136,6 +122,7 @@ export default function ComplianceFullKYC() {
                 handleArrayChange={handleArrayChange}
                 handleAddArrayItem={handleAddArrayItem}
                 handleRemoveArrayItem={handleRemoveArrayItem}
+                isFullKYC={true}
               />
             )}
           </div>
