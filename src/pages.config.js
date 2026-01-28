@@ -158,6 +158,7 @@ import IBSettingsSecurity from './pages/IBSettingsSecurity';
 import LandingPage from './pages/LandingPage';
 import LivenessFacematchStep from './pages/LivenessFacematchStep';
 import LivenessSimulation from './pages/LivenessSimulation';
+import MEDDashboard from './pages/MEDDashboard';
 import OriginationAgent from './pages/OriginationAgent';
 import OriginationAgentSettings from './pages/OriginationAgentSettings';
 import PaymentLinkCreate from './pages/PaymentLinkCreate';
@@ -184,7 +185,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import MEDDashboard from './pages/MEDDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -300,6 +300,7 @@ export const PAGES = {
     "LandingPage": LandingPage,
     "LivenessFacematchStep": LivenessFacematchStep,
     "LivenessSimulation": LivenessSimulation,
+    "MEDDashboard": MEDDashboard,
     "OriginationAgent": OriginationAgent,
     "OriginationAgentSettings": OriginationAgentSettings,
     "PaymentLinkCreate": PaymentLinkCreate,
@@ -326,7 +327,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "MEDDashboard": MEDDashboard,
 }
 
 export const pagesConfig = {
