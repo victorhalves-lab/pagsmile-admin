@@ -143,7 +143,7 @@ export default function QuickActionsCustomizable() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {displayActions.map((action) => (
           <Link key={action.id} to={createPageUrl(action.page)}>
-            <Card className="group hover:shadow-lg hover:border-[#00D26A]/30 transition-all duration-300 cursor-pointer h-full">
+            <Card className="group hover:shadow-lg hover:border-[#2bc196]/30 transition-all duration-300 cursor-pointer h-full">
               <CardContent className="p-5 flex flex-col items-center text-center">
                 <div className={cn(
                   "w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110",
@@ -205,7 +205,7 @@ export default function QuickActionsCustomizable() {
                     className={cn(
                       "flex items-center gap-3 p-4 rounded-xl border-2 transition-all cursor-pointer",
                       isSelected
-                        ? "border-[#00D26A] bg-[#00D26A]/5"
+                        ? "border-[#2bc196] bg-[#2bc196]/5"
                         : isDisabled
                         ? "border-slate-100 bg-slate-50 opacity-50 cursor-not-allowed"
                         : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
@@ -224,7 +224,7 @@ export default function QuickActionsCustomizable() {
                     <div className={cn(
                       "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors",
                       isSelected
-                        ? "bg-[#00D26A] border-[#00D26A]"
+                        ? "bg-[#2bc196] border-[#2bc196]"
                         : "border-slate-300"
                     )}>
                       {isSelected && <Check className="w-4 h-4 text-white" />}
@@ -242,7 +242,7 @@ export default function QuickActionsCustomizable() {
             <Button
               onClick={handleSave}
               disabled={saveMutation.isPending || tempSelected.length === 0}
-              className="bg-[#00D26A] hover:bg-[#00A854]"
+              className="bg-[#2bc196] hover:bg-[#239b7a]"
             >
               {saveMutation.isPending ? 'Salvando...' : 'Salvar'}
             </Button>

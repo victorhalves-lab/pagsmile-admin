@@ -11,14 +11,14 @@ export default function PlanCard({ plan, isSelected, onSelect }) {
       className={cn(
         "relative cursor-pointer transition-all duration-300 hover:-translate-y-1",
         isSelected 
-        ? "border-2 border-[#00c295] shadow-xl shadow-[#00c295]/15 bg-white scale-[1.02] z-10" 
-        : "border-slate-100 hover:border-[#00c295]/30 hover:shadow-lg bg-white/80"
+        ? "border-2 border-[#2bc196] shadow-xl shadow-[#2bc196]/15 bg-white scale-[1.02] z-10" 
+        : "border-slate-100 hover:border-[#2bc196]/30 hover:shadow-lg bg-white/80"
         )}
         onClick={() => onSelect(plan.id)}
         >
         {plan.popular && (
         <div className="absolute -top-3 left-0 right-0 flex justify-center">
-        <Badge className="bg-[#00c295] hover:bg-[#00c295] text-white border-0 shadow-lg shadow-[#00c295]/30 px-3 py-1 text-xs uppercase tracking-widest font-bold">
+        <Badge className="bg-[#2bc196] hover:bg-[#2bc196] text-white border-0 shadow-lg shadow-[#2bc196]/30 px-3 py-1 text-xs uppercase tracking-widest font-bold">
           Mais Popular
         </Badge>
         </div>
@@ -43,9 +43,9 @@ export default function PlanCard({ plan, isSelected, onSelect }) {
             <span className="text-xs text-slate-500 font-medium">Crédito 7x-12x</span>
             <span className="text-sm font-bold text-slate-900">{plan.mdr7_12x}</span>
           </div>
-          <div className="flex justify-between items-center py-1 bg-[#00c295]/5 -mx-4 px-4">
-            <span className="text-xs font-bold text-[#00c295]">Taxa PIX</span>
-            <span className="text-sm font-bold text-[#00c295]">{plan.pixRate}</span>
+          <div className="flex justify-between items-center py-1 bg-[#2bc196]/5 -mx-4 px-4">
+            <span className="text-xs font-bold text-[#2bc196]">Taxa PIX</span>
+            <span className="text-sm font-bold text-[#2bc196]">{plan.pixRate}</span>
           </div>
         </div>
         
@@ -62,7 +62,7 @@ export default function PlanCard({ plan, isSelected, onSelect }) {
         <div className={cn(
           "w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300",
           isSelected 
-            ? "bg-[#00c295] text-white shadow-lg shadow-[#00c295]/40 scale-110" 
+            ? "bg-[#2bc196] text-white shadow-lg shadow-[#2bc196]/40 scale-110" 
             : "bg-slate-100 text-slate-300 group-hover:bg-slate-200"
         )}>
           <Check className="w-4 h-4" />

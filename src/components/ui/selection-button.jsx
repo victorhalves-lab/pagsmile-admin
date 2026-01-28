@@ -24,7 +24,7 @@ const SelectionButton = React.forwardRef(({
         "px-4 py-3 text-sm font-semibold",
         // Selected state
         selected 
-          ? "border-[#00c295] bg-[#00c295]/5 text-[#00c295] shadow-[0_0_10px_rgba(0,194,149,0.15)]" 
+          ? "border-[#2bc196] bg-[#2bc196]/5 text-[#2bc196] shadow-[0_0_10px_rgba(0,194,149,0.15)]" 
           : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50",
         disabled && "opacity-50 cursor-not-allowed",
         className
@@ -33,7 +33,7 @@ const SelectionButton = React.forwardRef(({
     >
       {selected && variant === "default" && (
         <div className="absolute top-2 right-2 md:static md:mr-2">
-           <div className="w-4 h-4 rounded-full bg-[#00c295] flex items-center justify-center">
+           <div className="w-4 h-4 rounded-full bg-[#2bc196] flex items-center justify-center">
              <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
            </div>
         </div>

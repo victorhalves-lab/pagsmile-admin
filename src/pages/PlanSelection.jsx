@@ -87,16 +87,16 @@ export default function PlanSelection() {
           {/* Enhanced Progress Bar */}
           <div className="flex items-center justify-center gap-3 mt-4">
             <div className="flex flex-col items-center gap-2">
-               <div className="w-3 h-3 rounded-full bg-[#00c295] border-2 border-[#00c295]" />
-               <div className="w-24 h-1.5 rounded-full bg-[#00c295]" />
+               <div className="w-3 h-3 rounded-full bg-[#2bc196] border-2 border-[#2bc196]" />
+               <div className="w-24 h-1.5 rounded-full bg-[#2bc196]" />
             </div>
             
             <div className="flex flex-col items-center gap-2">
               <div className="relative">
-                <div className="w-3 h-3 rounded-full bg-white border-2 border-[#00c295] z-10 relative shadow-[0_0_10px_rgba(0,194,149,0.4)]" />
-                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#00c295]" />
+                <div className="w-3 h-3 rounded-full bg-white border-2 border-[#2bc196] z-10 relative shadow-[0_0_10px_rgba(0,194,149,0.4)]" />
+                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#2bc196]" />
               </div>
-              <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-[#00c295] to-emerald-500 shadow-sm" />
+              <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-[#2bc196] to-emerald-500 shadow-sm" />
             </div>
             
             <div className="flex flex-col items-center gap-2 opacity-30">
@@ -129,7 +129,7 @@ export default function PlanSelection() {
             onClick={handleContinue} 
             disabled={!selectedPlan}
             size="lg"
-            className="bg-[#00c295] hover:bg-[#00a880] text-white shadow-lg shadow-[#00c295]/20 hover:shadow-[#00c295]/40 px-10 rounded-full font-bold transition-all transform hover:-translate-y-0.5"
+            className="bg-[#2bc196] hover:bg-[#239b7a] text-white shadow-lg shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 px-10 rounded-full font-bold transition-all transform hover:-translate-y-0.5"
           >
             Continuar <ArrowRight className="ml-2 h-4 w-4" />
           </Button>

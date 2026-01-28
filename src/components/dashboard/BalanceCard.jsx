@@ -32,7 +32,7 @@ export default function BalanceCard({
 
   return (
     <div className={cn(
-      "bg-gradient-to-br from-[#101F3E] to-[#1a2f5e] rounded-xl p-6 text-white",
+      "bg-gradient-to-br from-[#002443] to-[#003459] rounded-xl p-6 text-white",
       className
     )}>
       <div className="flex items-start justify-between mb-6">
@@ -55,7 +55,7 @@ export default function BalanceCard({
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="bg-white/10 rounded-lg p-3">
           <div className="flex items-center gap-2 mb-2">
-            <Wallet className="w-4 h-4 text-[#00D26A]" />
+            <Wallet className="w-4 h-4 text-[#2bc196]" />
             <span className="text-xs text-white/60">Disponível</span>
           </div>
           <p className="font-semibold">{formatCurrency(available)}</p>
@@ -79,7 +79,7 @@ export default function BalanceCard({
       </div>
 
       <div className="flex gap-3">
-        <Button className="flex-1 bg-[#00D26A] hover:bg-[#00A854] text-white">
+        <Button className="flex-1 bg-[#2bc196] hover:bg-[#239b7a] text-white">
           <ArrowUpRight className="w-4 h-4 mr-2" />
           Solicitar Saque
         </Button>
