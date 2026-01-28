@@ -24,46 +24,48 @@ export default function PlanCard({ plan, isSelected, onSelect }) {
         </div>
         )}
       
-      <CardHeader className="text-center pb-2 pt-8">
-        <h3 className="text-xl font-bold text-slate-900">{plan.name}</h3>
-        <p className="text-sm text-slate-500 min-h-[40px] flex items-center justify-center">{plan.description}</p>
+      <CardHeader className="text-center pb-2 pt-4 px-4">
+        <h3 className="text-lg font-bold text-slate-900">{plan.name}</h3>
+        <p className="text-xs text-slate-500 min-h-[32px] flex items-center justify-center leading-tight">{plan.description}</p>
       </CardHeader>
 
-      <CardContent className="space-y-6">
-        <div className="space-y-3">
-          <div className="flex justify-between items-center py-2 border-b border-slate-50">
-            <span className="text-sm text-slate-500 font-medium">Crédito à vista</span>
-            <span className="font-bold text-slate-900">{plan.mdr1x}</span>
+      <CardContent className="space-y-3 px-4 pb-2">
+        <div className="space-y-1.5">
+          <div className="flex justify-between items-center py-1 border-b border-slate-50">
+            <span className="text-xs text-slate-500 font-medium">Crédito à vista</span>
+            <span className="text-sm font-bold text-slate-900">{plan.mdr1x}</span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-slate-50">
-            <span className="text-sm text-slate-500 font-medium">Crédito 2x-6x</span>
-            <span className="font-bold text-slate-900">{plan.mdr2_6x}</span>
+          <div className="flex justify-between items-center py-1 border-b border-slate-50">
+            <span className="text-xs text-slate-500 font-medium">Crédito 2x-6x</span>
+            <span className="text-sm font-bold text-slate-900">{plan.mdr2_6x}</span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-slate-50">
-            <span className="text-sm text-slate-500 font-medium">Crédito 7x-12x</span>
-            <span className="font-bold text-slate-900">{plan.mdr7_12x}</span>
+          <div className="flex justify-between items-center py-1 border-b border-slate-50">
+            <span className="text-xs text-slate-500 font-medium">Crédito 7x-12x</span>
+            <span className="text-sm font-bold text-slate-900">{plan.mdr7_12x}</span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-slate-50 bg-[#00c295]/5 -mx-6 px-6">
-            <span className="text-sm font-bold text-[#00c295]">Taxa PIX</span>
-            <span className="font-bold text-[#00c295]">{plan.pixRate}</span>
+          <div className="flex justify-between items-center py-1 bg-[#00c295]/5 -mx-4 px-4">
+            <span className="text-xs font-bold text-[#00c295]">Taxa PIX</span>
+            <span className="text-sm font-bold text-[#00c295]">{plan.pixRate}</span>
           </div>
         </div>
         
-        <div className="bg-slate-50 rounded-xl p-4 text-center space-y-1">
-          <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Recebimento</p>
-          <p className="text-2xl font-black text-slate-900">{plan.anticipationTerm}</p>
-          <p className="text-xs text-slate-400">Taxa antecipação: {plan.anticipationRate}</p>
+        <div className="bg-slate-50 rounded-lg p-2 text-center flex flex-col items-center justify-center gap-0.5">
+          <div className="flex items-baseline gap-2">
+             <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Recebimento</span>
+             <span className="text-lg font-black text-slate-900">{plan.anticipationTerm}</span>
+          </div>
+          <p className="text-[10px] text-slate-400">Antecipação: {plan.anticipationRate}</p>
         </div>
       </CardContent>
 
-      <CardFooter className="pt-2 pb-6 flex justify-center">
+      <CardFooter className="pt-0 pb-4 flex justify-center">
         <div className={cn(
-          "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300",
+          "w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300",
           isSelected 
             ? "bg-[#00c295] text-white shadow-lg shadow-[#00c295]/40 scale-110" 
             : "bg-slate-100 text-slate-300 group-hover:bg-slate-200"
         )}>
-          <Check className="w-5 h-5" />
+          <Check className="w-4 h-4" />
         </div>
       </CardFooter>
     </Card>

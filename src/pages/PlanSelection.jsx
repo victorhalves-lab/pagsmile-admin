@@ -85,7 +85,7 @@ export default function PlanSelection() {
           <p className="text-lg text-slate-500 font-medium">Etapa 2 de 3 - Selecione o plano ideal para seu negócio</p>
           
           {/* Enhanced Progress Bar */}
-          <div className="flex items-center justify-center gap-3 mt-8">
+          <div className="flex items-center justify-center gap-3 mt-4">
             <div className="flex flex-col items-center gap-2">
                <div className="w-3 h-3 rounded-full bg-[#00c295] border-2 border-[#00c295]" />
                <div className="w-24 h-1.5 rounded-full bg-[#00c295]" />
@@ -107,7 +107,7 @@ export default function PlanSelection() {
         </div>
 
         {/* Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           {plans.map((plan) => (
             <PlanCard
               key={plan.id}

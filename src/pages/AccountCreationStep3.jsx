@@ -8,9 +8,9 @@ import { cn } from '@/lib/utils';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight, Building2, Search } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import SelectionButton from '@/components/ui/selection-button';
 
 export default function AccountCreationStep3() {
   const navigate = useNavigate();
@@ -149,38 +149,48 @@ export default function AccountCreationStep3() {
               <Input id="address" value={formData.address} onChange={handleChange} className="bg-gray-50" />
             </div>
             
-            <div className="space-y-2 md:col-span-3">
+            <div className="space-y-2 md:col-span-12">
               <Label htmlFor="avgMonthlyRevenue">Faturamento Médio Mensal</Label>
-              <Select onValueChange={(v) => setFormData(p => ({...p, avgMonthlyRevenue: v}))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a faixa" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0-10k">Até R$ 10.000</SelectItem>
-                  <SelectItem value="10k-50k">R$ 10.000 - R$ 50.000</SelectItem>
-                  <SelectItem value="50k-100k">R$ 50.000 - R$ 100.000</SelectItem>
-                  <SelectItem value="100k-500k">R$ 100.000 - R$ 500.000</SelectItem>
-                  <SelectItem value="500k+">Acima de R$ 500.000</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                {[
+                  { value: '0-10k', label: 'Até R$ 10k' },
+                  { value: '10k-50k', label: 'R$ 10k - 50k' },
+                  { value: '50k-100k', label: 'R$ 50k - 100k' },
+                  { value: '100k-500k', label: 'R$ 100k - 500k' },
+                  { value: '500k+', label: '+ R$ 500k' }
+                ].map(opt => (
+                  <SelectionButton
+                    key={opt.value}
+                    selected={formData.avgMonthlyRevenue === opt.value}
+                    onClick={() => setFormData(p => ({...p, avgMonthlyRevenue: opt.value}))}
+                  >
+                    {opt.label}
+                  </SelectionButton>
+                ))}
+              </div>
             </div>
             
-            <div className="space-y-2 md:col-span-3">
+            <div className="space-y-2 md:col-span-12">
               <Label htmlFor="businessType">Tipo de Negócio</Label>
-              <Select onValueChange={(v) => setFormData(p => ({...p, businessType: v}))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ecommerce">E-commerce</SelectItem>
-                  <SelectItem value="saas">SaaS / Software</SelectItem>
-                  <SelectItem value="services">Serviços</SelectItem>
-                  <SelectItem value="retail">Varejo Físico</SelectItem>
-                  <SelectItem value="marketplace">Marketplace</SelectItem>
-                  <SelectItem value="infoproducts">Infoprodutos</SelectItem>
-                  <SelectItem value="other">Outro</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+                {[
+                  { value: 'ecommerce', label: 'E-commerce' },
+                  { value: 'saas', label: 'SaaS' },
+                  { value: 'services', label: 'Serviços' },
+                  { value: 'retail', label: 'Varejo' },
+                  { value: 'marketplace', label: 'Marketplace' },
+                  { value: 'infoproducts', label: 'Infoprodutos' },
+                  { value: 'other', label: 'Outro' }
+                ].map(opt => (
+                  <SelectionButton
+                    key={opt.value}
+                    selected={formData.businessType === opt.value}
+                    onClick={() => setFormData(p => ({...p, businessType: opt.value}))}
+                  >
+                    {opt.label}
+                  </SelectionButton>
+                ))}
+              </div>
             </div>
             
             <div className="space-y-2 md:col-span-6">

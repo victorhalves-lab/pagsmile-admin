@@ -9,6 +9,7 @@ import { ArrowLeft, ArrowRight, Check, CheckCircle2, Mail, Smartphone } from 'lu
 import { Link } from 'react-router-dom';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
 import { cn } from "@/lib/utils";
+import SelectionButton from '@/components/ui/selection-button';
 
 export default function AccountCreationStep1() {
   const navigate = useNavigate();
@@ -112,32 +113,20 @@ export default function AccountCreationStep1() {
                 <div className="space-y-2 md:col-span-3">
                   <Label className="text-sm font-bold text-[#00c295]">Representante Legal?</Label>
                   <div className="flex gap-2">
-                    <button
-                      type="button"
+                    <SelectionButton
+                      className="flex-1"
+                      selected={formData.isRepresentative === 'yes'}
                       onClick={() => setFormData(p => ({...p, isRepresentative: 'yes'}))}
-                      className={cn(
-                        "flex-1 flex items-center justify-center px-2 py-2.5 rounded-xl border transition-all duration-200 font-bold text-sm",
-                        formData.isRepresentative === 'yes'
-                          ? "bg-[#00c295] border-[#00c295] text-white"
-                          : "bg-white border-[#00c295] text-slate-600 hover:bg-[#00c295]/5"
-                      )}
                     >
-                      {formData.isRepresentative === 'yes' && <Check className="w-3 h-3 mr-1" />}
                       Sim
-                    </button>
-                    <button
-                      type="button"
+                    </SelectionButton>
+                    <SelectionButton
+                      className="flex-1"
+                      selected={formData.isRepresentative === 'no'}
                       onClick={() => setFormData(p => ({...p, isRepresentative: 'no'}))}
-                      className={cn(
-                        "flex-1 flex items-center justify-center px-2 py-2.5 rounded-xl border transition-all duration-200 font-bold text-sm",
-                        formData.isRepresentative === 'no'
-                          ? "bg-[#00c295] border-[#00c295] text-white"
-                          : "bg-white border-[#00c295] text-slate-600 hover:bg-[#00c295]/5"
-                      )}
                     >
-                      {formData.isRepresentative === 'no' && <Check className="w-3 h-3 mr-1" />}
                       Não
-                    </button>
+                    </SelectionButton>
                   </div>
                 </div>
                 
