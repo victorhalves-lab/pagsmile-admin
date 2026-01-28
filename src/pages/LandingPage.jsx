@@ -32,7 +32,7 @@ export default function LandingPage() {
 
         <div className="space-y-4">
           <h1 className="text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Bem-vindo à <span className="text-[#00c295]">PagSmile</span>
+            Bem-vindo à
           </h1>
           <p className="text-xl text-slate-400 font-medium leading-relaxed max-w-sm mx-auto">
             Transforme seus pagamentos em sorrisos com a plataforma mais completa do mercado.
