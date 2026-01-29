@@ -21,25 +21,14 @@ export default function LandingPage() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#2bc196]/5 blur-[120px]" />
       </div>
 
-      <div className="text-center space-y-10 max-w-md w-full relative z-10">
+      <div className="text-center space-y-12 max-w-md w-full relative z-10">
         <div className="relative">
           <img
             src={getLogoUrlByTheme('dark')}
             alt="PagSmile Logo"
-            className="mx-auto h-20 drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+            className="mx-auto h-24 drop-shadow-2xl hover:scale-105 transition-transform duration-500"
           />
         </div>
-
-        <div className="space-y-4">
-          <h1 className="text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Bem-vindo à
-          </h1>
-          <p className="text-xl text-slate-400 font-medium leading-relaxed max-w-sm mx-auto">
-            Transforme seus pagamentos em sorrisos com a plataforma mais completa do mercado.
-          </p>
-        </div>
-
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
 
         <div className="flex flex-col gap-4">
           <Button 
@@ -58,20 +47,9 @@ export default function LandingPage() {
           >
             <Link to={createPageUrl('AccountCreationStep1')}>Criar Conta</Link>
           </Button>
-          
-          <Button 
-            asChild 
-            size="lg" 
-            variant="ghost" 
-            className="w-full py-6 text-base text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all duration-300"
-          >
-            <a href="https://preview--onboardingpagsmile.base44.app/QuestionarioPublico?tipo=manual" target="_blank" rel="noopener noreferrer">
-              Receber Proposta Personalizada
-            </a>
-          </Button>
         </div>
 
-        <div className="pt-8 text-xs text-slate-600 font-medium">
+        <div className="pt-4 text-xs text-slate-600 font-medium">
           &copy; {new Date().getFullYear()} PagSmile. Todos os direitos reservados.
         </div>
       </div>

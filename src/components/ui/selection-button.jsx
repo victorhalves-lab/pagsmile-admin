@@ -7,11 +7,18 @@ const SelectionButton = React.forwardRef(({
   selected, 
   onClick, 
   children, 
-  variant = "default", // default (icon check) or simple (just border/bg change)
+  variant = "default",
   type = "button",
   disabled = false,
+  size = "default",
   ...props 
 }, ref) => {
+  const sizeClasses = {
+    sm: "px-3 py-2 text-xs",
+    default: "px-5 py-4 text-sm",
+    lg: "px-6 py-5 text-base"
+  };
+
   return (
     <button
       type={type}
@@ -20,21 +27,20 @@ const SelectionButton = React.forwardRef(({
       disabled={disabled}
       className={cn(
         "relative flex items-center justify-center text-center transition-all duration-200 border-2 rounded-xl group",
-        // Base sizes
-        "px-4 py-3 text-sm font-semibold",
-        // Selected state
+        sizeClasses[size],
+        "font-semibold",
         selected 
-          ? "border-[#2bc196] bg-[#2bc196]/5 text-[#2bc196] shadow-[0_0_10px_rgba(0,194,149,0.15)]" 
-          : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50",
+          ? "border-[#2bc196] bg-[#2bc196]/10 text-[#2bc196] shadow-lg shadow-[#2bc196]/10" 
+          : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md",
         disabled && "opacity-50 cursor-not-allowed",
         className
       )}
       {...props}
     >
       {selected && variant === "default" && (
-        <div className="absolute top-2 right-2 md:static md:mr-2">
-           <div className="w-4 h-4 rounded-full bg-[#2bc196] flex items-center justify-center">
-             <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
+        <div className="absolute top-2 right-2">
+           <div className="w-5 h-5 rounded-full bg-[#2bc196] flex items-center justify-center shadow-sm">
+             <Check className="w-3 h-3 text-white stroke-[3]" />
            </div>
         </div>
       )}

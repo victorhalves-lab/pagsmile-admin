@@ -9,40 +9,41 @@ export default function FormSection({
   children, 
   collapsible = false, 
   defaultOpen = true,
-  icon: Icon 
+  icon: Icon,
+  className
 }) {
   const [isOpen, setIsOpen] = React.useState(defaultOpen);
 
   return (
-    <Card className="border border-gray-200 shadow-sm">
+    <Card className={cn("border border-slate-200 shadow-lg bg-white", className)}>
       <CardHeader 
         className={cn(
-          "pb-4",
-          collapsible && "cursor-pointer hover:bg-gray-50 transition-colors"
+          "pb-6 pt-6",
+          collapsible && "cursor-pointer hover:bg-slate-50 transition-colors"
         )}
         onClick={() => collapsible && setIsOpen(!isOpen)}
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             {Icon && (
-              <div className="w-10 h-10 rounded-lg bg-[#00D26A]/10 flex items-center justify-center">
-                <Icon className="w-5 h-5 text-[#00D26A]" />
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2bc196] to-emerald-500 flex items-center justify-center shadow-lg shadow-[#2bc196]/20">
+                <Icon className="w-7 h-7 text-white" />
               </div>
             )}
             <div>
-              <CardTitle className="text-lg font-semibold text-gray-800">{title}</CardTitle>
-              {subtitle && <CardDescription className="text-gray-500 mt-0.5">{subtitle}</CardDescription>}
+              <CardTitle className="text-xl font-bold text-slate-800">{title}</CardTitle>
+              {subtitle && <CardDescription className="text-slate-500 mt-1 text-sm">{subtitle}</CardDescription>}
             </div>
           </div>
           {collapsible && (
-            <div className="text-gray-400">
-              {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            <div className="text-slate-400">
+              {isOpen ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
             </div>
           )}
         </div>
       </CardHeader>
       {(!collapsible || isOpen) && (
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 pb-8 px-6">
           {children}
         </CardContent>
       )}
