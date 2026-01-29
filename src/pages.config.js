@@ -201,6 +201,10 @@ import AdminIntRiskDashboard from './pages/AdminIntRiskDashboard';
 import AdminIntFraudMonitoring from './pages/AdminIntFraudMonitoring';
 import AdminIntChargebacksList from './pages/AdminIntChargebacksList';
 import AdminIntMEDsList from './pages/AdminIntMEDsList';
+import AdminIntRiskRules from './pages/AdminIntRiskRules';
+import AdminIntControlLists from './pages/AdminIntControlLists';
+import AdminIntRiskAlerts from './pages/AdminIntRiskAlerts';
+import AdminIntCompliance from './pages/AdminIntCompliance';
 import __Layout from './Layout.jsx';
 
 
@@ -359,6 +363,10 @@ export const PAGES = {
     "AdminIntFraudMonitoring": AdminIntFraudMonitoring,
     "AdminIntChargebacksList": AdminIntChargebacksList,
     "AdminIntMEDsList": AdminIntMEDsList,
+    "AdminIntRiskRules": AdminIntRiskRules,
+    "AdminIntControlLists": AdminIntControlLists,
+    "AdminIntRiskAlerts": AdminIntRiskAlerts,
+    "AdminIntCompliance": AdminIntCompliance,
 }
 
 export const pagesConfig = {

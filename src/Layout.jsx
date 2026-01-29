@@ -291,14 +291,18 @@ const adminInternoMenuItems = [
   },
   {
     id: 'risk',
-    label: 'Risco & Disputas',
+    label: 'Risco & Compliance',
     icon: AlertTriangle,
-    page: 'AdminIntRisk',
+    page: 'AdminIntRiskDashboard',
     submenu: [
-      { label: 'Monitoramento', page: 'AdminIntRisk' },
-      { label: 'Pré-Chargebacks', page: 'AdminIntPreChargebacks' },
-      { label: 'Chargebacks', page: 'AdminIntChargebacks' },
-      { label: 'Antifraude', page: 'AdminIntAntifraud' },
+      { label: 'Dashboard de Risco', page: 'AdminIntRiskDashboard' },
+      { label: 'Monitoramento de Fraudes', page: 'AdminIntFraudMonitoring' },
+      { label: 'Chargebacks', page: 'AdminIntChargebacksList' },
+      { label: 'MEDs (PIX)', page: 'AdminIntMEDsList' },
+      { label: 'Regras de Risco', page: 'AdminIntRiskRules' },
+      { label: 'Listas de Controle', page: 'AdminIntControlLists' },
+      { label: 'Alertas', page: 'AdminIntRiskAlerts' },
+      { label: 'Compliance', page: 'AdminIntCompliance' },
     ]
   },
   {
@@ -387,6 +391,7 @@ const adminInternoPages = [
   'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts', 'AdminIntMerchantsList', 'AdminIntNewMerchant', 'AdminIntMerchantGroups', 'AdminIntMerchantTags', 'AdminIntMerchantReports',
   'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList', 'AdminIntTransactionDetail', 'AdminIntBatchProcessing', 'AdminIntTransactionReports',
   'AdminIntFinancialDashboard', 'AdminIntSettlements', 'AdminIntWithdrawals', 'AdminIntAnticipations', 'AdminIntStatements', 'AdminIntInvoices', 'AdminIntBalanceManagement',
+  'AdminIntRiskDashboard', 'AdminIntFraudMonitoring', 'AdminIntChargebacksList', 'AdminIntMEDsList', 'AdminIntRiskRules', 'AdminIntControlLists', 'AdminIntRiskAlerts', 'AdminIntCompliance',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
   'AdminIntMCCs', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
 ];
