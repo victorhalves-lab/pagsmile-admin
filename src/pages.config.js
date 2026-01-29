@@ -70,7 +70,6 @@ import AdminIntCommSMTP from './pages/AdminIntCommSMTP';
 import AdminIntCommSenders from './pages/AdminIntCommSenders';
 import AdminIntCommTemplates from './pages/AdminIntCommTemplates';
 import AdminIntCommercialInsights from './pages/AdminIntCommercialInsights';
-import AdminIntCompliance from './pages/AdminIntCompliance';
 import AdminIntControlLists from './pages/AdminIntControlLists';
 import AdminIntCreateProposal from './pages/AdminIntCreateProposal';
 import AdminIntDashboard from './pages/AdminIntDashboard';
@@ -247,7 +246,6 @@ export const PAGES = {
     "AdminIntCommSenders": AdminIntCommSenders,
     "AdminIntCommTemplates": AdminIntCommTemplates,
     "AdminIntCommercialInsights": AdminIntCommercialInsights,
-    "AdminIntCompliance": AdminIntCompliance,
     "AdminIntControlLists": AdminIntControlLists,
     "AdminIntCreateProposal": AdminIntCreateProposal,
     "AdminIntDashboard": AdminIntDashboard,
