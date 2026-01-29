@@ -42,6 +42,8 @@ import HeatmapChart from '@/components/dashboard/HeatmapChart.jsx';
 import DeclineAnalysis from '@/components/dashboard/DeclineAnalysis.jsx';
 import ComparativeMetrics from '@/components/dashboard/ComparativeMetrics.jsx';
 import AlertsPanel from '@/components/dashboard/AlertsPanel.jsx';
+import ConversionMetricsCards from '@/components/dashboard/ConversionMetricsCards.jsx';
+import PixFlowCards from '@/components/dashboard/PixFlowCards.jsx';
 
 export default function Dashboard() {
   const [period, setPeriod] = React.useState('7d');
@@ -160,6 +162,9 @@ export default function Dashboard() {
 
         {/* Executive View */}
         <TabsContent value="executive" className="space-y-6">
+          {/* Conversion Metrics */}
+          <ConversionMetricsCards transactions={transactions} />
+
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartCard
@@ -191,6 +196,9 @@ export default function Dashboard() {
 
         {/* Pix Performance View */}
         <TabsContent value="pix" className="space-y-6">
+          {/* PIX In/Out Flow Cards */}
+          <PixFlowCards transactions={transactions} />
+
           <PixPerformanceMetrics transactions={transactions} />
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
