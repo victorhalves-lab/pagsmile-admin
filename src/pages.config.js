@@ -197,6 +197,10 @@ import AdminIntAnticipations from './pages/AdminIntAnticipations';
 import AdminIntStatements from './pages/AdminIntStatements';
 import AdminIntInvoices from './pages/AdminIntInvoices';
 import AdminIntBalanceManagement from './pages/AdminIntBalanceManagement';
+import AdminIntRiskDashboard from './pages/AdminIntRiskDashboard';
+import AdminIntFraudMonitoring from './pages/AdminIntFraudMonitoring';
+import AdminIntChargebacksList from './pages/AdminIntChargebacksList';
+import AdminIntMEDsList from './pages/AdminIntMEDsList';
 import __Layout from './Layout.jsx';
 
 
@@ -351,6 +355,10 @@ export const PAGES = {
     "AdminIntStatements": AdminIntStatements,
     "AdminIntInvoices": AdminIntInvoices,
     "AdminIntBalanceManagement": AdminIntBalanceManagement,
+    "AdminIntRiskDashboard": AdminIntRiskDashboard,
+    "AdminIntFraudMonitoring": AdminIntFraudMonitoring,
+    "AdminIntChargebacksList": AdminIntChargebacksList,
+    "AdminIntMEDsList": AdminIntMEDsList,
 }
 
 export const pagesConfig = {
