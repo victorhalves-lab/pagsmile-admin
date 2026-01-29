@@ -46,6 +46,7 @@ import {
   ShieldCheck,
   AlertTriangle
 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -263,15 +264,25 @@ const adminInternoMenuItems = [
     ]
   },
   {
+    id: 'transactions',
+    label: 'Transações',
+    icon: ArrowLeftRight,
+    page: 'AdminIntTransactionsList',
+    submenu: [
+      { label: 'Lista de Transações', page: 'AdminIntTransactionsList' },
+      { label: 'Processamento em Lote', page: 'AdminIntBatchProcessing' },
+      { label: 'Relatórios', page: 'AdminIntTransactionReports' },
+      { label: 'Conciliação', page: 'AdminIntReconciliation' },
+    ]
+  },
+  {
     id: 'financial',
     label: 'Financeiro',
     icon: DollarSign,
     page: 'AdminIntTransactionsDashboard',
     submenu: [
       { label: 'Dashboard Transações', page: 'AdminIntTransactionsDashboard' },
-      { label: 'Lista de Transações', page: 'AdminIntTransactionsList' },
       { label: 'Liquidação', page: 'AdminIntSettlement' },
-      { label: 'Conciliação', page: 'AdminIntReconciliation' },
       { label: 'Antecipações', page: 'AdminIntAnticipation' },
     ]
   },
@@ -371,7 +382,7 @@ const adminInternoPages = [
   'AdminIntOnboardingDash', 'AdminIntOnboardingQueue', 'AdminIntSelfService', 'AdminIntActivation',
   'AdminIntKYC', 'AdminIntPLD', 'AdminIntDocs', 'AdminIntSubaccountDetail', 'AdminIntKYCQueue', 'AdminIntKycAnalysis',
   'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts', 'AdminIntMerchantsList', 'AdminIntNewMerchant', 'AdminIntMerchantGroups', 'AdminIntMerchantTags', 'AdminIntMerchantReports',
-  'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList',
+  'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList', 'AdminIntTransactionDetail', 'AdminIntBatchProcessing', 'AdminIntTransactionReports',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
   'AdminIntMCCs', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
 ];

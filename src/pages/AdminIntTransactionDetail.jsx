@@ -1,217 +1,374 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
-import StatusBadge from '@/components/common/StatusBadge';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Copy, FileText, ExternalLink, RefreshCw, Shield, CreditCard, User, Globe } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ArrowLeft, Copy, Download, RefreshCw, RotateCcw, X, CheckCircle, XCircle, Eye, Clock, Zap, AlertTriangle } from 'lucide-react';
+import StatusBadge from '@/components/common/StatusBadge';
+import { mockTransactions } from '@/components/mockData/adminInternoMocks';
+import { toast } from 'sonner';
 
-const DetailRow = ({ label, value, copyable }) => (
-    <div className="flex justify-between py-2 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 rounded transition-colors">
-        <span className="text-sm text-slate-500">{label}</span>
-        <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-slate-900">{value}</span>
-            {copyable && <Button variant="ghost" size="icon" className="h-4 w-4 text-slate-400 hover:text-slate-600"><Copy className="w-3 h-3" /></Button>}
-        </div>
-    </div>
-);
+const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 
 export default function AdminIntTransactionDetail() {
-    const { id } = useParams();
-    const txnId = id || 'TXN-12345678';
+    const [searchParams] = useSearchParams();
+    const txId = searchParams.get('id');
+    const tx = mockTransactions.find(t => t.id === txId) || mockTransactions[0];
+
+    const [refundModal, setRefundModal] = useState(false);
+    const [refundType, setRefundType] = useState('full');
+    const [refundAmount, setRefundAmount] = useState('');
+    const [revealModal, setRevealModal] = useState(false);
+
+    const timeline = [
+        { time: '14:32:45.123', event: 'TRANSACTION_CREATED', icon: '🆕', desc: 'Transação criada', details: 'Origem: API v2 | IP: 189.123.456.789' },
+        { time: '14:32:45.456', event: 'ANTIFRAUD_STARTED', icon: '🔍', desc: 'Antifraude iniciado', details: 'Provider: ClearSale' },
+        { time: '14:32:46.789', event: 'ANTIFRAUD_APPROVED', icon: '✅', desc: 'Antifraude aprovado', details: 'Score: 15 | Tempo: 1.2s' },
+        { time: '14:32:47.012', event: 'SENT_TO_ACQUIRER', icon: '📤', desc: 'Enviado para adquirente', details: 'Adquirente: Cielo' },
+        { time: '14:32:48.345', event: 'AUTHORIZATION_RECEIVED', icon: '📥', desc: 'Autorização recebida', details: 'Código: ABC123 | NSU: 123456789 | 00 - Aprovada' },
+        { time: '14:32:48.678', event: 'STATUS_CHANGED', icon: '🔄', desc: 'Status atualizado', details: 'PENDING → APPROVED' },
+        { time: '14:32:49.000', event: 'WEBHOOK_SENT', icon: '📧', desc: 'Webhook enviado', details: 'URL: https://api.merchant.com/webhooks | 200 OK | 0.3s' },
+        { time: '14:33:00.000', event: 'CAPTURE_CONFIRMED', icon: '✅', desc: 'Captura automática', details: 'Valor: R$ 299,00' },
+    ];
 
     return (
         <div className="space-y-6">
-            <PageHeader
-                title={`Transação ${txnId}`}
-                subtitle="Detalhes Completos"
+            <PageHeader 
+                title={tx.id}
+                subtitle="Detalhes da Transação"
                 breadcrumbs={[
-                    { label: 'Transações', page: 'AdminIntTransactionsList' },
-                    { label: 'Detalhes', page: '#' }
+                    { label: 'Transações' },
+                    { label: 'Lista', page: 'AdminIntTransactionsList' },
+                    { label: tx.id }
                 ]}
-                actions={
-                    <div className="flex gap-2">
-                        <Button variant="outline"><Copy className="w-4 h-4 mr-2" /> Copiar ID</Button>
-                        <Button variant="outline"><FileText className="w-4 h-4 mr-2" /> PDF</Button>
-                    </div>
+                actionElement={
+                    <Link to={createPageUrl('AdminIntTransactionsList')}>
+                        <Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" /> Voltar à Lista</Button>
+                    </Link>
                 }
             />
 
-            {/* Summary Card */}
-            <Card className="border-l-4 border-l-green-500">
+            {/* Header */}
+            <Card>
                 <CardContent className="pt-6">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="flex items-start justify-between mb-6">
                         <div>
-                            <div className="flex items-center gap-3 mb-2">
-                                <StatusBadge status="approved" size="lg" />
-                                <span className="text-2xl font-bold">R$ 1.250,00</span>
-                            </div>
+                            <h2 className="text-2xl font-bold mb-2">{tx.id}</h2>
                             <p className="text-slate-500">
-                                Merchant: <span className="font-semibold text-slate-900">Loja ABC Ltda</span> (M-00123)
-                            </p>
-                            <p className="text-slate-500 text-sm">
-                                27/01/2026 14:32:45 • Cartão de Crédito - Visa • 3x de R$ 416,67
+                                {new Date(tx.date).toLocaleDateString('pt-BR')} às {new Date(tx.date).toLocaleTimeString('pt-BR')}
                             </p>
                         </div>
-                        <div className="flex gap-2">
-                            <Button className="bg-purple-600 hover:bg-purple-700 text-white"><RefreshCw className="w-4 h-4 mr-2" /> Estornar</Button>
-                            <Button variant="outline">Ver Logs</Button>
+                        <StatusBadge status={tx.status} />
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-4 mb-6">
+                        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-center">
+                            <p className="text-xs text-slate-500 mb-1">VALOR</p>
+                            <p className="text-xl font-bold">{formatCurrency(tx.amount)}</p>
+                            {tx.installments > 1 && <p className="text-xs text-slate-500">{tx.installments}x {formatCurrency(tx.amount / tx.installments)}</p>}
                         </div>
+                        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-center">
+                            <p className="text-xs text-slate-500 mb-1">MÉTODO</p>
+                            <p className="text-base font-medium">{paymentMethodIcons[tx.method]} {tx.method === 'pix' ? 'PIX' : tx.brand}</p>
+                            <p className="text-xs text-slate-500">{tx.method === 'credit_card' ? 'Crédito' : tx.method === 'debit_card' ? 'Débito' : ''}</p>
+                        </div>
+                        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-center">
+                            <p className="text-xs text-slate-500 mb-1">MERCHANT</p>
+                            <Link to={createPageUrl('AdminIntMerchantProfile') + '?id=' + tx.merchant_id} className="text-base font-medium text-blue-600 hover:underline">
+                                {tx.merchant_name}
+                            </Link>
+                            <p className="text-xs text-slate-500">ID: {tx.merchant_id}</p>
+                        </div>
+                        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-center">
+                            <p className="text-xs text-slate-500 mb-1">PAGADOR</p>
+                            <p className="text-base font-medium">{tx.customer?.name || 'N/A'}</p>
+                            <p className="text-xs text-slate-500 font-mono">***. ***.***-**</p>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                        {tx.status === 'approved' && <Button variant="outline" onClick={() => setRefundModal(true)}><RotateCcw className="w-4 h-4 mr-2" /> Estornar</Button>}
+                        <Button variant="outline" onClick={() => { navigator.clipboard.writeText(tx.id); toast.success('ID copiado!'); }}>
+                            <Copy className="w-4 h-4 mr-2" /> Copiar Dados
+                        </Button>
+                        <Button variant="outline" onClick={() => toast.success('Webhook reenviado!')}>
+                            <RefreshCw className="w-4 h-4 mr-2" /> Reenviar Webhook
+                        </Button>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">Mais Ações</Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem>📄 Gerar Comprovante</DropdownMenuItem>
+                                <DropdownMenuItem>🔗 Abrir no Merchant</DropdownMenuItem>
+                                <DropdownMenuItem>📝 Adicionar Nota</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </CardContent>
             </Card>
 
-            <Tabs defaultValue="details" className="w-full">
-                <TabsList className="w-full justify-start border-b rounded-none px-0 bg-transparent">
-                    <TabsTrigger value="details" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">Detalhes</TabsTrigger>
-                    <TabsTrigger value="fraud" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">Antifraude & Risco</TabsTrigger>
-                    <TabsTrigger value="financial" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">Financeiro</TabsTrigger>
-                    <TabsTrigger value="timeline" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">Timeline</TabsTrigger>
+            {/* Tabs */}
+            <Tabs defaultValue="dados" className="w-full">
+                <TabsList className="w-full justify-start">
+                    <TabsTrigger value="dados">Dados</TabsTrigger>
+                    <TabsTrigger value="pagador">Pagador</TabsTrigger>
+                    <TabsTrigger value="pagamento">Pagamento</TabsTrigger>
+                    <TabsTrigger value="antifraud">Antifraude</TabsTrigger>
+                    <TabsTrigger value="processing">Processamento</TabsTrigger>
+                    <TabsTrigger value="timeline">Timeline</TabsTrigger>
+                    <TabsTrigger value="notas">Notas</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="details" className="mt-6 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <TabsContent value="dados">
+                    <div className="grid grid-cols-2 gap-6">
                         <Card>
-                            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium flex items-center gap-2"><User className="w-4 h-4" /> Dados do Pagador</CardTitle></CardHeader>
-                            <CardContent className="space-y-1">
-                                <DetailRow label="Nome" value="João da Silva" />
-                                <DetailRow label="CPF" value="123.456.789-00" />
-                                <DetailRow label="E-mail" value="joao@email.com" copyable />
-                                <DetailRow label="Telefone" value="(11) 99999-9999" />
-                                <DetailRow label="IP" value="189.123.45.67" />
+                            <CardHeader><CardTitle className="text-base">Identificadores</CardTitle></CardHeader>
+                            <CardContent className="space-y-2 text-sm">
+                                <div><span className="text-slate-500">ID Transação:</span> <span className="font-mono font-medium">{tx.id}</span></div>
+                                <div><span className="text-slate-500">Ref. Externa:</span> <span className="font-mono">{tx.external_reference || 'N/A'}</span></div>
+                                <div><span className="text-slate-500">ID Merchant:</span> <span className="font-mono">{tx.merchant_id}</span></div>
+                                <div><span className="text-slate-500">Criado em:</span> {new Date(tx.date).toLocaleString('pt-BR')}</div>
+                                <div><span className="text-slate-500">Atualizado:</span> {new Date(tx.date).toLocaleString('pt-BR')}</div>
                             </CardContent>
                         </Card>
-
                         <Card>
-                            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium flex items-center gap-2"><CreditCard className="w-4 h-4" /> Dados do Cartão</CardTitle></CardHeader>
-                            <CardContent className="space-y-1">
-                                <DetailRow label="Bandeira" value="Visa" />
-                                <DetailRow label="Cartão" value="411111 ****** 1234" />
-                                <DetailRow label="Portador" value="JOAO DA SILVA" />
-                                <DetailRow label="Emissor" value="Banco Itaú (Brasil)" />
-                                <DetailRow label="Tipo" value="Crédito / Classic" />
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium flex items-center gap-2"><Globe className="w-4 h-4" /> Processamento</CardTitle></CardHeader>
-                            <CardContent className="space-y-1">
-                                <DetailRow label="Adquirente" value="Adyen" />
-                                <DetailRow label="ARN" value="74027123456789012345678" copyable />
-                                <DetailRow label="NSU" value="123456" copyable />
-                                <DetailRow label="Auth Code" value="987654" />
-                                <DetailRow label="Retorno" value="00 - Aprovada" />
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium flex items-center gap-2"><FileText className="w-4 h-4" /> Metadata</CardTitle></CardHeader>
-                            <CardContent className="space-y-1">
-                                <DetailRow label="Order ID" value="PEDIDO-2026-00123" />
-                                <DetailRow label="Product" value="Tênis Nike Air Max" />
-                                <DetailRow label="Customer ID" value="CLI-98765" />
+                            <CardHeader><CardTitle className="text-base">Valores</CardTitle></CardHeader>
+                            <CardContent className="space-y-2 text-sm">
+                                <div><span className="text-slate-500">Valor Bruto:</span> <span className="font-bold">{formatCurrency(tx.amount)}</span></div>
+                                <div><span className="text-slate-500">Taxa PagSmile:</span> <span className="text-red-600">{formatCurrency(tx.fee_amount)} ({((tx.fee_amount/tx.amount)*100).toFixed(2)}%)</span></div>
+                                <div><span className="text-slate-500">Valor Líquido:</span> <span className="font-bold text-green-600">{formatCurrency(tx.net_amount)}</span></div>
+                                <div><span className="text-slate-500">Parcelas:</span> {tx.installments > 1 ? `${tx.installments}x de ${formatCurrency(tx.amount / tx.installments)}` : 'À vista'}</div>
+                                <div><span className="text-slate-500">Moeda:</span> BRL</div>
                             </CardContent>
                         </Card>
                     </div>
                 </TabsContent>
 
-                <TabsContent value="fraud" className="mt-6 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Card>
-                            <CardHeader><CardTitle className="flex items-center gap-2"><Shield className="w-4 h-4 text-blue-500" /> Antifraude (Konduto)</CardTitle></CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                                    <div>
-                                        <p className="text-sm text-slate-500">Score</p>
-                                        <p className="text-2xl font-bold text-green-600">85</p>
-                                    </div>
-                                    <Badge className="bg-green-100 text-green-700 hover:bg-green-200">Baixo Risco</Badge>
-                                </div>
-                                <div className="space-y-2">
-                                    <DetailRow label="Recomendação" value="Aprovar" />
-                                    <DetailRow label="Tempo Análise" value="89ms" />
-                                    <DetailRow label="Regras" value="Nenhuma regra de bloqueio acionada" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                        
-                        <Card>
-                            <CardHeader><CardTitle>3D Secure 2.0</CardTitle></CardHeader>
-                            <CardContent className="space-y-2">
-                                <DetailRow label="Status" value="✅ Autenticado com Sucesso" />
-                                <DetailRow label="ECI" value="05" />
-                                <DetailRow label="Liability Shift" value="Sim (Banco Emissor)" />
-                                <DetailRow label="CAVV" value="AAABB..." />
-                            </CardContent>
-                        </Card>
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="financial" className="mt-6">
+                <TabsContent value="pagador">
                     <Card>
-                        <CardContent className="pt-6">
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-4 border-b">
-                                    <div>
-                                        <p className="text-xs text-slate-500 uppercase">Valor Bruto</p>
-                                        <p className="text-lg font-bold">R$ 1.250,00</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 uppercase">Total Taxas</p>
-                                        <p className="text-lg font-bold text-red-500">- R$ 41,36</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 uppercase">Retenção (RR)</p>
-                                        <p className="text-lg font-bold text-orange-500">- R$ 36,26</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 uppercase">Líquido a Receber</p>
-                                        <p className="text-lg font-bold text-green-600">R$ 1.172,38</p>
-                                    </div>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle className="text-base">Dados do Pagador</CardTitle>
+                            <Button variant="outline" size="sm" onClick={() => setRevealModal(true)}>
+                                <Eye className="w-4 h-4 mr-2" /> Revelar Dados
+                            </Button>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div><Label className="text-slate-500">Nome</Label><p className="font-medium mt-1">{tx.customer?.name || 'N/A'}</p></div>
+                                <div><Label className="text-slate-500">CPF/CNPJ</Label><p className="font-mono mt-1">***. ***.***-**</p></div>
+                                <div><Label className="text-slate-500">E-mail</Label><p className="font-mono mt-1">j***@email.com</p></div>
+                                <div><Label className="text-slate-500">Telefone</Label><p className="font-mono mt-1">(11) 9****-1234</p></div>
+                                <div className="col-span-2"><Label className="text-slate-500">IP</Label><p className="font-mono mt-1">{tx.customer?.ip || '189.123.456.789'}</p></div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="pagamento">
+                    <Card>
+                        <CardHeader><CardTitle className="text-base">Dados do Pagamento</CardTitle></CardHeader>
+                        <CardContent>
+                            {tx.method === 'credit_card' || tx.method === 'debit_card' ? (
+                                <div className="space-y-3 text-sm">
+                                    <div><Label className="text-slate-500">Método</Label><p className="mt-1">Cartão de {tx.method === 'credit_card' ? 'Crédito' : 'Débito'}</p></div>
+                                    <div><Label className="text-slate-500">Bandeira</Label><p className="mt-1">{tx.brand}</p></div>
+                                    <div><Label className="text-slate-500">Últimos 4 dígitos</Label><p className="font-mono mt-1">**** **** **** {tx.card_last4}</p></div>
+                                    <div><Label className="text-slate-500">Portador</Label><p className="mt-1">JOAO DA SILVA</p></div>
+                                    <div><Label className="text-slate-500">Parcelas</Label><p className="mt-1">{tx.installments}x</p></div>
                                 </div>
-                                <div className="space-y-1">
-                                    <h4 className="font-semibold text-sm mb-2">Detalhamento de Taxas</h4>
-                                    <DetailRow label="MDR (3.29%)" value="R$ 41,13" />
-                                    <DetailRow label="Fee Transação" value="R$ 0,15" />
-                                    <DetailRow label="Antifraude" value="R$ 0,08" />
+                            ) : tx.method === 'pix' ? (
+                                <div className="space-y-3 text-sm">
+                                    <div><Label className="text-slate-500">Método</Label><p className="mt-1">PIX</p></div>
+                                    <div><Label className="text-slate-500">End-to-End ID</Label><p className="font-mono mt-1">{tx.pix?.end_to_end_id || 'E12345678...'}</p></div>
+                                    <div><Label className="text-slate-500">Data Pagamento</Label><p className="mt-1">{new Date(tx.date).toLocaleString('pt-BR')}</p></div>
                                 </div>
-                                <div className="pt-4 border-t">
-                                    <div className="flex justify-between items-center">
-                                        <span className="font-medium">Liquidação Agendada</span>
-                                        <span className="text-slate-500">11/02/2026 (D+15)</span>
-                                    </div>
+                            ) : (
+                                <p className="text-slate-500">Dados do pagamento não disponíveis</p>
+                            )}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="antifraud">
+                    <Card>
+                        <CardHeader><CardTitle className="text-base">Análise de Antifraude</CardTitle></CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 rounded-lg p-4">
+                                <div className="flex items-center justify-between mb-3">
+                                    <p className="font-semibold">Status: 🟢 APROVADO</p>
+                                    <p>Score de Risco: <span className="text-2xl font-bold text-green-600">15</span>/100 (Baixo)</p>
+                                </div>
+                                <div className="w-full bg-slate-200 rounded-full h-2">
+                                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '15%' }} />
+                                </div>
+                                <div className="flex justify-between text-xs text-slate-500 mt-1">
+                                    <span>Baixo</span><span>Médio</span><span>Alto</span><span>Crítico</span>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div><Label className="text-slate-500">Provider</Label><p className="mt-1">ClearSale</p></div>
+                                <div><Label className="text-slate-500">ID Análise</Label><p className="font-mono mt-1">CS-987654321</p></div>
+                                <div><Label className="text-slate-500">Tempo de resposta</Label><p className="mt-1">1.2s</p></div>
+                                <div><Label className="text-slate-500">Decisão automática</Label><p className="mt-1">Sim</p></div>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold mb-3">Dados da Análise</h4>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between py-2 border-b"><span className="text-slate-500">IP do Comprador</span><span>189.123.456.789 (São Paulo, BR)</span></div>
+                                    <div className="flex justify-between py-2 border-b"><span className="text-slate-500">Device ID</span><span className="font-mono">a1b2c3d4e5f6...</span></div>
+                                    <div className="flex justify-between py-2 border-b"><span className="text-slate-500">Device Score</span><span>Confiável (usado 15x antes)</span></div>
+                                    <div className="flex justify-between py-2 border-b"><span className="text-slate-500">Histórico do CPF</span><span>5 compras nos últimos 30 dias</span></div>
+                                    <div className="flex justify-between py-2"><span className="text-slate-500">Velocidade</span><span>1 transação/hora (normal)</span></div>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
 
-                <TabsContent value="timeline" className="mt-6">
+                <TabsContent value="processing">
                     <Card>
-                        <CardContent className="pt-6">
-                            <div className="relative pl-6 border-l-2 border-slate-200 space-y-8">
-                                {[
-                                    { time: '14:32:53', text: 'Webhook entregue (200 OK)', success: true },
-                                    { time: '14:32:53', text: 'Transação APROVADA', success: true },
-                                    { time: '14:32:52', text: 'Enviado para Adquirente (Adyen)' },
-                                    { time: '14:32:52', text: '3DS Autenticado' },
-                                    { time: '14:32:45', text: 'Antifraude: Aprovar' },
-                                    { time: '14:32:45', text: 'Transação Iniciada' },
-                                ].map((event, idx) => (
-                                    <div key={idx} className="relative">
-                                        <div className={`absolute -left-[29px] top-0 w-4 h-4 rounded-full border-2 ${event.success ? 'bg-green-500 border-green-500' : 'bg-white border-slate-300'}`} />
-                                        <p className="text-xs font-mono text-slate-500">{event.time}</p>
-                                        <p className={`text-sm ${event.success ? 'font-bold text-green-700' : 'text-slate-700'}`}>{event.text}</p>
+                        <CardHeader><CardTitle className="text-base">Dados de Processamento</CardTitle></CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div><Label className="text-slate-500">Adquirente</Label><p className="mt-1">{tx.acquirer_data?.name || 'Cielo'}</p></div>
+                                <div><Label className="text-slate-500">NSU</Label><p className="font-mono mt-1">{tx.acquirer_data?.nsu || '123456789'}</p></div>
+                                <div><Label className="text-slate-500">Código Autorização</Label><p className="font-mono mt-1">{tx.acquirer_data?.authorization_code || 'ABC123'}</p></div>
+                                <div><Label className="text-slate-500">TID</Label><p className="font-mono mt-1">{tx.acquirer_data?.tid || '1234567890123456'}</p></div>
+                                <div><Label className="text-slate-500">Código Resposta</Label><p className="mt-1">{tx.acquirer_data?.return_code || '00'}</p></div>
+                                <div><Label className="text-slate-500">Mensagem</Label><p className="mt-1">{tx.acquirer_data?.return_message || 'Transação aprovada'}</p></div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="timeline">
+                    <Card>
+                        <CardHeader><CardTitle className="text-base">Timeline de Eventos</CardTitle></CardHeader>
+                        <CardContent>
+                            <div className="space-y-1">
+                                {timeline.map((event, idx) => (
+                                    <div key={idx} className="flex gap-3 py-2 border-b border-slate-100 last:border-0">
+                                        <span className="text-xs font-mono text-slate-500 w-24">{event.time}</span>
+                                        <div className="flex items-start gap-2">
+                                            <span className="text-lg">{event.icon}</span>
+                                            <div>
+                                                <p className="font-medium text-sm">{event.desc}</p>
+                                                <p className="text-xs text-slate-500">{event.details}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
+
+                <TabsContent value="notas">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle className="text-base">Notas Internas</CardTitle>
+                            <Button size="sm">+ Adicionar Nota</Button>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-slate-500 text-center py-8">Nenhuma nota registrada</p>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
             </Tabs>
+
+            {/* Refund Modal */}
+            <Dialog open={refundModal} onOpenChange={setRefundModal}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Estornar Transação</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <p className="text-sm text-slate-600">Transação: <span className="font-mono">{tx.id}</span></p>
+                        <p className="text-sm text-slate-600">Valor disponível: <span className="font-bold">{formatCurrency(tx.amount)}</span></p>
+                        
+                        <div>
+                            <Label>Tipo de Estorno</Label>
+                            <div className="space-y-2 mt-2">
+                                <div className="flex items-center gap-2">
+                                    <input type="radio" name="refund" value="full" checked={refundType === 'full'} onChange={(e) => setRefundType(e.target.value)} />
+                                    Estorno Total ({formatCurrency(tx.amount)})
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <input type="radio" name="refund" value="partial" checked={refundType === 'partial'} onChange={(e) => setRefundType(e.target.value)} />
+                                    Estorno Parcial: {refundType === 'partial' && <Input type="number" className="w-32 ml-2" placeholder="R$ 0,00" value={refundAmount} onChange={(e) => setRefundAmount(e.target.value)} />}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <Label>Motivo do Estorno</Label>
+                            <Select><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="customer_request">Solicitação do cliente</SelectItem>
+                                    <SelectItem value="not_delivered">Produto não entregue</SelectItem>
+                                    <SelectItem value="defect">Produto com defeito</SelectItem>
+                                    <SelectItem value="fraud">Fraude confirmada</SelectItem>
+                                    <SelectItem value="operational">Erro operacional</SelectItem>
+                                    <SelectItem value="other">Outro</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="bg-red-50 border border-red-200 rounded p-3 text-sm text-red-700">
+                            ⚠️ Esta ação não pode ser desfeita.
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setRefundModal(false)}>Cancelar</Button>
+                        <Button className="bg-red-600 hover:bg-red-700" onClick={() => { toast.success('Estorno processado!'); setRefundModal(false); }}>
+                            Confirmar Estorno
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Reveal Modal */}
+            <Dialog open={revealModal} onOpenChange={setRevealModal}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <AlertTriangle className="w-5 h-5 text-amber-600" />
+                            Revelar Dados do Pagador
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div className="bg-amber-50 border border-amber-200 rounded p-3 text-sm text-amber-700">
+                            ⚠️ Esta ação será registrada em auditoria.
+                        </div>
+                        <div>
+                            <Label>Motivo para revelar dados</Label>
+                            <Select><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="support">Atendimento ao cliente</SelectItem>
+                                    <SelectItem value="fraud">Investigação de fraude</SelectItem>
+                                    <SelectItem value="legal">Solicitação judicial</SelectItem>
+                                    <SelectItem value="other">Outro</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setRevealModal(false)}>Cancelar</Button>
+                        <Button onClick={() => { toast.success('Dados revelados e ação registrada'); setRevealModal(false); }}>
+                            Revelar e Registrar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

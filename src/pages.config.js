@@ -188,6 +188,8 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
+import AdminIntBatchProcessing from './pages/AdminIntBatchProcessing';
+import AdminIntTransactionReports from './pages/AdminIntTransactionReports';
 import __Layout from './Layout.jsx';
 
 
@@ -333,6 +335,8 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
+    "AdminIntBatchProcessing": AdminIntBatchProcessing,
+    "AdminIntTransactionReports": AdminIntTransactionReports,
 }
 
 export const pagesConfig = {
