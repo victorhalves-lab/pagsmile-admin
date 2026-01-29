@@ -104,7 +104,7 @@ export default function TabMetodosPagamento({ merchant }) {
                         <Badge variant="outline" className="text-green-600 border-green-200"><CheckCircle className="w-3 h-3 mr-1" /> Habilitado</Badge>
                     </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
                     <h4 className="font-semibold text-sm mb-3">Configurações:</h4>
                     <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
                         <li>• Expiração do QR Code: <span className="font-medium text-slate-900 dark:text-white">30 minutos</span></li>
@@ -113,6 +113,32 @@ export default function TabMetodosPagamento({ merchant }) {
                         <li>• PIX Copia e Cola: <span className="font-medium text-slate-900 dark:text-white">Habilitado</span></li>
                         <li>• PIX QR Code dinâmico: <span className="font-medium text-slate-900 dark:text-white">Habilitado</span></li>
                     </ul>
+                    <Separator />
+                    <div>
+                        <h4 className="font-semibold text-sm mb-3">Chaves Pix de Recebimento:</h4>
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <div className="flex items-center gap-2">
+                                    <QrCode className="w-4 h-4 text-green-600" />
+                                    <div>
+                                        <p className="font-medium text-sm">12.345.678/0001-90</p>
+                                        <p className="text-xs text-slate-500">CNPJ - Principal</p>
+                                    </div>
+                                </div>
+                                <Badge className="bg-green-100 text-green-700">Ativa</Badge>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                                <div className="flex items-center gap-2">
+                                    <QrCode className="w-4 h-4 text-slate-500" />
+                                    <div>
+                                        <p className="font-medium text-sm">financeiro@empresa.com.br</p>
+                                        <p className="text-xs text-slate-500">E-mail - Secundária</p>
+                                    </div>
+                                </div>
+                                <Badge variant="outline">Secundária</Badge>
+                            </div>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
 

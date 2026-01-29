@@ -3,15 +3,38 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CheckCircle, XCircle, RefreshCw, Eye, Settings, Copy } from 'lucide-react';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { CheckCircle, XCircle, RefreshCw, Eye, Settings, Copy, Plus, Edit, Trash2 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { toast } from 'sonner';
 
+const availableEvents = [
+    { id: 'transaction.approved', label: 'Transação Aprovada' },
+    { id: 'transaction.denied', label: 'Transação Negada' },
+    { id: 'transaction.refunded', label: 'Transação Estornada' },
+    { id: 'pix.received', label: 'PIX Recebido' },
+    { id: 'pix.expired', label: 'PIX Expirado' },
+    { id: 'boleto.paid', label: 'Boleto Pago' },
+    { id: 'chargeback.opened', label: 'Chargeback Aberto' },
+    { id: 'withdrawal.processed', label: 'Saque Processado' },
+    { id: 'subscription.created', label: 'Assinatura Criada' },
+    { id: 'subscription.cancelled', label: 'Assinatura Cancelada' },
+];
+
 export default function TabWebhooks({ merchant }) {
     const [detailModal, setDetailModal] = useState(false);
+    const [configModal, setConfigModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [webhookConfig, setWebhookConfig] = useState({
+        url: 'https://api.lojadojoao.com.br/webhooks/pagsmile',
+        events: ['transaction.approved', 'transaction.denied', 'pix.received', 'withdrawal.processed'],
+        timeout: 30,
+        retries: 3,
+        active: true
+    });
 
     const webhookUrl = 'https://api.lojadojoao.com.br/webhooks/pagsmile';
     const webhookStatus = 'operational';
@@ -84,8 +107,11 @@ export default function TabWebhooks({ merchant }) {
                         <Button variant="outline" onClick={() => toast.success('Teste enviado!')}>
                             <RefreshCw className="w-4 h-4 mr-2" /> Testar Webhook
                         </Button>
-                        <Button variant="outline">
-                            <Settings className="w-4 h-4 mr-2" /> Ver Configuração
+                        <Button variant="outline" onClick={() => setConfigModal(true)}>
+                            <Settings className="w-4 h-4 mr-2" /> Editar Configuração
+                        </Button>
+                        <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
+                            <Trash2 className="w-4 h-4 mr-2" /> Desativar
                         </Button>
                     </div>
                 </CardContent>
@@ -230,7 +256,7 @@ export default function TabWebhooks({ merchant }) {
                             <div className="bg-slate-50 rounded p-3">
                                 <p className="font-medium mb-2">REQUEST ENVIADO:</p>
                                 <pre className="text-xs bg-slate-900 text-slate-100 p-3 rounded overflow-x-auto">
-{`POST ${webhookUrl}
+{`POST ${webhookConfig.url}
 
 Headers:
 Content-Type: application/json
@@ -265,6 +291,78 @@ Body:
                             <RefreshCw className="w-4 h-4 mr-2" /> Reenviar
                         </Button>
                         <Button onClick={() => setDetailModal(false)}>Fechar</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Config Modal */}
+            <Dialog open={configModal} onOpenChange={setConfigModal}>
+                <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle>Configurar Webhook</DialogTitle>
+                        <DialogDescription>Edite as configurações do webhook do cliente</DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div>
+                            <Label>URL do Webhook *</Label>
+                            <Input 
+                                value={webhookConfig.url} 
+                                onChange={(e) => setWebhookConfig({...webhookConfig, url: e.target.value})}
+                                placeholder="https://..." 
+                                className="mt-1 font-mono text-sm" 
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <Label>Timeout (segundos)</Label>
+                                <Select value={String(webhookConfig.timeout)} onValueChange={(v) => setWebhookConfig({...webhookConfig, timeout: parseInt(v)})}>
+                                    <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="5">5 segundos</SelectItem>
+                                        <SelectItem value="10">10 segundos</SelectItem>
+                                        <SelectItem value="30">30 segundos</SelectItem>
+                                        <SelectItem value="60">60 segundos</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label>Retentativas</Label>
+                                <Select value={String(webhookConfig.retries)} onValueChange={(v) => setWebhookConfig({...webhookConfig, retries: parseInt(v)})}>
+                                    <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="0">Nenhuma</SelectItem>
+                                        <SelectItem value="1">1 retentativa</SelectItem>
+                                        <SelectItem value="3">3 retentativas</SelectItem>
+                                        <SelectItem value="5">5 retentativas</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <div>
+                            <Label className="mb-3 block">Eventos para notificar:</Label>
+                            <div className="grid grid-cols-2 gap-2 max-h-[200px] overflow-y-auto p-3 bg-slate-50 rounded-lg">
+                                {availableEvents.map(event => (
+                                    <div key={event.id} className="flex items-center gap-2">
+                                        <Checkbox 
+                                            id={event.id} 
+                                            checked={webhookConfig.events.includes(event.id)}
+                                            onCheckedChange={(checked) => {
+                                                if (checked) {
+                                                    setWebhookConfig({...webhookConfig, events: [...webhookConfig.events, event.id]});
+                                                } else {
+                                                    setWebhookConfig({...webhookConfig, events: webhookConfig.events.filter(e => e !== event.id)});
+                                                }
+                                            }}
+                                        />
+                                        <Label htmlFor={event.id} className="text-sm cursor-pointer">{event.label}</Label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setConfigModal(false)}>Cancelar</Button>
+                        <Button onClick={() => { toast.success('Webhook atualizado!'); setConfigModal(false); }}>Salvar</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
