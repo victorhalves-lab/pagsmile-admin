@@ -89,7 +89,7 @@ export default function AdminIntMerchantProfile() {
                     <TabsTrigger value="webhooks">🔔 Webhooks</TabsTrigger>
                     <TabsTrigger value="split">➗ Split</TabsTrigger>
                     <TabsTrigger value="recorrencia">🔄 Recorr.</TabsTrigger>
-                    <TabsTrigger value="client-users">👤 Usuários Cliente</TabsTrigger>
+                    <TabsTrigger value="clientusers">👤 Usuários Cliente</TabsTrigger>
                     <TabsTrigger value="subsellers">🏪 Sub-sellers</TabsTrigger>
                 </TabsList>
 
@@ -115,7 +115,7 @@ export default function AdminIntMerchantProfile() {
                 <TabsContent value="webhooks"><TabWebhooks merchant={merchant} /></TabsContent>
                 <TabsContent value="split"><TabSplit merchant={merchant} /></TabsContent>
                 <TabsContent value="recorrencia"><TabRecorrencia merchant={merchant} /></TabsContent>
-                <TabsContent value="client-users"><TabClientUsers merchant={merchant} /></TabsContent>
+                <TabsContent value="clientusers"><TabClientUsers merchant={merchant} /></TabsContent>
                 <TabsContent value="subsellers"><TabSubSellers merchant={merchant} /></TabsContent>
             </Tabs>
         </div>
