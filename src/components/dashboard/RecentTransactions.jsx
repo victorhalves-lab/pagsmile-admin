@@ -60,56 +60,55 @@ export default function RecentTransactions({ transactions = [], loading = false,
   }
 
   return (
-    <div className={cn("bg-white rounded-xl border border-gray-100", className)}>
-      <div className="flex items-center justify-between p-5 border-b border-gray-100">
-        <h3 className="font-semibold text-gray-900">Transações Recentes</h3>
+    <div className={cn("bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800", className)}>
+      <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-slate-800">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Transações Recentes</h3>
         <Link to={createPageUrl('Transactions')}>
-          <Button variant="ghost" size="sm" className="text-[#2bc196] hover:text-[#239b7a] hover:bg-[#2bc196]/10">
+          <Button variant="ghost" size="sm" className="text-[#2bc196] hover:text-[#239b7a] hover:bg-[#2bc196]/10 h-7 text-xs">
             Ver todas
-            <ChevronRight className="w-4 h-4 ml-1" />
+            <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
           </Button>
         </Link>
       </div>
       
-      <div className="divide-y divide-gray-50">
+      <div className="divide-y divide-gray-50 dark:divide-slate-800">
         {transactions.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            <p>Nenhuma transação recente</p>
+          <div className="p-6 text-center text-gray-500 dark:text-slate-400">
+            <p className="text-sm">Nenhuma transação recente</p>
           </div>
         ) : (
           transactions.slice(0, 5).map((tx) => {
             const status = statusConfig[tx.status] || statusConfig.pending;
-            const StatusIcon = status.icon;
             
             return (
-              <div key={tx.id} className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors">
+              <div key={tx.id} className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
                 <div className={cn(
-                  "w-10 h-10 rounded-lg flex items-center justify-center",
-                  tx.type === 'pix' ? 'bg-teal-100' : 'bg-blue-100'
+                  "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0",
+                  tx.type === 'pix' ? 'bg-teal-100 dark:bg-teal-900/30' : 'bg-blue-100 dark:bg-blue-900/30'
                 )}>
                   {tx.type === 'pix' ? (
-                    <QrCode className="w-5 h-5 text-teal-600" />
+                    <QrCode className="w-4 h-4 text-teal-600 dark:text-teal-400" />
                   ) : (
-                    <CreditCard className="w-5 h-5 text-blue-600" />
+                    <CreditCard className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   )}
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm text-gray-900 truncate">
-                    {tx.customer_name || 'Cliente não identificado'}
+                  <p className="font-medium text-xs text-gray-900 dark:text-white truncate">
+                    {tx.customer_name || 'Cliente'}
                   </p>
-                  <p className="text-xs text-gray-500">
-                    {tx.transaction_id} • {tx.created_date && format(new Date(tx.created_date), "dd/MM HH:mm", { locale: ptBR })}
+                  <p className="text-[10px] text-gray-500 dark:text-slate-400 truncate">
+                    {tx.transaction_id?.slice(0, 12)}... • {tx.created_date && format(new Date(tx.created_date), "dd/MM HH:mm", { locale: ptBR })}
                   </p>
                 </div>
                 
-                <div className="text-right">
-                  <p className="font-semibold text-sm text-gray-900">
+                <div className="text-right flex-shrink-0">
+                  <p className="font-semibold text-xs text-gray-900 dark:text-white">
                     {formatCurrency(tx.amount)}
                   </p>
-                  <Badge className={cn("text-xs font-medium", status.color)}>
+                  <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded", status.color)}>
                     {status.label}
-                  </Badge>
+                  </span>
                 </div>
               </div>
             );
