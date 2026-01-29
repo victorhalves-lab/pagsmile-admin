@@ -72,6 +72,12 @@ import AdminIntCommSenders from './pages/AdminIntCommSenders';
 import AdminIntCommTemplates from './pages/AdminIntCommTemplates';
 import AdminIntCommercialInsights from './pages/AdminIntCommercialInsights';
 import AdminIntCompliance from './pages/AdminIntCompliance';
+import AdminIntComplianceDocs from './pages/AdminIntComplianceDocs';
+import AdminIntComplianceForms from './pages/AdminIntComplianceForms';
+import AdminIntComplianceQueue from './pages/AdminIntComplianceQueue';
+import AdminIntComplianceReview from './pages/AdminIntComplianceReview';
+import AdminIntComplianceRules from './pages/AdminIntComplianceRules';
+import AdminIntComplianceSubmissions from './pages/AdminIntComplianceSubmissions';
 import AdminIntConciliation from './pages/AdminIntConciliation';
 import AdminIntControlLists from './pages/AdminIntControlLists';
 import AdminIntCreateProposal from './pages/AdminIntCreateProposal';
@@ -141,14 +147,13 @@ import AdminIntTransactionReports from './pages/AdminIntTransactionReports';
 import AdminIntTransactions from './pages/AdminIntTransactions';
 import AdminIntTransactionsDashboard from './pages/AdminIntTransactionsDashboard';
 import AdminIntTransactionsList from './pages/AdminIntTransactionsList';
+import ApiKeys from './pages/ApiKeys';
 import AdminIntUserDetail from './pages/AdminIntUserDetail';
 import AdminIntUsers from './pages/AdminIntUsers';
 import AdminIntWebhooks from './pages/AdminIntWebhooks';
 import AdminIntWithdrawalApprovals from './pages/AdminIntWithdrawalApprovals';
 import AdminIntWithdrawals from './pages/AdminIntWithdrawals';
 import Anticipation from './pages/Anticipation';
-import ApiKeys from './pages/ApiKeys';
-import Disputes from './pages/Disputes';
 import CardTransactions from './pages/CardTransactions';
 import Chargebacks from './pages/Chargebacks';
 import CheckoutAnalytics from './pages/CheckoutAnalytics';
@@ -169,6 +174,7 @@ import DisputeAgentSettings from './pages/DisputeAgentSettings';
 import DisputeContestation from './pages/DisputeContestation';
 import DisputeDashboard from './pages/DisputeDashboard';
 import DisputeManager from './pages/DisputeManager';
+import Disputes from './pages/Disputes';
 import DocumentUploadFull from './pages/DocumentUploadFull';
 import DocumentUploadPix from './pages/DocumentUploadPix';
 import DunningSettings from './pages/DunningSettings';
@@ -219,12 +225,7 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntComplianceQueue from './pages/AdminIntComplianceQueue';
-import AdminIntComplianceReview from './pages/AdminIntComplianceReview';
-import AdminIntComplianceSubmissions from './pages/AdminIntComplianceSubmissions';
-import AdminIntComplianceForms from './pages/AdminIntComplianceForms';
-import AdminIntComplianceDocs from './pages/AdminIntComplianceDocs';
-import AdminIntComplianceRules from './pages/AdminIntComplianceRules';
+import AdminIntMCCsAnalysis from './pages/AdminIntMCCsAnalysis';
 import __Layout from './Layout.jsx';
 
 
@@ -254,6 +255,12 @@ export const PAGES = {
     "AdminIntCommTemplates": AdminIntCommTemplates,
     "AdminIntCommercialInsights": AdminIntCommercialInsights,
     "AdminIntCompliance": AdminIntCompliance,
+    "AdminIntComplianceDocs": AdminIntComplianceDocs,
+    "AdminIntComplianceForms": AdminIntComplianceForms,
+    "AdminIntComplianceQueue": AdminIntComplianceQueue,
+    "AdminIntComplianceReview": AdminIntComplianceReview,
+    "AdminIntComplianceRules": AdminIntComplianceRules,
+    "AdminIntComplianceSubmissions": AdminIntComplianceSubmissions,
     "AdminIntConciliation": AdminIntConciliation,
     "AdminIntControlLists": AdminIntControlLists,
     "AdminIntCreateProposal": AdminIntCreateProposal,
@@ -323,14 +330,13 @@ export const PAGES = {
     "AdminIntTransactions": AdminIntTransactions,
     "AdminIntTransactionsDashboard": AdminIntTransactionsDashboard,
     "AdminIntTransactionsList": AdminIntTransactionsList,
+    "ApiKeys": ApiKeys,
     "AdminIntUserDetail": AdminIntUserDetail,
     "AdminIntUsers": AdminIntUsers,
     "AdminIntWebhooks": AdminIntWebhooks,
     "AdminIntWithdrawalApprovals": AdminIntWithdrawalApprovals,
     "AdminIntWithdrawals": AdminIntWithdrawals,
     "Anticipation": Anticipation,
-    "ApiKeys": ApiKeys,
-    "Disputes": Disputes,
     "CardTransactions": CardTransactions,
     "Chargebacks": Chargebacks,
     "CheckoutAnalytics": CheckoutAnalytics,
@@ -351,6 +357,7 @@ export const PAGES = {
     "DisputeContestation": DisputeContestation,
     "DisputeDashboard": DisputeDashboard,
     "DisputeManager": DisputeManager,
+    "Disputes": Disputes,
     "DocumentUploadFull": DocumentUploadFull,
     "DocumentUploadPix": DocumentUploadPix,
     "DunningSettings": DunningSettings,
@@ -401,12 +408,7 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntComplianceQueue": AdminIntComplianceQueue,
-    "AdminIntComplianceReview": AdminIntComplianceReview,
-    "AdminIntComplianceSubmissions": AdminIntComplianceSubmissions,
-    "AdminIntComplianceForms": AdminIntComplianceForms,
-    "AdminIntComplianceDocs": AdminIntComplianceDocs,
-    "AdminIntComplianceRules": AdminIntComplianceRules,
+    "AdminIntMCCsAnalysis": AdminIntMCCsAnalysis,
 }
 
 export const pagesConfig = {
