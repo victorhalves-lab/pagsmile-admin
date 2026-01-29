@@ -58,37 +58,32 @@ export default function PixPerformanceMetrics({ transactions = [] }) {
 
   return (
     <div className="space-y-6">
-      {/* Main Conversion Card */}
-      <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl p-6 text-white">
-        <div className="flex items-start justify-between mb-6">
+      {/* Main Conversion Card - Compact */}
+      <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl p-4 text-white">
+        <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-white/80 text-sm mb-1">Conversão Pix</p>
-            <p className="text-4xl font-bold">{conversionRate.toFixed(1)}%</p>
+            <p className="text-white/70 text-xs mb-0.5">Conversão Pix</p>
+            <p className="text-3xl font-bold">{conversionRate.toFixed(1)}%</p>
           </div>
-          <div className="p-3 bg-white/20 rounded-lg">
-            <QrCode className="w-6 h-6" />
-          </div>
+          <QrCode className="w-8 h-8 text-white/30" />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <p className="text-white/60 text-xs mb-1">QR Gerados</p>
-            <p className="text-lg font-semibold">{qrGenerated}</p>
+        <div className="grid grid-cols-4 gap-3 text-center">
+          <div className="bg-white/10 rounded-lg py-2 px-1">
+            <p className="text-white/60 text-[10px] mb-0.5">QR Gerados</p>
+            <p className="text-base font-bold">{qrGenerated}</p>
           </div>
-          <div>
-            <p className="text-white/60 text-xs mb-1">Pagos</p>
-            <p className="text-lg font-semibold">{pixPaid.length}</p>
+          <div className="bg-white/10 rounded-lg py-2 px-1">
+            <p className="text-white/60 text-[10px] mb-0.5">Pagos</p>
+            <p className="text-base font-bold text-emerald-300">{pixPaid.length}</p>
           </div>
-          <div>
-            <p className="text-white/60 text-xs mb-1">Pendentes</p>
-            <p className="text-lg font-semibold">{pixPending.length}</p>
+          <div className="bg-white/10 rounded-lg py-2 px-1">
+            <p className="text-white/60 text-[10px] mb-0.5">Pendentes</p>
+            <p className="text-base font-bold text-yellow-300">{pixPending.length}</p>
           </div>
-        </div>
-
-        <div className="mt-4 pt-4 border-t border-white/20">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-white/80">Expirados</span>
-            <span className="font-semibold">{pixExpired}</span>
+          <div className="bg-white/10 rounded-lg py-2 px-1">
+            <p className="text-white/60 text-[10px] mb-0.5">Expirados</p>
+            <p className="text-base font-bold text-red-300">{pixExpired}</p>
           </div>
         </div>
       </div>

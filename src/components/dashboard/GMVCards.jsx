@@ -32,71 +32,71 @@ export default function GMVCards({ data = {}, loading = false }) {
   const gmvMetrics = [
     {
       id: 'today',
-      label: 'GMV Hoje',
+      label: 'GMV HOJE',
       value: data.today || 0,
       change: data.todayChange || 0,
-      subtitle: 'Atualizado em tempo real',
+      subtitle: 'Tempo real',
       cardBreakdown: { card: data.todayCard || 0, pix: data.todayPix || 0 },
       icon: Zap,
-      iconBg: 'bg-gradient-to-br from-emerald-400 to-[#2bc196]',
-      cardBg: 'bg-gradient-to-br from-emerald-50 via-white to-white dark:from-emerald-950/30 dark:via-slate-900 dark:to-slate-900',
+      accentColor: 'text-emerald-600',
+      bgColor: 'bg-emerald-50 dark:bg-emerald-950/30',
       borderColor: 'border-emerald-200 dark:border-emerald-800',
-      accentColor: 'text-emerald-600'
+      iconColor: 'text-emerald-500'
     },
     {
       id: 'yesterday',
-      label: 'GMV Ontem',
+      label: 'GMV ONTEM',
       value: data.yesterday || 0,
       change: data.yesterdayChange || 0,
-      subtitle: 'Comparado com dia anterior',
+      subtitle: 'vs anterior',
       icon: Calendar,
-      iconBg: 'bg-gradient-to-br from-blue-400 to-blue-600',
-      cardBg: 'bg-gradient-to-br from-blue-50 via-white to-white dark:from-blue-950/30 dark:via-slate-900 dark:to-slate-900',
+      accentColor: 'text-blue-600',
+      bgColor: 'bg-blue-50 dark:bg-blue-950/30',
       borderColor: 'border-blue-200 dark:border-blue-800',
-      accentColor: 'text-blue-600'
+      iconColor: 'text-blue-500'
     },
     {
       id: 'last7days',
-      label: 'GMV Últimos 7 Dias',
+      label: 'GMV 7 DIAS',
       value: data.last7days || 0,
       change: data.last7daysChange || 0,
       subtitle: 'Incluindo hoje',
       showSparkline: true,
       icon: BarChart3,
-      iconBg: 'bg-gradient-to-br from-violet-400 to-purple-600',
-      cardBg: 'bg-gradient-to-br from-violet-50 via-white to-white dark:from-violet-950/30 dark:via-slate-900 dark:to-slate-900',
+      accentColor: 'text-violet-600',
+      bgColor: 'bg-violet-50 dark:bg-violet-950/30',
       borderColor: 'border-violet-200 dark:border-violet-800',
-      accentColor: 'text-violet-600'
+      iconColor: 'text-violet-500'
     },
     {
       id: 'currentMonth',
-      label: 'GMV Mês Atual',
+      label: 'GMV MÊS ATUAL',
       value: data.currentMonth || 0,
       change: data.currentMonthChange || 0,
-      subtitle: `${data.monthProgress || 0}% do mês decorrido`,
+      subtitle: `${data.monthProgress || 0}% do mês`,
       projection: data.monthProjection || 0,
       icon: Target,
-      iconBg: 'bg-gradient-to-br from-amber-400 to-orange-500',
-      cardBg: 'bg-gradient-to-br from-amber-50 via-white to-white dark:from-amber-950/30 dark:via-slate-900 dark:to-slate-900',
+      accentColor: 'text-amber-600',
+      bgColor: 'bg-amber-50 dark:bg-amber-950/30',
       borderColor: 'border-amber-200 dark:border-amber-800',
-      accentColor: 'text-amber-600'
+      iconColor: 'text-amber-500'
     },
     {
       id: 'lastMonth',
-      label: 'GMV Mês Anterior',
+      label: 'GMV MÊS ANTERIOR',
       value: data.lastMonth || 0,
       change: data.lastMonthChange || 0,
-      subtitle: 'Mês completo',
+      subtitle: 'Completo',
       icon: CalendarDays,
-      iconBg: 'bg-gradient-to-br from-slate-400 to-slate-600',
-      cardBg: 'bg-gradient-to-br from-slate-50 via-white to-white dark:from-slate-800/50 dark:via-slate-900 dark:to-slate-900',
+      accentColor: 'text-slate-600',
+      bgColor: 'bg-slate-50 dark:bg-slate-800/50',
       borderColor: 'border-slate-200 dark:border-slate-700',
-      accentColor: 'text-slate-600'
+      iconColor: 'text-slate-500'
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
       {gmvMetrics.map((metric) => {
         const IconComponent = metric.icon;
         return (
@@ -104,74 +104,65 @@ export default function GMVCards({ data = {}, loading = false }) {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Card className={cn(
-                  "cursor-pointer hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden relative group",
-                  metric.cardBg,
+                  "cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all duration-200 overflow-hidden",
+                  metric.bgColor,
                   metric.borderColor,
-                  "border-2"
+                  "border"
                 )}>
-                  {/* Decorative glow */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-current to-transparent opacity-5 blur-2xl rounded-full -translate-y-1/2 translate-x-1/2" />
-                  
-                  <CardContent className="p-5 relative">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <p className={cn("text-[10px] font-bold uppercase tracking-wider mb-1", metric.accentColor)}>
-                          {metric.label}
-                        </p>
-                        <p className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">
-                          {formatCurrency(metric.value)}
-                        </p>
-                      </div>
-                      <div className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300",
-                        metric.iconBg
-                      )}>
-                        <IconComponent className="w-5 h-5 text-white" />
-                      </div>
+                  <CardContent className="p-4">
+                    {/* Header with label and icon */}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={cn("text-[10px] font-bold tracking-wider", metric.accentColor)}>
+                        {metric.label}
+                      </span>
+                      <IconComponent className={cn("w-4 h-4", metric.iconColor)} />
                     </div>
 
-                    {/* Change Indicator */}
-                    <div className="flex items-center gap-2">
+                    {/* Value */}
+                    <p className="text-xl font-bold text-slate-800 dark:text-white mb-2 truncate">
+                      {formatCurrency(metric.value)}
+                    </p>
+
+                    {/* Change + Subtitle */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
                       <span className={cn(
-                        "flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full",
+                        "inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded",
                         metric.change > 0 
-                          ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-900/50 dark:text-emerald-300' 
+                          ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-900/50' 
                           : metric.change < 0 
-                            ? 'text-red-700 bg-red-100 dark:bg-red-900/50 dark:text-red-300' 
-                            : 'text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-300'
+                            ? 'text-red-700 bg-red-100 dark:bg-red-900/50' 
+                            : 'text-slate-600 bg-slate-100 dark:bg-slate-700'
                       )}>
                         {metric.change > 0 ? (
-                          <TrendingUp className="w-3 h-3" />
+                          <TrendingUp className="w-2.5 h-2.5" />
                         ) : metric.change < 0 ? (
-                          <TrendingDown className="w-3 h-3" />
+                          <TrendingDown className="w-2.5 h-2.5" />
                         ) : null}
                         {formatPercentage(metric.change)}
                       </span>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">{metric.subtitle}</span>
+                      <span className="text-[10px] text-slate-500 truncate">{metric.subtitle}</span>
                     </div>
 
                     {/* Projection */}
                     {metric.projection > 0 && (
-                      <div className="mt-3 pt-3 border-t border-dashed border-slate-200 dark:border-slate-700">
-                        <div className="flex items-center gap-2">
-                          <Sparkles className="w-3 h-3 text-amber-500" />
-                          <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Projeção: <span className="font-bold text-amber-600 dark:text-amber-400">{formatCurrency(metric.projection)}</span>
-                          </p>
-                        </div>
+                      <div className="mt-2 pt-2 border-t border-dashed border-slate-200 dark:border-slate-600">
+                        <p className="text-[10px] text-slate-500 flex items-center gap-1">
+                          <Sparkles className="w-2.5 h-2.5 text-amber-500" />
+                          Proj: <span className="font-semibold text-amber-600">{formatCurrency(metric.projection)}</span>
+                        </p>
                       </div>
                     )}
 
                     {/* Mini Sparkline */}
                     {metric.showSparkline && (
-                      <div className="mt-4 h-8">
-                        <div className="flex items-end justify-between h-full gap-1">
+                      <div className="mt-2 h-6">
+                        <div className="flex items-end justify-between h-full gap-0.5">
                           {[45, 52, 48, 61, 55, 67, 72].map((val, idx) => (
                             <div
                               key={idx}
                               className={cn(
-                                "rounded-t-md flex-1 transition-all duration-300 group-hover:opacity-100",
-                                idx === 6 ? "bg-gradient-to-t from-violet-500 to-violet-400 opacity-100" : "bg-violet-300 dark:bg-violet-600 opacity-60"
+                                "rounded-sm flex-1",
+                                idx === 6 ? "bg-violet-500" : "bg-violet-300 dark:bg-violet-600"
                               )}
                               style={{ height: `${(val / 72) * 100}%` }}
                             />
@@ -184,24 +175,22 @@ export default function GMVCards({ data = {}, loading = false }) {
               </TooltipTrigger>
               <TooltipContent className="bg-slate-900 border-slate-700">
                 {metric.cardBreakdown && (
-                  <div className="space-y-2 p-1">
-                    <p className="text-xs font-bold text-white flex items-center gap-2">
-                      <DollarSign className="w-3 h-3 text-[#2bc196]" /> Detalhamento:
+                  <div className="space-y-1.5 p-1">
+                    <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                      <DollarSign className="w-3 h-3 text-[#2bc196]" /> Detalhamento
                     </p>
-                    <div className="space-y-1">
-                      <p className="text-xs text-slate-300 flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-                        Cartão: {formatCurrency(metric.cardBreakdown.card)}
-                      </p>
-                      <p className="text-xs text-slate-300 flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#2bc196]"></span>
-                        Pix: {formatCurrency(metric.cardBreakdown.pix)}
-                      </p>
-                    </div>
+                    <p className="text-xs text-slate-300 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                      Cartão: {formatCurrency(metric.cardBreakdown.card)}
+                    </p>
+                    <p className="text-xs text-slate-300 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#2bc196]" />
+                      Pix: {formatCurrency(metric.cardBreakdown.pix)}
+                    </p>
                   </div>
                 )}
                 {!metric.cardBreakdown && (
-                  <p className="text-xs text-slate-300">Clique para ver detalhes</p>
+                  <p className="text-xs text-slate-300">Clique para detalhes</p>
                 )}
               </TooltipContent>
             </Tooltip>
