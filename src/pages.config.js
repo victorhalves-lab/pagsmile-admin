@@ -208,6 +208,12 @@ import AdminIntCompliance from './pages/AdminIntCompliance';
 import AdminIntGlobalRates from './pages/AdminIntGlobalRates';
 import AdminIntRiskParams from './pages/AdminIntRiskParams';
 import AdminIntTemplates from './pages/AdminIntTemplates';
+import AdminIntReportsHub from './pages/AdminIntReportsHub';
+import AdminIntReportsOperational from './pages/AdminIntReportsOperational';
+import AdminIntReportsFinancial from './pages/AdminIntReportsFinancial';
+import AdminIntReportsRisk from './pages/AdminIntReportsRisk';
+import AdminIntReportsCustom from './pages/AdminIntReportsCustom';
+import AdminIntAnalytics from './pages/AdminIntAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -373,6 +379,12 @@ export const PAGES = {
     "AdminIntGlobalRates": AdminIntGlobalRates,
     "AdminIntRiskParams": AdminIntRiskParams,
     "AdminIntTemplates": AdminIntTemplates,
+    "AdminIntReportsHub": AdminIntReportsHub,
+    "AdminIntReportsOperational": AdminIntReportsOperational,
+    "AdminIntReportsFinancial": AdminIntReportsFinancial,
+    "AdminIntReportsRisk": AdminIntReportsRisk,
+    "AdminIntReportsCustom": AdminIntReportsCustom,
+    "AdminIntAnalytics": AdminIntAnalytics,
 }
 
 export const pagesConfig = {
