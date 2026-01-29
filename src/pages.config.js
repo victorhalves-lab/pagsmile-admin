@@ -49,7 +49,6 @@
  */
 import AccountCreationStep1 from './pages/AccountCreationStep1';
 import AccountCreationStep3 from './pages/AccountCreationStep3';
-import AdminIntActivation from './pages/AdminIntActivation';
 import AdminIntAiAgents from './pages/AdminIntAiAgents';
 import AdminIntAnalytics from './pages/AdminIntAnalytics';
 import AdminIntAnticipation from './pages/AdminIntAnticipation';
@@ -62,7 +61,6 @@ import AdminIntBlockages from './pages/AdminIntBlockages';
 import AdminIntCentralLinks from './pages/AdminIntCentralLinks';
 import AdminIntChargebacks from './pages/AdminIntChargebacks';
 import AdminIntChargebacksList from './pages/AdminIntChargebacksList';
-import AdminIntComercial from './pages/AdminIntComercial';
 import AdminIntCommAutomations from './pages/AdminIntCommAutomations';
 import AdminIntCommDashboard from './pages/AdminIntCommDashboard';
 import AdminIntCommLogs from './pages/AdminIntCommLogs';
@@ -84,12 +82,9 @@ import AdminIntGlobalRates from './pages/AdminIntGlobalRates';
 import AdminIntGoalsPerformance from './pages/AdminIntGoalsPerformance';
 import AdminIntIntegrationDetail from './pages/AdminIntIntegrationDetail';
 import AdminIntIntegrations from './pages/AdminIntIntegrations';
-import AdminIntInvoices from './pages/AdminIntInvoices';
-import AdminIntKYC from './pages/AdminIntKYC';
 import AdminIntKYCQueue from './pages/AdminIntKYCQueue';
 import AdminIntKycAnalysis from './pages/AdminIntKycAnalysis';
 import AdminIntLeadProfile from './pages/AdminIntLeadProfile';
-import AdminIntLeads from './pages/AdminIntLeads';
 import AdminIntMCCDetail from './pages/AdminIntMCCDetail';
 import AdminIntMCCs from './pages/AdminIntMCCs';
 import AdminIntMEDsList from './pages/AdminIntMEDsList';
@@ -101,18 +96,13 @@ import AdminIntMerchantTags from './pages/AdminIntMerchantTags';
 import AdminIntMerchants from './pages/AdminIntMerchants';
 import AdminIntMerchantsList from './pages/AdminIntMerchantsList';
 import AdminIntNewMerchant from './pages/AdminIntNewMerchant';
-import AdminIntOnboardingDash from './pages/AdminIntOnboardingDash';
-import AdminIntOnboardingQueue from './pages/AdminIntOnboardingQueue';
 import AdminIntPLD from './pages/AdminIntPLD';
 import AdminIntPartnerDetail from './pages/AdminIntPartnerDetail';
 import AdminIntPartners from './pages/AdminIntPartners';
-import AdminIntPipeline from './pages/AdminIntPipeline';
 import AdminIntPreChargebacks from './pages/AdminIntPreChargebacks';
 import AdminIntPriceSimulator from './pages/AdminIntPriceSimulator';
 import AdminIntProfiles from './pages/AdminIntProfiles';
 import AdminIntProposalDetails from './pages/AdminIntProposalDetails';
-import AdminIntProposals from './pages/AdminIntProposals';
-import AdminIntQuestionnaires from './pages/AdminIntQuestionnaires';
 import AdminIntReconciliation from './pages/AdminIntReconciliation';
 import AdminIntReports from './pages/AdminIntReports';
 import AdminIntReportsCustom from './pages/AdminIntReportsCustom';
@@ -127,7 +117,6 @@ import AdminIntRiskDashboard from './pages/AdminIntRiskDashboard';
 import AdminIntRiskParams from './pages/AdminIntRiskParams';
 import AdminIntRiskRules from './pages/AdminIntRiskRules';
 import AdminIntRollingReserve from './pages/AdminIntRollingReserve';
-import AdminIntSelfService from './pages/AdminIntSelfService';
 import AdminIntSettings from './pages/AdminIntSettings';
 import AdminIntSettlement from './pages/AdminIntSettlement';
 import AdminIntSettlements from './pages/AdminIntSettlements';
@@ -219,13 +208,15 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
+import AdminIntCompliance from './pages/AdminIntCompliance';
+import AdminIntConciliation from './pages/AdminIntConciliation';
+import AdminIntPaymentAgenda from './pages/AdminIntPaymentAgenda';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AccountCreationStep1": AccountCreationStep1,
     "AccountCreationStep3": AccountCreationStep3,
-    "AdminIntActivation": AdminIntActivation,
     "AdminIntAiAgents": AdminIntAiAgents,
     "AdminIntAnalytics": AdminIntAnalytics,
     "AdminIntAnticipation": AdminIntAnticipation,
@@ -238,7 +229,6 @@ export const PAGES = {
     "AdminIntCentralLinks": AdminIntCentralLinks,
     "AdminIntChargebacks": AdminIntChargebacks,
     "AdminIntChargebacksList": AdminIntChargebacksList,
-    "AdminIntComercial": AdminIntComercial,
     "AdminIntCommAutomations": AdminIntCommAutomations,
     "AdminIntCommDashboard": AdminIntCommDashboard,
     "AdminIntCommLogs": AdminIntCommLogs,
@@ -260,12 +250,9 @@ export const PAGES = {
     "AdminIntGoalsPerformance": AdminIntGoalsPerformance,
     "AdminIntIntegrationDetail": AdminIntIntegrationDetail,
     "AdminIntIntegrations": AdminIntIntegrations,
-    "AdminIntInvoices": AdminIntInvoices,
-    "AdminIntKYC": AdminIntKYC,
     "AdminIntKYCQueue": AdminIntKYCQueue,
     "AdminIntKycAnalysis": AdminIntKycAnalysis,
     "AdminIntLeadProfile": AdminIntLeadProfile,
-    "AdminIntLeads": AdminIntLeads,
     "AdminIntMCCDetail": AdminIntMCCDetail,
     "AdminIntMCCs": AdminIntMCCs,
     "AdminIntMEDsList": AdminIntMEDsList,
@@ -277,18 +264,13 @@ export const PAGES = {
     "AdminIntMerchants": AdminIntMerchants,
     "AdminIntMerchantsList": AdminIntMerchantsList,
     "AdminIntNewMerchant": AdminIntNewMerchant,
-    "AdminIntOnboardingDash": AdminIntOnboardingDash,
-    "AdminIntOnboardingQueue": AdminIntOnboardingQueue,
     "AdminIntPLD": AdminIntPLD,
     "AdminIntPartnerDetail": AdminIntPartnerDetail,
     "AdminIntPartners": AdminIntPartners,
-    "AdminIntPipeline": AdminIntPipeline,
     "AdminIntPreChargebacks": AdminIntPreChargebacks,
     "AdminIntPriceSimulator": AdminIntPriceSimulator,
     "AdminIntProfiles": AdminIntProfiles,
     "AdminIntProposalDetails": AdminIntProposalDetails,
-    "AdminIntProposals": AdminIntProposals,
-    "AdminIntQuestionnaires": AdminIntQuestionnaires,
     "AdminIntReconciliation": AdminIntReconciliation,
     "AdminIntReports": AdminIntReports,
     "AdminIntReportsCustom": AdminIntReportsCustom,
@@ -303,7 +285,6 @@ export const PAGES = {
     "AdminIntRiskParams": AdminIntRiskParams,
     "AdminIntRiskRules": AdminIntRiskRules,
     "AdminIntRollingReserve": AdminIntRollingReserve,
-    "AdminIntSelfService": AdminIntSelfService,
     "AdminIntSettings": AdminIntSettings,
     "AdminIntSettlement": AdminIntSettlement,
     "AdminIntSettlements": AdminIntSettlements,
@@ -395,6 +376,9 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
+    "AdminIntCompliance": AdminIntCompliance,
+    "AdminIntConciliation": AdminIntConciliation,
+    "AdminIntPaymentAgenda": AdminIntPaymentAgenda,
 }
 
 export const pagesConfig = {

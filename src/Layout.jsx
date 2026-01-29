@@ -212,40 +212,23 @@ const adminInternoMenuItems = [
     icon: LayoutDashboard,
     page: 'AdminIntDashboard',
   },
+
   {
-    id: 'comercial',
-    label: 'Comercial',
-    icon: Briefcase,
-    page: 'AdminIntComercial',
-    submenu: [
-      { label: 'Dashboard Comercial', page: 'AdminIntComercial' },
-      { label: 'Gestão de Leads', page: 'AdminIntLeads' },
-      { label: 'Pipeline de Vendas', page: 'AdminIntPipeline' },
-      { label: 'Propostas', page: 'AdminIntProposals' },
-      { label: 'Questionários', page: 'AdminIntQuestionnaires' },
-    ]
-  },
-  {
-    id: 'onboarding',
-    label: 'Onboarding',
-    icon: UserPlus,
-    page: 'AdminIntOnboardingDash',
-    submenu: [
-      { label: 'Dashboard', page: 'AdminIntOnboardingDash' },
-      { label: 'Fila de Onboarding', page: 'AdminIntOnboardingQueue' },
-      { label: 'Contas Self-Service', page: 'AdminIntSelfService' },
-      { label: 'Workflow', page: 'AdminIntActivation' },
-    ]
-  },
-  {
-    id: 'kyc',
-    label: 'KYC & Compliance',
+    id: 'compliance',
+    label: 'QIC Compliance',
     icon: ShieldCheck,
-    page: 'AdminIntKYC',
+    page: 'AdminIntCompliance',
     submenu: [
-      { label: 'Análise de KYC', page: 'AdminIntKYC' },
-      { label: 'PLD/AML', page: 'AdminIntPLD' },
-      { label: 'Documentação', page: 'AdminIntDocs' },
+      { label: 'Dashboard', page: 'AdminIntCompliance' },
+      { label: 'Fila de Compliance', page: 'AdminIntComplianceQueue' },
+      { label: 'Análise Manual', page: 'AdminIntComplianceReview' },
+      { label: 'Submissões', page: 'AdminIntComplianceSubmissions' },
+      { label: 'Gestão de Forms', page: 'AdminIntComplianceForms' },
+      { label: 'Documentos', page: 'AdminIntComplianceDocs' },
+      { label: 'Regras & Workflows', page: 'AdminIntComplianceRules' },
+      { label: 'Auditoria', page: 'AdminIntComplianceAudit' },
+      { label: 'Helena IA', page: 'AdminIntComplianceHelena' },
+      { label: 'Link do Formulário', page: 'AdminIntComplianceFormLink' },
     ]
   },
   {
@@ -282,11 +265,12 @@ const adminInternoMenuItems = [
     page: 'AdminIntFinancialDashboard',
     submenu: [
       { label: 'Dashboard', page: 'AdminIntFinancialDashboard' },
+      { label: 'Conciliação', page: 'AdminIntConciliation' },
+      { label: 'Agenda de Pagamentos', page: 'AdminIntPaymentAgenda' },
       { label: 'Liquidações', page: 'AdminIntSettlements' },
       { label: 'Saques', page: 'AdminIntWithdrawals' },
       { label: 'Antecipação', page: 'AdminIntAnticipations' },
       { label: 'Extratos', page: 'AdminIntStatements' },
-      { label: 'Faturas', page: 'AdminIntInvoices' },
       { label: 'Gestão de Saldos', page: 'AdminIntBalanceManagement' },
     ]
   },
@@ -419,12 +403,14 @@ const internetBankingPages = [
 
 // Admin Interno pages
 const adminInternoPages = [
-  'AdminIntDashboard', 'AdminIntComercial', 'AdminIntLeads', 'AdminIntPipeline', 'AdminIntProposals', 'AdminIntQuestionnaires',
-  'AdminIntOnboardingDash', 'AdminIntOnboardingQueue', 'AdminIntSelfService', 'AdminIntActivation',
-  'AdminIntKYC', 'AdminIntPLD', 'AdminIntDocs', 'AdminIntSubaccountDetail', 'AdminIntKYCQueue', 'AdminIntKycAnalysis',
+  'AdminIntDashboard',
+  'AdminIntCompliance', 'AdminIntComplianceQueue', 'AdminIntComplianceReview', 'AdminIntComplianceSubmissions',
+  'AdminIntComplianceForms', 'AdminIntComplianceDocs', 'AdminIntComplianceRules', 'AdminIntComplianceAudit',
+  'AdminIntComplianceHelena', 'AdminIntComplianceFormLink',
+  'AdminIntSubaccountDetail', 'AdminIntKYCQueue', 'AdminIntKycAnalysis',
   'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts', 'AdminIntMerchantsList', 'AdminIntNewMerchant', 'AdminIntMerchantGroups', 'AdminIntMerchantTags', 'AdminIntMerchantReports',
   'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList', 'AdminIntTransactionDetail', 'AdminIntBatchProcessing', 'AdminIntTransactionReports',
-  'AdminIntFinancialDashboard', 'AdminIntSettlements', 'AdminIntWithdrawals', 'AdminIntAnticipations', 'AdminIntStatements', 'AdminIntInvoices', 'AdminIntBalanceManagement',
+  'AdminIntFinancialDashboard', 'AdminIntSettlements', 'AdminIntWithdrawals', 'AdminIntAnticipations', 'AdminIntStatements', 'AdminIntBalanceManagement', 'AdminIntConciliation', 'AdminIntPaymentAgenda',
   'AdminIntRiskDashboard', 'AdminIntFraudMonitoring', 'AdminIntChargebacksList', 'AdminIntMEDsList', 'AdminIntRiskRules', 'AdminIntControlLists', 'AdminIntRiskAlerts', 'AdminIntCompliance',
   'AdminIntSettings', 'AdminIntUsers', 'AdminIntProfiles', 'AdminIntGlobalRates', 'AdminIntRiskParams', 'AdminIntIntegrations', 'AdminIntTemplates', 'AdminIntSystemLogs',
   'AdminIntReportsHub', 'AdminIntReportsOperational', 'AdminIntReportsFinancial', 'AdminIntReportsRisk', 'AdminIntReportsCustom', 'AdminIntAnalytics',
