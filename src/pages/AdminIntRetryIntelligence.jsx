@@ -23,6 +23,7 @@ const KPICard = ({ title, value, subtitle, icon: Icon, trend, trendValue, color 
     red: { bg: "bg-red-50 dark:bg-red-900/20", icon: "text-red-600", border: "border-red-100 dark:border-red-800" },
     amber: { bg: "bg-amber-50 dark:bg-amber-900/20", icon: "text-amber-600", border: "border-amber-100 dark:border-amber-800" },
     purple: { bg: "bg-purple-50 dark:bg-purple-900/20", icon: "text-purple-600", border: "border-purple-100 dark:border-purple-800" },
+    teal: { bg: "bg-teal-50 dark:bg-teal-900/20", icon: "text-teal-600", border: "border-teal-100 dark:border-teal-800" },
   };
   const colors = colorClasses[color];
 
