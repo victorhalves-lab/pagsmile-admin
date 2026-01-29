@@ -70,7 +70,9 @@ const DEFAULT_COLUMNS = [
   { key: 'type', label: 'Método', visible: true, sortable: true },
   { key: 'amount', label: 'Valor', visible: true, sortable: true },
   { key: 'status', label: 'Status', visible: true, sortable: true },
-  { key: 'customer', label: 'Cliente', visible: true, sortable: true },
+  { key: 'merchant', label: 'Cliente (Merchant)', visible: true, sortable: true },
+  { key: 'customer', label: 'Pagador', visible: true, sortable: true },
+  { key: 'sub_seller', label: 'Sub-seller', visible: false, sortable: true },
   { key: 'card_brand', label: 'Bandeira', visible: false, sortable: true },
   { key: 'card_last_four', label: 'Últimos 4', visible: false },
   { key: 'installments', label: 'Parcelas', visible: false, sortable: true },
@@ -81,19 +83,37 @@ const DEFAULT_COLUMNS = [
 ];
 
 const CARD_COLUMNS = [
-  ...DEFAULT_COLUMNS,
+  { key: 'transaction_id', label: 'ID', visible: true, sortable: true },
+  { key: 'created_date', label: 'Data/Hora', visible: true, sortable: true },
+  { key: 'type', label: 'Método', visible: true, sortable: true },
+  { key: 'amount', label: 'Valor', visible: true, sortable: true },
+  { key: 'status', label: 'Status', visible: true, sortable: true },
+  { key: 'merchant', label: 'Cliente (Merchant)', visible: true, sortable: true },
+  { key: 'customer', label: 'Pagador', visible: true, sortable: true },
+  { key: 'sub_seller', label: 'Sub-seller', visible: true, sortable: true },
+  { key: 'card_brand', label: 'Bandeira', visible: true, sortable: true },
+  { key: 'card_last_four', label: 'Últimos 4', visible: false },
+  { key: 'installments', label: 'Parcelas', visible: true, sortable: true },
   { key: 'bin', label: 'BIN', visible: true },
   { key: 'issuer', label: 'Emissor', visible: false },
   { key: 'authorization_code', label: 'Cód. Autorização', visible: false },
   { key: 'threeds', label: '3DS', visible: true },
+  { key: 'net_amount', label: 'Líquido', visible: false, sortable: true },
+  { key: 'fee_amount', label: 'Taxa', visible: false },
 ];
 
 const PIX_COLUMNS = [
-  ...DEFAULT_COLUMNS.filter(c => !['card_brand', 'card_last_four', 'installments'].includes(c.key)),
+  { key: 'transaction_id', label: 'ID', visible: true, sortable: true },
+  { key: 'created_date', label: 'Data/Hora', visible: true, sortable: true },
   { key: 'pix_transaction_type', label: 'Tipo PIX', visible: true, sortable: true },
+  { key: 'amount', label: 'Valor', visible: true, sortable: true },
+  { key: 'status', label: 'Status', visible: true, sortable: true },
+  { key: 'merchant', label: 'Cliente (Merchant)', visible: true, sortable: true },
+  { key: 'payer', label: 'Pagador', visible: true, sortable: true },
   { key: 'e2eid', label: 'E2EID', visible: true },
-  { key: 'pix_type', label: 'Tipo Cobrança', visible: true },
+  { key: 'pix_type', label: 'Tipo Cobrança', visible: false },
   { key: 'payment_time', label: 'Tempo Pgto', visible: false },
+  { key: 'net_amount', label: 'Líquido', visible: false, sortable: true },
 ];
 
 export default function TransactionDataTable({
@@ -264,11 +284,40 @@ export default function TransactionDataTable({
       case 'status':
         return <StatusBadge status={row.status} />;
 
+      case 'merchant':
+        return (
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-gray-900 truncate">{row?.merchant_name || row?.subaccount_name || 'N/A'}</p>
+            <p className="text-xs text-gray-500 truncate">{row?.subaccount_id ? `ID: ${row.subaccount_id.slice(0, 8)}...` : ''}</p>
+          </div>
+        );
+
       case 'customer':
         return (
           <div className="min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">{row?.customer_name || 'N/A'}</p>
-            <p className="text-xs text-gray-500 truncate">{row?.customer_email || ''}</p>
+            <p className="text-sm font-medium text-gray-900 truncate">{row?.customer?.name || row?.customer_name || 'N/A'}</p>
+            <p className="text-xs text-gray-500 truncate">{row?.customer?.email || row?.customer_email || ''}</p>
+          </div>
+        );
+
+      case 'payer':
+        return (
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-gray-900 truncate">{row?.customer?.name || row?.customer_name || row?.payer_name || 'N/A'}</p>
+            <p className="text-xs text-gray-500 truncate">{row?.customer?.document || row?.payer_document || ''}</p>
+          </div>
+        );
+
+      case 'sub_seller':
+        if (!row?.sub_seller_name && !row?.split_rules?.length) return '-';
+        return (
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-purple-700 truncate">
+              {row?.sub_seller_name || (row?.split_rules?.[0]?.recipient_id ? `Split: ${row.split_rules[0].recipient_id.slice(0, 8)}...` : '-')}
+            </p>
+            {row?.split_rules?.length > 1 && (
+              <p className="text-xs text-purple-500">+{row.split_rules.length - 1} outros</p>
+            )}
           </div>
         );
 
