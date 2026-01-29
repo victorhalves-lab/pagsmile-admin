@@ -215,7 +215,7 @@ const adminInternoMenuItems = [
 
   {
     id: 'compliance',
-    label: 'QIC Compliance',
+    label: 'KYC Compliance',
     icon: ShieldCheck,
     page: 'AdminIntCompliance',
     submenu: [
