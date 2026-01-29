@@ -37,7 +37,10 @@ import {
   RefreshCw,
   Plus,
   Timer,
-  Percent
+  Percent,
+  ArrowDownLeft,
+  ArrowUpRight,
+  Wallet
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -58,6 +61,7 @@ export default function PixTransactionsView() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [activeSubTab, setActiveSubTab] = useState('all');
+  const [pixTypeFilter, setPixTypeFilter] = useState('all'); // 'all', 'in', 'out'
   const [showNewQRDialog, setShowNewQRDialog] = useState(false);
   const [showRefundDialog, setShowRefundDialog] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -83,15 +87,30 @@ export default function PixTransactionsView() {
 
 
 
-  // Pix-specific metrics
+  // Pix-specific metrics with In/Out separation
   const metrics = useMemo(() => {
     const paid = transactions.filter(t => t.status === 'approved');
     const pending = transactions.filter(t => t.status === 'pending');
     const expired = transactions.filter(t => t.status === 'expired');
     const refunded = transactions.filter(t => t.status === 'refunded');
 
+    // PIX In/Out separation
+    const pixIn = transactions.filter(t => t.pix_transaction_type === 'in' || !t.pix_transaction_type);
+    const pixOut = transactions.filter(t => t.pix_transaction_type === 'out');
+    const pixInPaid = pixIn.filter(t => t.status === 'approved');
+    const pixOutPaid = pixOut.filter(t => t.status === 'approved');
+
     const totalGenerated = paid.length + pending.length + expired.length;
     const conversionRate = totalGenerated > 0 ? (paid.length / totalGenerated) * 100 : 0;
+
+    // Conversion rate by type
+    const pixInTotal = pixIn.length;
+    const pixInApproved = pixIn.filter(t => t.status === 'approved').length;
+    const pixOutTotal = pixOut.length;
+    const pixOutApproved = pixOut.filter(t => t.status === 'approved').length;
+
+    const conversionRateIn = pixInTotal > 0 ? (pixInApproved / pixInTotal) * 100 : 0;
+    const conversionRateOut = pixOutTotal > 0 ? (pixOutApproved / pixOutTotal) * 100 : 0;
 
     // Calculate average payment time (mock)
     const avgPaymentTime = 3.5; // minutes
@@ -116,7 +135,19 @@ export default function PixTransactionsView() {
       refundedValue: refunded.reduce((sum, t) => sum + (t.amount || 0), 0),
       conversionRate,
       avgPaymentTime,
-      peakHour
+      peakHour,
+      // PIX In metrics
+      pixInCount: pixIn.length,
+      pixInPaidCount: pixInPaid.length,
+      pixInVolume: pixInPaid.reduce((sum, t) => sum + (t.amount || 0), 0),
+      conversionRateIn,
+      // PIX Out metrics
+      pixOutCount: pixOut.length,
+      pixOutPaidCount: pixOutPaid.length,
+      pixOutVolume: pixOutPaid.reduce((sum, t) => sum + (t.amount || 0), 0),
+      conversionRateOut,
+      // Net balance
+      pixNetBalance: pixInPaid.reduce((sum, t) => sum + (t.amount || 0), 0) - pixOutPaid.reduce((sum, t) => sum + (t.amount || 0), 0)
     };
   }, [transactions]);
 
@@ -148,8 +179,15 @@ export default function PixTransactionsView() {
       result = result.filter(tx => tx.status === 'refunded');
     }
 
+    // PIX In/Out filtering
+    if (pixTypeFilter === 'in') {
+      result = result.filter(tx => tx.pix_transaction_type === 'in' || !tx.pix_transaction_type);
+    } else if (pixTypeFilter === 'out') {
+      result = result.filter(tx => tx.pix_transaction_type === 'out');
+    }
+
     return result;
-  }, [transactions, filters, activeSubTab]);
+  }, [transactions, filters, activeSubTab, pixTypeFilter]);
 
   const paginatedTransactions = useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -183,13 +221,83 @@ export default function PixTransactionsView() {
 
   return (
     <div className="space-y-6">
+      {/* PIX In/Out Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border-emerald-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                  <ArrowDownLeft className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <span className="text-xs font-medium text-emerald-600 uppercase">PIX Entrada</span>
+                  <p className="text-xs text-emerald-500">{metrics.pixInCount} transações</p>
+                </div>
+              </div>
+              <Badge className="bg-emerald-100 text-emerald-700 border-0">
+                {metrics.conversionRateIn.toFixed(1)}% conv.
+              </Badge>
+            </div>
+            <p className="text-2xl font-bold text-emerald-700">{formatCurrency(metrics.pixInVolume)}</p>
+            <p className="text-xs text-emerald-600 mt-1">{metrics.pixInPaidCount} pagos de {metrics.pixInCount} gerados</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-red-50 to-red-100/50 border-red-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
+                  <ArrowUpRight className="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                  <span className="text-xs font-medium text-red-600 uppercase">PIX Saída</span>
+                  <p className="text-xs text-red-500">{metrics.pixOutCount} transações</p>
+                </div>
+              </div>
+              <Badge className="bg-red-100 text-red-700 border-0">
+                {metrics.conversionRateOut.toFixed(1)}% conv.
+              </Badge>
+            </div>
+            <p className="text-2xl font-bold text-red-700">{formatCurrency(metrics.pixOutVolume)}</p>
+            <p className="text-xs text-red-600 mt-1">{metrics.pixOutPaidCount} enviados de {metrics.pixOutCount} solicitados</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-blue-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                  <Wallet className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <span className="text-xs font-medium text-blue-600 uppercase">Saldo Líquido PIX</span>
+                  <p className="text-xs text-blue-500">Entrada - Saída</p>
+                </div>
+              </div>
+            </div>
+            <p className={cn(
+              "text-2xl font-bold",
+              metrics.pixNetBalance >= 0 ? "text-blue-700" : "text-red-700"
+            )}>
+              {formatCurrency(metrics.pixNetBalance)}
+            </p>
+            <p className="text-xs text-blue-600 mt-1">
+              {metrics.pixNetBalance >= 0 ? 'Saldo positivo' : 'Saldo negativo'}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Pix Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         <Card className="bg-gradient-to-br from-teal-50 to-teal-100/50">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
               <QrCode className="w-5 h-5 text-teal-600" />
-              <span className="text-xs font-medium text-gray-500 uppercase">Volume Pix</span>
+              <span className="text-xs font-medium text-gray-500 uppercase">Volume Total</span>
             </div>
             <p className="text-xl font-bold text-teal-700">{formatCurrency(metrics.totalVolume)}</p>
             <p className="text-xs text-gray-500">{metrics.paidCount} pagos</p>
@@ -200,7 +308,7 @@ export default function PixTransactionsView() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
               <Percent className="w-5 h-5 text-emerald-600" />
-              <span className="text-xs font-medium text-gray-500 uppercase">Conversão</span>
+              <span className="text-xs font-medium text-gray-500 uppercase">Conversão Geral</span>
             </div>
             <p className="text-xl font-bold text-emerald-600">{metrics.conversionRate.toFixed(1)}%</p>
             <p className="text-xs text-gray-500">QRs pagos</p>
@@ -261,6 +369,56 @@ export default function PixTransactionsView() {
           <Plus className="w-4 h-4 mr-2" />
           Gerar Novo QR Pix
         </Button>
+      </div>
+
+      {/* PIX Type Filter (In/Out) */}
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-slate-600">Tipo PIX:</span>
+          <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
+            <Button
+              variant={pixTypeFilter === 'all' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setPixTypeFilter('all')}
+              className={cn(
+                "h-8",
+                pixTypeFilter === 'all' && "bg-white shadow-sm"
+              )}
+            >
+              Todos
+            </Button>
+            <Button
+              variant={pixTypeFilter === 'in' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setPixTypeFilter('in')}
+              className={cn(
+                "h-8 gap-1",
+                pixTypeFilter === 'in' && "bg-emerald-500 text-white hover:bg-emerald-600"
+              )}
+            >
+              <ArrowDownLeft className="w-3 h-3" />
+              Entrada
+              <Badge className="ml-1 bg-emerald-100 text-emerald-700 px-1.5 py-0 text-xs border-0">
+                {metrics.pixInCount}
+              </Badge>
+            </Button>
+            <Button
+              variant={pixTypeFilter === 'out' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setPixTypeFilter('out')}
+              className={cn(
+                "h-8 gap-1",
+                pixTypeFilter === 'out' && "bg-red-500 text-white hover:bg-red-600"
+              )}
+            >
+              <ArrowUpRight className="w-3 h-3" />
+              Saída
+              <Badge className="ml-1 bg-red-100 text-red-700 px-1.5 py-0 text-xs border-0">
+                {metrics.pixOutCount}
+              </Badge>
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* Sub-tabs for Pix Specific Views */}

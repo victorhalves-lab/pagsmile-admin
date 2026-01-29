@@ -31,6 +31,7 @@ import TabSplit from '@/components/admin-interno/merchant-profile/tabs/TabSplit'
 import TabRecorrencia from '@/components/admin-interno/merchant-profile/tabs/TabRecorrencia';
 import TabClientUsers from '@/components/admin-interno/merchant-profile/tabs/TabClientUsers';
 import TabSubSellers from '@/components/admin-interno/merchant-profile/tabs/TabSubSellers';
+import TabPerformance from '@/components/admin-interno/merchant-profile/tabs/TabPerformance';
 
 
 
@@ -68,6 +69,7 @@ export default function AdminIntMerchantProfile() {
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                 <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto p-1 bg-white dark:bg-slate-800 border rounded-lg mb-4 gap-1">
                     <TabsTrigger value="resumo">📊 Resumo</TabsTrigger>
+                    <TabsTrigger value="performance">📈 Performance</TabsTrigger>
                     <TabsTrigger value="dados">📝 Dados</TabsTrigger>
                     <TabsTrigger value="config">⚙️ Config</TabsTrigger>
                     <TabsTrigger value="taxas">💰 Taxas</TabsTrigger>
@@ -94,6 +96,7 @@ export default function AdminIntMerchantProfile() {
                 </TabsList>
 
                 <TabsContent value="resumo"><TabResumo merchant={merchant} /></TabsContent>
+                <TabsContent value="performance"><TabPerformance merchant={merchant} /></TabsContent>
                 <TabsContent value="dados"><TabDadosCadastrais merchant={merchant} /></TabsContent>
                 <TabsContent value="taxas"><TabTaxas merchant={merchant} /></TabsContent>
                 <TabsContent value="config"><TabConfiguracoes merchant={merchant} /></TabsContent>
