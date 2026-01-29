@@ -340,6 +340,7 @@ const adminInternoMenuItems = [
       { label: 'Templates', page: 'AdminIntTemplates' },
       { label: 'Logs e Auditoria', page: 'AdminIntSystemLogs' },
       { label: 'MCCs', page: 'AdminIntMCCs' },
+      { label: 'Análise MCCs', page: 'AdminIntMCCsAnalysis' },
       { label: 'Parceiros & Custos', page: 'AdminIntPartners' },
       { label: 'Planos de Taxas', page: 'AdminIntFeePlans' },
       { label: 'Agentes IA', page: 'AdminIntAiAgents' },
@@ -423,7 +424,7 @@ const adminInternoPages = [
   'AdminIntReportsHub', 'AdminIntReportsOperational', 'AdminIntReportsFinancial', 'AdminIntReportsRisk', 'AdminIntReportsCustom', 'AdminIntAnalytics',
   'AdminIntCommDashboard', 'AdminIntCommAutomations', 'AdminIntCommTemplates', 'AdminIntCommSMTP', 'AdminIntCommSenders', 'AdminIntCommLogs',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
-  'AdminIntMCCs', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
+  'AdminIntMCCs', 'AdminIntMCCsAnalysis', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
 ];
 
 import { Sun, Moon } from 'lucide-react';
