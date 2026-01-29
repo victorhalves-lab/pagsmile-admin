@@ -258,6 +258,7 @@ export default function AdminIntTransactionsList() {
                   <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">ID / Referência</th>
                   <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Data</th>
                   <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Merchant</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Pagador</th>
                   <th className="text-right py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Valor</th>
                   <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Método</th>
                   <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Status</th>
@@ -290,6 +291,21 @@ export default function AdminIntTransactionsList() {
                           {tx.merchant_name}
                         </Link>
                         <p className="text-[10px] text-slate-400">ID: {tx.merchant_id}</p>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                            <User className="w-3 h-3 text-slate-500" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-slate-900 dark:text-white font-medium truncate max-w-[120px]">
+                              {tx.customer?.name || tx.payer_name || 'N/A'}
+                            </p>
+                            <p className="text-[10px] text-slate-400 truncate max-w-[120px]">
+                              {tx.customer?.document || tx.payer_document || tx.customer?.email || ''}
+                            </p>
+                          </div>
+                        </div>
                       </td>
                       <td className="py-3 px-4 text-right">
                         <span className="font-semibold text-slate-900 dark:text-white">{formatCurrency(tx.amount)}</span>
