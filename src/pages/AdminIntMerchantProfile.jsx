@@ -17,6 +17,17 @@ import TabFinanceiro from '@/components/admin-interno/merchant-profile/tabs/TabF
 import TabSaques from '@/components/admin-interno/merchant-profile/tabs/TabSaques';
 import TabAntecipacao from '@/components/admin-interno/merchant-profile/tabs/TabAntecipacao';
 import TabRisco from '@/components/admin-interno/merchant-profile/tabs/TabRisco';
+import TabChargebacks from '@/components/admin-interno/merchant-profile/tabs/TabChargebacks';
+import TabMEDs from '@/components/admin-interno/merchant-profile/tabs/TabMEDs';
+import TabDocumentos from '@/components/admin-interno/merchant-profile/tabs/TabDocumentos';
+import TabKYC from '@/components/admin-interno/merchant-profile/tabs/TabKYC';
+import TabNotas from '@/components/admin-interno/merchant-profile/tabs/TabNotas';
+import TabComunicacoes from '@/components/admin-interno/merchant-profile/tabs/TabComunicacoes';
+import TabAuditoria from '@/components/admin-interno/merchant-profile/tabs/TabAuditoria';
+import TabUsuarios from '@/components/admin-interno/merchant-profile/tabs/TabUsuarios';
+import TabWebhooks from '@/components/admin-interno/merchant-profile/tabs/TabWebhooks';
+import TabSplit from '@/components/admin-interno/merchant-profile/tabs/TabSplit';
+import TabRecorrencia from '@/components/admin-interno/merchant-profile/tabs/TabRecorrencia';
 
 
 
@@ -53,17 +64,28 @@ export default function AdminIntMerchantProfile() {
 
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                 <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto p-1 bg-white dark:bg-slate-800 border rounded-lg mb-4 gap-1">
-                    <TabsTrigger value="resumo" className="gap-1">📊 Resumo</TabsTrigger>
-                    <TabsTrigger value="dados" className="gap-1">📝 Dados</TabsTrigger>
-                    <TabsTrigger value="config" className="gap-1">⚙️ Config</TabsTrigger>
-                    <TabsTrigger value="taxas" className="gap-1">💰 Taxas</TabsTrigger>
-                    <TabsTrigger value="metodos" className="gap-1">💳 Métodos</TabsTrigger>
-                    <TabsTrigger value="api" className="gap-1">🔑 API</TabsTrigger>
-                    <TabsTrigger value="transacoes" className="gap-1">📋 Trans.</TabsTrigger>
-                    <TabsTrigger value="financeiro" className="gap-1">🏦 Financ.</TabsTrigger>
-                    <TabsTrigger value="saques" className="gap-1">🏧 Saques</TabsTrigger>
-                    <TabsTrigger value="antecipacao" className="gap-1">⏩ Antec.</TabsTrigger>
-                    <TabsTrigger value="risco" className="gap-1">⚠️ Risco</TabsTrigger>
+                    <TabsTrigger value="resumo">📊 Resumo</TabsTrigger>
+                    <TabsTrigger value="dados">📝 Dados</TabsTrigger>
+                    <TabsTrigger value="config">⚙️ Config</TabsTrigger>
+                    <TabsTrigger value="taxas">💰 Taxas</TabsTrigger>
+                    <TabsTrigger value="metodos">💳 Métodos</TabsTrigger>
+                    <TabsTrigger value="api">🔑 API</TabsTrigger>
+                    <TabsTrigger value="transacoes">📋 Trans.</TabsTrigger>
+                    <TabsTrigger value="financeiro">🏦 Financ.</TabsTrigger>
+                    <TabsTrigger value="saques">🏧 Saques</TabsTrigger>
+                    <TabsTrigger value="antecipacao">⏩ Antec.</TabsTrigger>
+                    <TabsTrigger value="risco">⚠️ Risco</TabsTrigger>
+                    <TabsTrigger value="chargebacks">💳 CBs</TabsTrigger>
+                    <TabsTrigger value="meds">🏦 MEDs</TabsTrigger>
+                    <TabsTrigger value="documentos">📁 Docs</TabsTrigger>
+                    <TabsTrigger value="kyc">🔍 KYC</TabsTrigger>
+                    <TabsTrigger value="notas">📝 Notas</TabsTrigger>
+                    <TabsTrigger value="comunicacoes">💬 Comun.</TabsTrigger>
+                    <TabsTrigger value="auditoria">📋 Audit.</TabsTrigger>
+                    <TabsTrigger value="usuarios">👥 Users</TabsTrigger>
+                    <TabsTrigger value="webhooks">🔔 Webhooks</TabsTrigger>
+                    <TabsTrigger value="split">➗ Split</TabsTrigger>
+                    <TabsTrigger value="recorrencia">🔄 Recorr.</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="resumo"><TabResumo merchant={merchant} /></TabsContent>
@@ -77,6 +99,17 @@ export default function AdminIntMerchantProfile() {
                 <TabsContent value="saques"><TabSaques merchant={merchant} /></TabsContent>
                 <TabsContent value="antecipacao"><TabAntecipacao merchant={merchant} /></TabsContent>
                 <TabsContent value="risco"><TabRisco merchant={merchant} /></TabsContent>
+                <TabsContent value="chargebacks"><TabChargebacks merchant={merchant} /></TabsContent>
+                <TabsContent value="meds"><TabMEDs merchant={merchant} /></TabsContent>
+                <TabsContent value="documentos"><TabDocumentos merchant={merchant} /></TabsContent>
+                <TabsContent value="kyc"><TabKYC merchant={merchant} /></TabsContent>
+                <TabsContent value="notas"><TabNotas merchant={merchant} /></TabsContent>
+                <TabsContent value="comunicacoes"><TabComunicacoes merchant={merchant} /></TabsContent>
+                <TabsContent value="auditoria"><TabAuditoria merchant={merchant} /></TabsContent>
+                <TabsContent value="usuarios"><TabUsuarios merchant={merchant} /></TabsContent>
+                <TabsContent value="webhooks"><TabWebhooks merchant={merchant} /></TabsContent>
+                <TabsContent value="split"><TabSplit merchant={merchant} /></TabsContent>
+                <TabsContent value="recorrencia"><TabRecorrencia merchant={merchant} /></TabsContent>
             </Tabs>
         </div>
     );

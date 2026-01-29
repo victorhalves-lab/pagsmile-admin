@@ -77,7 +77,10 @@ import AdminIntLeads from './pages/AdminIntLeads';
 import AdminIntMCCDetail from './pages/AdminIntMCCDetail';
 import AdminIntMCCs from './pages/AdminIntMCCs';
 import AdminIntMccIrregularities from './pages/AdminIntMccIrregularities';
+import AdminIntMerchantGroups from './pages/AdminIntMerchantGroups';
 import AdminIntMerchantProfile from './pages/AdminIntMerchantProfile';
+import AdminIntMerchantReports from './pages/AdminIntMerchantReports';
+import AdminIntMerchantTags from './pages/AdminIntMerchantTags';
 import AdminIntMerchants from './pages/AdminIntMerchants';
 import AdminIntMerchantsList from './pages/AdminIntMerchantsList';
 import AdminIntNewMerchant from './pages/AdminIntNewMerchant';
@@ -185,9 +188,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntMerchantGroups from './pages/AdminIntMerchantGroups';
-import AdminIntMerchantTags from './pages/AdminIntMerchantTags';
-import AdminIntMerchantReports from './pages/AdminIntMerchantReports';
 import __Layout from './Layout.jsx';
 
 
@@ -222,7 +222,10 @@ export const PAGES = {
     "AdminIntMCCDetail": AdminIntMCCDetail,
     "AdminIntMCCs": AdminIntMCCs,
     "AdminIntMccIrregularities": AdminIntMccIrregularities,
+    "AdminIntMerchantGroups": AdminIntMerchantGroups,
     "AdminIntMerchantProfile": AdminIntMerchantProfile,
+    "AdminIntMerchantReports": AdminIntMerchantReports,
+    "AdminIntMerchantTags": AdminIntMerchantTags,
     "AdminIntMerchants": AdminIntMerchants,
     "AdminIntMerchantsList": AdminIntMerchantsList,
     "AdminIntNewMerchant": AdminIntNewMerchant,
@@ -330,9 +333,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntMerchantGroups": AdminIntMerchantGroups,
-    "AdminIntMerchantTags": AdminIntMerchantTags,
-    "AdminIntMerchantReports": AdminIntMerchantReports,
 }
 
 export const pagesConfig = {
