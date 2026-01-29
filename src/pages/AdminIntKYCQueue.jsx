@@ -159,57 +159,102 @@ export default function AdminIntKYCQueue() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 min-h-screen">
       <PageHeader 
         title="Fila de Análise KYC" 
-        subtitle="Casos aguardando revisão manual"
+        subtitle="Casos aguardando revisão manual por analistas"
         breadcrumbs={[
-          { label: 'KYC & Compliance', page: 'AdminIntKYC' },
-          { label: 'Fila de Análise', page: 'AdminIntKYCQueue' }
+          { label: 'Compliance' },
+          { label: 'Fila KYC' }
         ]}
+        actions={
+          <Button size="sm" className="gap-1.5 bg-[#2bc196] hover:bg-[#239b7a]">
+            <RefreshCw className="w-4 h-4" /> Atualizar Fila
+          </Button>
+        }
       />
 
-      <div className="flex justify-between items-center bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-        <div className="relative w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <Input 
-            placeholder="Buscar empresa ou CNPJ..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
+      {/* KPIs */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <KPICard title="Total na Fila" value={queueItems.length} icon={Users} color="blue" />
+        <KPICard title="Alta Prioridade" value={queueItems.filter(m => m.kyc_score < 50).length} icon={AlertCircle} color="red" subtitle="Score < 50" />
+        <KPICard title="Média Prioridade" value={queueItems.filter(m => m.kyc_score >= 50 && m.kyc_score < 70).length} icon={Clock} color="amber" subtitle="Score 50-70" />
+        <KPICard title="Com Red Flags" value={queueItems.filter(m => m.ai_red_flags?.length > 0).length} icon={AlertCircle} color="purple" />
+        <KPICard title="Aprovados Hoje" value="12" icon={CheckCircle2} color="emerald" trend="+3" />
+      </div>
+
+      {/* Filters */}
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+        <CardContent className="py-3 px-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+                <TabsTrigger value="all" className="rounded-md text-xs gap-1.5">
+                  <Users className="w-3.5 h-3.5" /> Todos ({queueItems.length})
+                </TabsTrigger>
+                <TabsTrigger value="high" className="rounded-md text-xs gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5 text-red-500" /> Alta
+                </TabsTrigger>
+                <TabsTrigger value="medium" className="rounded-md text-xs gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-amber-500" /> Média
+                </TabsTrigger>
+                <TabsTrigger value="flags" className="rounded-md text-xs gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5 text-purple-500" /> Red Flags
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <div className="flex gap-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Input 
+                  placeholder="Buscar empresa ou CNPJ..." 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 w-[250px] bg-slate-50 dark:bg-slate-800"
+                />
+              </div>
+              <Button variant="outline" size="sm">
+                <Filter className="w-4 h-4 mr-1.5" /> Filtros
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Helena AI Banner */}
+      <Card className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 border-purple-100 dark:border-purple-800">
+        <CardContent className="py-3 px-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+              <Sparkles className="w-5 h-5 text-purple-600" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-purple-900 dark:text-purple-200">Helena AI está ativa</p>
+              <p className="text-xs text-purple-700 dark:text-purple-300">Pré-análise automática aplicada em todos os casos da fila</p>
+            </div>
+            <Badge className="bg-purple-600 text-white">92% precisão</Badge>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Table */}
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+        <CardHeader className="py-3 px-4 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-slate-500" />
+              {filteredQueue.length} empresas na fila
+            </CardTitle>
+          </div>
+        </CardHeader>
+        <div className="overflow-hidden">
+          <DataTable 
+            columns={columns} 
+            data={filteredQueue} 
           />
         </div>
-        <Button variant="outline">
-            <Filter className="w-4 h-4 mr-2" /> Filtros Avançados
-        </Button>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border">
-          <div className="text-sm text-slate-500">Total na Fila</div>
-          <div className="text-2xl font-bold">{filteredQueue.length}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-l-4 border-l-red-500">
-          <div className="text-sm text-slate-500">Alta Prioridade</div>
-          <div className="text-2xl font-bold text-red-600">{filteredQueue.filter(m => m.kyc_score < 50).length}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-l-4 border-l-amber-500">
-          <div className="text-sm text-slate-500">Média Prioridade</div>
-          <div className="text-2xl font-bold text-amber-600">{filteredQueue.filter(m => m.kyc_score >= 50 && m.kyc_score < 70).length}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-l-4 border-l-purple-500">
-          <div className="text-sm text-slate-500">Com Red Flags</div>
-          <div className="text-2xl font-bold text-purple-600">{filteredQueue.filter(m => m.ai_red_flags?.length > 0).length}</div>
-        </div>
-      </div>
-
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-        <DataTable 
-          columns={columns} 
-          data={filteredQueue} 
-        />
-      </div>
+      </Card>
     </div>
   );
 }
