@@ -8,9 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from 'sonner';
 import { 
     DollarSign, Landmark, CreditCard, Shield, Bell, Webhook, Palette, 
-    Zap, Settings, Edit, CheckCircle, XCircle
+    Zap, Settings, Edit, CheckCircle, XCircle, Globe, Clock
 } from 'lucide-react';
 
 const features = [
@@ -44,24 +45,79 @@ export default function TabConfiguracoes({ merchant }) {
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg">
-                            <Label className="text-slate-500">Limite por Transação</Label>
-                            <p className="text-xl font-bold mt-1">R$ 10.000,00</p>
+                            <Label className="text-slate-500">Limite por Transação (Geral)</Label>
+                            {editMode ? (
+                                <Input defaultValue="10000" className="mt-1" />
+                            ) : (
+                                <p className="text-xl font-bold mt-1">R$ 10.000,00</p>
+                            )}
                             <p className="text-xs text-slate-400 mt-1">Padrão: R$ 5.000,00</p>
                         </div>
                         <div className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg">
-                            <Label className="text-slate-500">Limite Diário</Label>
-                            <p className="text-xl font-bold mt-1">R$ 100.000,00</p>
+                            <Label className="text-slate-500">Limite Diário (Geral)</Label>
+                            {editMode ? (
+                                <Input defaultValue="100000" className="mt-1" />
+                            ) : (
+                                <p className="text-xl font-bold mt-1">R$ 100.000,00</p>
+                            )}
                             <p className="text-xs text-slate-400 mt-1">Padrão: R$ 50.000,00</p>
                         </div>
                         <div className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg">
                             <Label className="text-slate-500">Limite Mensal</Label>
-                            <p className="text-xl font-bold mt-1">R$ 3.000.000,00</p>
+                            {editMode ? (
+                                <Input defaultValue="3000000" className="mt-1" />
+                            ) : (
+                                <p className="text-xl font-bold mt-1">R$ 3.000.000,00</p>
+                            )}
                             <p className="text-xs text-slate-400 mt-1">Padrão: R$ 1.000.000,00</p>
                         </div>
                         <div className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg">
                             <Label className="text-slate-500">Ticket Médio Esperado</Label>
-                            <p className="text-xl font-bold mt-1">R$ 150 - R$ 500</p>
+                            {editMode ? (
+                                <div className="flex gap-2 mt-1">
+                                    <Input defaultValue="150" placeholder="Mín" />
+                                    <Input defaultValue="500" placeholder="Máx" />
+                                </div>
+                            ) : (
+                                <p className="text-xl font-bold mt-1">R$ 150 - R$ 500</p>
+                            )}
                             <p className="text-xs text-slate-400 mt-1">Configurado no onboarding</p>
+                        </div>
+                    </div>
+                    <Separator className="my-6" />
+                    <h4 className="font-semibold mb-4">Limites por Método de Pagamento</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <Label className="text-blue-700 text-xs">Pix - Por Transação</Label>
+                            {editMode ? (
+                                <Input defaultValue="50000" className="mt-1 h-8 text-sm" />
+                            ) : (
+                                <p className="font-bold text-blue-800">R$ 50.000</p>
+                            )}
+                        </div>
+                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <Label className="text-blue-700 text-xs">Pix - Diário</Label>
+                            {editMode ? (
+                                <Input defaultValue="200000" className="mt-1 h-8 text-sm" />
+                            ) : (
+                                <p className="font-bold text-blue-800">R$ 200.000</p>
+                            )}
+                        </div>
+                        <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                            <Label className="text-purple-700 text-xs">Cartão - Por Transação</Label>
+                            {editMode ? (
+                                <Input defaultValue="10000" className="mt-1 h-8 text-sm" />
+                            ) : (
+                                <p className="font-bold text-purple-800">R$ 10.000</p>
+                            )}
+                        </div>
+                        <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                            <Label className="text-purple-700 text-xs">Cartão - Diário</Label>
+                            {editMode ? (
+                                <Input defaultValue="100000" className="mt-1 h-8 text-sm" />
+                            ) : (
+                                <p className="font-bold text-purple-800">R$ 100.000</p>
+                            )}
                         </div>
                     </div>
                 </CardContent>
@@ -507,6 +563,60 @@ export default function TabConfiguracoes({ merchant }) {
                             </tbody>
                         </table>
                     </div>
+                </CardContent>
+            </Card>
+
+            {/* Preferences */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                        <Globe className="w-5 h-5" /> Preferências Gerais
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <Label>Fuso Horário</Label>
+                            <Select defaultValue="america_sao_paulo">
+                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="america_sao_paulo">América/São Paulo (UTC-3)</SelectItem>
+                                    <SelectItem value="america_manaus">América/Manaus (UTC-4)</SelectItem>
+                                    <SelectItem value="america_recife">América/Recife (UTC-3)</SelectItem>
+                                    <SelectItem value="america_cuiaba">América/Cuiabá (UTC-4)</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div>
+                            <Label>Idioma</Label>
+                            <Select defaultValue="pt_BR">
+                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="pt_BR">Português (Brasil)</SelectItem>
+                                    <SelectItem value="en_US">English (US)</SelectItem>
+                                    <SelectItem value="es_ES">Español</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div>
+                            <Label>Formato de Data</Label>
+                            <Select defaultValue="dd_mm_yyyy">
+                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="dd_mm_yyyy">DD/MM/AAAA</SelectItem>
+                                    <SelectItem value="mm_dd_yyyy">MM/DD/AAAA</SelectItem>
+                                    <SelectItem value="yyyy_mm_dd">AAAA-MM-DD</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                    {editMode && (
+                        <div className="flex justify-end mt-6">
+                            <Button onClick={() => { toast.success('Preferências salvas!'); setEditMode(false); }}>
+                                Salvar Alterações
+                            </Button>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         </div>
