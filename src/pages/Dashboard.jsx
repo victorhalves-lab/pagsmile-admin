@@ -116,25 +116,16 @@ export default function Dashboard() {
 
       {/* GMV Overview Cards */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Volume Financeiro (GMV)</h2>
-        </div>
         <GMVCards data={gmvData} loading={loadingTx} />
       </div>
 
       {/* Transaction Metrics */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Quantidade de Transações</h2>
-        </div>
         <TransactionMetricsCards transactions={transactions} />
       </div>
 
       {/* Performance Indicators */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Indicadores de Performance</h2>
-        </div>
         <PerformanceIndicators transactions={transactions} />
       </div>
 
