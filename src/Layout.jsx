@@ -311,13 +311,18 @@ const adminInternoMenuItems = [
     icon: Settings,
     page: 'AdminIntSettings',
     submenu: [
+      { label: 'Configurações Gerais', page: 'AdminIntSettings' },
+      { label: 'Usuários', page: 'AdminIntUsers' },
+      { label: 'Perfis e Permissões', page: 'AdminIntProfiles' },
+      { label: 'Taxas Globais', page: 'AdminIntGlobalRates' },
+      { label: 'Parâmetros de Risco', page: 'AdminIntRiskParams' },
+      { label: 'Integrações', page: 'AdminIntIntegrations' },
+      { label: 'Templates', page: 'AdminIntTemplates' },
+      { label: 'Logs e Auditoria', page: 'AdminIntSystemLogs' },
       { label: 'MCCs', page: 'AdminIntMCCs' },
       { label: 'Parceiros & Custos', page: 'AdminIntPartners' },
       { label: 'Planos de Taxas', page: 'AdminIntFeePlans' },
       { label: 'Agentes IA', page: 'AdminIntAiAgents' },
-      { label: 'Suporte', page: 'AdminIntSupport' },
-      { label: 'Relatórios', page: 'AdminIntReports' },
-      { label: 'Configurações', page: 'AdminIntSettings' },
     ]
   }
 ];
@@ -392,6 +397,7 @@ const adminInternoPages = [
   'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList', 'AdminIntTransactionDetail', 'AdminIntBatchProcessing', 'AdminIntTransactionReports',
   'AdminIntFinancialDashboard', 'AdminIntSettlements', 'AdminIntWithdrawals', 'AdminIntAnticipations', 'AdminIntStatements', 'AdminIntInvoices', 'AdminIntBalanceManagement',
   'AdminIntRiskDashboard', 'AdminIntFraudMonitoring', 'AdminIntChargebacksList', 'AdminIntMEDsList', 'AdminIntRiskRules', 'AdminIntControlLists', 'AdminIntRiskAlerts', 'AdminIntCompliance',
+  'AdminIntSettings', 'AdminIntUsers', 'AdminIntProfiles', 'AdminIntGlobalRates', 'AdminIntRiskParams', 'AdminIntIntegrations', 'AdminIntTemplates', 'AdminIntSystemLogs',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
   'AdminIntMCCs', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
 ];
