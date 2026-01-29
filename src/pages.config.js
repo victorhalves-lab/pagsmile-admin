@@ -54,6 +54,7 @@ import AdminIntAiAgents from './pages/AdminIntAiAgents';
 import AdminIntAnticipation from './pages/AdminIntAnticipation';
 import AdminIntAntifraud from './pages/AdminIntAntifraud';
 import AdminIntAudit from './pages/AdminIntAudit';
+import AdminIntBatchProcessing from './pages/AdminIntBatchProcessing';
 import AdminIntBlockages from './pages/AdminIntBlockages';
 import AdminIntCentralLinks from './pages/AdminIntCentralLinks';
 import AdminIntChargebacks from './pages/AdminIntChargebacks';
@@ -109,6 +110,7 @@ import AdminIntSubaccounts from './pages/AdminIntSubaccounts';
 import AdminIntSupport from './pages/AdminIntSupport';
 import AdminIntSystemLogs from './pages/AdminIntSystemLogs';
 import AdminIntTransactionDetail from './pages/AdminIntTransactionDetail';
+import AdminIntTransactionReports from './pages/AdminIntTransactionReports';
 import AdminIntTransactions from './pages/AdminIntTransactions';
 import AdminIntTransactionsDashboard from './pages/AdminIntTransactionsDashboard';
 import AdminIntTransactionsList from './pages/AdminIntTransactionsList';
@@ -153,6 +155,7 @@ import IBPixLimits from './pages/IBPixLimits';
 import IBPixReceive from './pages/IBPixReceive';
 import IBPixSend from './pages/IBPixSend';
 import IBProofs from './pages/IBProofs';
+import Plugins from './pages/Plugins';
 import IBSettings from './pages/IBSettings';
 import IBSettingsAccess from './pages/IBSettingsAccess';
 import IBSettingsAccount from './pages/IBSettingsAccount';
@@ -168,7 +171,6 @@ import PaymentLinkCreate from './pages/PaymentLinkCreate';
 import PaymentLinks from './pages/PaymentLinks';
 import PixTransactions from './pages/PixTransactions';
 import PlanSelection from './pages/PlanSelection';
-import Plugins from './pages/Plugins';
 import PreChargebacks from './pages/PreChargebacks';
 import ReceivablesAgenda from './pages/ReceivablesAgenda';
 import RecoveryAgent from './pages/RecoveryAgent';
@@ -188,8 +190,13 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntBatchProcessing from './pages/AdminIntBatchProcessing';
-import AdminIntTransactionReports from './pages/AdminIntTransactionReports';
+import AdminIntFinancialDashboard from './pages/AdminIntFinancialDashboard';
+import AdminIntSettlements from './pages/AdminIntSettlements';
+import AdminIntWithdrawals from './pages/AdminIntWithdrawals';
+import AdminIntAnticipations from './pages/AdminIntAnticipations';
+import AdminIntStatements from './pages/AdminIntStatements';
+import AdminIntInvoices from './pages/AdminIntInvoices';
+import AdminIntBalanceManagement from './pages/AdminIntBalanceManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -201,6 +208,7 @@ export const PAGES = {
     "AdminIntAnticipation": AdminIntAnticipation,
     "AdminIntAntifraud": AdminIntAntifraud,
     "AdminIntAudit": AdminIntAudit,
+    "AdminIntBatchProcessing": AdminIntBatchProcessing,
     "AdminIntBlockages": AdminIntBlockages,
     "AdminIntCentralLinks": AdminIntCentralLinks,
     "AdminIntChargebacks": AdminIntChargebacks,
@@ -256,6 +264,7 @@ export const PAGES = {
     "AdminIntSupport": AdminIntSupport,
     "AdminIntSystemLogs": AdminIntSystemLogs,
     "AdminIntTransactionDetail": AdminIntTransactionDetail,
+    "AdminIntTransactionReports": AdminIntTransactionReports,
     "AdminIntTransactions": AdminIntTransactions,
     "AdminIntTransactionsDashboard": AdminIntTransactionsDashboard,
     "AdminIntTransactionsList": AdminIntTransactionsList,
@@ -300,6 +309,7 @@ export const PAGES = {
     "IBPixReceive": IBPixReceive,
     "IBPixSend": IBPixSend,
     "IBProofs": IBProofs,
+    "Plugins": Plugins,
     "IBSettings": IBSettings,
     "IBSettingsAccess": IBSettingsAccess,
     "IBSettingsAccount": IBSettingsAccount,
@@ -315,7 +325,6 @@ export const PAGES = {
     "PaymentLinks": PaymentLinks,
     "PixTransactions": PixTransactions,
     "PlanSelection": PlanSelection,
-    "Plugins": Plugins,
     "PreChargebacks": PreChargebacks,
     "ReceivablesAgenda": ReceivablesAgenda,
     "RecoveryAgent": RecoveryAgent,
@@ -335,8 +344,13 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntBatchProcessing": AdminIntBatchProcessing,
-    "AdminIntTransactionReports": AdminIntTransactionReports,
+    "AdminIntFinancialDashboard": AdminIntFinancialDashboard,
+    "AdminIntSettlements": AdminIntSettlements,
+    "AdminIntWithdrawals": AdminIntWithdrawals,
+    "AdminIntAnticipations": AdminIntAnticipations,
+    "AdminIntStatements": AdminIntStatements,
+    "AdminIntInvoices": AdminIntInvoices,
+    "AdminIntBalanceManagement": AdminIntBalanceManagement,
 }
 
 export const pagesConfig = {

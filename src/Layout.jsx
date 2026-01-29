@@ -278,11 +278,15 @@ const adminInternoMenuItems = [
     id: 'financial',
     label: 'Financeiro',
     icon: DollarSign,
-    page: 'AdminIntTransactionsDashboard',
+    page: 'AdminIntFinancialDashboard',
     submenu: [
-      { label: 'Dashboard Transações', page: 'AdminIntTransactionsDashboard' },
-      { label: 'Liquidação', page: 'AdminIntSettlement' },
-      { label: 'Antecipações', page: 'AdminIntAnticipation' },
+      { label: 'Dashboard', page: 'AdminIntFinancialDashboard' },
+      { label: 'Liquidações', page: 'AdminIntSettlements' },
+      { label: 'Saques', page: 'AdminIntWithdrawals' },
+      { label: 'Antecipação', page: 'AdminIntAnticipations' },
+      { label: 'Extratos', page: 'AdminIntStatements' },
+      { label: 'Faturas', page: 'AdminIntInvoices' },
+      { label: 'Gestão de Saldos', page: 'AdminIntBalanceManagement' },
     ]
   },
   {
@@ -382,6 +386,7 @@ const adminInternoPages = [
   'AdminIntKYC', 'AdminIntPLD', 'AdminIntDocs', 'AdminIntSubaccountDetail', 'AdminIntKYCQueue', 'AdminIntKycAnalysis',
   'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts', 'AdminIntMerchantsList', 'AdminIntNewMerchant', 'AdminIntMerchantGroups', 'AdminIntMerchantTags', 'AdminIntMerchantReports',
   'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList', 'AdminIntTransactionDetail', 'AdminIntBatchProcessing', 'AdminIntTransactionReports',
+  'AdminIntFinancialDashboard', 'AdminIntSettlements', 'AdminIntWithdrawals', 'AdminIntAnticipations', 'AdminIntStatements', 'AdminIntInvoices', 'AdminIntBalanceManagement',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
   'AdminIntMCCs', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
 ];
