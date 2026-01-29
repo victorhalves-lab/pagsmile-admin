@@ -5,9 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Eye, Download, Upload, CheckCircle, XCircle, AlertTriangle, Clock, FileText, Trash2 } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Eye, Download, Upload, CheckCircle, XCircle, AlertTriangle, Clock, FileText, Trash2, Link2, Copy, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
 const docStatusConfig = {
@@ -20,7 +21,11 @@ const docStatusConfig = {
 
 export default function TabDocumentos({ merchant }) {
     const [uploadModal, setUploadModal] = useState(false);
+    const [requestModal, setRequestModal] = useState(false);
+    const [generateLinkModal, setGenerateLinkModal] = useState(false);
     const [category, setCategory] = useState('all');
+    const [requestData, setRequestData] = useState({ doc_type: '', message: '', deadline: '' });
+    const [generatedLink, setGeneratedLink] = useState('');
 
     const stats = { total: 15, approved: 12, pending: 1, expired: 1, expiring: 2 };
 
@@ -100,7 +105,7 @@ export default function TabDocumentos({ merchant }) {
             )}
 
             {/* Category Filter & Upload */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-3">
                 <div className="flex gap-2 flex-wrap">
                     <Button variant={category === 'all' ? 'default' : 'outline'} size="sm" onClick={() => setCategory('all')}>Todos</Button>
                     <Button variant={category === 'corporate' ? 'default' : 'outline'} size="sm" onClick={() => setCategory('corporate')}>Societários</Button>
@@ -109,9 +114,17 @@ export default function TabDocumentos({ merchant }) {
                     <Button variant={category === 'contracts' ? 'default' : 'outline'} size="sm" onClick={() => setCategory('contracts')}>Contratos</Button>
                     <Button variant={category === 'bank' ? 'default' : 'outline'} size="sm" onClick={() => setCategory('bank')}>Bancários</Button>
                 </div>
-                <Button onClick={() => setUploadModal(true)}>
-                    <Upload className="w-4 h-4 mr-2" /> Upload Novo
-                </Button>
+                <div className="flex gap-2">
+                    <Button variant="outline" onClick={() => setGenerateLinkModal(true)}>
+                        <Link2 className="w-4 h-4 mr-2" /> Gerar Link Upload
+                    </Button>
+                    <Button variant="outline" onClick={() => setRequestModal(true)}>
+                        <Send className="w-4 h-4 mr-2" /> Solicitar Documento
+                    </Button>
+                    <Button onClick={() => setUploadModal(true)}>
+                        <Upload className="w-4 h-4 mr-2" /> Upload Novo
+                    </Button>
+                </div>
             </div>
 
             {/* Documents List */}
@@ -193,6 +206,108 @@ export default function TabDocumentos({ merchant }) {
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setUploadModal(false)}>Cancelar</Button>
                         <Button onClick={() => { toast.success('Documento enviado!'); setUploadModal(false); }}>Enviar</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Request Document Modal */}
+            <Dialog open={requestModal} onOpenChange={setRequestModal}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Solicitar Documento ao Cliente</DialogTitle>
+                        <DialogDescription>Envie uma solicitação de documento para o cliente</DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div>
+                            <Label>Tipo de Documento *</Label>
+                            <Select value={requestData.doc_type} onValueChange={(v) => setRequestData({...requestData, doc_type: v})}>
+                                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="cnd_federal">CND Federal</SelectItem>
+                                    <SelectItem value="cnd_estadual">CND Estadual</SelectItem>
+                                    <SelectItem value="crf_fgts">CRF FGTS</SelectItem>
+                                    <SelectItem value="contrato_social">Contrato Social / Alterações</SelectItem>
+                                    <SelectItem value="comprovante_residencia">Comprovante de Residência</SelectItem>
+                                    <SelectItem value="comprovante_faturamento">Comprovante de Faturamento</SelectItem>
+                                    <SelectItem value="outro">Outro (especificar na mensagem)</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div>
+                            <Label>Prazo para envio</Label>
+                            <Input type="date" value={requestData.deadline} onChange={(e) => setRequestData({...requestData, deadline: e.target.value})} className="mt-1" />
+                        </div>
+                        <div>
+                            <Label>Mensagem para o cliente</Label>
+                            <Textarea 
+                                value={requestData.message} 
+                                onChange={(e) => setRequestData({...requestData, message: e.target.value})}
+                                placeholder="Ex: Precisamos do documento atualizado para manter sua conta em conformidade..."
+                                rows={3}
+                                className="mt-1"
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setRequestModal(false)}>Cancelar</Button>
+                        <Button onClick={() => { toast.success('Solicitação enviada ao cliente!'); setRequestModal(false); }}>
+                            <Send className="w-4 h-4 mr-2" /> Enviar Solicitação
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Generate Upload Link Modal */}
+            <Dialog open={generateLinkModal} onOpenChange={setGenerateLinkModal}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Gerar Link de Upload</DialogTitle>
+                        <DialogDescription>Crie um link único para o cliente enviar um documento específico</DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div>
+                            <Label>Tipo de Documento *</Label>
+                            <Select onValueChange={() => setGeneratedLink(`https://upload.pagsmile.com/d/${merchant?.id || '12345'}/${Date.now()}`)}>
+                                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="cnd_federal">CND Federal</SelectItem>
+                                    <SelectItem value="contrato_social">Contrato Social</SelectItem>
+                                    <SelectItem value="comprovante_residencia">Comprovante de Residência</SelectItem>
+                                    <SelectItem value="outro">Outro</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div>
+                            <Label>Validade do link</Label>
+                            <Select defaultValue="7">
+                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="1">1 dia</SelectItem>
+                                    <SelectItem value="3">3 dias</SelectItem>
+                                    <SelectItem value="7">7 dias</SelectItem>
+                                    <SelectItem value="30">30 dias</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        {generatedLink && (
+                            <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                                <Label className="text-green-700 mb-2 block">Link gerado:</Label>
+                                <div className="flex gap-2">
+                                    <Input value={generatedLink} readOnly className="flex-1 font-mono text-xs" />
+                                    <Button variant="outline" size="sm" onClick={() => { navigator.clipboard.writeText(generatedLink); toast.success('Link copiado!'); }}>
+                                        <Copy className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => { setGenerateLinkModal(false); setGeneratedLink(''); }}>Fechar</Button>
+                        {generatedLink && (
+                            <Button onClick={() => toast.success('Link enviado ao cliente por e-mail!')}>
+                                <Send className="w-4 h-4 mr-2" /> Enviar por E-mail
+                            </Button>
+                        )}
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
