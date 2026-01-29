@@ -11,7 +11,8 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGri
 import { 
   RefreshCw, TrendingUp, Zap, CheckCircle2, XCircle, Clock, 
   AlertTriangle, DollarSign, ArrowUpRight, ArrowDownRight, Settings,
-  Play, Pause, Eye, ChevronRight, Filter, Target, Sparkles
+  Play, Pause, Eye, ChevronRight, Filter, Target, Sparkles, QrCode,
+  CreditCard, ArrowRight, MessageSquare
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
