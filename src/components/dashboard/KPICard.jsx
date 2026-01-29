@@ -92,48 +92,38 @@ export default function KPICard({
 
   return (
     <Card className={cn(
-      "overflow-hidden group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-2 relative",
+      "overflow-hidden group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border relative",
       colors.bg,
       colors.border,
       className
     )}>
-      {/* Decorative glow */}
-      <div className="absolute top-0 right-0 w-40 h-40 bg-current opacity-5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
-      
-      <CardContent className="p-6 relative">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1 flex-1">
-            <p className={cn("text-xs font-bold uppercase tracking-wider", colors.text)}>{title}</p>
-            <div className="flex items-baseline gap-1">
-              <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">
-                {prefix}{typeof value === 'number' ? value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : value}{suffix}
-              </h3>
-            </div>
-          </div>
-          <div className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300",
-            colors.iconBg,
-            colors.iconShadow
-          )}>
-            {Icon && <Icon className="w-6 h-6 text-white" />}
-          </div>
+      <CardContent className="p-4">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-2">
+          <p className={cn("text-[10px] font-bold uppercase tracking-wider", colors.text)}>{title}</p>
+          {Icon && <Icon className={cn("w-4 h-4", colors.text)} />}
         </div>
 
-        <div className="mt-4 flex items-end justify-between">
-          <div className={cn(
-            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold",
-            isPositive 
-              ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-900/50 dark:text-emerald-300' 
-              : isNegative 
-                ? 'text-red-700 bg-red-100 dark:bg-red-900/50 dark:text-red-300' 
-                : 'text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-300'
-          )}>
-            {isPositive ? <ArrowUpRight className="w-3.5 h-3.5" /> : isNegative ? <ArrowDownRight className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
-            <span>{Math.abs(change)}%</span>
-            <span className="font-medium opacity-70 ml-1 hidden sm:inline">vs anterior</span>
-          </div>
+        {/* Value */}
+        <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2 truncate">
+          {prefix}{typeof value === 'number' ? value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : value}{suffix}
+        </h3>
 
-          <div className="w-24 h-12 opacity-60 group-hover:opacity-100 transition-opacity duration-500">
+        {/* Change + Mini Chart */}
+        <div className="flex items-center justify-between">
+          <span className={cn(
+            "inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded",
+            isPositive 
+              ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-900/50' 
+              : isNegative 
+                ? 'text-red-700 bg-red-100 dark:bg-red-900/50' 
+                : 'text-slate-600 bg-slate-100 dark:bg-slate-700'
+          )}>
+            {isPositive ? <ArrowUpRight className="w-2.5 h-2.5" /> : isNegative ? <ArrowDownRight className="w-2.5 h-2.5" /> : <Minus className="w-2.5 h-2.5" />}
+            {Math.abs(change)}%
+          </span>
+
+          <div className="w-16 h-8">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data}>
                 <defs>
@@ -146,7 +136,7 @@ export default function KPICard({
                   type="monotone" 
                   dataKey="v" 
                   stroke={colors.chartStroke}
-                  strokeWidth={2} 
+                  strokeWidth={1.5} 
                   fillOpacity={1} 
                   fill={`url(#gradient-${title}-${color})`} 
                 />
