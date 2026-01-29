@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import FormSection from '@/components/compliance/FormSection';
 import { Briefcase } from 'lucide-react';
+import MCCCNAESelector from '@/components/compliance/shared/MCCCNAESelector';
 
 export default function Step4_Atividade({ formData, handleChange }) {
   return (
@@ -18,6 +19,16 @@ export default function Step4_Atividade({ formData, handleChange }) {
             onChange={(e) => handleChange('escopoNegocio', e.target.value)}
           />
         </div>
+
+        {/* CNAE e MCC - Campos Obrigatórios */}
+        <MCCCNAESelector 
+          formData={formData} 
+          handleChange={handleChange}
+          cnaeField="cnae_declared"
+          mccField="mcc_declared"
+          required={true}
+        />
+
         <div className="space-y-1">
           <Label className="text-xs font-semibold">Site Corporativo *</Label>
           <Input 
