@@ -30,11 +30,6 @@ export default function LandingPage() {
           />
         </div>
 
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-2">Proposta Personalizada</h1>
-          <p className="text-slate-400 text-sm">Acesse sua proposta comercial exclusiva</p>
-        </div>
-
         <div className="flex flex-col gap-4">
           <Button 
             onClick={handleLogin} 
@@ -52,6 +47,15 @@ export default function LandingPage() {
           >
             <Link to={createPageUrl('AccountCreationStep1')}>Criar Conta</Link>
           </Button>
+
+          <a 
+            href="https://pagsmileonboarding.base44.app/QuestionarioPublico?tipo=manual"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-4 text-base font-medium rounded-full border-2 border-[#2bc196]/30 text-[#2bc196] hover:bg-[#2bc196]/10 hover:border-[#2bc196]/50 transition-all duration-300 flex items-center justify-center gap-2"
+          >
+            Proposta Personalizada
+          </a>
         </div>
 
         <div className="pt-4 text-xs text-slate-600 font-medium">
