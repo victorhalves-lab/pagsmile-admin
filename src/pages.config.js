@@ -214,6 +214,12 @@ import AdminIntReportsFinancial from './pages/AdminIntReportsFinancial';
 import AdminIntReportsRisk from './pages/AdminIntReportsRisk';
 import AdminIntReportsCustom from './pages/AdminIntReportsCustom';
 import AdminIntAnalytics from './pages/AdminIntAnalytics';
+import AdminIntCommDashboard from './pages/AdminIntCommDashboard';
+import AdminIntCommAutomations from './pages/AdminIntCommAutomations';
+import AdminIntCommTemplates from './pages/AdminIntCommTemplates';
+import AdminIntCommSMTP from './pages/AdminIntCommSMTP';
+import AdminIntCommSenders from './pages/AdminIntCommSenders';
+import AdminIntCommLogs from './pages/AdminIntCommLogs';
 import __Layout from './Layout.jsx';
 
 
@@ -385,6 +391,12 @@ export const PAGES = {
     "AdminIntReportsRisk": AdminIntReportsRisk,
     "AdminIntReportsCustom": AdminIntReportsCustom,
     "AdminIntAnalytics": AdminIntAnalytics,
+    "AdminIntCommDashboard": AdminIntCommDashboard,
+    "AdminIntCommAutomations": AdminIntCommAutomations,
+    "AdminIntCommTemplates": AdminIntCommTemplates,
+    "AdminIntCommSMTP": AdminIntCommSMTP,
+    "AdminIntCommSenders": AdminIntCommSenders,
+    "AdminIntCommLogs": AdminIntCommLogs,
 }
 
 export const pagesConfig = {
