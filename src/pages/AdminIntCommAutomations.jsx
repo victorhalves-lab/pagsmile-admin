@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Search, Mail, Pause, Play, Edit, Eye, Clock, Zap } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const summaryStats = { total: 45, active: 38, paused: 5, draft: 2, dispatches: 12456 };
 
@@ -85,23 +86,28 @@ export default function AdminIntCommAutomations() {
     const [activeTab, setActiveTab] = useState('info');
 
     const AutomationCard = ({ automation }) => (
-        <div className="border rounded-lg p-4 hover:bg-slate-50">
+        <div className="border border-[var(--color-border-default)] rounded-lg p-4 hover:bg-[var(--color-bg-hover)] bg-[var(--color-bg-primary)]">
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-blue-500" />
-                    <span className="font-medium">{automation.name}</span>
+                    <Mail className="w-4 h-4 text-[var(--color-info)]" />
+                    <span className="font-medium text-[var(--color-text-primary)]">{automation.name}</span>
                 </div>
-                <Badge className={automation.status === 'active' ? 'bg-green-100 text-green-700 border-0' : 'bg-yellow-100 text-yellow-700 border-0'}>
+                <Badge className={cn(
+                    "border-0",
+                    automation.status === 'active' 
+                        ? 'bg-[var(--color-success-bg)] text-[var(--color-success-text)]' 
+                        : 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]'
+                )}>
                     {automation.status === 'active' ? '✅ Ativa' : '⏸️ Pausada'}
                 </Badge>
             </div>
-            <div className="text-sm text-slate-500 space-y-1">
+            <div className="text-sm text-[var(--color-text-tertiary)] space-y-1">
                 <p><Zap className="w-3 h-3 inline mr-1" /> Gatilho: {automation.trigger} | Delay: {automation.delay}</p>
                 <p>Template: {automation.template} | Disparos (30d): {automation.dispatches.toLocaleString()} | Abertura: {automation.openRate}%</p>
             </div>
             <div className="flex justify-end gap-2 mt-3">
-                <Button variant="outline" size="sm"><Edit className="w-3 h-3 mr-1" /> Editar</Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"><Edit className="w-3 h-3 mr-1" /> Editar</Button>
+                <Button variant="outline" size="sm" className="border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]">
                     {automation.status === 'active' ? <><Pause className="w-3 h-3 mr-1" /> Pausar</> : <><Play className="w-3 h-3 mr-1" /> Ativar</>}
                 </Button>
             </div>
@@ -109,7 +115,7 @@ export default function AdminIntCommAutomations() {
     );
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
             <PageHeader 
                 title="Régua de E-mails - Automações"
                 breadcrumbs={[{ label: 'Comunicação', page: 'AdminIntCommDashboard' }, { label: 'Régua de E-mails' }]}
@@ -121,26 +127,26 @@ export default function AdminIntCommAutomations() {
             />
 
             {/* Summary */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardContent className="pt-4">
                     <div className="grid grid-cols-5 gap-4 text-center">
-                        <div><p className="text-2xl font-bold">{summaryStats.total}</p><p className="text-sm text-slate-500">Total</p></div>
-                        <div><p className="text-2xl font-bold text-green-600">{summaryStats.active}</p><p className="text-sm text-slate-500">Ativas</p></div>
-                        <div><p className="text-2xl font-bold text-yellow-600">{summaryStats.paused}</p><p className="text-sm text-slate-500">Pausadas</p></div>
-                        <div><p className="text-2xl font-bold text-slate-400">{summaryStats.draft}</p><p className="text-sm text-slate-500">Rascunhos</p></div>
-                        <div><p className="text-2xl font-bold text-blue-600">{summaryStats.dispatches.toLocaleString()}</p><p className="text-sm text-slate-500">Disparos (30d)</p></div>
+                        <div><p className="text-2xl font-bold text-[var(--color-text-primary)]">{summaryStats.total}</p><p className="text-sm text-[var(--color-text-tertiary)]">Total</p></div>
+                        <div><p className="text-2xl font-bold text-[var(--color-success)]">{summaryStats.active}</p><p className="text-sm text-[var(--color-text-tertiary)]">Ativas</p></div>
+                        <div><p className="text-2xl font-bold text-[var(--color-warning)]">{summaryStats.paused}</p><p className="text-sm text-[var(--color-text-tertiary)]">Pausadas</p></div>
+                        <div><p className="text-2xl font-bold text-[var(--color-text-disabled)]">{summaryStats.draft}</p><p className="text-sm text-[var(--color-text-tertiary)]">Rascunhos</p></div>
+                        <div><p className="text-2xl font-bold text-[var(--color-info)]">{summaryStats.dispatches.toLocaleString()}</p><p className="text-sm text-[var(--color-text-tertiary)]">Disparos (30d)</p></div>
                     </div>
                 </CardContent>
             </Card>
 
             {/* Filters */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardContent className="pt-4">
                     <div className="flex items-center gap-4">
                         <div className="flex-1">
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                <Input placeholder="Buscar automação..." className="pl-10" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-placeholder)]" />
+                                <Input placeholder="Buscar automação..." className="pl-10 bg-[var(--color-input-bg)] border-[var(--color-input-border)] text-[var(--color-input-text)]" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                             </div>
                         </div>
                         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -167,9 +173,9 @@ export default function AdminIntCommAutomations() {
 
             {/* Automation Categories */}
             {Object.entries(automationCategories).map(([key, category]) => (
-                <Card key={key}>
+                <Card key={key} className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                     <CardHeader>
-                        <CardTitle className="text-base">{category.label}</CardTitle>
+                        <CardTitle className="text-base text-[var(--color-text-primary)]">{category.label}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
                         {category.items.map(automation => (

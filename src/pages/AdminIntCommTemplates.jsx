@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Search, Edit, Eye, Copy, Mail, Bold, Italic, Underline, Link as LinkIcon, Image, List, ListOrdered, Code } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const templates = [
     { id: 'TPL-001', name: 'Boas-vindas ao PagSmile', category: 'Onboarding', usedIn: 2 },
@@ -46,7 +47,7 @@ export default function AdminIntCommTemplates() {
     });
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
             <PageHeader 
                 title="Templates de E-mail"
                 breadcrumbs={[{ label: 'Comunicação', page: 'AdminIntCommDashboard' }, { label: 'Templates' }]}
@@ -58,12 +59,12 @@ export default function AdminIntCommTemplates() {
             />
 
             {/* Filters */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardContent className="pt-4">
                     <div className="flex items-center gap-4">
                         <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                            <Input placeholder="Buscar template..." className="pl-10" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-placeholder)]" />
+                            <Input placeholder="Buscar template..." className="pl-10 bg-[var(--color-input-bg)] border-[var(--color-input-border)] text-[var(--color-input-text)]" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
                         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                             <SelectTrigger className="w-[150px]"><SelectValue placeholder="Categoria" /></SelectTrigger>
@@ -80,35 +81,35 @@ export default function AdminIntCommTemplates() {
             </Card>
 
             {/* Templates List */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader>
-                    <CardTitle className="text-base">📋 Lista de Templates</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">📋 Lista de Templates</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <table className="w-full text-sm">
                         <thead>
-                            <tr className="border-b">
-                                <th className="text-left py-2 px-3">ID</th>
-                                <th className="text-left py-2 px-3">Nome</th>
-                                <th className="text-left py-2 px-3">Categoria</th>
-                                <th className="text-center py-2 px-3">Usado em</th>
-                                <th className="text-right py-2 px-3">Ações</th>
+                            <tr className="border-b border-[var(--color-border-light)]">
+                                <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">ID</th>
+                                <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Nome</th>
+                                <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Categoria</th>
+                                <th className="text-center py-2 px-3 text-[var(--color-text-tertiary)]">Usado em</th>
+                                <th className="text-right py-2 px-3 text-[var(--color-text-tertiary)]">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredTemplates.map(template => (
-                                <tr key={template.id} className="border-b hover:bg-slate-50">
-                                    <td className="py-3 px-3 font-mono text-xs">{template.id}</td>
-                                    <td className="py-3 px-3 font-medium">{template.name}</td>
+                                <tr key={template.id} className="border-b border-[var(--color-border-light)] hover:bg-[var(--color-bg-hover)]">
+                                    <td className="py-3 px-3 font-mono text-xs text-[var(--color-text-secondary)]">{template.id}</td>
+                                    <td className="py-3 px-3 font-medium text-[var(--color-text-primary)]">{template.name}</td>
                                     <td className="py-3 px-3">
-                                        <Badge variant="outline">{template.category}</Badge>
+                                        <Badge variant="outline" className="border-[var(--color-border-default)] text-[var(--color-text-secondary)]">{template.category}</Badge>
                                     </td>
-                                    <td className="py-3 px-3 text-center">{template.usedIn} automações</td>
+                                    <td className="py-3 px-3 text-center text-[var(--color-text-secondary)]">{template.usedIn} automações</td>
                                     <td className="py-3 px-3 text-right">
                                         <div className="flex justify-end gap-1">
-                                            <Button variant="ghost" size="sm" onClick={() => setEditorModal(template)}><Edit className="w-4 h-4" /></Button>
-                                            <Button variant="ghost" size="sm"><Eye className="w-4 h-4" /></Button>
-                                            <Button variant="ghost" size="sm"><Copy className="w-4 h-4" /></Button>
+                                            <Button variant="ghost" size="sm" className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]" onClick={() => setEditorModal(template)}><Edit className="w-4 h-4" /></Button>
+                                            <Button variant="ghost" size="sm" className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"><Eye className="w-4 h-4" /></Button>
+                                            <Button variant="ghost" size="sm" className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"><Copy className="w-4 h-4" /></Button>
                                         </div>
                                     </td>
                                 </tr>

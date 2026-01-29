@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Download, Search, Eye, RefreshCw, Mail, CheckCircle, XCircle, Clock, MousePointer, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const emailLogs = [
     { id: 'EMAIL-001', date: '28/01 14:35:22', recipient: 'joao@empresa.com', merchant: 'Loja do João', subject: '🎉 Bem-vindo ao...', type: 'Boas-vindas', status: 'opened', openedAt: '14:40' },
@@ -21,12 +22,12 @@ const emailLogs = [
 ];
 
 const statusConfig = {
-    sent: { label: 'Enviado', icon: Clock, color: 'bg-yellow-100 text-yellow-700' },
-    delivered: { label: 'Entregue', icon: CheckCircle, color: 'bg-green-100 text-green-700' },
-    opened: { label: 'Aberto', icon: Eye, color: 'bg-green-100 text-green-700' },
-    clicked: { label: 'Clicado', icon: MousePointer, color: 'bg-blue-100 text-blue-700' },
-    bounced: { label: 'Bounce', icon: XCircle, color: 'bg-red-100 text-red-700' },
-    spam: { label: 'Spam', icon: AlertTriangle, color: 'bg-red-100 text-red-700' },
+    sent: { label: 'Enviado', icon: Clock, color: 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]' },
+    delivered: { label: 'Entregue', icon: CheckCircle, color: 'bg-[var(--color-success-bg)] text-[var(--color-success-text)]' },
+    opened: { label: 'Aberto', icon: Eye, color: 'bg-[var(--color-success-bg)] text-[var(--color-success-text)]' },
+    clicked: { label: 'Clicado', icon: MousePointer, color: 'bg-[var(--color-info-bg)] text-[var(--color-info-text)]' },
+    bounced: { label: 'Bounce', icon: XCircle, color: 'bg-[var(--color-error-bg)] text-[var(--color-error-text)]' },
+    spam: { label: 'Spam', icon: AlertTriangle, color: 'bg-[var(--color-error-bg)] text-[var(--color-error-text)]' },
 };
 
 export default function AdminIntCommLogs() {
@@ -38,7 +39,7 @@ export default function AdminIntCommLogs() {
     const [detailModal, setDetailModal] = useState(null);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
             <PageHeader 
                 title="Histórico de E-mails"
                 breadcrumbs={[{ label: 'Comunicação', page: 'AdminIntCommDashboard' }, { label: 'Logs' }]}
@@ -50,11 +51,11 @@ export default function AdminIntCommLogs() {
             />
 
             {/* Filters */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardContent className="pt-4">
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                         <div>
-                            <Label className="text-xs">Período</Label>
+                            <Label className="text-xs text-[var(--color-text-tertiary)]">Período</Label>
                             <Select value={period} onValueChange={setPeriod}>
                                 <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                                 <SelectContent>
@@ -107,9 +108,9 @@ export default function AdminIntCommLogs() {
             </Card>
 
             {/* Email List */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader>
-                    <CardTitle className="text-base">📋 E-mails Enviados</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">📋 E-mails Enviados</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-2">
@@ -117,32 +118,32 @@ export default function AdminIntCommLogs() {
                             const status = statusConfig[email.status];
                             const StatusIcon = status.icon;
                             return (
-                                <div key={email.id} className="border rounded-lg p-3 hover:bg-slate-50">
+                                <div key={email.id} className="border border-[var(--color-border-default)] rounded-lg p-3 hover:bg-[var(--color-bg-hover)] bg-[var(--color-bg-primary)]">
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
                                             <div className="flex items-center gap-3 mb-1">
-                                                <span className="text-sm text-slate-500">{email.date}</span>
-                                                <span className="font-medium">{email.recipient}</span>
-                                                <Badge variant="outline" className="text-xs">{email.type}</Badge>
+                                                <span className="text-sm text-[var(--color-text-tertiary)]">{email.date}</span>
+                                                <span className="font-medium text-[var(--color-text-primary)]">{email.recipient}</span>
+                                                <Badge variant="outline" className="text-xs border-[var(--color-border-default)] text-[var(--color-text-secondary)]">{email.type}</Badge>
                                             </div>
-                                            <p className="text-sm text-slate-600">{email.subject}</p>
-                                            <p className="text-xs text-slate-400">Merchant: {email.merchant}</p>
+                                            <p className="text-sm text-[var(--color-text-secondary)]">{email.subject}</p>
+                                            <p className="text-xs text-[var(--color-text-tertiary)]">Merchant: {email.merchant}</p>
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <div className="text-right">
-                                                <Badge className={`${status.color} border-0`}>
+                                                <Badge className={cn(status.color, "border-0")}>
                                                     <StatusIcon className="w-3 h-3 mr-1" />
                                                     {status.label}
                                                 </Badge>
-                                                {email.openedAt && <p className="text-xs text-slate-500 mt-1">👁️ {email.openedAt}</p>}
-                                                {email.clickedAt && <p className="text-xs text-slate-500">🔗 {email.clickedAt}</p>}
+                                                {email.openedAt && <p className="text-xs text-[var(--color-text-tertiary)] mt-1">👁️ {email.openedAt}</p>}
+                                                {email.clickedAt && <p className="text-xs text-[var(--color-text-tertiary)]">🔗 {email.clickedAt}</p>}
                                             </div>
                                             <div className="flex gap-1">
-                                                <Button variant="ghost" size="sm" onClick={() => setDetailModal(email)}>
+                                                <Button variant="ghost" size="sm" className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]" onClick={() => setDetailModal(email)}>
                                                     <Eye className="w-4 h-4" />
                                                 </Button>
                                                 {email.status !== 'bounced' && (
-                                                    <Button variant="ghost" size="sm" onClick={() => toast.success('E-mail reenviado!')}>
+                                                    <Button variant="ghost" size="sm" className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]" onClick={() => toast.success('E-mail reenviado!')}>
                                                         <RefreshCw className="w-4 h-4" />
                                                     </Button>
                                                 )}
@@ -153,12 +154,12 @@ export default function AdminIntCommLogs() {
                             );
                         })}
                     </div>
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t">
-                        <p className="text-sm text-slate-500">Mostrando 1-50 de 12.456</p>
+                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--color-border-light)]">
+                        <p className="text-sm text-[var(--color-text-tertiary)]">Mostrando 1-50 de 12.456</p>
                         <div className="flex gap-1">
-                            <Button variant="outline" size="sm">◄ Anterior</Button>
-                            <Button variant="outline" size="sm">Página 1 de 250</Button>
-                            <Button variant="outline" size="sm">Próxima ►</Button>
+                            <Button variant="outline" size="sm" className="border-[var(--color-border-default)] text-[var(--color-text-secondary)]">◄ Anterior</Button>
+                            <Button variant="outline" size="sm" className="border-[var(--color-border-default)] text-[var(--color-text-secondary)]">Página 1 de 250</Button>
+                            <Button variant="outline" size="sm" className="border-[var(--color-border-default)] text-[var(--color-text-secondary)]">Próxima ►</Button>
                         </div>
                     </div>
                 </CardContent>

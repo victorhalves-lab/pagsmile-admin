@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Plus, Edit, Trash2, Star, Copy, RefreshCw, CheckCircle, AlertTriangle, Settings } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const senders = [
     { email: 'noreply@pagsmile.com', name: 'PagSmile', usage: 'Automações de sistema', isDefault: true, verified: true, spf: true, dkim: true, dmarc: true },
@@ -31,10 +32,10 @@ export default function AdminIntCommSenders() {
     const [newSenderModal, setNewSenderModal] = useState(false);
     const [newDomainModal, setNewDomainModal] = useState(false);
 
-    const StatusIcon = ({ ok }) => ok ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+    const StatusIcon = ({ ok }) => ok ? <CheckCircle className="w-4 h-4 text-[var(--color-success)]" /> : <AlertTriangle className="w-4 h-4 text-[var(--color-warning)]" />;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
             <PageHeader 
                 title="Remetentes e Domínios"
                 breadcrumbs={[{ label: 'Comunicação', page: 'AdminIntCommDashboard' }, { label: 'Remetentes' }]}
@@ -46,28 +47,31 @@ export default function AdminIntCommSenders() {
             />
 
             {/* Senders */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader>
-                    <CardTitle className="text-base">📧 Remetentes Configurados</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">📧 Remetentes Configurados</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                     {senders.map((sender, idx) => (
-                        <div key={idx} className={`border rounded-lg p-4 ${!sender.verified ? 'border-yellow-300 bg-yellow-50' : ''}`}>
+                        <div key={idx} className={cn(
+                            "border rounded-lg p-4 bg-[var(--color-bg-primary)]",
+                            !sender.verified ? 'border-[var(--color-warning-border)] bg-[var(--color-warning-bg)]' : 'border-[var(--color-border-default)]'
+                        )}>
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
-                                    <span className="font-medium">📧 {sender.email}</span>
-                                    {sender.isDefault && <Badge className="bg-yellow-100 text-yellow-700 border-0">⭐ Padrão</Badge>}
+                                    <span className="font-medium text-[var(--color-text-primary)]">📧 {sender.email}</span>
+                                    {sender.isDefault && <Badge className="bg-[var(--color-warning-bg)] text-[var(--color-warning-text)] border-0">⭐ Padrão</Badge>}
                                 </div>
                                 <div className="flex gap-1">
-                                    <Button variant="ghost" size="sm"><Edit className="w-4 h-4" /></Button>
-                                    <Button variant="ghost" size="sm"><Trash2 className="w-4 h-4 text-red-500" /></Button>
+                                    <Button variant="ghost" size="sm" className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"><Edit className="w-4 h-4" /></Button>
+                                    <Button variant="ghost" size="sm" className="text-[var(--color-error)] hover:text-[var(--color-error)]"><Trash2 className="w-4 h-4" /></Button>
                                 </div>
                             </div>
-                            <p className="text-sm text-slate-500">Nome: {sender.name}</p>
-                            <p className="text-sm text-slate-500">Uso: {sender.usage}</p>
-                            <div className="flex items-center gap-4 mt-2 text-sm">
+                            <p className="text-sm text-[var(--color-text-tertiary)]">Nome: {sender.name}</p>
+                            <p className="text-sm text-[var(--color-text-tertiary)]">Uso: {sender.usage}</p>
+                            <div className="flex items-center gap-4 mt-2 text-sm text-[var(--color-text-secondary)]">
                                 <span className="flex items-center gap-1">
-                                    {sender.verified ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertTriangle className="w-4 h-4 text-yellow-500" />}
+                                    {sender.verified ? <CheckCircle className="w-4 h-4 text-[var(--color-success)]" /> : <AlertTriangle className="w-4 h-4 text-[var(--color-warning)]" />}
                                     {sender.verified ? 'Verificado' : 'Não verificado'}
                                 </span>
                                 <span className="flex items-center gap-1">SPF <StatusIcon ok={sender.spf} /></span>
@@ -75,7 +79,7 @@ export default function AdminIntCommSenders() {
                                 <span className="flex items-center gap-1">DMARC <StatusIcon ok={sender.dmarc} /></span>
                             </div>
                             {!sender.verified && (
-                                <Button variant="outline" size="sm" className="mt-3">🔧 Corrigir</Button>
+                                <Button variant="outline" size="sm" className="mt-3 border-[var(--color-border-default)]">🔧 Corrigir</Button>
                             )}
                         </div>
                     ))}
@@ -83,9 +87,9 @@ export default function AdminIntCommSenders() {
             </Card>
 
             {/* Domains */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle className="text-base">🌐 Domínios Verificados</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">🌐 Domínios Verificados</CardTitle>
                     <Button size="sm" onClick={() => setNewDomainModal(true)}>
                         <Plus className="w-4 h-4 mr-1" /> Novo Domínio
                     </Button>
@@ -93,31 +97,36 @@ export default function AdminIntCommSenders() {
                 <CardContent>
                     <table className="w-full text-sm">
                         <thead>
-                            <tr className="border-b">
-                                <th className="text-left py-2 px-3">Domínio</th>
-                                <th className="text-center py-2 px-3">SPF</th>
-                                <th className="text-center py-2 px-3">DKIM</th>
-                                <th className="text-center py-2 px-3">DMARC</th>
-                                <th className="text-center py-2 px-3">Status</th>
-                                <th className="text-right py-2 px-3">Ações</th>
+                            <tr className="border-b border-[var(--color-border-light)]">
+                                <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Domínio</th>
+                                <th className="text-center py-2 px-3 text-[var(--color-text-tertiary)]">SPF</th>
+                                <th className="text-center py-2 px-3 text-[var(--color-text-tertiary)]">DKIM</th>
+                                <th className="text-center py-2 px-3 text-[var(--color-text-tertiary)]">DMARC</th>
+                                <th className="text-center py-2 px-3 text-[var(--color-text-tertiary)]">Status</th>
+                                <th className="text-right py-2 px-3 text-[var(--color-text-tertiary)]">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {domains.map((domain, idx) => (
-                                <tr key={idx} className="border-b hover:bg-slate-50">
-                                    <td className="py-3 px-3 font-medium">{domain.domain}</td>
+                                <tr key={idx} className="border-b border-[var(--color-border-light)] hover:bg-[var(--color-bg-hover)]">
+                                    <td className="py-3 px-3 font-medium text-[var(--color-text-primary)]">{domain.domain}</td>
                                     <td className="py-3 px-3 text-center"><StatusIcon ok={domain.spf} /></td>
                                     <td className="py-3 px-3 text-center"><StatusIcon ok={domain.dkim} /></td>
                                     <td className="py-3 px-3 text-center"><StatusIcon ok={domain.dmarc} /></td>
                                     <td className="py-3 px-3 text-center">
-                                        <Badge className={domain.status === 'active' ? 'bg-green-100 text-green-700 border-0' : 'bg-yellow-100 text-yellow-700 border-0'}>
+                                        <Badge className={cn(
+                                            "border-0",
+                                            domain.status === 'active' 
+                                                ? 'bg-[var(--color-success-bg)] text-[var(--color-success-text)]' 
+                                                : 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]'
+                                        )}>
                                             {domain.status === 'active' ? '✅ Ativo' : '🟡 Parcial'}
                                         </Badge>
                                     </td>
                                     <td className="py-3 px-3 text-right">
                                         <div className="flex justify-end gap-1">
-                                            <Button variant="ghost" size="sm"><Settings className="w-4 h-4" /></Button>
-                                            <Button variant="ghost" size="sm"><RefreshCw className="w-4 h-4" /></Button>
+                                            <Button variant="ghost" size="sm" className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"><Settings className="w-4 h-4" /></Button>
+                                            <Button variant="ghost" size="sm" className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]"><RefreshCw className="w-4 h-4" /></Button>
                                         </div>
                                     </td>
                                 </tr>
@@ -128,34 +137,34 @@ export default function AdminIntCommSenders() {
             </Card>
 
             {/* DNS Records */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader>
-                    <CardTitle className="text-base">📋 Registros DNS Necessários - pagsmile.com</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">📋 Registros DNS Necessários - pagsmile.com</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div>
-                        <Label className="text-sm">SPF (TXT em @):</Label>
+                        <Label className="text-sm text-[var(--color-text-secondary)]">SPF (TXT em @):</Label>
                         <div className="flex items-center gap-2 mt-1">
-                            <Input readOnly value={dnsRecords.spf} className="font-mono text-xs bg-slate-50" />
-                            <Button variant="outline" size="sm" onClick={() => { navigator.clipboard.writeText(dnsRecords.spf); toast.success('Copiado!'); }}>
+                            <Input readOnly value={dnsRecords.spf} className="font-mono text-xs bg-[var(--color-bg-secondary)] border-[var(--color-border-default)] text-[var(--color-text-primary)]" />
+                            <Button variant="outline" size="sm" className="border-[var(--color-border-default)]" onClick={() => { navigator.clipboard.writeText(dnsRecords.spf); toast.success('Copiado!'); }}>
                                 <Copy className="w-4 h-4" />
                             </Button>
                         </div>
                     </div>
                     <div>
-                        <Label className="text-sm">DKIM (CNAME):</Label>
+                        <Label className="text-sm text-[var(--color-text-secondary)]">DKIM (CNAME):</Label>
                         <div className="flex items-center gap-2 mt-1">
-                            <Input readOnly value={dnsRecords.dkim} className="font-mono text-xs bg-slate-50" />
-                            <Button variant="outline" size="sm" onClick={() => { navigator.clipboard.writeText(dnsRecords.dkim); toast.success('Copiado!'); }}>
+                            <Input readOnly value={dnsRecords.dkim} className="font-mono text-xs bg-[var(--color-bg-secondary)] border-[var(--color-border-default)] text-[var(--color-text-primary)]" />
+                            <Button variant="outline" size="sm" className="border-[var(--color-border-default)]" onClick={() => { navigator.clipboard.writeText(dnsRecords.dkim); toast.success('Copiado!'); }}>
                                 <Copy className="w-4 h-4" />
                             </Button>
                         </div>
                     </div>
                     <div>
-                        <Label className="text-sm">DMARC (TXT em _dmarc):</Label>
+                        <Label className="text-sm text-[var(--color-text-secondary)]">DMARC (TXT em _dmarc):</Label>
                         <div className="flex items-center gap-2 mt-1">
-                            <Input readOnly value={dnsRecords.dmarc} className="font-mono text-xs bg-slate-50" />
-                            <Button variant="outline" size="sm" onClick={() => { navigator.clipboard.writeText(dnsRecords.dmarc); toast.success('Copiado!'); }}>
+                            <Input readOnly value={dnsRecords.dmarc} className="font-mono text-xs bg-[var(--color-bg-secondary)] border-[var(--color-border-default)] text-[var(--color-text-primary)]" />
+                            <Button variant="outline" size="sm" className="border-[var(--color-border-default)]" onClick={() => { navigator.clipboard.writeText(dnsRecords.dmarc); toast.success('Copiado!'); }}>
                                 <Copy className="w-4 h-4" />
                             </Button>
                         </div>

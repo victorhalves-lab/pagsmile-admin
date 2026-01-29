@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckCircle, RefreshCw, BarChart3, Eye, EyeOff, Server, Cloud, Mail } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const providers = [
     { id: 'smtp', name: 'SMTP Próprio', icon: Server },
@@ -32,38 +33,38 @@ export default function AdminIntCommSMTP() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
             <PageHeader 
                 title="Configuração de Envio de E-mails"
                 breadcrumbs={[{ label: 'Comunicação', page: 'AdminIntCommDashboard' }, { label: 'Config SMTP' }]}
             />
 
             {/* Status */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader>
-                    <CardTitle className="text-base">📊 Status do Serviço</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">📊 Status do Serviço</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                         <div>
-                            <p className="text-sm text-slate-500">Provedor atual</p>
-                            <p className="font-semibold">Amazon SES</p>
+                            <p className="text-sm text-[var(--color-text-tertiary)]">Provedor atual</p>
+                            <p className="font-semibold text-[var(--color-text-primary)]">Amazon SES</p>
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500">Status</p>
-                            <Badge className="bg-green-100 text-green-700 border-0">✅ Conectado</Badge>
+                            <p className="text-sm text-[var(--color-text-tertiary)]">Status</p>
+                            <Badge className="bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-0">✅ Conectado</Badge>
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500">Último envio</p>
-                            <p className="font-medium">28/01/2026 14:35:22</p>
+                            <p className="text-sm text-[var(--color-text-tertiary)]">Último envio</p>
+                            <p className="font-medium text-[var(--color-text-primary)]">28/01/2026 14:35:22</p>
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500">Taxa de entrega (24h)</p>
-                            <p className="font-semibold text-green-600">97,8%</p>
+                            <p className="text-sm text-[var(--color-text-tertiary)]">Taxa de entrega (24h)</p>
+                            <p className="font-semibold text-[var(--color-success)]">97,8%</p>
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500">E-mails na fila</p>
-                            <p className="font-semibold">12</p>
+                            <p className="text-sm text-[var(--color-text-tertiary)]">E-mails na fila</p>
+                            <p className="font-semibold text-[var(--color-text-primary)]">12</p>
                         </div>
                     </div>
                     <div className="flex gap-2 mt-4">
@@ -76,22 +77,27 @@ export default function AdminIntCommSMTP() {
             </Card>
 
             {/* Provider Selection */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader>
-                    <CardTitle className="text-base">📮 Provedor de E-mail</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">📮 Provedor de E-mail</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-sm text-slate-500 mb-4">Selecione o provedor:</p>
+                    <p className="text-sm text-[var(--color-text-tertiary)] mb-4">Selecione o provedor:</p>
                     <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                         {providers.map(provider => (
                             <button
                                 key={provider.id}
                                 onClick={() => setSelectedProvider(provider.id)}
-                                className={`p-4 border-2 rounded-lg text-center transition-all ${selectedProvider === provider.id ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-slate-300'}`}
+                                className={cn(
+                                    "p-4 border-2 rounded-lg text-center transition-all",
+                                    selectedProvider === provider.id 
+                                        ? 'border-[var(--color-brand-primary)] bg-[var(--color-success-bg)]' 
+                                        : 'border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] bg-[var(--color-bg-primary)]'
+                                )}
                             >
-                                <provider.icon className="w-6 h-6 mx-auto mb-2" />
-                                <p className="text-sm font-medium">{provider.name}</p>
-                                {provider.active && <Badge className="bg-green-100 text-green-700 border-0 text-xs mt-1">✅ ATIVO</Badge>}
+                                <provider.icon className={cn("w-6 h-6 mx-auto mb-2", selectedProvider === provider.id ? 'text-[var(--color-brand-primary)]' : 'text-[var(--color-text-tertiary)]')} />
+                                <p className="text-sm font-medium text-[var(--color-text-primary)]">{provider.name}</p>
+                                {provider.active && <Badge className="bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-0 text-xs mt-1">✅ ATIVO</Badge>}
                             </button>
                         ))}
                     </div>
@@ -99,9 +105,9 @@ export default function AdminIntCommSMTP() {
             </Card>
 
             {/* Provider Config */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader>
-                    <CardTitle className="text-base">⚙️ Configuração - Amazon SES</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">⚙️ Configuração - Amazon SES</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
