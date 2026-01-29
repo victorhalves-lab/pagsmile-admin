@@ -205,6 +205,9 @@ import AdminIntRiskRules from './pages/AdminIntRiskRules';
 import AdminIntControlLists from './pages/AdminIntControlLists';
 import AdminIntRiskAlerts from './pages/AdminIntRiskAlerts';
 import AdminIntCompliance from './pages/AdminIntCompliance';
+import AdminIntGlobalRates from './pages/AdminIntGlobalRates';
+import AdminIntRiskParams from './pages/AdminIntRiskParams';
+import AdminIntTemplates from './pages/AdminIntTemplates';
 import __Layout from './Layout.jsx';
 
 
@@ -367,6 +370,9 @@ export const PAGES = {
     "AdminIntControlLists": AdminIntControlLists,
     "AdminIntRiskAlerts": AdminIntRiskAlerts,
     "AdminIntCompliance": AdminIntCompliance,
+    "AdminIntGlobalRates": AdminIntGlobalRates,
+    "AdminIntRiskParams": AdminIntRiskParams,
+    "AdminIntTemplates": AdminIntTemplates,
 }
 
 export const pagesConfig = {

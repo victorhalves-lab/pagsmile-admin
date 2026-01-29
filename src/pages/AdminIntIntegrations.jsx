@@ -1,55 +1,176 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PageHeader from '@/components/common/PageHeader';
-import DataTable from '@/components/common/DataTable';
-import KPICard from '@/components/dashboard/KPICard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Settings, Link as LinkIcon, Activity } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/components/utils';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Settings, RefreshCw, Plus, Building2, Shield, Landmark, Mail, MessageSquare } from 'lucide-react';
+import { toast } from 'sonner';
+
+const integrations = {
+    acquirers: [
+        { name: 'Cielo', code: '1234567890', env: 'Produção', status: 'active', lastTransaction: '28/01/2026 14:35', uptime: 99.98 },
+        { name: 'Rede', code: '0987654321', env: 'Produção', status: 'active', lastTransaction: '28/01/2026 14:30', uptime: 99.95 },
+        { name: 'Stone', code: '5555555555', env: 'Sandbox', status: 'inactive', lastTransaction: '-', uptime: 0 },
+    ],
+    antifraud: [
+        { name: 'ClearSale', account: 'PagSmile_Prod', mode: 'Total Guarantee', status: 'active', sla: 98.5, avgScore: 72 },
+        { name: 'Konduto', account: 'pagsmile_api', mode: 'Score Only', status: 'active', sla: 99.2, avgScore: 68 },
+    ],
+    banking: [
+        { name: 'Banco do Brasil', account: '12345-6 / Ag: 1234-5', psp: 'Direto', status: 'active', keys: 3, lastTransaction: '28/01/2026 14:32' },
+        { name: 'Itaú', account: '98765-4 / Ag: 4321-0', psp: 'Direto', status: 'active', keys: 2, lastTransaction: '28/01/2026 14:28' },
+    ],
+    notifications: [
+        { name: 'SendGrid', type: 'E-mail', status: 'active', sent24h: 1234 },
+        { name: 'Twilio', type: 'SMS', status: 'active', sent24h: 89 },
+        { name: 'Slack', type: 'Alertas', status: 'active', channels: 5 },
+    ],
+};
+
+const statusConfig = {
+    active: { label: '✅ Ativo', color: 'bg-green-100 text-green-700' },
+    inactive: { label: '⚫ Inativo', color: 'bg-slate-100 text-slate-700' },
+    error: { label: '❌ Erro', color: 'bg-red-100 text-red-700' },
+};
 
 export default function AdminIntIntegrations() {
-    const integrations = [
-        { name: 'Adyen', type: 'Adquirente', status: 'active', latency: '245ms', errors: '0.12%' },
-        { name: 'Stone', type: 'Adquirente', status: 'active', latency: '312ms', errors: '0.18%' },
-        { name: 'Cielo', type: 'Adquirente', status: 'warning', latency: '890ms', errors: '0.45%' },
-        { name: 'Konduto', type: 'Antifraude', status: 'active', latency: '89ms', errors: '0.05%' },
-        { name: 'SendGrid', type: 'E-mail', status: 'active', latency: '234ms', errors: '0.10%' },
-    ];
+    const [configModal, setConfigModal] = useState(null);
 
-    const columns = [
-        { header: 'Integração', accessorKey: 'name', cell: i => <span className="font-bold">{i.getValue()}</span> },
-        { header: 'Tipo', accessorKey: 'type' },
-        { header: 'Status', accessorKey: 'status', cell: i => (
-            <Badge className={i.getValue() === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}>
-                {i.getValue() === 'active' ? '🟢 OK' : '🟡 Warn'}
-            </Badge>
-        )},
-        { header: 'Latência', accessorKey: 'latency' },
-        { header: 'Erros (24h)', accessorKey: 'errors' },
-        { header: 'Ações', id: 'actions', cell: () => (
-            <Button size="sm" variant="ghost" asChild>
-                <Link to={createPageUrl('AdminIntIntegrationDetail')}><Settings className="w-4 h-4" /></Link>
-            </Button>
-        )}
-    ];
+    const IntegrationCard = ({ integration, icon: Icon, type }) => (
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50">
+            <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                    <Icon className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                    <div className="flex items-center gap-2">
+                        <h3 className="font-semibold">{integration.name}</h3>
+                        <Badge className={`${statusConfig[integration.status].color} border-0 text-xs`}>
+                            {statusConfig[integration.status].label}
+                        </Badge>
+                    </div>
+                    {type === 'acquirer' && (
+                        <p className="text-sm text-slate-500">EC: {integration.code} | Ambiente: {integration.env}</p>
+                    )}
+                    {type === 'antifraud' && (
+                        <p className="text-sm text-slate-500">Conta: {integration.account} | Modo: {integration.mode}</p>
+                    )}
+                    {type === 'banking' && (
+                        <p className="text-sm text-slate-500">Conta: {integration.account} | PSP: {integration.psp}</p>
+                    )}
+                    {type === 'notification' && (
+                        <p className="text-sm text-slate-500">Tipo: {integration.type}</p>
+                    )}
+                    {integration.lastTransaction && (
+                        <p className="text-xs text-slate-400">Última transação: {integration.lastTransaction}</p>
+                    )}
+                    {integration.uptime > 0 && (
+                        <p className="text-xs text-slate-400">Uptime: {integration.uptime}%</p>
+                    )}
+                    {integration.sla && (
+                        <p className="text-xs text-slate-400">SLA: {integration.sla}% &lt; 2s | Score médio: {integration.avgScore}/100</p>
+                    )}
+                </div>
+            </div>
+            <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => setConfigModal(integration.name)}>
+                    <Settings className="w-4 h-4 mr-1" /> Configurar
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => toast.success(`Teste de ${integration.name} OK!`)}>
+                    <RefreshCw className="w-4 h-4 mr-1" /> Testar
+                </Button>
+            </div>
+        </div>
+    );
 
     return (
         <div className="space-y-6">
             <PageHeader 
-                title="Integrações" 
-                subtitle="Status de Conectores e APIs"
-                breadcrumbs={[{ label: 'Configurações', page: 'AdminIntSettings' }, { label: 'Integrações', page: 'AdminIntIntegrations' }]}
+                title="Integrações"
+                breadcrumbs={[{ label: 'Administração' }, { label: 'Integrações' }]}
+                actionElement={
+                    <Button>
+                        <Plus className="w-4 h-4 mr-2" /> Nova Integração
+                    </Button>
+                }
             />
 
-            <div className="grid grid-cols-4 gap-4">
-                <KPICard title="Integr. Ativas" value="12" icon={LinkIcon} />
-                <KPICard title="Saúde Geral" value="98" suffix="%" icon={Activity} />
-                <KPICard title="Chamadas Hoje" value="45.6k" icon={Activity} />
-                <KPICard title="Taxa Erro" value="0.34" suffix="%" icon={Activity} className="border-l-4 border-l-green-500" />
-            </div>
+            {/* Acquirers */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                        <Building2 className="w-5 h-5" /> Adquirentes
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                    {integrations.acquirers.map((int, idx) => (
+                        <IntegrationCard key={idx} integration={int} icon={Building2} type="acquirer" />
+                    ))}
+                </CardContent>
+            </Card>
 
-            <DataTable columns={columns} data={integrations} />
+            {/* Antifraud */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                        <Shield className="w-5 h-5" /> Antifraude
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                    {integrations.antifraud.map((int, idx) => (
+                        <IntegrationCard key={idx} integration={int} icon={Shield} type="antifraud" />
+                    ))}
+                </CardContent>
+            </Card>
+
+            {/* Banking */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                        <Landmark className="w-5 h-5" /> PIX / Bancos
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                    {integrations.banking.map((int, idx) => (
+                        <IntegrationCard key={idx} integration={int} icon={Landmark} type="banking" />
+                    ))}
+                </CardContent>
+            </Card>
+
+            {/* Notifications */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                        <Mail className="w-5 h-5" /> Notificações
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                    {integrations.notifications.map((int, idx) => (
+                        <IntegrationCard key={idx} integration={int} icon={int.type === 'E-mail' ? Mail : MessageSquare} type="notification" />
+                    ))}
+                </CardContent>
+            </Card>
+
+            {/* Config Modal */}
+            <Dialog open={!!configModal} onOpenChange={() => setConfigModal(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Configurar {configModal}</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <p className="text-sm text-slate-500">Formulário de configuração seria exibido aqui.</p>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setConfigModal(null)}>Cancelar</Button>
+                        <Button onClick={() => { toast.success('Configuração salva!'); setConfigModal(null); }}>
+                            💾 Salvar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
