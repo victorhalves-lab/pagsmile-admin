@@ -231,7 +231,10 @@ export default function AdminIntRetryIntelligence() {
         <TabsList className="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
           <TabsTrigger value="overview" className="rounded-lg">Visão Geral</TabsTrigger>
           <TabsTrigger value="rules" className="rounded-lg gap-1.5">
-            <Settings className="w-4 h-4" /> Regras
+            <Settings className="w-4 h-4" /> Regras de Retry
+          </TabsTrigger>
+          <TabsTrigger value="pix-fallback" className="rounded-lg gap-1.5">
+            <QrCode className="w-4 h-4" /> Fallback PIX
           </TabsTrigger>
           <TabsTrigger value="analysis" className="rounded-lg gap-1.5">
             <TrendingUp className="w-4 h-4" /> Análise
