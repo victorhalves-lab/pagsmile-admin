@@ -7,7 +7,8 @@ import {
   Lock, 
   ArrowUpRight,
   Eye,
-  EyeOff
+  EyeOff,
+  FileText
 } from 'lucide-react';
 
 export default function BalanceCard({ 
@@ -20,7 +21,7 @@ export default function BalanceCard({
   const [showValues, setShowValues] = React.useState(true);
 
   const formatCurrency = (value) => {
-    if (!showValues) return '•••••';
+    if (!showValues) return '•••••••';
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
@@ -29,61 +30,68 @@ export default function BalanceCard({
 
   const total = available + pending + blocked;
 
+  const balanceItems = [
+    { label: 'Disponível', value: available, icon: Wallet, color: 'text-[#2bc196]', bgColor: 'bg-[#2bc196]/10' },
+    { label: 'A receber', value: pending, icon: Clock, color: 'text-yellow-400', bgColor: 'bg-yellow-400/10' },
+    { label: 'Bloqueado', value: blocked, icon: Lock, color: 'text-red-400', bgColor: 'bg-red-400/10' },
+  ];
+
   return (
     <div className={cn(
-      "bg-gradient-to-br from-[#002443] to-[#003459] rounded-xl p-5 text-white h-full flex flex-col",
+      "bg-gradient-to-r from-[#002443] via-[#003459] to-[#002443] rounded-2xl p-6 text-white",
       className
     )}>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-white/60 text-sm">Saldo Total</p>
-        <button
-          className="text-white/60 hover:text-white transition-colors p-1"
-          onClick={() => setShowValues(!showValues)}
-        >
-          {showValues ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-        </button>
-      </div>
-
-      {/* Total Value */}
-      <p className="text-2xl md:text-3xl font-bold mb-4 truncate">{formatCurrency(total)}</p>
-
-      {/* Balance Breakdown */}
-      <div className="grid grid-cols-3 gap-2 mb-4 flex-1">
-        <div className="bg-white/10 rounded-lg p-2.5">
-          <div className="flex items-center gap-1.5 mb-1">
-            <Wallet className="w-3.5 h-3.5 text-[#2bc196]" />
-            <span className="text-[10px] text-white/60">Disponível</span>
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        {/* Left: Total Balance */}
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+            <Wallet className="w-6 h-6 text-[#2bc196]" />
           </div>
-          <p className="text-sm font-semibold truncate">{formatCurrency(available)}</p>
-        </div>
-        
-        <div className="bg-white/10 rounded-lg p-2.5">
-          <div className="flex items-center gap-1.5 mb-1">
-            <Clock className="w-3.5 h-3.5 text-yellow-400" />
-            <span className="text-[10px] text-white/60">A receber</span>
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="text-white/60 text-sm">Saldo Total</p>
+              <button
+                className="text-white/40 hover:text-white transition-colors"
+                onClick={() => setShowValues(!showValues)}
+              >
+                {showValues ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+              </button>
+            </div>
+            <p className="text-2xl lg:text-3xl font-bold tracking-tight">{formatCurrency(total)}</p>
           </div>
-          <p className="text-sm font-semibold truncate">{formatCurrency(pending)}</p>
         </div>
-        
-        <div className="bg-white/10 rounded-lg p-2.5">
-          <div className="flex items-center gap-1.5 mb-1">
-            <Lock className="w-3.5 h-3.5 text-red-400" />
-            <span className="text-[10px] text-white/60">Bloqueado</span>
-          </div>
-          <p className="text-sm font-semibold truncate">{formatCurrency(blocked)}</p>
-        </div>
-      </div>
 
-      {/* Actions */}
-      <div className="flex gap-2">
-        <Button size="sm" className="flex-1 bg-[#2bc196] hover:bg-[#239b7a] text-white text-xs h-9">
-          <ArrowUpRight className="w-3.5 h-3.5 mr-1.5" />
-          Solicitar Saque
-        </Button>
-        <Button size="sm" variant="outline" className="flex-1 border-white/20 text-white hover:bg-white/10 text-xs h-9">
-          Ver Extrato
-        </Button>
+        {/* Center: Balance Breakdown */}
+        <div className="flex items-center gap-3 lg:gap-6 flex-wrap lg:flex-nowrap">
+          {balanceItems.map((item, index) => (
+            <React.Fragment key={item.label}>
+              <div className="flex items-center gap-3">
+                <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center", item.bgColor)}>
+                  <item.icon className={cn("w-4 h-4", item.color)} />
+                </div>
+                <div>
+                  <p className="text-[11px] text-white/50 uppercase tracking-wide">{item.label}</p>
+                  <p className="text-base font-semibold">{formatCurrency(item.value)}</p>
+                </div>
+              </div>
+              {index < balanceItems.length - 1 && (
+                <div className="hidden lg:block w-px h-10 bg-white/10" />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex gap-2 lg:flex-shrink-0">
+          <Button size="sm" className="bg-[#2bc196] hover:bg-[#239b7a] text-white font-medium h-10 px-4">
+            <ArrowUpRight className="w-4 h-4 mr-2" />
+            Solicitar Saque
+          </Button>
+          <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10 font-medium h-10 px-4">
+            <FileText className="w-4 h-4 mr-2" />
+            Ver Extrato
+          </Button>
+        </div>
       </div>
     </div>
   );
