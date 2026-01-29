@@ -251,12 +251,16 @@ const adminInternoMenuItems = [
     id: 'transactions',
     label: 'Transações',
     icon: ArrowLeftRight,
-    page: 'AdminIntTransactionsList',
+    page: 'AdminIntTransactionsDashboard',
     submenu: [
+      { label: 'Dashboard', page: 'AdminIntTransactionsDashboard' },
       { label: 'Lista de Transações', page: 'AdminIntTransactionsList' },
+      { label: 'Orquestração', page: 'AdminIntOrchestration' },
+      { label: 'Análise de BINs', page: 'AdminIntBINAnalysis' },
+      { label: 'Retry Intelligence', page: 'AdminIntRetryIntelligence' },
       { label: 'Processamento em Lote', page: 'AdminIntBatchProcessing' },
-      { label: 'Relatórios', page: 'AdminIntTransactionReports' },
       { label: 'Conciliação', page: 'AdminIntReconciliation' },
+      { label: 'Relatórios', page: 'AdminIntTransactionReports' },
     ]
   },
   {
