@@ -8,6 +8,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { Mail, Send, Eye, MousePointer, AlertTriangle, TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import { cn } from '@/lib/utils';
 
 const kpis = [
     { label: 'Enviados', value: '12.456', icon: Send, change: '+15%', changeType: 'up' },
@@ -58,7 +59,7 @@ export default function AdminIntCommDashboard() {
     const [period, setPeriod] = useState('30d');
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
             <PageHeader 
                 title="Dashboard de Comunicação"
                 breadcrumbs={[{ label: 'Comunicação' }]}
@@ -77,18 +78,23 @@ export default function AdminIntCommDashboard() {
             {/* KPIs */}
             <div className="grid grid-cols-5 gap-4">
                 {kpis.map((kpi, idx) => (
-                    <Card key={idx}>
+                    <Card key={idx} className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                         <CardContent className="pt-4">
                             <div className="flex items-center justify-between mb-2">
-                                <kpi.icon className={`w-5 h-5 ${kpi.isNegative ? 'text-red-500' : 'text-blue-500'}`} />
-                                <Badge className={`${kpi.changeType === 'up' && !kpi.isNegative ? 'bg-green-100 text-green-700' : kpi.changeType === 'down' && kpi.isNegative ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} border-0 text-xs`}>
+                                <kpi.icon className={cn("w-5 h-5", kpi.isNegative ? 'text-[var(--color-error)]' : 'text-[var(--color-info)]')} />
+                                <Badge className={cn(
+                                    "border-0 text-xs",
+                                    (kpi.changeType === 'up' && !kpi.isNegative) || (kpi.changeType === 'down' && kpi.isNegative)
+                                        ? 'bg-[var(--color-success-bg)] text-[var(--color-success-text)]'
+                                        : 'bg-[var(--color-error-bg)] text-[var(--color-error-text)]'
+                                )}>
                                     {kpi.changeType === 'up' ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
                                     {kpi.change}
                                 </Badge>
                             </div>
-                            <p className="text-2xl font-bold">{kpi.value}</p>
-                            {kpi.subValue && <p className="text-sm text-slate-500">{kpi.subValue}</p>}
-                            <p className="text-xs text-slate-400 mt-1">{kpi.label}</p>
+                            <p className="text-2xl font-bold text-[var(--color-text-primary)]">{kpi.value}</p>
+                            {kpi.subValue && <p className="text-sm text-[var(--color-text-secondary)]">{kpi.subValue}</p>}
+                            <p className="text-xs text-[var(--color-text-tertiary)] mt-1">{kpi.label}</p>
                         </CardContent>
                     </Card>
                 ))}
@@ -96,19 +102,19 @@ export default function AdminIntCommDashboard() {
 
             <div className="grid grid-cols-2 gap-6">
                 {/* Volume Chart */}
-                <Card>
+                <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                     <CardHeader>
-                        <CardTitle className="text-base">📈 Volume de Envio (Últimos 30d)</CardTitle>
+                        <CardTitle className="text-base text-[var(--color-text-primary)]">📈 Volume de Envio (Últimos 30d)</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="h-48">
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={volumeData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="week" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Line type="monotone" dataKey="value" stroke="#3B82F6" strokeWidth={2} />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-chart-grid)" />
+                                    <XAxis dataKey="week" stroke="var(--color-chart-label)" />
+                                    <YAxis stroke="var(--color-chart-label)" />
+                                    <Tooltip contentStyle={{ backgroundColor: 'var(--color-bg-primary)', borderColor: 'var(--color-border-default)', color: 'var(--color-text-primary)' }} />
+                                    <Line type="monotone" dataKey="value" stroke="var(--color-brand-primary)" strokeWidth={2} />
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>
@@ -116,22 +122,22 @@ export default function AdminIntCommDashboard() {
                 </Card>
 
                 {/* Email Type Distribution */}
-                <Card>
+                <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                     <CardHeader>
-                        <CardTitle className="text-base">📧 Por Tipo de E-mail</CardTitle>
+                        <CardTitle className="text-base text-[var(--color-text-primary)]">📧 Por Tipo de E-mail</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-3">
                             {emailTypeData.map((type, idx) => (
                                 <div key={idx} className="flex items-center gap-3">
-                                    <div className="w-24 text-sm">{type.name}</div>
-                                    <div className="flex-1 h-6 bg-slate-100 rounded-full overflow-hidden">
+                                    <div className="w-24 text-sm text-[var(--color-text-secondary)]">{type.name}</div>
+                                    <div className="flex-1 h-6 bg-[var(--color-bg-secondary)] rounded-full overflow-hidden">
                                         <div 
                                             className="h-full rounded-full" 
                                             style={{ width: `${type.value}%`, backgroundColor: type.color }}
                                         />
                                     </div>
-                                    <div className="w-24 text-sm text-right">{type.value}% ({type.count.toLocaleString()})</div>
+                                    <div className="w-24 text-sm text-right text-[var(--color-text-secondary)]">{type.value}% ({type.count.toLocaleString()})</div>
                                 </div>
                             ))}
                         </div>
@@ -141,19 +147,19 @@ export default function AdminIntCommDashboard() {
 
             <div className="grid grid-cols-2 gap-6">
                 {/* Top Templates */}
-                <Card>
+                <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                     <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle className="text-base">🎯 Top 5 Templates (Abertura)</CardTitle>
+                        <CardTitle className="text-base text-[var(--color-text-primary)]">🎯 Top 5 Templates (Abertura)</CardTitle>
                         <Link to={createPageUrl('AdminIntCommTemplates')}>
-                            <Button variant="ghost" size="sm">Ver todos →</Button>
+                            <Button variant="ghost" size="sm" className="text-[var(--color-text-link)] hover:text-[var(--color-text-link-hover)]">Ver todos →</Button>
                         </Link>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-3">
                             {topTemplates.map((tpl, idx) => (
-                                <div key={idx} className="flex items-center justify-between py-2 border-b last:border-0">
-                                    <span className="text-sm">{idx + 1}. {tpl.name}</span>
-                                    <Badge className="bg-green-100 text-green-700 border-0">{tpl.rate}%</Badge>
+                                <div key={idx} className="flex items-center justify-between py-2 border-b border-[var(--color-border-light)] last:border-0">
+                                    <span className="text-sm text-[var(--color-text-secondary)]">{idx + 1}. {tpl.name}</span>
+                                    <Badge className="bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-0">{tpl.rate}%</Badge>
                                 </div>
                             ))}
                         </div>
@@ -161,19 +167,22 @@ export default function AdminIntCommDashboard() {
                 </Card>
 
                 {/* Problems */}
-                <Card>
+                <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                     <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle className="text-base">⚠️ Problemas Recentes</CardTitle>
+                        <CardTitle className="text-base text-[var(--color-text-primary)]">⚠️ Problemas Recentes</CardTitle>
                         <Link to={createPageUrl('AdminIntCommLogs')}>
-                            <Button variant="ghost" size="sm">Ver todos →</Button>
+                            <Button variant="ghost" size="sm" className="text-[var(--color-text-link)] hover:text-[var(--color-text-link-hover)]">Ver todos →</Button>
                         </Link>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-3">
                             {problems.map((problem, idx) => (
-                                <div key={idx} className={`flex items-start gap-3 p-3 rounded-lg ${problem.type === 'error' ? 'bg-red-50' : 'bg-yellow-50'}`}>
+                                <div key={idx} className={cn(
+                                    "flex items-start gap-3 p-3 rounded-lg",
+                                    problem.type === 'error' ? 'bg-[var(--color-error-bg)]' : 'bg-[var(--color-warning-bg)]'
+                                )}>
                                     <span>{problem.type === 'error' ? '🔴' : '🟡'}</span>
-                                    <span className="text-sm">{problem.message}</span>
+                                    <span className={cn("text-sm", problem.type === 'error' ? 'text-[var(--color-error-text)]' : 'text-[var(--color-warning-text)]')}>{problem.message}</span>
                                 </div>
                             ))}
                         </div>
@@ -182,33 +191,33 @@ export default function AdminIntCommDashboard() {
             </div>
 
             {/* Top Automations */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle className="text-base">📊 Automações Mais Ativas (Últimos 30 dias)</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">📊 Automações Mais Ativas (Últimos 30 dias)</CardTitle>
                     <Link to={createPageUrl('AdminIntCommAutomations')}>
-                        <Button variant="ghost" size="sm">Ver todas →</Button>
+                        <Button variant="ghost" size="sm" className="text-[var(--color-text-link)] hover:text-[var(--color-text-link-hover)]">Ver todas →</Button>
                     </Link>
                 </CardHeader>
                 <CardContent>
                     <table className="w-full text-sm">
                         <thead>
-                            <tr className="border-b">
-                                <th className="text-left py-2 px-3">Automação</th>
-                                <th className="text-right py-2 px-3">Enviados</th>
-                                <th className="text-right py-2 px-3">Entrega</th>
-                                <th className="text-right py-2 px-3">Abertura</th>
-                                <th className="text-center py-2 px-3">Status</th>
+                            <tr className="border-b border-[var(--color-border-light)]">
+                                <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Automação</th>
+                                <th className="text-right py-2 px-3 text-[var(--color-text-tertiary)]">Enviados</th>
+                                <th className="text-right py-2 px-3 text-[var(--color-text-tertiary)]">Entrega</th>
+                                <th className="text-right py-2 px-3 text-[var(--color-text-tertiary)]">Abertura</th>
+                                <th className="text-center py-2 px-3 text-[var(--color-text-tertiary)]">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {topAutomations.map((auto, idx) => (
-                                <tr key={idx} className="border-b hover:bg-slate-50">
-                                    <td className="py-3 px-3">{auto.name}</td>
-                                    <td className="py-3 px-3 text-right">{auto.sent.toLocaleString()}</td>
-                                    <td className="py-3 px-3 text-right">{auto.delivery}%</td>
-                                    <td className="py-3 px-3 text-right">{auto.open}%</td>
+                                <tr key={idx} className="border-b border-[var(--color-border-light)] hover:bg-[var(--color-bg-hover)]">
+                                    <td className="py-3 px-3 text-[var(--color-text-primary)]">{auto.name}</td>
+                                    <td className="py-3 px-3 text-right text-[var(--color-text-secondary)]">{auto.sent.toLocaleString()}</td>
+                                    <td className="py-3 px-3 text-right text-[var(--color-text-secondary)]">{auto.delivery}%</td>
+                                    <td className="py-3 px-3 text-right text-[var(--color-text-secondary)]">{auto.open}%</td>
                                     <td className="py-3 px-3 text-center">
-                                        <Badge className="bg-green-100 text-green-700 border-0">✅ Ativa</Badge>
+                                        <Badge className="bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-0">✅ Ativa</Badge>
                                     </td>
                                 </tr>
                             ))}
