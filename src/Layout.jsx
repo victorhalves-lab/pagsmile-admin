@@ -416,7 +416,7 @@ const adminInternoPages = [
   'AdminIntComplianceHelena', 'AdminIntComplianceFormLink',
   'AdminIntSubaccountDetail', 'AdminIntKYCQueue', 'AdminIntKycAnalysis',
   'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts', 'AdminIntMerchantsList', 'AdminIntNewMerchant', 'AdminIntMerchantGroups', 'AdminIntMerchantTags', 'AdminIntMerchantReports', 'AdminIntLimitRequests',
-  'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList', 'AdminIntTransactionDetail', 'AdminIntBatchProcessing', 'AdminIntTransactionReports',
+  'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList', 'AdminIntTransactionDetail', 'AdminIntBatchProcessing', 'AdminIntTransactionReports', 'AdminIntOrchestration', 'AdminIntBINAnalysis', 'AdminIntRetryIntelligence',
   'AdminIntFinancialDashboard', 'AdminIntFinancialResults', 'AdminIntClientProfitability', 'AdminIntClientSplitDetail', 'AdminIntSettlements', 'AdminIntWithdrawals', 'AdminIntAnticipations', 'AdminIntStatements', 'AdminIntBalanceManagement', 'AdminIntConciliation', 'AdminIntPaymentAgenda',
   'AdminIntRiskDashboard', 'AdminIntFraudMonitoring', 'AdminIntChargebacksList', 'AdminIntMEDsList', 'AdminIntRiskRules', 'AdminIntControlLists', 'AdminIntRiskAlerts', 'AdminIntCompliance',
   'AdminIntSettings', 'AdminIntUsers', 'AdminIntProfiles', 'AdminIntGlobalRates', 'AdminIntRiskParams', 'AdminIntIntegrations', 'AdminIntTemplates', 'AdminIntSystemLogs',
