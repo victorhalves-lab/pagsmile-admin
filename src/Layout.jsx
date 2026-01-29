@@ -320,6 +320,20 @@ const adminInternoMenuItems = [
     ]
   },
   {
+    id: 'communication',
+    label: 'Comunicação',
+    icon: Mail,
+    page: 'AdminIntCommDashboard',
+    submenu: [
+      { label: 'Dashboard', page: 'AdminIntCommDashboard' },
+      { label: 'Régua de E-mails', page: 'AdminIntCommAutomations' },
+      { label: 'Templates', page: 'AdminIntCommTemplates' },
+      { label: 'Config SMTP', page: 'AdminIntCommSMTP' },
+      { label: 'Remetentes', page: 'AdminIntCommSenders' },
+      { label: 'Logs', page: 'AdminIntCommLogs' },
+    ]
+  },
+  {
     id: 'admin',
     label: 'Administração',
     icon: Settings,
@@ -413,6 +427,7 @@ const adminInternoPages = [
   'AdminIntRiskDashboard', 'AdminIntFraudMonitoring', 'AdminIntChargebacksList', 'AdminIntMEDsList', 'AdminIntRiskRules', 'AdminIntControlLists', 'AdminIntRiskAlerts', 'AdminIntCompliance',
   'AdminIntSettings', 'AdminIntUsers', 'AdminIntProfiles', 'AdminIntGlobalRates', 'AdminIntRiskParams', 'AdminIntIntegrations', 'AdminIntTemplates', 'AdminIntSystemLogs',
   'AdminIntReportsHub', 'AdminIntReportsOperational', 'AdminIntReportsFinancial', 'AdminIntReportsRisk', 'AdminIntReportsCustom', 'AdminIntAnalytics',
+  'AdminIntCommDashboard', 'AdminIntCommAutomations', 'AdminIntCommTemplates', 'AdminIntCommSMTP', 'AdminIntCommSenders', 'AdminIntCommLogs',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
   'AdminIntMCCs', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
 ];
