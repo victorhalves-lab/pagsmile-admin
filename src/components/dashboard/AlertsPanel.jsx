@@ -114,33 +114,33 @@ export default function AlertsPanel({
   };
 
   return (
-    <div className={cn("bg-white rounded-xl border border-gray-100 overflow-hidden", className)}>
-      <div className="flex items-center justify-between p-4 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-gray-900">Alertas</h3>
+    <div className={cn("bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 overflow-hidden", className)}>
+      <div className="flex items-center justify-between p-3 border-b border-gray-100 dark:border-slate-800">
+        <div className="flex items-center gap-1.5">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Alertas</h3>
           {criticalCount > 0 && (
-            <Badge className="bg-red-600 text-white h-5 px-2">
-              {criticalCount} crítico{criticalCount > 1 ? 's' : ''}
-            </Badge>
+            <span className="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+              {criticalCount}
+            </span>
           )}
         </div>
-        <Button variant="ghost" size="sm" className="text-xs">
+        <Button variant="ghost" size="sm" className="text-[10px] h-6 px-2">
           Ver todos
         </Button>
       </div>
 
-      <ScrollArea className="h-[400px]">
+      <ScrollArea className="h-[320px]">
         <div className="p-2">
           {displayAlerts.length === 0 ? (
-            <div className="p-8 text-center">
-              <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-3">
-                <Clock className="w-6 h-6 text-emerald-600" />
+            <div className="p-6 text-center">
+              <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-2">
+                <Clock className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <p className="text-sm font-medium text-gray-900">Tudo certo!</p>
-              <p className="text-xs text-gray-500 mt-1">Nenhum alerta no momento</p>
+              <p className="text-xs font-medium text-gray-900 dark:text-white">Tudo certo!</p>
+              <p className="text-[10px] text-gray-500 dark:text-slate-400 mt-0.5">Nenhum alerta</p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {displayAlerts.map((alert) => {
                 const Icon = alert.icon;
                 const style = alertTypes[alert.type];
@@ -149,48 +149,42 @@ export default function AlertsPanel({
                   <div
                     key={alert.id}
                     className={cn(
-                      "p-3 rounded-lg border transition-all hover:shadow-sm",
+                      "p-2.5 rounded-lg border transition-all hover:shadow-sm",
                       style.bg,
                       style.border
                     )}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className={cn("p-1.5 rounded", style.bg)}>
-                        <Icon className={cn("w-4 h-4", style.icon)} />
-                      </div>
+                    <div className="flex items-start gap-2">
+                      <Icon className={cn("w-4 h-4 flex-shrink-0 mt-0.5", style.icon)} />
                       
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2 mb-1">
-                          <p className={cn("text-sm font-semibold", style.text)}>
+                        <div className="flex items-start justify-between gap-1">
+                          <p className={cn("text-xs font-semibold truncate", style.text)}>
                             {alert.title}
                           </p>
                           {onDismiss && (
                             <button
                               onClick={() => onDismiss(alert.id)}
-                              className="text-gray-400 hover:text-gray-600"
+                              className="text-gray-400 hover:text-gray-600 flex-shrink-0"
                             >
-                              <X className="w-4 h-4" />
+                              <X className="w-3 h-3" />
                             </button>
                           )}
                         </div>
                         
-                        <p className="text-xs text-gray-600 mb-2">
+                        <p className="text-[10px] text-gray-600 dark:text-gray-400 mt-0.5 line-clamp-2">
                           {alert.message}
                         </p>
                         
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-gray-500">
+                        <div className="flex items-center justify-between mt-1.5">
+                          <span className="text-[10px] text-gray-500">
                             {formatTimestamp(alert.timestamp)}
                           </span>
                           {alert.action && (
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              className={cn("h-7 text-xs", style.icon)}
-                            >
+                            <button className={cn("text-[10px] font-semibold flex items-center gap-0.5", style.icon)}>
                               {alert.action}
-                              <ChevronRight className="w-3 h-3 ml-1" />
-                            </Button>
+                              <ChevronRight className="w-3 h-3" />
+                            </button>
                           )}
                         </div>
                       </div>
