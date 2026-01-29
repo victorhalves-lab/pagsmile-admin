@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
     TrendingUp, TrendingDown, DollarSign, CreditCard, Percent, Wallet, AlertTriangle,
-    Clock, CheckCircle, XCircle, Mail, Settings, ArrowUpRight, ExternalLink
+    Clock, CheckCircle, XCircle, Mail, Settings, ArrowUpRight, ExternalLink, Building2, Tag
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { Link } from 'react-router-dom';
@@ -238,6 +238,131 @@ export default function TabResumo({ merchant }) {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* MCC/CNAE Info Card */}
+            <Card>
+                <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                        <Building2 className="w-4 h-4 text-primary" />
+                        Classificação MCC/CNAE
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Declarado */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                                <Tag className="w-3.5 h-3.5" />
+                                Declarado pelo Cliente
+                            </h4>
+                            <div className="space-y-2 bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-xs text-slate-500">CNAE</span>
+                                    {merchant.cnae_declared ? (
+                                        <Badge variant="outline" className="font-mono text-xs">
+                                            {merchant.cnae_declared}
+                                        </Badge>
+                                    ) : (
+                                        <span className="text-xs text-slate-400 italic">Não informado</span>
+                                    )}
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-xs text-slate-500">MCC</span>
+                                    {merchant.mcc_declared ? (
+                                        <Badge className="bg-primary/10 text-primary border-0 font-mono text-xs">
+                                            {merchant.mcc_declared}
+                                        </Badge>
+                                    ) : (
+                                        <span className="text-xs text-slate-400 italic">Não informado</span>
+                                    )}
+                                </div>
+                                {merchant.mcc_description && (
+                                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                                        {merchant.mcc_description}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Observado/Inferido */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                                <CreditCard className="w-3.5 h-3.5" />
+                                Observado nas Transações
+                            </h4>
+                            <div className="space-y-2 bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-xs text-slate-500">CNAE Inferido</span>
+                                    {merchant.cnae_observed ? (
+                                        <Badge variant="outline" className="font-mono text-xs">
+                                            {merchant.cnae_observed}
+                                        </Badge>
+                                    ) : (
+                                        <span className="text-xs text-slate-400 italic">Não analisado</span>
+                                    )}
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-xs text-slate-500">MCC Inferido</span>
+                                    {merchant.mcc_observed ? (
+                                        <Badge className="bg-blue-100 text-blue-700 border-0 font-mono text-xs">
+                                            {merchant.mcc_observed}
+                                        </Badge>
+                                    ) : (
+                                        <span className="text-xs text-slate-400 italic">Não analisado</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Status de Conformidade */}
+                    <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm text-slate-600 dark:text-slate-400">Status de Conformidade:</span>
+                                {merchant.mcc_compliance_status === 'compliant' && (
+                                    <Badge className="bg-green-100 text-green-700 border-0">
+                                        <CheckCircle className="w-3 h-3 mr-1" />
+                                        Conforme
+                                    </Badge>
+                                )}
+                                {merchant.mcc_compliance_status === 'potential_deviation' && (
+                                    <Badge className="bg-orange-100 text-orange-700 border-0">
+                                        <AlertTriangle className="w-3 h-3 mr-1" />
+                                        Possível Desvio
+                                    </Badge>
+                                )}
+                                {merchant.mcc_compliance_status === 'under_review' && (
+                                    <Badge className="bg-blue-100 text-blue-700 border-0">
+                                        <Clock className="w-3 h-3 mr-1" />
+                                        Em Revisão
+                                    </Badge>
+                                )}
+                                {(!merchant.mcc_compliance_status || merchant.mcc_compliance_status === 'not_registered') && (
+                                    <Badge variant="outline" className="text-slate-500">
+                                        Não Registrado
+                                    </Badge>
+                                )}
+                            </div>
+                            {merchant.mcc_last_analyzed_date && (
+                                <span className="text-xs text-slate-400">
+                                    Última análise: {new Date(merchant.mcc_last_analyzed_date).toLocaleDateString('pt-BR')}
+                                </span>
+                            )}
+                        </div>
+                        {merchant.mcc_ai_justification && (
+                            <p className="text-xs text-slate-500 mt-2 bg-slate-50 dark:bg-slate-800 rounded p-2">
+                                <strong>IA:</strong> {merchant.mcc_ai_justification}
+                            </p>
+                        )}
+                        {merchant.mcc_impact_revenue && merchant.mcc_impact_revenue !== 0 && (
+                            <p className="text-xs text-orange-600 mt-2">
+                                💰 Impacto estimado na receita: {formatCurrency(merchant.mcc_impact_revenue)}
+                            </p>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
 
             {/* TPV Chart */}
             <Card>
