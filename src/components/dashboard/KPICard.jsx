@@ -20,7 +20,7 @@ export default function KPICard({
 }) {
   if (loading) {
     return (
-      <Card className="h-full border-slate-100 shadow-sm">
+      <Card className="h-full border-[var(--color-card-border)] shadow-sm bg-[var(--color-card-bg)]">
         <CardContent className="p-6">
           <div className="flex justify-between items-start mb-4">
             <Skeleton className="h-4 w-24" />
@@ -45,20 +45,20 @@ export default function KPICard({
   ];
 
   return (
-    <Card className={cn("overflow-hidden group hover:shadow-xl transition-all duration-300 border-slate-100", className)}>
+    <Card className={cn("overflow-hidden group hover:shadow-xl transition-all duration-300 border-[var(--color-card-border)] bg-[var(--color-card-bg)]", className)}>
       <CardContent className="p-6">
         <div className="flex justify-between items-start">
           <div className="space-y-1">
-            <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">{title}</p>
+            <p className="text-sm font-medium text-[var(--color-text-tertiary)] uppercase tracking-wider">{title}</p>
             <div className="flex items-baseline gap-1">
-              <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
+              <h3 className="text-2xl font-bold text-[var(--color-text-primary)] tracking-tight">
                 {prefix}{typeof value === 'number' ? value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : value}{suffix}
               </h3>
             </div>
           </div>
           <div className={cn(
             "p-2.5 rounded-xl transition-colors duration-300 group-hover:scale-110",
-            "bg-slate-50 text-slate-500 group-hover:bg-[#2bc196]/10 group-hover:text-[#2bc196]"
+            "bg-[var(--color-bg-secondary)] text-[var(--color-text-tertiary)] group-hover:bg-[#2bc196]/10 group-hover:text-[#2bc196]"
           )}>
             {Icon && <Icon className="w-5 h-5" />}
           </div>

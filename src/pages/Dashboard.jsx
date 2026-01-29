@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
 
 import PageHeader from '@/components/common/PageHeader';
 import KPICard from '@/components/dashboard/KPICard';
@@ -82,7 +83,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
       <PageHeader
         title="Dashboard Executivo"
         subtitle="Visão completa da sua operação em tempo real"
@@ -116,7 +117,7 @@ export default function Dashboard() {
       {/* GMV Overview Cards */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Volume Financeiro (GMV)</h2>
+          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Volume Financeiro (GMV)</h2>
         </div>
         <GMVCards data={gmvData} loading={loadingTx} />
       </div>
@@ -124,7 +125,7 @@ export default function Dashboard() {
       {/* Transaction Metrics */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Quantidade de Transações</h2>
+          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Quantidade de Transações</h2>
         </div>
         <TransactionMetricsCards transactions={transactions} />
       </div>
@@ -132,7 +133,7 @@ export default function Dashboard() {
       {/* Performance Indicators */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Indicadores de Performance</h2>
+          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Indicadores de Performance</h2>
         </div>
         <PerformanceIndicators transactions={transactions} />
       </div>

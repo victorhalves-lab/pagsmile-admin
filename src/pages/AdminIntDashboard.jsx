@@ -60,7 +60,7 @@ export default function AdminIntDashboard() {
   const alertCount = 3; // Mock - would come from real data
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-6 pb-20 bg-[var(--color-bg-page)] min-h-screen">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>

@@ -28,14 +28,15 @@ import {
     Play, Pause, Ban, Globe, Building2, Calendar, Hash
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const statusConfig = {
-    active: { label: 'Ativo', color: 'bg-green-100 text-green-700 border-green-200', icon: CheckCircle },
-    pending: { label: 'Pendente', color: 'bg-yellow-100 text-yellow-700 border-yellow-200', icon: PauseCircle },
-    suspended: { label: 'Suspenso', color: 'bg-orange-100 text-orange-700 border-orange-200', icon: Pause },
-    blocked: { label: 'Bloqueado', color: 'bg-red-100 text-red-700 border-red-200', icon: Ban },
-    inactive: { label: 'Inativo', color: 'bg-gray-100 text-gray-700 border-gray-200', icon: XCircle },
-    under_review: { label: 'Em Análise', color: 'bg-blue-100 text-blue-700 border-blue-200', icon: RefreshCw },
+    active: { label: 'Ativo', color: 'bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-[var(--color-success-border)]', icon: CheckCircle },
+    pending: { label: 'Pendente', color: 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)] border-[var(--color-warning-border)]', icon: PauseCircle },
+    suspended: { label: 'Suspenso', color: 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)] border-[var(--color-warning-border)]', icon: Pause },
+    blocked: { label: 'Bloqueado', color: 'bg-[var(--color-error-bg)] text-[var(--color-error-text)] border-[var(--color-error-border)]', icon: Ban },
+    inactive: { label: 'Inativo', color: 'bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] border-[var(--color-border-default)]', icon: XCircle },
+    under_review: { label: 'Em Análise', color: 'bg-[var(--color-info-bg)] text-[var(--color-info-text)] border-[var(--color-info-border)]', icon: RefreshCw },
 };
 
 const suspendReasons = [
@@ -79,11 +80,11 @@ export default function MerchantHeader({ merchant }) {
 
     return (
         <>
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="bg-[var(--color-card-bg)] rounded-xl p-6 shadow-sm border border-[var(--color-card-border)]">
                 <div className="flex flex-col lg:flex-row gap-6">
                     {/* Logo and Info */}
                     <div className="flex gap-4 flex-1">
-                        <Avatar className="w-20 h-20 border-2 border-slate-200 dark:border-slate-600">
+                        <Avatar className="w-20 h-20 border-2 border-[var(--color-border-default)]">
                             <AvatarImage src={merchant.logo_url} />
                             <AvatarFallback className="text-xl font-bold bg-gradient-to-br from-[#2bc196] to-emerald-600 text-white">
                                 {merchant.business_name?.substring(0, 2).toUpperCase()}
@@ -92,7 +93,7 @@ export default function MerchantHeader({ merchant }) {
                         
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-3 mb-2 flex-wrap">
-                                <h1 className="text-2xl font-bold text-slate-900 dark:text-white truncate">
+                                <h1 className="text-2xl font-bold text-[var(--color-text-primary)] truncate">
                                     {merchant.business_name}
                                 </h1>
                                 <Badge className={`${status.color} border gap-1`}>
@@ -101,29 +102,29 @@ export default function MerchantHeader({ merchant }) {
                                 </Badge>
                             </div>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-sm text-slate-600 dark:text-slate-400">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-sm text-[var(--color-text-secondary)]">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-slate-400">CNPJ:</span>
+                                    <span className="text-[var(--color-text-tertiary)]">CNPJ:</span>
                                     <span className="font-medium">{merchant.document}</span>
                                     <button onClick={() => copyToClipboard(merchant.document, 'CNPJ')} className="hover:text-[#2bc196]">
                                         <Copy className="w-3 h-3" />
                                     </button>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Mail className="w-3 h-3 text-slate-400" />
+                                    <Mail className="w-3 h-3 text-[var(--color-text-tertiary)]" />
                                     <span className="truncate">{merchant.email}</span>
                                     <button onClick={() => copyToClipboard(merchant.email, 'E-mail')} className="hover:text-[#2bc196]">
                                         <Copy className="w-3 h-3" />
                                     </button>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Phone className="w-3 h-3 text-slate-400" />
+                                    <Phone className="w-3 h-3 text-[var(--color-text-tertiary)]" />
                                     <span>{merchant.phone || '(11) 99999-0000'}</span>
                                 </div>
                                 {merchant.website && (
                                     <div className="flex items-center gap-2">
-                                        <Globe className="w-3 h-3 text-slate-400" />
-                                        <a href={merchant.website} target="_blank" rel="noopener noreferrer" className="text-[#2bc196] hover:underline truncate">
+                                        <Globe className="w-3 h-3 text-[var(--color-text-tertiary)]" />
+                                        <a href={merchant.website} target="_blank" rel="noopener noreferrer" className="text-[var(--color-text-link)] hover:underline truncate">
                                             {merchant.website}
                                         </a>
                                     </div>
@@ -135,24 +136,24 @@ export default function MerchantHeader({ merchant }) {
                     {/* Status Info */}
                     <div className="flex flex-col items-end gap-2 min-w-[200px]">
                         <div className="text-right">
-                            <div className="flex items-center gap-2 text-sm text-slate-500">
+                            <div className="flex items-center gap-2 text-sm text-[var(--color-text-tertiary)]">
                                 <Hash className="w-3 h-3" />
-                                <span>ID: <span className="font-mono font-medium text-slate-700 dark:text-slate-300">{merchant.id}</span></span>
+                                <span>ID: <span className="font-mono font-medium text-[var(--color-text-secondary)]">{merchant.id}</span></span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-slate-500">
+                            <div className="flex items-center gap-2 text-sm text-[var(--color-text-tertiary)]">
                                 <Calendar className="w-3 h-3" />
-                                <span>Desde: <span className="font-medium text-slate-700 dark:text-slate-300">{new Date(merchant.created_date || '2024-03-15').toLocaleDateString('pt-BR')}</span></span>
+                                <span>Desde: <span className="font-medium text-[var(--color-text-secondary)]">{new Date(merchant.created_date || '2024-03-15').toLocaleDateString('pt-BR')}</span></span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-slate-500">
+                            <div className="flex items-center gap-2 text-sm text-[var(--color-text-tertiary)]">
                                 <Building2 className="w-3 h-3" />
-                                <span>Categoria: <span className="font-medium text-slate-700 dark:text-slate-300">{merchant.category || 'Varejo'}</span></span>
+                                <span>Categoria: <span className="font-medium text-[var(--color-text-secondary)]">{merchant.category || 'Varejo'}</span></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-wrap gap-2 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex flex-wrap gap-2 mt-6 pt-4 border-t border-[var(--color-border-light)]">
                     {merchant.status !== 'active' && (
                         <Button size="sm" className="gap-2 bg-green-600 hover:bg-green-700" onClick={() => setActivateModal(true)}>
                             <Play className="w-4 h-4" /> Ativar

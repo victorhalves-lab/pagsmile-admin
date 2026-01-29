@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Download, AlertTriangle, Sparkles } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 import PageHeader from '@/components/common/PageHeader';
 import AllTransactionsView from '@/components/transactions/AllTransactionsView';
@@ -15,7 +16,7 @@ export default function Transactions() {
   const [activeTab, setActiveTab] = useState('all');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
       <PageHeader
         title="Transações"
         subtitle="Gerencie todas as suas transações de pagamento"

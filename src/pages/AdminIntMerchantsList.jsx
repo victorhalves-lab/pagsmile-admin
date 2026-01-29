@@ -7,6 +7,7 @@ import {
 import { Plus, Upload, Download, Settings, FileSpreadsheet, FileText, File } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import { cn } from '@/lib/utils';
 
 import MerchantFilters from '@/components/admin-interno/merchants/MerchantFilters';
 import MerchantTable from '@/components/admin-interno/merchants/MerchantTable';
@@ -137,7 +138,7 @@ export default function AdminIntMerchantsList() {
   };
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-6 pb-20 bg-[var(--color-bg-page)] min-h-screen">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <PageHeader

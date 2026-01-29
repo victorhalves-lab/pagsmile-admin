@@ -4,6 +4,7 @@ import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Activity } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { mockMerchants, mockTransactions } from '@/components/mockData/adminInternoMocks';
 import MerchantHeader from '@/components/admin-interno/merchant-profile/MerchantHeader';
 import TabResumo from '@/components/admin-interno/merchant-profile/tabs/TabResumo';
@@ -49,7 +50,7 @@ export default function AdminIntMerchantProfile() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
             <PageHeader 
                 title={merchant.business_name}
                 subtitle="Perfil 360°"

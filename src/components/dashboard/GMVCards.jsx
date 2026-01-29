@@ -69,16 +69,16 @@ export default function GMVCards({ data = {}, loading = false }) {
           <Tooltip>
             <TooltipTrigger asChild>
               <Card className={cn(
-                "cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300",
+                "cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-[var(--color-card-bg)] border-[var(--color-card-border)]",
                 metric.highlight && "ring-2 ring-[#2bc196]/20"
               )}>
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      <p className="text-xs font-bold text-[var(--color-text-tertiary)] uppercase tracking-wider">
                         {metric.label}
                       </p>
-                      <p className="text-2xl font-black text-slate-900 mt-2 tracking-tight">
+                      <p className="text-2xl font-black text-[var(--color-text-primary)] mt-2 tracking-tight">
                         {formatCurrency(metric.value)}
                       </p>
                     </div>
@@ -88,7 +88,7 @@ export default function GMVCards({ data = {}, loading = false }) {
                   <div className="flex items-center gap-2">
                     <span className={cn(
                       "flex items-center gap-1 text-xs font-bold px-1.5 py-0.5 rounded-md",
-                      metric.change > 0 ? 'text-emerald-700 bg-emerald-50' : metric.change < 0 ? 'text-red-700 bg-red-50' : 'text-slate-500 bg-slate-50'
+                      metric.change > 0 ? 'text-[var(--color-success)] bg-[var(--color-success-bg)]' : metric.change < 0 ? 'text-[var(--color-error)] bg-[var(--color-error-bg)]' : 'text-[var(--color-text-tertiary)] bg-[var(--color-bg-secondary)]'
                     )}>
                       {metric.change > 0 ? (
                         <TrendingUp className="w-3 h-3" />
@@ -97,14 +97,14 @@ export default function GMVCards({ data = {}, loading = false }) {
                       ) : null}
                       {formatPercentage(metric.change)}
                     </span>
-                    <span className="text-xs text-slate-400 font-medium">{metric.subtitle}</span>
+                    <span className="text-xs text-[var(--color-text-tertiary)] font-medium">{metric.subtitle}</span>
                   </div>
 
                   {/* Projection */}
                   {metric.projection && (
-                    <div className="mt-3 pt-2 border-t border-slate-50">
-                      <p className="text-xs text-slate-500">
-                        Projeção: <span className="font-bold text-slate-700">{formatCurrency(metric.projection)}</span>
+                    <div className="mt-3 pt-2 border-t border-[var(--color-border-light)]">
+                      <p className="text-xs text-[var(--color-text-tertiary)]">
+                        Projeção: <span className="font-bold text-[var(--color-text-secondary)]">{formatCurrency(metric.projection)}</span>
                       </p>
                     </div>
                   )}

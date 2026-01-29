@@ -20,6 +20,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
+import { cn } from '@/lib/utils';
+
 export default function IBHome() {
   const [showBalance, setShowBalance] = useState(true);
 
@@ -54,12 +56,12 @@ export default function IBHome() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Home</h1>
-          <p className="text-slate-500 dark:text-slate-400">Bem-vindo à sua conta digital</p>
+          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Home</h1>
+          <p className="text-[var(--color-text-tertiary)]">Bem-vindo à sua conta digital</p>
         </div>
       </div>
 
@@ -188,51 +190,51 @@ export default function IBHome() {
       </div>
 
       {/* Recent Transactions */}
-      <Card>
+      <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
         <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <CardTitle className="text-base font-semibold">Últimas Movimentações</CardTitle>
+          <CardTitle className="text-base font-semibold text-[var(--color-text-primary)]">Últimas Movimentações</CardTitle>
           <Link to={createPageUrl('IBExtract')}>
-            <Button variant="ghost" size="sm" className="text-[#2bc196] hover:text-[#2bc196] hover:bg-[#2bc196]/10">
+            <Button variant="ghost" size="sm" className="text-[var(--color-text-link)] hover:text-[var(--color-text-link-hover)] hover:bg-[var(--color-success-bg)]">
               Ver extrato
               <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </Link>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="divide-y dark:divide-slate-700">
+          <div className="divide-y divide-[var(--color-border-light)]">
             {recentTransactions.map((transaction) => (
               <div
                 key={transaction.id}
-                className="flex items-center justify-between px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer"
+                className="flex items-center justify-between px-6 py-4 hover:bg-[var(--color-bg-hover)] transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-4">
                   <div className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center",
                     transaction.type === 'received'
-                      ? "bg-emerald-100 dark:bg-emerald-900/50"
-                      : "bg-red-100 dark:bg-red-900/50"
+                      ? "bg-[var(--color-success-bg)]"
+                      : "bg-[var(--color-error-bg)]"
                   )}>
                     {transaction.type === 'received' ? (
-                      <ArrowDownLeft className="w-5 h-5 text-emerald-600" />
+                      <ArrowDownLeft className="w-5 h-5 text-[var(--color-success)]" />
                     ) : (
-                      <ArrowUpRight className="w-5 h-5 text-red-600" />
+                      <ArrowUpRight className="w-5 h-5 text-[var(--color-error)]" />
                     )}
                   </div>
                   <div>
-                    <p className="font-medium text-slate-900 dark:text-white">
+                    <p className="font-medium text-[var(--color-text-primary)]">
                       {transaction.type === 'received' ? 'Pix Recebido' : 'Pix Enviado'}
                     </p>
-                    <p className="text-sm text-slate-500">{transaction.description}</p>
+                    <p className="text-sm text-[var(--color-text-tertiary)]">{transaction.description}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className={cn(
                     "font-semibold",
-                    transaction.type === 'received' ? "text-emerald-600" : "text-red-600"
+                    transaction.type === 'received' ? "text-[var(--color-success)]" : "text-[var(--color-error)]"
                   )}>
                     {transaction.type === 'received' ? '+' : '-'} {formatCurrency(transaction.amount)}
                   </p>
-                  <p className="text-xs text-slate-500">{transaction.date}</p>
+                  <p className="text-xs text-[var(--color-text-tertiary)]">{transaction.date}</p>
                 </div>
               </div>
             ))}

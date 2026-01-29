@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Download, Eye, FileText, ChevronRight, AlertTriangle, Clock } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 
@@ -22,11 +23,11 @@ const chargebacks = [
 ];
 
 const statusConfig = {
-    open: { label: 'Aberto', color: 'bg-yellow-100 text-yellow-700' },
-    in_defense: { label: 'Em Defesa', color: 'bg-blue-100 text-blue-700' },
-    awaiting: { label: 'Aguardando', color: 'bg-slate-100 text-slate-700' },
-    won: { label: 'Ganho', color: 'bg-green-100 text-green-700' },
-    lost: { label: 'Perdido', color: 'bg-red-100 text-red-700' },
+    open: { label: 'Aberto', color: 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]' },
+    in_defense: { label: 'Em Defesa', color: 'bg-[var(--color-info-bg)] text-[var(--color-info-text)]' },
+    awaiting: { label: 'Aguardando', color: 'bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)]' },
+    won: { label: 'Ganho', color: 'bg-[var(--color-success-bg)] text-[var(--color-success-text)]' },
+    lost: { label: 'Perdido', color: 'bg-[var(--color-error-bg)] text-[var(--color-error-text)]' },
 };
 
 const urgentChargebacks = chargebacks.filter(cb => cb.urgent && cb.status === 'open');
@@ -42,16 +43,16 @@ export default function AdminIntChargebacksList() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
             <PageHeader 
                 title="Gestão de Chargebacks"
                 breadcrumbs={[{ label: 'Risco e Compliance' }, { label: 'Chargebacks' }]}
             />
 
             {/* Stats */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle className="text-base">📊 Resumo Geral</CardTitle>
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">📊 Resumo Geral</CardTitle>
                     <Select defaultValue="30d">
                         <SelectTrigger className="w-[120px]"><SelectValue /></SelectTrigger>
                         <SelectContent>
@@ -63,35 +64,35 @@ export default function AdminIntChargebacksList() {
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-6 gap-4">
-                        <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-green-700">{stats.cbRatio}%</p>
-                            <p className="text-xs text-slate-500">CB Ratio</p>
-                            <Badge className="bg-green-100 text-green-700 border-0 mt-1">🟢 OK</Badge>
+                        <div className="p-3 bg-[var(--color-success-bg)] border border-[var(--color-success-border)] rounded-lg text-center">
+                            <p className="text-2xl font-bold text-[var(--color-success)]">{stats.cbRatio}%</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">CB Ratio</p>
+                            <Badge className="bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-0 mt-1">🟢 OK</Badge>
                         </div>
-                        <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
-                            <p className="text-2xl font-bold">{stats.open.count}</p>
-                            <p className="text-xs text-slate-500">Abertos</p>
-                            <p className="text-xs text-slate-400">{formatCurrency(stats.open.value)}</p>
+                        <div className="p-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-lg text-center">
+                            <p className="text-2xl font-bold text-[var(--color-text-primary)]">{stats.open.count}</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">Abertos</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">{formatCurrency(stats.open.value)}</p>
                         </div>
-                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-center">
-                            <p className="text-2xl font-bold">{stats.inDefense.count}</p>
-                            <p className="text-xs text-slate-500">Em Defesa</p>
-                            <p className="text-xs text-slate-400">{formatCurrency(stats.inDefense.value)}</p>
+                        <div className="p-3 bg-[var(--color-info-bg)] border border-[var(--color-info-border)] rounded-lg text-center">
+                            <p className="text-2xl font-bold text-[var(--color-text-primary)]">{stats.inDefense.count}</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">Em Defesa</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">{formatCurrency(stats.inDefense.value)}</p>
                         </div>
-                        <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                            <p className="text-2xl font-bold">{stats.awaiting.count}</p>
-                            <p className="text-xs text-slate-500">Aguardando</p>
-                            <p className="text-xs text-slate-400">{formatCurrency(stats.awaiting.value)}</p>
+                        <div className="p-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border-default)] rounded-lg text-center">
+                            <p className="text-2xl font-bold text-[var(--color-text-primary)]">{stats.awaiting.count}</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">Aguardando</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">{formatCurrency(stats.awaiting.value)}</p>
                         </div>
-                        <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-green-700">{stats.won.count} ({stats.won.percentage}%)</p>
-                            <p className="text-xs text-slate-500">Ganhos</p>
-                            <p className="text-xs text-slate-400">{formatCurrency(stats.won.value)}</p>
+                        <div className="p-3 bg-[var(--color-success-bg)] border border-[var(--color-success-border)] rounded-lg text-center">
+                            <p className="text-2xl font-bold text-[var(--color-success)]">{stats.won.count} ({stats.won.percentage}%)</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">Ganhos</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">{formatCurrency(stats.won.value)}</p>
                         </div>
-                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-red-700">{stats.lost.count} ({stats.lost.percentage}%)</p>
-                            <p className="text-xs text-slate-500">Perdidos</p>
-                            <p className="text-xs text-slate-400">{formatCurrency(stats.lost.value)}</p>
+                        <div className="p-3 bg-[var(--color-error-bg)] border border-[var(--color-error-border)] rounded-lg text-center">
+                            <p className="text-2xl font-bold text-[var(--color-error)]">{stats.lost.count} ({stats.lost.percentage}%)</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">Perdidos</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">{formatCurrency(stats.lost.value)}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -99,24 +100,24 @@ export default function AdminIntChargebacksList() {
 
             {/* Urgent Deadlines */}
             {urgentChargebacks.length > 0 && (
-                <Card className="border-red-200 bg-red-50/50">
+                <Card className="border-[var(--color-error-border)] bg-[var(--color-error-bg)]">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-base flex items-center gap-2">
-                            <AlertTriangle className="w-5 h-5 text-red-500" />
+                        <CardTitle className="text-base flex items-center gap-2 text-[var(--color-error-text)]">
+                            <AlertTriangle className="w-5 h-5 text-[var(--color-error)]" />
                             Prazos Urgentes (Próximos 3 dias)
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2">
                         {urgentChargebacks.map(cb => (
-                            <div key={cb.id} className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                            <div key={cb.id} className="flex items-center justify-between p-3 bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-default)]">
                                 <div className="flex items-center gap-3">
-                                    <span className="text-red-500">🔴</span>
-                                    <span className="font-mono text-sm">{cb.id}</span>
-                                    <span className="text-sm">{cb.merchant}</span>
-                                    <span className="font-medium">{formatCurrency(cb.amount)}</span>
+                                    <span className="text-[var(--color-error)]">🔴</span>
+                                    <span className="font-mono text-sm text-[var(--color-text-secondary)]">{cb.id}</span>
+                                    <span className="text-sm text-[var(--color-text-primary)]">{cb.merchant}</span>
+                                    <span className="font-medium text-[var(--color-text-primary)]">{formatCurrency(cb.amount)}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-sm text-red-600 font-medium flex items-center gap-1">
+                                    <span className="text-sm text-[var(--color-error)] font-medium flex items-center gap-1">
                                         <Clock className="w-4 h-4" /> Prazo: {cb.deadline}
                                     </span>
                                     <Button size="sm" onClick={() => toast.info('Abrindo modal de defesa...')}>
@@ -130,7 +131,7 @@ export default function AdminIntChargebacksList() {
             )}
 
             {/* Filters */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardContent className="pt-4">
                     <div className="flex flex-wrap gap-3 items-center">
                         <Select defaultValue="30d">
@@ -188,37 +189,37 @@ export default function AdminIntChargebacksList() {
             </Card>
 
             {/* Chargebacks List */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardContent className="pt-4">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="border-b">
-                                    <th className="text-left py-2 px-3">ID</th>
-                                    <th className="text-left py-2 px-3">Merchant</th>
-                                    <th className="text-right py-2 px-3">Valor</th>
-                                    <th className="text-left py-2 px-3">Bandeira</th>
-                                    <th className="text-left py-2 px-3">Motivo</th>
-                                    <th className="text-left py-2 px-3">Prazo</th>
-                                    <th className="text-left py-2 px-3">Status</th>
-                                    <th className="text-center py-2 px-3">Ações</th>
+                                <tr className="border-b border-[var(--color-border-light)]">
+                                    <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">ID</th>
+                                    <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Merchant</th>
+                                    <th className="text-right py-2 px-3 text-[var(--color-text-tertiary)]">Valor</th>
+                                    <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Bandeira</th>
+                                    <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Motivo</th>
+                                    <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Prazo</th>
+                                    <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Status</th>
+                                    <th className="text-center py-2 px-3 text-[var(--color-text-tertiary)]">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {chargebacks.map(cb => (
-                                    <tr key={cb.id} className="border-b hover:bg-slate-50">
-                                        <td className="py-3 px-3 font-mono text-xs">{cb.id}</td>
+                                    <tr key={cb.id} className="border-b border-[var(--color-border-light)] hover:bg-[var(--color-bg-hover)]">
+                                        <td className="py-3 px-3 font-mono text-xs text-[var(--color-text-secondary)]">{cb.id}</td>
                                         <td className="py-3 px-3">
-                                            <Link to={createPageUrl('AdminIntMerchantProfile') + '?id=' + cb.merchantId} className="text-blue-600 hover:underline">
+                                            <Link to={createPageUrl('AdminIntMerchantProfile') + '?id=' + cb.merchantId} className="text-[var(--color-text-link)] hover:underline">
                                                 {cb.merchant}
                                             </Link>
                                         </td>
-                                        <td className="py-3 px-3 text-right font-medium">{formatCurrency(cb.amount)}</td>
-                                        <td className="py-3 px-3">{cb.brand}</td>
-                                        <td className="py-3 px-3">{cb.reason}</td>
+                                        <td className="py-3 px-3 text-right font-medium text-[var(--color-text-primary)]">{formatCurrency(cb.amount)}</td>
+                                        <td className="py-3 px-3 text-[var(--color-text-secondary)]">{cb.brand}</td>
+                                        <td className="py-3 px-3 text-[var(--color-text-secondary)]">{cb.reason}</td>
                                         <td className="py-3 px-3">
                                             {cb.deadline !== '-' ? (
-                                                <span className={`flex items-center gap-1 ${cb.urgent ? 'text-red-600 font-medium' : ''}`}>
+                                                <span className={cn("flex items-center gap-1", cb.urgent && 'text-[var(--color-error)] font-medium')}>
                                                     {cb.urgent && '🔴'} {cb.deadline}
                                                 </span>
                                             ) : '-'}
@@ -243,8 +244,8 @@ export default function AdminIntChargebacksList() {
                             </tbody>
                         </table>
                     </div>
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t">
-                        <span className="text-sm text-slate-500">Mostrando 1-50 de 234</span>
+                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--color-border-light)]">
+                        <span className="text-sm text-[var(--color-text-tertiary)]">Mostrando 1-50 de 234</span>
                         <div className="flex gap-2">
                             <Button variant="outline" size="sm" disabled>◀ Anterior</Button>
                             <span className="px-3 py-1 text-sm">Página 1 de 5</span>

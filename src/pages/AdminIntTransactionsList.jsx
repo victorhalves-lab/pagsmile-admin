@@ -13,6 +13,7 @@ import { Search, Download, Eye, MoreVertical, ChevronLeft, ChevronRight, Filter,
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import StatusBadge from '@/components/common/StatusBadge';
 import { mockTransactions } from '@/components/mockData/adminInternoMocks';
+import { cn } from '@/lib/utils';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 
@@ -57,7 +58,7 @@ export default function AdminIntTransactionsList() {
     const approvalRate = stats.total > 0 ? (stats.approved / stats.total * 100).toFixed(1) : 0;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
             <PageHeader 
                 title="Lista de Transações"
                 breadcrumbs={[
@@ -67,13 +68,13 @@ export default function AdminIntTransactionsList() {
             />
 
             {/* Quick Search */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardContent className="pt-6">
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-placeholder)]" />
                         <Input 
                             placeholder="ID da Transação, CPF, E-mail, Referência Externa... (Ctrl+K)"
-                            className="pl-12 text-base"
+                            className="pl-12 text-base bg-[var(--color-input-bg)] border-[var(--color-input-border)] text-[var(--color-input-text)]"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -83,37 +84,37 @@ export default function AdminIntTransactionsList() {
 
             {/* Indicators */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg">
-                    <p className="text-sm text-slate-500 mb-1">Total</p>
-                    <p className="text-2xl font-bold">{stats.total.toLocaleString()}</p>
-                    <p className="text-xs text-slate-400">(Hoje)</p>
+                <div className="p-4 bg-[var(--color-card-bg)] border border-[var(--color-card-border)] rounded-lg">
+                    <p className="text-sm text-[var(--color-text-tertiary)] mb-1">Total</p>
+                    <p className="text-2xl font-bold text-[var(--color-text-primary)]">{stats.total.toLocaleString()}</p>
+                    <p className="text-xs text-[var(--color-text-tertiary)]">(Hoje)</p>
                 </div>
-                <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                    <p className="text-sm text-slate-500 mb-1">Aprovadas</p>
-                    <p className="text-2xl font-bold text-green-600">{stats.approved.toLocaleString()}</p>
-                    <p className="text-xs text-slate-500">{approvalRate}%</p>
+                <div className="p-4 bg-[var(--color-success-bg)] border border-[var(--color-success-border)] rounded-lg">
+                    <p className="text-sm text-[var(--color-text-tertiary)] mb-1">Aprovadas</p>
+                    <p className="text-2xl font-bold text-[var(--color-success)]">{stats.approved.toLocaleString()}</p>
+                    <p className="text-xs text-[var(--color-text-tertiary)]">{approvalRate}%</p>
                 </div>
-                <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                    <p className="text-sm text-slate-500 mb-1">Negadas</p>
-                    <p className="text-2xl font-bold text-red-600">{stats.denied.toLocaleString()}</p>
-                    <p className="text-xs text-slate-500">{((stats.denied/stats.total)*100).toFixed(1)}%</p>
+                <div className="p-4 bg-[var(--color-error-bg)] border border-[var(--color-error-border)] rounded-lg">
+                    <p className="text-sm text-[var(--color-text-tertiary)] mb-1">Negadas</p>
+                    <p className="text-2xl font-bold text-[var(--color-error)]">{stats.denied.toLocaleString()}</p>
+                    <p className="text-xs text-[var(--color-text-tertiary)]">{((stats.denied/stats.total)*100).toFixed(1)}%</p>
                 </div>
-                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                    <p className="text-sm text-slate-500 mb-1">Pendentes</p>
-                    <p className="text-2xl font-bold text-yellow-600">{stats.pending.toLocaleString()}</p>
-                    <p className="text-xs text-slate-500">{((stats.pending/stats.total)*100).toFixed(1)}%</p>
+                <div className="p-4 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-lg">
+                    <p className="text-sm text-[var(--color-text-tertiary)] mb-1">Pendentes</p>
+                    <p className="text-2xl font-bold text-[var(--color-warning)]">{stats.pending.toLocaleString()}</p>
+                    <p className="text-xs text-[var(--color-text-tertiary)]">{((stats.pending/stats.total)*100).toFixed(1)}%</p>
                 </div>
-                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                    <p className="text-sm text-slate-500 mb-1">TPV</p>
-                    <p className="text-xl font-bold text-blue-600">{formatCurrency(stats.tpv)}</p>
-                    <p className="text-xs text-slate-500">TM: {formatCurrency(avgTicket)}</p>
+                <div className="p-4 bg-[var(--color-info-bg)] border border-[var(--color-info-border)] rounded-lg">
+                    <p className="text-sm text-[var(--color-text-tertiary)] mb-1">TPV</p>
+                    <p className="text-xl font-bold text-[var(--color-info)]">{formatCurrency(stats.tpv)}</p>
+                    <p className="text-xs text-[var(--color-text-tertiary)]">TM: {formatCurrency(avgTicket)}</p>
                 </div>
             </div>
 
             {/* Filters */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader className="flex flex-row items-center justify-between pb-3">
-                    <CardTitle className="text-base flex items-center gap-2">
+                    <CardTitle className="text-base flex items-center gap-2 text-[var(--color-text-primary)]">
                         <Filter className="w-4 h-4" /> Filtros
                     </CardTitle>
                     <Button variant="ghost" size="sm" onClick={() => { setSearchTerm(''); setSelectedStatus('all'); setSelectedMethod('all'); }}>
@@ -168,11 +169,11 @@ export default function AdminIntTransactionsList() {
             </Card>
 
             {/* Transaction List */}
-            <Card>
+            <Card className="bg-[var(--color-card-bg)] border-[var(--color-card-border)]">
                 <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle className="text-base">
+                    <CardTitle className="text-base text-[var(--color-text-primary)]">
                         Lista de Transações
-                        <span className="text-sm font-normal text-slate-500 ml-2">
+                        <span className="text-sm font-normal text-[var(--color-text-tertiary)] ml-2">
                             Exibindo {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, filteredTxs.length)} de {filteredTxs.length.toLocaleString()}
                         </span>
                     </CardTitle>
@@ -184,34 +185,34 @@ export default function AdminIntTransactionsList() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="border-b border-slate-200 dark:border-slate-700">
-                                    <th className="text-left py-2 px-3 font-medium text-slate-500">ID</th>
-                                    <th className="text-left py-2 px-3 font-medium text-slate-500">Data/Hora</th>
-                                    <th className="text-left py-2 px-3 font-medium text-slate-500">Merchant</th>
-                                    <th className="text-right py-2 px-3 font-medium text-slate-500">Valor</th>
-                                    <th className="text-left py-2 px-3 font-medium text-slate-500">Método</th>
-                                    <th className="text-left py-2 px-3 font-medium text-slate-500">Status</th>
-                                    <th className="text-center py-2 px-3 font-medium text-slate-500">Ações</th>
+                                <tr className="border-b border-[var(--color-border-light)]">
+                                    <th className="text-left py-2 px-3 font-medium text-[var(--color-text-tertiary)]">ID</th>
+                                    <th className="text-left py-2 px-3 font-medium text-[var(--color-text-tertiary)]">Data/Hora</th>
+                                    <th className="text-left py-2 px-3 font-medium text-[var(--color-text-tertiary)]">Merchant</th>
+                                    <th className="text-right py-2 px-3 font-medium text-[var(--color-text-tertiary)]">Valor</th>
+                                    <th className="text-left py-2 px-3 font-medium text-[var(--color-text-tertiary)]">Método</th>
+                                    <th className="text-left py-2 px-3 font-medium text-[var(--color-text-tertiary)]">Status</th>
+                                    <th className="text-center py-2 px-3 font-medium text-[var(--color-text-tertiary)]">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {paginatedTxs.map(tx => (
-                                    <tr key={tx.id} className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                                    <tr key={tx.id} className="border-b border-[var(--color-border-light)] hover:bg-[var(--color-bg-hover)]">
                                         <td className="py-3 px-3">
-                                            <Link to={createPageUrl('AdminIntTransactionDetail') + '?id=' + tx.id} className="font-mono text-xs text-blue-600 hover:underline">
+                                            <Link to={createPageUrl('AdminIntTransactionDetail') + '?id=' + tx.id} className="font-mono text-xs text-[var(--color-text-link)] hover:underline">
                                                 {tx.id}
                                             </Link>
                                         </td>
-                                        <td className="py-3 px-3 text-xs">
+                                        <td className="py-3 px-3 text-xs text-[var(--color-text-secondary)]">
                                             {new Date(tx.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} {new Date(tx.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                                         </td>
                                         <td className="py-3 px-3">
-                                            <Link to={createPageUrl('AdminIntMerchantProfile') + '?id=' + tx.merchant_id} className="text-blue-600 hover:underline">
+                                            <Link to={createPageUrl('AdminIntMerchantProfile') + '?id=' + tx.merchant_id} className="text-[var(--color-text-link)] hover:underline">
                                                 {tx.merchant_name}
                                             </Link>
                                         </td>
-                                        <td className="py-3 px-3 text-right font-medium">{formatCurrency(tx.amount)}</td>
-                                        <td className="py-3 px-3">
+                                        <td className="py-3 px-3 text-right font-medium text-[var(--color-text-primary)]">{formatCurrency(tx.amount)}</td>
+                                        <td className="py-3 px-3 text-[var(--color-text-secondary)]">
                                             <span className="flex items-center gap-1">
                                                 {paymentMethodIcons[tx.method]} {tx.method === 'pix' ? 'PIX' : tx.brand}
                                             </span>
@@ -243,22 +244,24 @@ export default function AdminIntTransactionsList() {
                     </div>
 
                     {/* Pagination */}
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--color-border-light)]">
                         <div className="flex items-center gap-2">
                             <Button 
                                 variant="outline" 
                                 size="sm" 
                                 disabled={currentPage === 1}
                                 onClick={() => setCurrentPage(p => p - 1)}
+                                className="border-[var(--color-border-default)] text-[var(--color-text-secondary)]"
                             >
                                 <ChevronLeft className="w-4 h-4 mr-1" /> Anterior
                             </Button>
-                            <span className="text-sm text-slate-600">Página {currentPage} de {totalPages}</span>
+                            <span className="text-sm text-[var(--color-text-secondary)]">Página {currentPage} de {totalPages}</span>
                             <Button 
                                 variant="outline" 
                                 size="sm" 
                                 disabled={currentPage === totalPages}
                                 onClick={() => setCurrentPage(p => p + 1)}
+                                className="border-[var(--color-border-default)] text-[var(--color-text-secondary)]"
                             >
                                 Próxima <ChevronRight className="w-4 h-4 ml-1" />
                             </Button>
