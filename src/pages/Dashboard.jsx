@@ -131,25 +131,23 @@ export default function Dashboard() {
         <PerformanceIndicators transactions={transactions} />
       </div>
 
-      {/* Balance + Volume Chart */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <BalanceCard
-          available={125430.50}
-          pending={45200.75}
-          blocked={2500.00}
-          className="lg:col-span-1"
-        />
-        <ChartCard
-          title="Volume de Vendas"
-          subtitle="Comparativo Cartão vs Pix"
-          className="lg:col-span-2"
-          periodSelector
-          selectedPeriod={period}
-          onPeriodChange={setPeriod}
-        >
-          <VolumeChart period={period} />
-        </ChartCard>
-      </div>
+      {/* Balance Card - Full Width */}
+      <BalanceCard
+        available={125430.50}
+        pending={45200.75}
+        blocked={2500.00}
+      />
+
+      {/* Volume Chart */}
+      <ChartCard
+        title="Volume de Vendas"
+        subtitle="Comparativo Cartão vs Pix"
+        periodSelector
+        selectedPeriod={period}
+        onPeriodChange={setPeriod}
+      >
+        <VolumeChart period={period} />
+      </ChartCard>
 
       {/* Tabs for Different Views */}
       <Tabs value={activeView} onValueChange={setActiveView} className="space-y-6">
