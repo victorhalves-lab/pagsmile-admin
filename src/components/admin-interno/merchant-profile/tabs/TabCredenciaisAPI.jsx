@@ -200,7 +200,12 @@ export default function TabCredenciaisAPI({ merchant }) {
                     <div>
                         <div className="flex items-center justify-between mb-3">
                             <Label>IPs Permitidos (Whitelist)</Label>
-                            <Button variant="outline" size="sm"><Plus className="w-4 h-4 mr-1" /> Adicionar IP</Button>
+                            <Button variant="outline" size="sm" onClick={() => { 
+                                const newIp = prompt('Digite o IP ou range (ex: 192.168.1.0/24):');
+                                if (newIp) setIps([...ips, newIp]);
+                            }}>
+                                <Plus className="w-4 h-4 mr-1" /> Adicionar IP
+                            </Button>
                         </div>
                         <div className="space-y-2">
                             {ips.map((ip, idx) => (
@@ -215,6 +220,40 @@ export default function TabCredenciaisAPI({ merchant }) {
                         <div className="flex items-center gap-2 mt-3">
                             <Checkbox id="whitelist-active" />
                             <Label htmlFor="whitelist-active" className="text-sm">Restringir acesso apenas aos IPs listados (whitelist ativa)</Label>
+                        </div>
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                        <div className="flex items-center justify-between mb-3">
+                            <Label>Permissões da API Key</Label>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-3 bg-slate-50 rounded-lg">
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="perm-transactions" defaultChecked />
+                                <Label htmlFor="perm-transactions" className="text-sm">Transações</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="perm-refunds" defaultChecked />
+                                <Label htmlFor="perm-refunds" className="text-sm">Estornos</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="perm-balance" defaultChecked />
+                                <Label htmlFor="perm-balance" className="text-sm">Consultar Saldo</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="perm-withdrawals" />
+                                <Label htmlFor="perm-withdrawals" className="text-sm">Saques</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="perm-customers" defaultChecked />
+                                <Label htmlFor="perm-customers" className="text-sm">Clientes</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="perm-subscriptions" />
+                                <Label htmlFor="perm-subscriptions" className="text-sm">Assinaturas</Label>
+                            </div>
                         </div>
                     </div>
 
