@@ -55,6 +55,7 @@ import AdminIntAnticipation from './pages/AdminIntAnticipation';
 import AdminIntAnticipations from './pages/AdminIntAnticipations';
 import AdminIntAntifraud from './pages/AdminIntAntifraud';
 import AdminIntAudit from './pages/AdminIntAudit';
+import AdminIntBINAnalysis from './pages/AdminIntBINAnalysis';
 import AdminIntBalanceManagement from './pages/AdminIntBalanceManagement';
 import AdminIntBatchProcessing from './pages/AdminIntBatchProcessing';
 import AdminIntBlockages from './pages/AdminIntBlockages';
@@ -102,6 +103,7 @@ import AdminIntMerchantTags from './pages/AdminIntMerchantTags';
 import AdminIntMerchants from './pages/AdminIntMerchants';
 import AdminIntMerchantsList from './pages/AdminIntMerchantsList';
 import AdminIntNewMerchant from './pages/AdminIntNewMerchant';
+import AdminIntOrchestration from './pages/AdminIntOrchestration';
 import AdminIntPLD from './pages/AdminIntPLD';
 import AdminIntPartnerDetail from './pages/AdminIntPartnerDetail';
 import AdminIntPartners from './pages/AdminIntPartners';
@@ -118,6 +120,7 @@ import AdminIntReportsHub from './pages/AdminIntReportsHub';
 import AdminIntReportsOperational from './pages/AdminIntReportsOperational';
 import AdminIntReportsRisk from './pages/AdminIntReportsRisk';
 import AdminIntRetention from './pages/AdminIntRetention';
+import AdminIntRetryIntelligence from './pages/AdminIntRetryIntelligence';
 import AdminIntRisk from './pages/AdminIntRisk';
 import AdminIntRiskAlerts from './pages/AdminIntRiskAlerts';
 import AdminIntRiskDashboard from './pages/AdminIntRiskDashboard';
@@ -145,6 +148,7 @@ import AdminIntWithdrawalApprovals from './pages/AdminIntWithdrawalApprovals';
 import AdminIntWithdrawals from './pages/AdminIntWithdrawals';
 import Anticipation from './pages/Anticipation';
 import ApiKeys from './pages/ApiKeys';
+import Disputes from './pages/Disputes';
 import CardTransactions from './pages/CardTransactions';
 import Chargebacks from './pages/Chargebacks';
 import CheckoutAnalytics from './pages/CheckoutAnalytics';
@@ -165,7 +169,6 @@ import DisputeAgentSettings from './pages/DisputeAgentSettings';
 import DisputeContestation from './pages/DisputeContestation';
 import DisputeDashboard from './pages/DisputeDashboard';
 import DisputeManager from './pages/DisputeManager';
-import Disputes from './pages/Disputes';
 import DocumentUploadFull from './pages/DocumentUploadFull';
 import DocumentUploadPix from './pages/DocumentUploadPix';
 import DunningSettings from './pages/DunningSettings';
@@ -216,9 +219,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntOrchestration from './pages/AdminIntOrchestration';
-import AdminIntBINAnalysis from './pages/AdminIntBINAnalysis';
-import AdminIntRetryIntelligence from './pages/AdminIntRetryIntelligence';
 import __Layout from './Layout.jsx';
 
 
@@ -231,6 +231,7 @@ export const PAGES = {
     "AdminIntAnticipations": AdminIntAnticipations,
     "AdminIntAntifraud": AdminIntAntifraud,
     "AdminIntAudit": AdminIntAudit,
+    "AdminIntBINAnalysis": AdminIntBINAnalysis,
     "AdminIntBalanceManagement": AdminIntBalanceManagement,
     "AdminIntBatchProcessing": AdminIntBatchProcessing,
     "AdminIntBlockages": AdminIntBlockages,
@@ -278,6 +279,7 @@ export const PAGES = {
     "AdminIntMerchants": AdminIntMerchants,
     "AdminIntMerchantsList": AdminIntMerchantsList,
     "AdminIntNewMerchant": AdminIntNewMerchant,
+    "AdminIntOrchestration": AdminIntOrchestration,
     "AdminIntPLD": AdminIntPLD,
     "AdminIntPartnerDetail": AdminIntPartnerDetail,
     "AdminIntPartners": AdminIntPartners,
@@ -294,6 +296,7 @@ export const PAGES = {
     "AdminIntReportsOperational": AdminIntReportsOperational,
     "AdminIntReportsRisk": AdminIntReportsRisk,
     "AdminIntRetention": AdminIntRetention,
+    "AdminIntRetryIntelligence": AdminIntRetryIntelligence,
     "AdminIntRisk": AdminIntRisk,
     "AdminIntRiskAlerts": AdminIntRiskAlerts,
     "AdminIntRiskDashboard": AdminIntRiskDashboard,
@@ -321,6 +324,7 @@ export const PAGES = {
     "AdminIntWithdrawals": AdminIntWithdrawals,
     "Anticipation": Anticipation,
     "ApiKeys": ApiKeys,
+    "Disputes": Disputes,
     "CardTransactions": CardTransactions,
     "Chargebacks": Chargebacks,
     "CheckoutAnalytics": CheckoutAnalytics,
@@ -341,7 +345,6 @@ export const PAGES = {
     "DisputeContestation": DisputeContestation,
     "DisputeDashboard": DisputeDashboard,
     "DisputeManager": DisputeManager,
-    "Disputes": Disputes,
     "DocumentUploadFull": DocumentUploadFull,
     "DocumentUploadPix": DocumentUploadPix,
     "DunningSettings": DunningSettings,
@@ -392,9 +395,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntOrchestration": AdminIntOrchestration,
-    "AdminIntBINAnalysis": AdminIntBINAnalysis,
-    "AdminIntRetryIntelligence": AdminIntRetryIntelligence,
 }
 
 export const pagesConfig = {

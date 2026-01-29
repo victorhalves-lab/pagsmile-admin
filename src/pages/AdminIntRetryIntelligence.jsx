@@ -165,6 +165,17 @@ export default function AdminIntRetryIntelligence() {
     },
   ];
 
+  const [pixFallbackEnabled, setPixFallbackEnabled] = useState(true);
+  const [pixFallbackAfter, setPixFallbackAfter] = useState('2');
+
+  const pixFallbackStats = {
+    offered: 1840,
+    converted: 1288,
+    conversionRate: 70,
+    volumeRecovered: 'R$ 520K',
+    avgTicket: 'R$ 403',
+  };
+
   return (
     <div className="space-y-5 min-h-screen">
       <PageHeader 
