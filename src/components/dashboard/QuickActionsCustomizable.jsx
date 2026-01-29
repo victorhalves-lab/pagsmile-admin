@@ -126,33 +126,35 @@ export default function QuickActionsCustomizable() {
   const displayActions = allActions.filter(a => selectedActions.includes(a.id));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">Ações Rápidas</h2>
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Ações Rápidas</h2>
         <Button
           variant="ghost"
           size="sm"
           onClick={handleOpenCustomize}
-          className="text-slate-500 hover:text-slate-700"
+          className="text-slate-500 hover:text-slate-700 h-7 text-xs px-2"
         >
-          <Settings2 className="w-4 h-4 mr-1" />
+          <Settings2 className="w-3.5 h-3.5 mr-1" />
           Personalizar
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {displayActions.map((action) => (
           <Link key={action.id} to={createPageUrl(action.page)}>
-            <Card className="group hover:shadow-lg hover:border-[#2bc196]/30 transition-all duration-300 cursor-pointer h-full">
-              <CardContent className="p-5 flex flex-col items-center text-center">
+            <Card className="group hover:shadow-md hover:border-[#2bc196]/30 transition-all duration-200 cursor-pointer h-full">
+              <CardContent className="p-3 flex items-center gap-3">
                 <div className={cn(
-                  "w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110",
+                  "w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105",
                   action.color
                 )}>
-                  <action.icon className="w-6 h-6 text-white" />
+                  <action.icon className="w-4 h-4 text-white" />
                 </div>
-                <p className="font-semibold text-slate-900 text-sm">{action.label}</p>
-                <p className="text-xs text-slate-500 mt-1">{action.description}</p>
+                <div className="min-w-0">
+                  <p className="font-medium text-slate-900 dark:text-white text-xs truncate">{action.label}</p>
+                  <p className="text-[10px] text-slate-500 truncate">{action.description}</p>
+                </div>
               </CardContent>
             </Card>
           </Link>
@@ -160,14 +162,14 @@ export default function QuickActionsCustomizable() {
 
         {displayActions.length < 4 && (
           <Card
-            className="group hover:shadow-lg hover:border-dashed transition-all duration-300 cursor-pointer border-dashed h-full"
+            className="group hover:shadow-md transition-all duration-200 cursor-pointer border-dashed h-full"
             onClick={handleOpenCustomize}
           >
-            <CardContent className="p-5 flex flex-col items-center justify-center text-center h-full min-h-[140px]">
-              <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-slate-200 transition-colors">
-                <Plus className="w-6 h-6 text-slate-400" />
+            <CardContent className="p-3 flex items-center gap-3 h-full">
+              <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0 group-hover:bg-slate-200 transition-colors">
+                <Plus className="w-4 h-4 text-slate-400" />
               </div>
-              <p className="font-medium text-slate-500 text-sm">Adicionar Ação</p>
+              <p className="font-medium text-slate-500 text-xs">Adicionar</p>
             </CardContent>
           </Card>
         )}
