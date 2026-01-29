@@ -250,15 +250,27 @@ export default function AccountCreationStep1() {
           )}
         </CardContent>
         
-        <CardFooter className="flex justify-between pt-6 pb-8 px-8 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-8">
+        <CardFooter className="flex flex-col pt-6 pb-8 px-8 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-8">
           {!showVerification ? (
             <>
-              <Button variant="ghost" className="text-slate-500 hover:text-slate-900 hover:bg-slate-100" asChild>
-                <Link to={createPageUrl('LandingPage')}><ArrowLeft className="mr-2 h-4 w-4" /> Voltar</Link>
-              </Button>
-              <Button onClick={handleNext} size="lg" className="bg-[#2bc196] hover:bg-[#239b7a] text-white font-bold px-10 rounded-full shadow-lg shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 transition-all hover:-translate-y-0.5">
-                Continuar <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <div className="flex justify-between w-full">
+                <Button variant="ghost" className="text-slate-500 hover:text-slate-900 hover:bg-slate-100" asChild>
+                  <Link to={createPageUrl('LandingPage')}><ArrowLeft className="mr-2 h-4 w-4" /> Voltar</Link>
+                </Button>
+                <Button onClick={handleNext} size="lg" className="bg-[#2bc196] hover:bg-[#239b7a] text-white font-bold px-10 rounded-full shadow-lg shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 transition-all hover:-translate-y-0.5">
+                  Continuar <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+              <div className="w-full text-center mt-4">
+                <a 
+                  href="https://pagsmileonboarding.base44.app/QuestionarioPublico?tipo=manual" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-sm text-[#2bc196] hover:text-[#239b7a] hover:underline font-medium transition-colors"
+                >
+                  Receber proposta personalizada →
+                </a>
+              </div>
             </>
           ) : (
             <>
