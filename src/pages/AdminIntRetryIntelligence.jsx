@@ -330,6 +330,186 @@ export default function AdminIntRetryIntelligence() {
           </Card>
         </TabsContent>
 
+        {/* PIX Fallback Tab */}
+        <TabsContent value="pix-fallback" className="mt-4 space-y-4">
+          {/* Fallback Flow Visualization */}
+          <Card className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-950/30 dark:to-cyan-950/30 border-teal-100 dark:border-teal-800">
+            <CardContent className="py-4">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-teal-100 dark:bg-teal-900/50 rounded-lg">
+                    <QrCode className="w-5 h-5 text-teal-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-sm text-teal-900 dark:text-teal-200">Fallback Automático para PIX</h3>
+                    <p className="text-xs text-teal-700 dark:text-teal-300">
+                      Após falhas no cartão, oferece PIX automaticamente ao cliente
+                    </p>
+                  </div>
+                </div>
+                <Switch checked={pixFallbackEnabled} onCheckedChange={setPixFallbackEnabled} />
+              </div>
+
+              {/* Visual Flow */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-white/50 dark:bg-slate-900/50 rounded-xl">
+                <div className="flex flex-col items-center p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 min-w-[100px]">
+                  <CreditCard className="w-6 h-6 text-blue-500 mb-1" />
+                  <span className="text-[10px] font-medium text-slate-700 dark:text-slate-300">1ª Tentativa</span>
+                  <span className="text-[9px] text-slate-500">Cartão</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-400" />
+                <div className="flex flex-col items-center p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 min-w-[100px]">
+                  <CreditCard className="w-6 h-6 text-amber-500 mb-1" />
+                  <span className="text-[10px] font-medium text-slate-700 dark:text-slate-300">2ª Tentativa</span>
+                  <span className="text-[9px] text-slate-500">Outro Adquirente</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-400" />
+                <div className="flex flex-col items-center p-3 bg-white dark:bg-slate-800 rounded-lg border border-red-200 dark:border-red-800 min-w-[100px]">
+                  <XCircle className="w-6 h-6 text-red-500 mb-1" />
+                  <span className="text-[10px] font-medium text-red-600">Falha</span>
+                  <span className="text-[9px] text-slate-500">Cartão Recusado</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-teal-500" />
+                <div className="flex flex-col items-center p-3 bg-teal-50 dark:bg-teal-900/30 rounded-lg border-2 border-teal-400 min-w-[120px]">
+                  <QrCode className="w-6 h-6 text-teal-600 mb-1" />
+                  <span className="text-[10px] font-bold text-teal-700 dark:text-teal-300">Fallback PIX</span>
+                  <span className="text-[9px] text-teal-600">QR Code Automático</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Config & Stats */}
+          <div className="grid lg:grid-cols-2 gap-4">
+            {/* Configuration */}
+            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+              <CardHeader className="pb-2 border-b border-slate-100 dark:border-slate-800">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <Settings className="w-4 h-4 text-slate-500" />
+                  Configurações do Fallback
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 space-y-4">
+                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Oferecer PIX após</p>
+                    <p className="text-[11px] text-slate-500">Número de tentativas falhas no cartão</p>
+                  </div>
+                  <Select value={pixFallbackAfter} onValueChange={setPixFallbackAfter}>
+                    <SelectTrigger className="w-[100px] h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 falha</SelectItem>
+                      <SelectItem value="2">2 falhas</SelectItem>
+                      <SelectItem value="3">3 falhas</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Mensagem Personalizada</p>
+                    <p className="text-[11px] text-slate-500">Exibir sugestão amigável ao cliente</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Desconto PIX</p>
+                    <p className="text-[11px] text-slate-500">Oferecer desconto para incentivar PIX</p>
+                  </div>
+                  <Select defaultValue="0">
+                    <SelectTrigger className="w-[100px] h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">Sem desconto</SelectItem>
+                      <SelectItem value="3">3% desconto</SelectItem>
+                      <SelectItem value="5">5% desconto</SelectItem>
+                      <SelectItem value="10">10% desconto</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+                  <div className="flex items-start gap-2">
+                    <MessageSquare className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs font-medium text-blue-900 dark:text-blue-200">Mensagem exibida ao cliente:</p>
+                      <p className="text-[11px] text-blue-700 dark:text-blue-300 mt-1 italic">
+                        "Ops! Tivemos um problema com seu cartão. Que tal pagar com PIX? É rápido, seguro e seu pedido é confirmado na hora! 🚀"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Stats */}
+            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+              <CardHeader className="pb-2 border-b border-slate-100 dark:border-slate-800">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-emerald-500" />
+                  Performance do Fallback PIX
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg text-center">
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{pixFallbackStats.offered.toLocaleString()}</p>
+                    <p className="text-[10px] text-slate-500">PIX Oferecidos</p>
+                  </div>
+                  <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-center">
+                    <p className="text-2xl font-bold text-emerald-600">{pixFallbackStats.converted.toLocaleString()}</p>
+                    <p className="text-[10px] text-slate-500">Convertidos</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Taxa de Conversão</span>
+                    <span className="text-sm font-bold text-emerald-600">{pixFallbackStats.conversionRate}%</span>
+                  </div>
+                  <div className="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all"
+                      style={{ width: `${pixFallbackStats.conversionRate}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <div>
+                    <p className="text-[11px] text-slate-500">Volume Recuperado</p>
+                    <p className="text-lg font-bold text-emerald-600">{pixFallbackStats.volumeRecovered}</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-slate-500">Ticket Médio PIX</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-white">{pixFallbackStats.avgTicket}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Decline codes for PIX fallback */}
+          <Card className="bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700">
+            <CardContent className="py-3 px-4">
+              <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-300 mb-2">Códigos que ativam o fallback PIX:</h4>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="outline" className="text-[10px] bg-white dark:bg-slate-800">51 - Saldo Insuficiente</Badge>
+                <Badge variant="outline" className="text-[10px] bg-white dark:bg-slate-800">61 - Excede Limite</Badge>
+                <Badge variant="outline" className="text-[10px] bg-white dark:bg-slate-800">65 - Limite Diário</Badge>
+                <Badge variant="outline" className="text-[10px] bg-white dark:bg-slate-800">05 - Não Autorizada</Badge>
+                <Badge variant="outline" className="text-[10px] bg-white dark:bg-slate-800">14 - Cartão Inválido</Badge>
+                <Badge variant="outline" className="text-[10px] bg-white dark:bg-slate-800">57 - Transação não permitida</Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Analysis Tab */}
         <TabsContent value="analysis" className="mt-4">
           <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
