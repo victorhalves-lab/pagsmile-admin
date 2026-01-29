@@ -55,7 +55,9 @@ import {
   Settings2,
   ArrowUpDown,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  ArrowDownLeft,
+  ArrowUpRight
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -88,6 +90,7 @@ const CARD_COLUMNS = [
 
 const PIX_COLUMNS = [
   ...DEFAULT_COLUMNS.filter(c => !['card_brand', 'card_last_four', 'installments'].includes(c.key)),
+  { key: 'pix_transaction_type', label: 'Tipo PIX', visible: true, sortable: true },
   { key: 'e2eid', label: 'E2EID', visible: true },
   { key: 'pix_type', label: 'Tipo Cobrança', visible: true },
   { key: 'payment_time', label: 'Tempo Pgto', visible: false },
@@ -325,6 +328,33 @@ export default function TransactionDataTable({
         return row.type === 'pix' ? (
           <Badge variant="outline">Imediata</Badge>
         ) : '-';
+
+      case 'pix_transaction_type':
+        if (row.method !== 'pix' && row.type !== 'pix') return '-';
+        const pixType = row.pix_transaction_type || 'in';
+        return (
+          <Badge 
+            variant="outline" 
+            className={cn(
+              "gap-1",
+              pixType === 'in' 
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                : 'bg-red-50 text-red-700 border-red-200'
+            )}
+          >
+            {pixType === 'in' ? (
+              <>
+                <ArrowDownLeft className="w-3 h-3" />
+                Entrada
+              </>
+            ) : (
+              <>
+                <ArrowUpRight className="w-3 h-3" />
+                Saída
+              </>
+            )}
+          </Badge>
+        );
 
       default:
         return row[columnKey] || '-';
