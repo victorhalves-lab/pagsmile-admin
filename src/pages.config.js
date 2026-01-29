@@ -219,6 +219,12 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
+import AdminIntComplianceQueue from './pages/AdminIntComplianceQueue';
+import AdminIntComplianceReview from './pages/AdminIntComplianceReview';
+import AdminIntComplianceSubmissions from './pages/AdminIntComplianceSubmissions';
+import AdminIntComplianceForms from './pages/AdminIntComplianceForms';
+import AdminIntComplianceDocs from './pages/AdminIntComplianceDocs';
+import AdminIntComplianceRules from './pages/AdminIntComplianceRules';
 import __Layout from './Layout.jsx';
 
 
@@ -395,6 +401,12 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
+    "AdminIntComplianceQueue": AdminIntComplianceQueue,
+    "AdminIntComplianceReview": AdminIntComplianceReview,
+    "AdminIntComplianceSubmissions": AdminIntComplianceSubmissions,
+    "AdminIntComplianceForms": AdminIntComplianceForms,
+    "AdminIntComplianceDocs": AdminIntComplianceDocs,
+    "AdminIntComplianceRules": AdminIntComplianceRules,
 }
 
 export const pagesConfig = {
