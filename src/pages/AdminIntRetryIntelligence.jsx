@@ -196,10 +196,11 @@ export default function AdminIntRetryIntelligence() {
       />
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
         <KPICard title="Transações Retriadas" value="8.2K" icon={RefreshCw} color="blue" subtitle="Hoje" />
         <KPICard title="Taxa de Recuperação" value="58%" icon={Target} color="emerald" trend="up" trendValue="+4%" />
         <KPICard title="Volume Recuperado" value="R$ 1.2M" icon={DollarSign} color="emerald" subtitle="Este mês" />
+        <KPICard title="Fallback PIX" value="70%" icon={QrCode} color="teal" trend="up" trendValue="+8%" subtitle="Conversão" />
         <KPICard title="Tempo Médio Retry" value="2.4h" icon={Clock} color="amber" />
         <KPICard title="Regras Ativas" value="3/4" icon={Zap} color="purple" />
       </div>
