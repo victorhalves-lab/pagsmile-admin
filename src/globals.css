@@ -1,0 +1,415 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   PAGSMILE DESIGN SYSTEM - THEME TOKENS
+   Light Mode & Dark Mode
+   ============================================ */
+
+:root,
+[data-theme="light"],
+.light {
+  /* CORES DA MARCA (não mudam) */
+  --color-brand-primary: #2BC196;
+  --color-brand-primary-hover: #25A880;
+  --color-brand-primary-active: #1F8F6D;
+  --color-brand-secondary: #5CF7CF;
+  --color-brand-navy: #002443;
+  
+  /* FUNDOS */
+  --color-bg-page: #FAFAFA;
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #F4F4F4;
+  --color-bg-tertiary: #E8E8E8;
+  --color-bg-hover: #F4F4F4;
+  --color-bg-active: #E8E8E8;
+  --color-bg-disabled: #F4F4F4;
+  
+  /* TEXTOS */
+  --color-text-primary: #171717;
+  --color-text-secondary: #525252;
+  --color-text-tertiary: #737373;
+  --color-text-placeholder: #A3A3A3;
+  --color-text-disabled: #A3A3A3;
+  --color-text-inverse: #FFFFFF;
+  --color-text-link: #2BC196;
+  --color-text-link-hover: #25A880;
+  
+  /* BORDAS */
+  --color-border-light: #E8E8E8;
+  --color-border-default: #D4D4D4;
+  --color-border-strong: #A3A3A3;
+  --color-border-focus: #2BC196;
+  --color-border-error: #EF4444;
+  
+  /* ESTADOS - SUCCESS */
+  --color-success: #2BC196;
+  --color-success-bg: #ECFDF5;
+  --color-success-border: #A7F3D0;
+  --color-success-text: #065F46;
+  
+  /* ESTADOS - WARNING */
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FFFBEB;
+  --color-warning-border: #FDE68A;
+  --color-warning-text: #92400E;
+  
+  /* ESTADOS - ERROR */
+  --color-error: #EF4444;
+  --color-error-bg: #FEF2F2;
+  --color-error-border: #FECACA;
+  --color-error-text: #991B1B;
+  
+  /* ESTADOS - INFO */
+  --color-info: #3B82F6;
+  --color-info-bg: #EFF6FF;
+  --color-info-border: #BFDBFE;
+  --color-info-text: #1E40AF;
+  
+  /* SOMBRAS */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+  
+  /* OVERLAYS */
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-overlay-light: rgba(0, 0, 0, 0.3);
+
+  /* SIDEBAR */
+  --color-sidebar-bg: #FFFFFF;
+  --color-sidebar-text: #525252;
+  --color-sidebar-text-hover: #171717;
+  --color-sidebar-text-active: #2BC196;
+  --color-sidebar-icon: #737373;
+  --color-sidebar-icon-hover: #404040;
+  --color-sidebar-icon-active: #2BC196;
+  --color-sidebar-item-hover: #F4F4F4;
+  --color-sidebar-item-active: #ECFDF5;
+  --color-sidebar-border: #E8E8E8;
+
+  /* HEADER */
+  --color-header-bg: #FFFFFF;
+  --color-header-border: #E8E8E8;
+  --color-header-text: #171717;
+
+  /* CARDS */
+  --color-card-bg: #FFFFFF;
+  --color-card-border: #E8E8E8;
+  --color-card-header-bg: #F4F4F4;
+
+  /* TABLES */
+  --color-table-header-bg: #F4F4F4;
+  --color-table-header-text: #525252;
+  --color-table-row-bg: #FFFFFF;
+  --color-table-row-alt-bg: #FAFAFA;
+  --color-table-row-hover: #F4F4F4;
+  --color-table-row-selected: #ECFDF5;
+  --color-table-border: #E8E8E8;
+
+  /* INPUTS */
+  --color-input-bg: #FFFFFF;
+  --color-input-border: #D4D4D4;
+  --color-input-border-hover: #A3A3A3;
+  --color-input-border-focus: #2BC196;
+  --color-input-text: #404040;
+  --color-input-disabled-bg: #F4F4F4;
+  --color-input-disabled-border: #E8E8E8;
+
+  /* BUTTONS */
+  --color-btn-primary-bg: #2BC196;
+  --color-btn-primary-bg-hover: #25A880;
+  --color-btn-primary-bg-active: #1F8F6D;
+  --color-btn-primary-text: #FFFFFF;
+  --color-btn-secondary-bg: transparent;
+  --color-btn-secondary-border: #2BC196;
+  --color-btn-secondary-text: #2BC196;
+  --color-btn-secondary-hover-bg: #ECFDF5;
+  --color-btn-ghost-bg: transparent;
+  --color-btn-ghost-text: #2BC196;
+  --color-btn-ghost-hover-bg: #F4F4F4;
+  --color-btn-danger-bg: #EF4444;
+  --color-btn-danger-bg-hover: #DC2626;
+  --color-btn-danger-text: #FFFFFF;
+
+  /* BADGES */
+  --color-badge-success-bg: #ECFDF5;
+  --color-badge-success-text: #065F46;
+  --color-badge-warning-bg: #FFFBEB;
+  --color-badge-warning-text: #92400E;
+  --color-badge-error-bg: #FEF2F2;
+  --color-badge-error-text: #991B1B;
+  --color-badge-info-bg: #EFF6FF;
+  --color-badge-info-text: #1E40AF;
+  --color-badge-neutral-bg: #F4F4F4;
+  --color-badge-neutral-text: #525252;
+
+  /* TOOLTIPS */
+  --color-tooltip-bg: #171717;
+  --color-tooltip-text: #FFFFFF;
+
+  /* MODALS */
+  --color-modal-bg: #FFFFFF;
+  --color-modal-header-bg: #FFFFFF;
+  --color-modal-footer-bg: #F4F4F4;
+  --color-modal-border: #E8E8E8;
+
+  /* SCROLLBAR */
+  --color-scrollbar-track: #F4F4F4;
+  --color-scrollbar-thumb: #D4D4D4;
+  --color-scrollbar-thumb-hover: #A3A3A3;
+
+  /* CHARTS */
+  --color-chart-grid: #E8E8E8;
+  --color-chart-axis: #D4D4D4;
+  --color-chart-label: #737373;
+}
+
+[data-theme="dark"],
+.dark {
+  /* CORES DA MARCA (variações para contraste) */
+  --color-brand-primary: #2BC196;
+  --color-brand-primary-hover: #34D399;
+  --color-brand-primary-active: #5CF7CF;
+  --color-brand-secondary: #5CF7CF;
+  --color-brand-navy: #002443;
+  
+  /* FUNDOS */
+  --color-bg-page: #0F0F11;
+  --color-bg-primary: #18181B;
+  --color-bg-secondary: #1F1F23;
+  --color-bg-tertiary: #27272A;
+  --color-bg-hover: #27272A;
+  --color-bg-active: #3F3F46;
+  --color-bg-disabled: #1F1F23;
+  
+  /* TEXTOS */
+  --color-text-primary: #FAFAFA;
+  --color-text-secondary: #D4D4D8;
+  --color-text-tertiary: #A1A1AA;
+  --color-text-placeholder: #71717A;
+  --color-text-disabled: #52525B;
+  --color-text-inverse: #171717;
+  --color-text-link: #34D399;
+  --color-text-link-hover: #5CF7CF;
+  
+  /* BORDAS */
+  --color-border-light: #27272A;
+  --color-border-default: #3F3F46;
+  --color-border-strong: #52525B;
+  --color-border-focus: #2BC196;
+  --color-border-error: #F87171;
+  
+  /* ESTADOS - SUCCESS */
+  --color-success: #34D399;
+  --color-success-bg: #064E3B;
+  --color-success-border: #065F46;
+  --color-success-text: #A7F3D0;
+  
+  /* ESTADOS - WARNING */
+  --color-warning: #FBBF24;
+  --color-warning-bg: #78350F;
+  --color-warning-border: #92400E;
+  --color-warning-text: #FDE68A;
+  
+  /* ESTADOS - ERROR */
+  --color-error: #F87171;
+  --color-error-bg: #7F1D1D;
+  --color-error-border: #991B1B;
+  --color-error-text: #FECACA;
+  
+  /* ESTADOS - INFO */
+  --color-info: #60A5FA;
+  --color-info-bg: #1E3A8A;
+  --color-info-border: #1E40AF;
+  --color-info-text: #BFDBFE;
+  
+  /* SOMBRAS (mais intensas em dark) */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4), 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.5), 0 10px 10px rgba(0, 0, 0, 0.3);
+  
+  /* OVERLAYS */
+  --color-overlay: rgba(0, 0, 0, 0.7);
+  --color-overlay-light: rgba(0, 0, 0, 0.5);
+
+  /* SIDEBAR */
+  --color-sidebar-bg: #18181B;
+  --color-sidebar-text: #A1A1AA;
+  --color-sidebar-text-hover: #FAFAFA;
+  --color-sidebar-text-active: #34D399;
+  --color-sidebar-icon: #71717A;
+  --color-sidebar-icon-hover: #D4D4D8;
+  --color-sidebar-icon-active: #34D399;
+  --color-sidebar-item-hover: #27272A;
+  --color-sidebar-item-active: #064E3B;
+  --color-sidebar-border: #27272A;
+
+  /* HEADER */
+  --color-header-bg: #18181B;
+  --color-header-border: #27272A;
+  --color-header-text: #FAFAFA;
+
+  /* CARDS */
+  --color-card-bg: #18181B;
+  --color-card-border: #27272A;
+  --color-card-header-bg: #1F1F23;
+
+  /* TABLES */
+  --color-table-header-bg: #27272A;
+  --color-table-header-text: #A1A1AA;
+  --color-table-row-bg: #18181B;
+  --color-table-row-alt-bg: #1F1F23;
+  --color-table-row-hover: #27272A;
+  --color-table-row-selected: #064E3B;
+  --color-table-border: #27272A;
+
+  /* INPUTS */
+  --color-input-bg: #1F1F23;
+  --color-input-border: #3F3F46;
+  --color-input-border-hover: #52525B;
+  --color-input-border-focus: #2BC196;
+  --color-input-text: #E4E4E7;
+  --color-input-disabled-bg: #18181B;
+  --color-input-disabled-border: #27272A;
+
+  /* BUTTONS */
+  --color-btn-primary-bg: #2BC196;
+  --color-btn-primary-bg-hover: #34D399;
+  --color-btn-primary-bg-active: #5CF7CF;
+  --color-btn-primary-text: #FFFFFF;
+  --color-btn-secondary-bg: transparent;
+  --color-btn-secondary-border: #34D399;
+  --color-btn-secondary-text: #34D399;
+  --color-btn-secondary-hover-bg: #064E3B;
+  --color-btn-ghost-bg: transparent;
+  --color-btn-ghost-text: #34D399;
+  --color-btn-ghost-hover-bg: #27272A;
+  --color-btn-danger-bg: #DC2626;
+  --color-btn-danger-bg-hover: #EF4444;
+  --color-btn-danger-text: #FFFFFF;
+
+  /* BADGES */
+  --color-badge-success-bg: #064E3B;
+  --color-badge-success-text: #A7F3D0;
+  --color-badge-warning-bg: #78350F;
+  --color-badge-warning-text: #FDE68A;
+  --color-badge-error-bg: #7F1D1D;
+  --color-badge-error-text: #FECACA;
+  --color-badge-info-bg: #1E3A8A;
+  --color-badge-info-text: #BFDBFE;
+  --color-badge-neutral-bg: #27272A;
+  --color-badge-neutral-text: #D4D4D8;
+
+  /* TOOLTIPS */
+  --color-tooltip-bg: #FAFAFA;
+  --color-tooltip-text: #171717;
+
+  /* MODALS */
+  --color-modal-bg: #1F1F23;
+  --color-modal-header-bg: #1F1F23;
+  --color-modal-footer-bg: #18181B;
+  --color-modal-border: #27272A;
+
+  /* SCROLLBAR */
+  --color-scrollbar-track: #1F1F23;
+  --color-scrollbar-thumb: #3F3F46;
+  --color-scrollbar-thumb-hover: #52525B;
+
+  /* CHARTS */
+  --color-chart-grid: #27272A;
+  --color-chart-axis: #3F3F46;
+  --color-chart-label: #A1A1AA;
+}
+
+/* ============================================
+   TRANSIÇÕES SUAVES ENTRE TEMAS
+   ============================================ */
+* {
+  transition: 
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    fill 0.2s ease,
+    stroke 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+*::before,
+*::after,
+img,
+video,
+[data-no-transition] {
+  transition: none !important;
+}
+
+/* ============================================
+   SCROLLBAR CUSTOMIZADA
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scrollbar-thumb-hover);
+}
+
+/* ============================================
+   CLASSES UTILITÁRIAS
+   ============================================ */
+@layer utilities {
+  /* Fundos */
+  .bg-page { background-color: var(--color-bg-page); }
+  .bg-primary { background-color: var(--color-bg-primary); }
+  .bg-secondary { background-color: var(--color-bg-secondary); }
+  .bg-tertiary { background-color: var(--color-bg-tertiary); }
+  
+  /* Textos */
+  .text-primary { color: var(--color-text-primary); }
+  .text-secondary { color: var(--color-text-secondary); }
+  .text-tertiary { color: var(--color-text-tertiary); }
+  
+  /* Bordas */
+  .border-light { border-color: var(--color-border-light); }
+  .border-default { border-color: var(--color-border-default); }
+  .border-strong { border-color: var(--color-border-strong); }
+  
+  /* Sombras */
+  .shadow-theme-xs { box-shadow: var(--shadow-xs); }
+  .shadow-theme-sm { box-shadow: var(--shadow-sm); }
+  .shadow-theme-md { box-shadow: var(--shadow-md); }
+  .shadow-theme-lg { box-shadow: var(--shadow-lg); }
+  .shadow-theme-xl { box-shadow: var(--shadow-xl); }
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+@layer base {
+  body {
+    background-color: var(--color-bg-page);
+    color: var(--color-text-primary);
+  }
+  
+  a {
+    color: var(--color-text-link);
+  }
+  
+  a:hover {
+    color: var(--color-text-link-hover);
+  }
+}
