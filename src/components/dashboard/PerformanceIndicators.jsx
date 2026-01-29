@@ -105,11 +105,11 @@ export default function PerformanceIndicators({ transactions = [] }) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
-        <Activity className="w-5 h-5 text-[#2bc196]" />
-        <h2 className="text-lg font-bold text-slate-800 dark:text-white">Performance & Indicadores</h2>
+      <div className="flex items-center gap-2 mb-3">
+        <Activity className="w-4 h-4 text-[#2bc196]" />
+        <h2 className="text-base font-bold text-slate-800 dark:text-white">Performance & Indicadores</h2>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {indicators.map((indicator) => {
           const IconComponent = indicator.icon;
 
@@ -117,25 +117,18 @@ export default function PerformanceIndicators({ transactions = [] }) {
             <Card
               key={indicator.id}
               className={cn(
-                "hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group border-2",
+                "hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group border",
                 indicator.cardBg,
                 indicator.borderColor
               )}
             >
-              {/* Decorative glow */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-current opacity-5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
-              
-              <CardContent className="p-6 relative">
-                <div className="flex items-start justify-between mb-4">
-                  <div className={cn(
-                    "w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300",
-                    indicator.iconBg
-                  )}>
-                    <IconComponent className="w-6 h-6 text-white" />
-                  </div>
+              <CardContent className="p-4">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-2">
+                  <IconComponent className={cn("w-4 h-4", `text-${indicator.color}-500`)} />
                   {indicator.percentage !== undefined && (
-                    <Badge className={cn(
-                      "text-xs font-bold border-0 shadow-sm",
+                    <span className={cn(
+                      "text-[10px] font-bold px-1.5 py-0.5 rounded",
                       indicator.percentage >= 85 
                         ? "bg-emerald-100 text-emerald-700" 
                         : indicator.percentage >= 70
@@ -143,45 +136,43 @@ export default function PerformanceIndicators({ transactions = [] }) {
                           : "bg-red-100 text-red-700"
                     )}>
                       {indicator.percentage.toFixed(1)}%
-                    </Badge>
+                    </span>
                   )}
                 </div>
 
-                <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">{indicator.label}</p>
-                  <p className="text-3xl font-black text-slate-800 dark:text-white">
-                    {formatValue(indicator.value, indicator.format)}
-                  </p>
-                </div>
+                {/* Content */}
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-0.5">{indicator.label}</p>
+                <p className="text-xl font-bold text-slate-800 dark:text-white truncate">
+                  {formatValue(indicator.value, indicator.format)}
+                </p>
 
                 {/* Gauge for approval rate */}
                 {indicator.showGauge && indicator.benchmark && (
-                  <div className="space-y-2 mt-4">
+                  <div className="mt-3 space-y-1">
                     <div className="relative">
-                      <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-gradient-to-r from-emerald-400 to-[#2bc196] rounded-full transition-all duration-500"
+                          className="h-full bg-gradient-to-r from-emerald-400 to-[#2bc196] rounded-full"
                           style={{ width: `${Math.min(indicator.value, 100)}%` }}
                         />
                       </div>
                       <div 
-                        className="absolute top-1/2 -translate-y-1/2 w-1 h-4 bg-slate-400 rounded-full"
+                        className="absolute top-1/2 -translate-y-1/2 w-0.5 h-2.5 bg-slate-400 rounded-full"
                         style={{ left: `${indicator.benchmark}%` }}
-                        title={`Benchmark: ${indicator.benchmark}%`}
                       />
                     </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-slate-500 font-medium">Meta: {indicator.benchmark}%</span>
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-slate-500">Meta: {indicator.benchmark}%</span>
                       {indicator.value >= indicator.benchmark ? (
-                        <div className="flex items-center gap-1 text-emerald-600 font-bold">
-                          <Trophy className="w-3 h-3" />
-                          +{(indicator.value - indicator.benchmark).toFixed(1)}p.p.
-                        </div>
+                        <span className="text-emerald-600 font-bold flex items-center gap-0.5">
+                          <Trophy className="w-2.5 h-2.5" />
+                          +{(indicator.value - indicator.benchmark).toFixed(1)}
+                        </span>
                       ) : (
-                        <div className="flex items-center gap-1 text-red-600 font-bold">
-                          <AlertTriangle className="w-3 h-3" />
-                          -{(indicator.benchmark - indicator.value).toFixed(1)}p.p.
-                        </div>
+                        <span className="text-red-600 font-bold flex items-center gap-0.5">
+                          <AlertTriangle className="w-2.5 h-2.5" />
+                          -{(indicator.benchmark - indicator.value).toFixed(1)}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -189,36 +180,34 @@ export default function PerformanceIndicators({ transactions = [] }) {
 
                 {/* Change indicator */}
                 {indicator.change !== undefined && (
-                  <div className="flex items-center gap-2 mt-3">
-                    <div className={cn(
-                      "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold",
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <span className={cn(
+                      "inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded",
                       indicator.change > 0 
                         ? 'bg-emerald-100 text-emerald-700' 
                         : 'bg-red-100 text-red-700'
                     )}>
-                      {indicator.change > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                      {indicator.change > 0 ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
                       {Math.abs(indicator.change).toFixed(1)}%
-                    </div>
-                    <span className="text-xs text-slate-400">vs anterior</span>
+                    </span>
+                    <span className="text-[10px] text-slate-400">vs anterior</span>
                   </div>
                 )}
 
                 {/* Comparison */}
                 {indicator.comparison !== undefined && indicator.value > 0 && (
-                  <div className="mt-3 pt-3 border-t border-dashed border-slate-200 dark:border-slate-700">
-                    <p className="text-xs text-slate-500">
+                  <div className="mt-2 pt-2 border-t border-dashed border-slate-200 dark:border-slate-600">
+                    <p className="text-[10px] text-slate-500 truncate">
                       {indicator.value > indicator.comparison ? (
-                        <span className="text-emerald-600 font-bold flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3" />
-                          {formatCurrency(indicator.value - indicator.comparison)} maior
+                        <span className="text-emerald-600 font-semibold">
+                          +{formatCurrency(indicator.value - indicator.comparison)}
                         </span>
                       ) : indicator.value < indicator.comparison ? (
-                        <span className="text-red-600 font-bold flex items-center gap-1">
-                          <TrendingDown className="w-3 h-3" />
-                          {formatCurrency(indicator.comparison - indicator.value)} menor
+                        <span className="text-red-600 font-semibold">
+                          -{formatCurrency(indicator.comparison - indicator.value)}
                         </span>
                       ) : (
-                        <span className="text-slate-600 font-medium">Igual</span>
+                        <span className="text-slate-600">Igual</span>
                       )}
                     </p>
                   </div>
