@@ -30,6 +30,11 @@ export default function LandingPage() {
           />
         </div>
 
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-white mb-2">Proposta Personalizada</h1>
+          <p className="text-slate-400 text-sm">Acesse sua proposta comercial exclusiva</p>
+        </div>
+
         <div className="flex flex-col gap-4">
           <Button 
             onClick={handleLogin} 
