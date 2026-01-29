@@ -306,6 +306,20 @@ const adminInternoMenuItems = [
     ]
   },
   {
+    id: 'reports',
+    label: 'Relatórios',
+    icon: BarChart3,
+    page: 'AdminIntReportsHub',
+    submenu: [
+      { label: 'Central de Relatórios', page: 'AdminIntReportsHub' },
+      { label: 'Operacionais', page: 'AdminIntReportsOperational' },
+      { label: 'Financeiros', page: 'AdminIntReportsFinancial' },
+      { label: 'Risco', page: 'AdminIntReportsRisk' },
+      { label: 'Customizados', page: 'AdminIntReportsCustom' },
+      { label: 'Analytics e BI', page: 'AdminIntAnalytics' },
+    ]
+  },
+  {
     id: 'admin',
     label: 'Administração',
     icon: Settings,
@@ -398,6 +412,7 @@ const adminInternoPages = [
   'AdminIntFinancialDashboard', 'AdminIntSettlements', 'AdminIntWithdrawals', 'AdminIntAnticipations', 'AdminIntStatements', 'AdminIntInvoices', 'AdminIntBalanceManagement',
   'AdminIntRiskDashboard', 'AdminIntFraudMonitoring', 'AdminIntChargebacksList', 'AdminIntMEDsList', 'AdminIntRiskRules', 'AdminIntControlLists', 'AdminIntRiskAlerts', 'AdminIntCompliance',
   'AdminIntSettings', 'AdminIntUsers', 'AdminIntProfiles', 'AdminIntGlobalRates', 'AdminIntRiskParams', 'AdminIntIntegrations', 'AdminIntTemplates', 'AdminIntSystemLogs',
+  'AdminIntReportsHub', 'AdminIntReportsOperational', 'AdminIntReportsFinancial', 'AdminIntReportsRisk', 'AdminIntReportsCustom', 'AdminIntAnalytics',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
   'AdminIntMCCs', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
 ];
