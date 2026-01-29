@@ -10,7 +10,8 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pi
 import { 
   Activity, DollarSign, CreditCard, AlertTriangle, TrendingUp, TrendingDown, RefreshCw, 
   Smartphone, Zap, Clock, CheckCircle2, XCircle, ArrowUpRight, ArrowDownRight, Eye,
-  Banknote, QrCode, Percent, Users, Building2, ChevronRight, Sparkles, Shield
+  Banknote, QrCode, Percent, Users, Building2, ChevronRight, Sparkles, Shield,
+  ArrowDownLeft, Wallet
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -304,9 +305,65 @@ export default function AdminIntTransactionsDashboard() {
         </TabsContent>
 
         <TabsContent value="pix" className="mt-4 space-y-4">
+          {/* PIX In/Out Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border-emerald-200">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center">
+                      <ArrowDownLeft className="w-4 h-4 text-emerald-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-emerald-600 uppercase">PIX Entrada</p>
+                      <p className="text-[10px] text-emerald-500">8.2K transações</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-emerald-100 text-emerald-700 border-0 text-[10px]">94.2% conv.</Badge>
+                </div>
+                <p className="text-2xl font-bold text-emerald-800">R$ 820K</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-red-50 to-red-100/50 border-red-200">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center">
+                      <ArrowUpRight className="w-4 h-4 text-red-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-red-600 uppercase">PIX Saída</p>
+                      <p className="text-[10px] text-red-500">320 transações</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-red-100 text-red-700 border-0 text-[10px]">98.1% conv.</Badge>
+                </div>
+                <p className="text-2xl font-bold text-red-800">R$ 30K</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-blue-200">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center">
+                      <Wallet className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-blue-600 uppercase">Saldo Líquido</p>
+                      <p className="text-[10px] text-blue-500">Entrada - Saída</p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-2xl font-bold text-blue-800">R$ 790K</p>
+              </CardContent>
+            </Card>
+          </div>
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <KPICard title="TPV PIX" value="R$ 850K" icon={QrCode} color="teal" trend="up" trendValue="+22%" />
-            <KPICard title="Conversão" value="92%" icon={CheckCircle2} color="emerald" subtitle="QR → Pagamento" />
+            <KPICard title="TPV PIX Total" value="R$ 850K" icon={QrCode} color="teal" trend="up" trendValue="+22%" />
+            <KPICard title="Conversão Geral" value="92%" icon={CheckCircle2} color="emerald" subtitle="QR → Pagamento" />
             <KPICard title="Tempo Médio" value="8s" icon={Clock} color="blue" subtitle="Confirmação" />
             <KPICard title="QR Expirados" value="4.2%" icon={Clock} color="amber" />
           </div>
@@ -315,7 +372,7 @@ export default function AdminIntTransactionsDashboard() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <QrCode className="w-4 h-4 text-teal-500" />
-                PIX Gerados vs Pagos
+                PIX Entrada vs Saída (Por Hora)
               </CardTitle>
             </CardHeader>
             <CardContent className="h-[280px]">
@@ -325,8 +382,9 @@ export default function AdminIntTransactionsDashboard() {
                   <XAxis dataKey="hour" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-                  <Bar dataKey="gerados" fill="#94A3B8" radius={[4, 4, 0, 0]} name="Gerados" />
-                  <Bar dataKey="pagos" fill="#14B8A6" radius={[4, 4, 0, 0]} name="Pagos" />
+                  <Legend />
+                  <Bar dataKey="gerados" fill="#10B981" radius={[4, 4, 0, 0]} name="PIX Entrada" />
+                  <Bar dataKey="pagos" fill="#EF4444" radius={[4, 4, 0, 0]} name="PIX Saída" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
