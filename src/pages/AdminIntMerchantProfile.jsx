@@ -29,6 +29,8 @@ import TabUsuarios from '@/components/admin-interno/merchant-profile/tabs/TabUsu
 import TabWebhooks from '@/components/admin-interno/merchant-profile/tabs/TabWebhooks';
 import TabSplit from '@/components/admin-interno/merchant-profile/tabs/TabSplit';
 import TabRecorrencia from '@/components/admin-interno/merchant-profile/tabs/TabRecorrencia';
+import TabClientUsers from '@/components/admin-interno/merchant-profile/tabs/TabClientUsers';
+import TabSubSellers from '@/components/admin-interno/merchant-profile/tabs/TabSubSellers';
 
 
 
@@ -87,6 +89,8 @@ export default function AdminIntMerchantProfile() {
                     <TabsTrigger value="webhooks">🔔 Webhooks</TabsTrigger>
                     <TabsTrigger value="split">➗ Split</TabsTrigger>
                     <TabsTrigger value="recorrencia">🔄 Recorr.</TabsTrigger>
+                    <TabsTrigger value="client-users">👤 Usuários Cliente</TabsTrigger>
+                    <TabsTrigger value="subsellers">🏪 Sub-sellers</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="resumo"><TabResumo merchant={merchant} /></TabsContent>
@@ -111,6 +115,8 @@ export default function AdminIntMerchantProfile() {
                 <TabsContent value="webhooks"><TabWebhooks merchant={merchant} /></TabsContent>
                 <TabsContent value="split"><TabSplit merchant={merchant} /></TabsContent>
                 <TabsContent value="recorrencia"><TabRecorrencia merchant={merchant} /></TabsContent>
+                <TabsContent value="client-users"><TabClientUsers merchant={merchant} /></TabsContent>
+                <TabsContent value="subsellers"><TabSubSellers merchant={merchant} /></TabsContent>
             </Tabs>
         </div>
     );
