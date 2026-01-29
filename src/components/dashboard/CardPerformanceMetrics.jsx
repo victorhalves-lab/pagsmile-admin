@@ -114,46 +114,46 @@ export default function CardPerformanceMetrics({ transactions = [] }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Approval by Brand */}
-      <div className="bg-white rounded-xl border border-gray-100 p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-gray-900">Taxa de Aprovação por Bandeira</h3>
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Aprovação por Bandeira</h3>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Info className="w-4 h-4 text-gray-400" />
+                <Info className="w-3.5 h-3.5 text-gray-400" />
               </TooltipTrigger>
               <TooltipContent>
-                <p className="text-xs max-w-xs">Percentual de transações aprovadas vs total de tentativas, segmentado por bandeira do cartão</p>
+                <p className="text-xs max-w-xs">Aprovação vs tentativas por bandeira</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {brandMetrics.map((metric) => (
-            <div key={metric.brand} className="space-y-1.5">
+            <div key={metric.brand} className="space-y-1">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-700">{brandLabels[metric.brand]}</span>
-                  <span className="text-xs text-gray-500">({metric.count} transações)</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{brandLabels[metric.brand]}</span>
+                  <span className="text-[10px] text-gray-400">({metric.count})</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <span className={cn(
-                    "text-sm font-bold",
+                    "text-xs font-bold",
                     metric.approvalRate >= 85 ? 'text-emerald-600' : 
                     metric.approvalRate >= 75 ? 'text-yellow-600' : 'text-red-600'
                   )}>
                     {metric.approvalRate.toFixed(1)}%
                   </span>
-                  <span className="text-xs text-gray-500">{formatCurrency(metric.volume)}</span>
+                  <span className="text-[10px] text-gray-400">{formatCurrency(metric.volume)}</span>
                 </div>
               </div>
               <Progress 
                 value={metric.approvalRate} 
                 className={cn(
-                  "h-2",
+                  "h-1.5",
                   metric.approvalRate >= 85 && "[&>div]:bg-emerald-500",
                   metric.approvalRate >= 75 && metric.approvalRate < 85 && "[&>div]:bg-yellow-500",
                   metric.approvalRate < 75 && "[&>div]:bg-red-500"
@@ -164,61 +164,45 @@ export default function CardPerformanceMetrics({ transactions = [] }) {
         </div>
       </div>
 
-      {/* Approval by Installments */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-100 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">Por Parcelamento</h3>
-          <div className="space-y-4">
+      {/* Approval by Installments + Value Range */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 p-4">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Por Parcelamento</h3>
+          <div className="space-y-2.5">
             {installmentMetrics.map((metric) => (
-              <div key={metric.label} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">{metric.label}</span>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">{metric.percentage.toFixed(0)}% do total</Badge>
-                    <span className="text-sm font-semibold text-gray-900">
-                      {metric.approvalRate.toFixed(1)}%
-                    </span>
-                  </div>
+              <div key={metric.label} className="flex items-center justify-between py-1">
+                <div>
+                  <span className="text-xs text-gray-700 dark:text-gray-300">{metric.label}</span>
+                  <p className="text-[10px] text-gray-400">{metric.count} tx • {formatCurrency(metric.volume)}</p>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <span>{metric.count} transações</span>
-                  <span>•</span>
-                  <span>{formatCurrency(metric.volume)}</span>
+                <div className="text-right">
+                  <span className="text-xs font-bold text-gray-900 dark:text-white">{metric.approvalRate.toFixed(1)}%</span>
+                  <p className="text-[10px] text-gray-400">{metric.percentage.toFixed(0)}%</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Approval by Value Range */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">Por Faixa de Valor</h3>
-          <div className="space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 p-4">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Por Faixa de Valor</h3>
+          <div className="space-y-2">
             {valueMetrics.map((metric) => (
-              <div key={metric.label} className="space-y-2">
+              <div key={metric.label} className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">{metric.label}</span>
+                  <span className="text-xs text-gray-700 dark:text-gray-300">{metric.label}</span>
                   <span className={cn(
-                    "text-sm font-semibold",
+                    "text-xs font-bold",
                     metric.approvalRate >= 85 ? 'text-emerald-600' : 
                     metric.approvalRate >= 75 ? 'text-yellow-600' : 'text-red-600'
                   )}>
                     {metric.approvalRate.toFixed(1)}%
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Progress 
-                    value={metric.approvalRate} 
-                    className="flex-1 h-1.5"
-                  />
-                  <span className="text-xs text-gray-500 w-12 text-right">{metric.count}</span>
+                <div className="flex items-center gap-1.5">
+                  <Progress value={metric.approvalRate} className="flex-1 h-1" />
+                  <span className="text-[10px] text-gray-400 w-8 text-right">{metric.count}</span>
                 </div>
-                {(metric.min >= 1000 || metric.max === Infinity) && metric.approvalRate < 75 && (
-                  <div className="flex items-center gap-1 text-xs text-yellow-600">
-                    <AlertCircle className="w-3 h-3" />
-                    Baixa aprovação em alto valor
-                  </div>
-                )}
               </div>
             ))}
           </div>
