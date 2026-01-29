@@ -4,26 +4,65 @@ import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
 import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, PlayCircle, Eye, AlertCircle, Clock } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Search, Filter, PlayCircle, Eye, AlertCircle, Clock, Users, 
+  Sparkles, CheckCircle2, XCircle, ArrowUpRight, Building2, RefreshCw
+} from 'lucide-react';
 import { mockMerchants } from '@/components/mockData/adminInternoMocks';
+import { cn } from '@/lib/utils';
+
+const KPICard = ({ title, value, icon: Icon, color, subtitle, trend }) => {
+  const colorClasses = {
+    blue: { bg: "bg-blue-50 dark:bg-blue-900/20", icon: "text-blue-600", border: "border-blue-100 dark:border-blue-800" },
+    red: { bg: "bg-red-50 dark:bg-red-900/20", icon: "text-red-600", border: "border-red-100 dark:border-red-800" },
+    amber: { bg: "bg-amber-50 dark:bg-amber-900/20", icon: "text-amber-600", border: "border-amber-100 dark:border-amber-800" },
+    purple: { bg: "bg-purple-50 dark:bg-purple-900/20", icon: "text-purple-600", border: "border-purple-100 dark:border-purple-800" },
+    emerald: { bg: "bg-emerald-50 dark:bg-emerald-900/20", icon: "text-emerald-600", border: "border-emerald-100 dark:border-emerald-800" },
+  };
+  const colors = colorClasses[color] || colorClasses.blue;
+
+  return (
+    <div className={cn("p-4 rounded-xl border bg-white dark:bg-slate-900", colors.border)}>
+      <div className="flex items-start justify-between mb-2">
+        <div className={cn("p-2 rounded-lg", colors.bg)}>
+          <Icon className={cn("w-4 h-4", colors.icon)} />
+        </div>
+        {trend && (
+          <span className="text-[10px] text-emerald-600 flex items-center gap-0.5">
+            <ArrowUpRight className="w-3 h-3" /> {trend}
+          </span>
+        )}
+      </div>
+      <p className="text-xs text-slate-500 mb-0.5">{title}</p>
+      <p className={cn("text-lg font-bold", `text-${color}-600`)}>{value}</p>
+      {subtitle && <p className="text-[10px] text-slate-400 mt-0.5">{subtitle}</p>}
+    </div>
+  );
+};
 
 export default function AdminIntKYCQueue() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('all');
 
-  // Filter mock merchants for those needing review
   const queueItems = mockMerchants.filter(m => 
     ['pending_compliance', 'under_review'].includes(m.compliance_status) || 
     m.kyc_score < 70
   );
 
-  // Filter by search
-  const filteredQueue = queueItems.filter(m =>
-    m.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    m.document.includes(searchTerm)
-  );
+  const filteredQueue = queueItems.filter(m => {
+    const matchSearch = m.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      m.document.includes(searchTerm);
+    const matchTab = activeTab === 'all' || 
+      (activeTab === 'high' && m.kyc_score < 50) ||
+      (activeTab === 'medium' && m.kyc_score >= 50 && m.kyc_score < 70) ||
+      (activeTab === 'flags' && m.ai_red_flags?.length > 0);
+    return matchSearch && matchTab;
+  });
 
   const columns = [
     {
