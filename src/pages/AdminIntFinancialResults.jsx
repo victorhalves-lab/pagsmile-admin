@@ -6,471 +6,433 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import {
-    DollarSign,
-    TrendingUp,
-    TrendingDown,
-    CreditCard,
-    QrCode,
-    Percent,
-    PiggyBank,
-    AlertTriangle,
-    ShieldCheck,
-    ArrowDownRight,
-    ArrowUpRight,
-    Download,
-    RefreshCw,
-    FileText,
-    Calculator,
-    Wallet,
-    BarChart3,
-    PieChart as PieChartIcon,
-    ArrowRight
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { 
+  DollarSign, TrendingUp, TrendingDown, Download, Calendar, Filter,
+  Wallet, CreditCard, Zap, Shield, AlertTriangle, PieChart, BarChart3
 } from 'lucide-react';
+import { ResponsiveContainer, AreaChart, Area, PieChart as RePieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
 import { cn } from '@/lib/utils';
-import { format, subDays, startOfMonth, endOfMonth } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import {
-    ResponsiveContainer,
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    BarChart,
-    Bar,
-    PieChart,
-    Pie,
-    Cell,
-    Legend,
-    LineChart,
-    Line
-} from 'recharts';
+import DataTable from '@/components/common/DataTable';
 
 const formatCurrency = (value) => {
-    if (value >= 1000000000) return `R$ ${(value / 1000000000).toFixed(2)}B`;
-    if (value >= 1000000) return `R$ ${(value / 1000000).toFixed(2)}M`;
-    if (value >= 1000) return `R$ ${(value / 1000).toFixed(1)}K`;
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
 };
 
-const formatPercent = (value) => `${(value || 0).toFixed(2)}%`;
-
-const COLORS = ['#2bc196', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'];
-
-const KPICard = ({ title, value, subtitle, icon: Icon, trend, trendValue, color = 'slate', highlight = false }) => (
-    <Card className={cn(highlight && "border-[#2bc196] bg-[#2bc196]/5")}>
-        <CardContent className="p-4">
-            <div className="flex items-start justify-between">
-                <div className="flex-1">
-                    <p className="text-sm text-slate-500 mb-1">{title}</p>
-                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
-                    {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
-                </div>
-                <div className={cn("p-2.5 rounded-xl", `bg-${color}-100 dark:bg-${color}-900/30`)}>
-                    <Icon className={cn("w-5 h-5", `text-${color}-600`)} />
-                </div>
-            </div>
-            {trend && (
-                <div className={cn(
-                    "flex items-center gap-1 mt-3 text-sm font-medium",
-                    trend === 'up' ? 'text-green-600' : 'text-red-600'
-                )}>
-                    {trend === 'up' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
-                    <span>{trendValue}</span>
-                    <span className="text-slate-400 font-normal ml-1">vs mês anterior</span>
-                </div>
-            )}
-        </CardContent>
-    </Card>
-);
+const COLORS = ['#2bc196', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899', '#14b8a6'];
 
 export default function AdminIntFinancialResults() {
-    const [period, setPeriod] = useState('month');
-    const [paymentMethod, setPaymentMethod] = useState('all');
+  const [period, setPeriod] = useState('30');
+  const [methodFilter, setMethodFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
-    // Mock data for financial results
-    const financialData = useMemo(() => {
-        // Revenue breakdown
-        const revenueByType = [
-            { name: 'MDR Cartão', value: 2850000, cost: 1900000, color: '#3b82f6' },
-            { name: 'MDR Pix', value: 1250000, cost: 450000, color: '#2bc196' },
-            { name: 'Antecipação', value: 680000, cost: 320000, color: '#8b5cf6' },
-            { name: 'Taxa Fixa', value: 420000, cost: 50000, color: '#f59e0b' },
-            { name: 'Anti-fraude', value: 180000, cost: 120000, color: '#ef4444' },
-            { name: 'Outras', value: 95000, cost: 30000, color: '#06b6d4' },
-        ];
+  const { data: revenueEntries = [], isLoading: loadingRevenue } = useQuery({
+    queryKey: ['revenue-entries'],
+    queryFn: () => base44.entities.RevenueEntry.list('-created_date', 500)
+  });
 
-        const totalRevenue = revenueByType.reduce((sum, r) => sum + r.value, 0);
-        const totalCost = revenueByType.reduce((sum, r) => sum + r.cost, 0);
-        const netRevenue = totalRevenue - totalCost;
+  const { data: costEntries = [], isLoading: loadingCosts } = useQuery({
+    queryKey: ['cost-entries'],
+    queryFn: () => base44.entities.CostEntry.list('-created_date', 500)
+  });
 
-        // Cost breakdown
-        const costBreakdown = [
-            { name: 'MDR Adquirentes', value: 1900000, category: 'mdr' },
-            { name: 'Liquidação Pix', value: 450000, category: 'pix' },
-            { name: 'Custo Antecipação', value: 320000, category: 'anticipation' },
-            { name: 'Anti-fraude', value: 120000, category: 'antifraud' },
-            { name: 'Chargebacks Perdidos', value: 85000, category: 'chargeback' },
-            { name: 'Custos Operacionais', value: 50000, category: 'operational' },
-        ];
+  const { data: transactions = [] } = useQuery({
+    queryKey: ['transactions-all'],
+    queryFn: () => base44.entities.Transaction.list('-created_date', 500)
+  });
 
-        // Monthly trend
-        const monthlyTrend = [
-            { month: 'Ago', revenue: 4800000, cost: 2600000, net: 2200000, margin: 45.8 },
-            { month: 'Set', revenue: 5100000, cost: 2750000, net: 2350000, margin: 46.1 },
-            { month: 'Out', revenue: 5350000, cost: 2850000, net: 2500000, margin: 46.7 },
-            { month: 'Nov', revenue: 5200000, cost: 2800000, net: 2400000, margin: 46.2 },
-            { month: 'Dez', revenue: 5650000, cost: 3000000, net: 2650000, margin: 46.9 },
-            { month: 'Jan', revenue: totalRevenue, cost: totalCost, net: netRevenue, margin: ((netRevenue / totalRevenue) * 100) },
-        ];
+  // Calculate main KPIs
+  const kpis = useMemo(() => {
+    const approvedTx = transactions.filter(t => t.status === 'approved');
+    const gmv = approvedTx.reduce((sum, t) => sum + (t.amount || 0), 0);
+    
+    const totalRevenue = revenueEntries.reduce((sum, e) => sum + (e.amount || 0), 0);
+    const totalCosts = costEntries.reduce((sum, e) => sum + (e.amount || 0), 0);
+    const netRevenue = totalRevenue - totalCosts;
+    const margin = gmv > 0 ? (netRevenue / gmv) * 100 : 0;
 
-        // Pre-chargeback results
-        const preChargebackData = {
-            alertsReceived: 245,
-            alertsEthoca: 142,
-            alertsVerifi: 103,
-            valueAtRisk: 185000,
-            reimbursed: 165,
-            contested: 45,
-            ignored: 35,
-            costOfAlerts: 12500,
-            chargebacksAvoided: 165,
-            valueAvoided: 125000,
-            roi: ((125000 - 12500) / 12500 * 100)
-        };
+    return { gmv, totalRevenue, totalCosts, netRevenue, margin };
+  }, [transactions, revenueEntries, costEntries]);
 
-        // GMV breakdown by method
-        const gmvByMethod = [
-            { name: 'Cartão Crédito', value: 45000000, percentage: 55 },
-            { name: 'Cartão Débito', value: 12000000, percentage: 14.7 },
-            { name: 'Pix', value: 22000000, percentage: 26.9 },
-            { name: 'Boleto', value: 2800000, percentage: 3.4 },
-        ];
+  // Revenue breakdown
+  const revenueBreakdown = useMemo(() => {
+    const breakdown = {};
+    revenueEntries.forEach(entry => {
+      if (!breakdown[entry.revenue_type]) {
+        breakdown[entry.revenue_type] = 0;
+      }
+      breakdown[entry.revenue_type] += entry.amount || 0;
+    });
+    
+    const labels = {
+      mdr_card: 'MDR Cartão',
+      mdr_pix: 'MDR Pix',
+      mdr_boleto: 'MDR Boleto',
+      anticipation: 'Antecipação',
+      fixed_fee_card: 'Taxa Fixa Cartão',
+      fixed_fee_pix: 'Taxa Fixa Pix',
+      antifraud: 'Anti-fraude',
+      setup_fee: 'Setup Fee',
+      chargeback_fee: 'Taxas de CB',
+      other: 'Outras'
+    };
 
-        const totalGMV = gmvByMethod.reduce((sum, g) => sum + g.value, 0);
+    return Object.entries(breakdown).map(([type, amount]) => ({
+      type,
+      label: labels[type] || type,
+      amount
+    }));
+  }, [revenueEntries]);
 
-        return {
-            gmv: totalGMV,
-            totalRevenue,
-            totalCost,
-            netRevenue,
-            margin: (netRevenue / totalRevenue) * 100,
-            marginOnGMV: (netRevenue / totalGMV) * 100,
-            revenueByType,
-            costBreakdown,
-            monthlyTrend,
-            preChargebackData,
-            gmvByMethod
-        };
-    }, [period, paymentMethod]);
+  // Cost breakdown
+  const costBreakdown = useMemo(() => {
+    const breakdown = {};
+    costEntries.forEach(entry => {
+      if (!breakdown[entry.cost_type]) {
+        breakdown[entry.cost_type] = 0;
+      }
+      breakdown[entry.cost_type] += entry.amount || 0;
+    });
+    
+    const labels = {
+      mdr_paid: 'MDR Repassado',
+      pix_cost: 'Custo Pix',
+      boleto_cost: 'Custo Boleto',
+      anticipation_cost: 'Custo Antecipação',
+      antifraud_cost: 'Custo Anti-fraude',
+      gateway_cost: 'Gateway',
+      chargeback_loss: 'Perdas CB',
+      prechargeback_alert_cost: 'Alertas Pré-CB',
+      operational: 'Operacional',
+      other: 'Outros'
+    };
 
-    return (
-        <div className="space-y-6">
-            <PageHeader
-                title="Resultados Financeiros"
-                subtitle="Análise P&L completa da operação PagSmile"
-                breadcrumbs={[
-                    { label: 'Financeiro', page: 'AdminIntFinancialDashboard' },
-                    { label: 'Resultados Financeiros' }
-                ]}
-                actions={
-                    <div className="flex items-center gap-3">
-                        <Select value={period} onValueChange={setPeriod}>
-                            <SelectTrigger className="w-[150px]">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="today">Hoje</SelectItem>
-                                <SelectItem value="week">Esta semana</SelectItem>
-                                <SelectItem value="month">Este mês</SelectItem>
-                                <SelectItem value="quarter">Este trimestre</SelectItem>
-                                <SelectItem value="year">Este ano</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                            <SelectTrigger className="w-[150px]">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">Todos os métodos</SelectItem>
-                                <SelectItem value="card">Cartão</SelectItem>
-                                <SelectItem value="pix">Pix</SelectItem>
-                                <SelectItem value="boleto">Boleto</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <Button variant="outline">
-                            <Download className="w-4 h-4 mr-2" />
-                            Exportar
-                        </Button>
-                    </div>
-                }
-            />
+    return Object.entries(breakdown).map(([type, amount]) => ({
+      type,
+      label: labels[type] || type,
+      amount
+    }));
+  }, [costEntries]);
 
-            {/* Main KPIs */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <KPICard
-                    title="GMV Total"
-                    value={formatCurrency(financialData.gmv)}
-                    subtitle="Volume processado"
-                    icon={DollarSign}
-                    color="blue"
-                    trend="up"
-                    trendValue="+12.5%"
-                />
-                <KPICard
-                    title="Receita Bruta"
-                    value={formatCurrency(financialData.totalRevenue)}
-                    subtitle="Todas as receitas"
-                    icon={TrendingUp}
-                    color="green"
-                    trend="up"
-                    trendValue="+8.3%"
-                />
-                <KPICard
-                    title="Custos Totais"
-                    value={formatCurrency(financialData.totalCost)}
-                    subtitle="Parceiros + Operacional"
-                    icon={TrendingDown}
-                    color="red"
-                    trend="up"
-                    trendValue="+6.1%"
-                />
-                <KPICard
-                    title="Receita Líquida"
-                    value={formatCurrency(financialData.netRevenue)}
-                    subtitle="Receita - Custos"
-                    icon={PiggyBank}
-                    color="emerald"
-                    trend="up"
-                    trendValue="+11.2%"
-                    highlight
-                />
-                <KPICard
-                    title="Margem Líquida"
-                    value={formatPercent(financialData.margin)}
-                    subtitle={`${formatPercent(financialData.marginOnGMV)} sobre GMV`}
-                    icon={Percent}
-                    color="purple"
-                    trend="up"
-                    trendValue="+0.5pp"
-                />
+  // Pie chart data
+  const revenuePieData = revenueBreakdown.map((item, idx) => ({
+    name: item.label,
+    value: item.amount,
+    fill: COLORS[idx % COLORS.length]
+  }));
+
+  const costPieData = costBreakdown.map((item, idx) => ({
+    name: item.label,
+    value: item.amount,
+    fill: COLORS[idx % COLORS.length]
+  }));
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Resultados Financeiros"
+        subtitle="Análise completa de receitas, custos e lucratividade (P&L)"
+        breadcrumbs={[
+          { label: 'Financeiro', page: 'AdminIntFinancialDashboard' },
+          { label: 'Resultados', page: 'AdminIntFinancialResults' }
+        ]}
+        actions={
+          <div className="flex gap-2">
+            <Select value={period} onValueChange={setPeriod}>
+              <SelectTrigger className="w-40">
+                <Calendar className="w-4 h-4 mr-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7">Últimos 7 dias</SelectItem>
+                <SelectItem value="30">Este mês</SelectItem>
+                <SelectItem value="90">Últimos 90 dias</SelectItem>
+                <SelectItem value="365">Este ano</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button variant="outline">
+              <Download className="w-4 h-4 mr-2" />
+              Exportar P&L
+            </Button>
+          </div>
+        }
+      />
+
+      {/* Main KPIs */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-slate-500">GMV Total</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                  {formatCurrency(kpis.gmv)}
+                </p>
+              </div>
+              <div className="p-2 rounded-lg bg-blue-100">
+                <DollarSign className="w-5 h-5 text-blue-600" />
+              </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Revenue and Cost Analysis */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Revenue Breakdown */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-base">
-                            <TrendingUp className="w-5 h-5 text-green-600" />
-                            Breakdown de Receitas
-                        </CardTitle>
-                        <CardDescription>Composição das receitas por tipo</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="h-[300px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={financialData.revenueByType}
-                                        dataKey="value"
-                                        nameKey="name"
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={100}
-                                        paddingAngle={2}
-                                    >
-                                        {financialData.revenueByType.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip formatter={(value) => formatCurrency(value)} />
-                                    <Legend />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div className="mt-4 space-y-2">
-                            {financialData.revenueByType.map((item, idx) => (
-                                <div key={idx} className="flex items-center justify-between text-sm">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                                        <span className="text-slate-600">{item.name}</span>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <span className="font-medium">{formatCurrency(item.value)}</span>
-                                        <span className="text-slate-400">
-                                            ({((item.value / financialData.totalRevenue) * 100).toFixed(1)}%)
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Cost Breakdown */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-base">
-                            <TrendingDown className="w-5 h-5 text-red-600" />
-                            Breakdown de Custos
-                        </CardTitle>
-                        <CardDescription>Composição dos custos por categoria</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="h-[300px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={financialData.costBreakdown} layout="vertical">
-                                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-                                    <XAxis type="number" tickFormatter={(v) => formatCurrency(v)} />
-                                    <YAxis type="category" dataKey="name" width={140} tick={{ fontSize: 12 }} />
-                                    <Tooltip formatter={(value) => formatCurrency(value)} />
-                                    <Bar dataKey="value" fill="#ef4444" radius={[0, 4, 4, 0]} />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div className="mt-4 pt-4 border-t">
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm text-slate-500">Total de Custos</span>
-                                <span className="text-lg font-bold text-red-600">{formatCurrency(financialData.totalCost)}</span>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Receita Bruta</p>
+                <p className="text-2xl font-bold text-emerald-600">
+                  {formatCurrency(kpis.totalRevenue)}
+                </p>
+              </div>
+              <div className="p-2 rounded-lg bg-emerald-100">
+                <TrendingUp className="w-5 h-5 text-emerald-600" />
+              </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Pre-Chargeback Results */}
-            <Card className="border-orange-200 bg-orange-50/50">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
-                        <ShieldCheck className="w-5 h-5 text-orange-600" />
-                        Resultado de Pré-Chargebacks (Alertas)
-                    </CardTitle>
-                    <CardDescription>Performance dos alertas Ethoca e Verifi</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                        <div className="p-3 bg-white rounded-lg border">
-                            <p className="text-xs text-slate-500">Alertas Recebidos</p>
-                            <p className="text-xl font-bold">{financialData.preChargebackData.alertsReceived}</p>
-                            <div className="flex gap-2 mt-1 text-xs text-slate-400">
-                                <span>Ethoca: {financialData.preChargebackData.alertsEthoca}</span>
-                                <span>|</span>
-                                <span>Verifi: {financialData.preChargebackData.alertsVerifi}</span>
-                            </div>
-                        </div>
-                        <div className="p-3 bg-white rounded-lg border">
-                            <p className="text-xs text-slate-500">Valor em Risco</p>
-                            <p className="text-xl font-bold text-orange-600">{formatCurrency(financialData.preChargebackData.valueAtRisk)}</p>
-                        </div>
-                        <div className="p-3 bg-white rounded-lg border">
-                            <p className="text-xs text-slate-500">Reembolsados</p>
-                            <p className="text-xl font-bold text-green-600">{financialData.preChargebackData.reimbursed}</p>
-                            <p className="text-xs text-green-600 mt-1">CBs evitados</p>
-                        </div>
-                        <div className="p-3 bg-white rounded-lg border">
-                            <p className="text-xs text-slate-500">Valor Economizado</p>
-                            <p className="text-xl font-bold text-green-600">{formatCurrency(financialData.preChargebackData.valueAvoided)}</p>
-                        </div>
-                        <div className="p-3 bg-white rounded-lg border">
-                            <p className="text-xs text-slate-500">Custo dos Alertas</p>
-                            <p className="text-xl font-bold text-red-600">{formatCurrency(financialData.preChargebackData.costOfAlerts)}</p>
-                        </div>
-                        <div className="p-3 bg-emerald-100 rounded-lg border border-emerald-200">
-                            <p className="text-xs text-emerald-700">ROI Pré-Chargeback</p>
-                            <p className="text-xl font-bold text-emerald-700">{formatPercent(financialData.preChargebackData.roi)}</p>
-                            <p className="text-xs text-emerald-600 mt-1">Retorno sobre investimento</p>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Custos Totais</p>
+                <p className="text-2xl font-bold text-red-600">
+                  {formatCurrency(kpis.totalCosts)}
+                </p>
+              </div>
+              <div className="p-2 rounded-lg bg-red-100">
+                <TrendingDown className="w-5 h-5 text-red-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            {/* Trend Chart */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
-                        <BarChart3 className="w-5 h-5 text-blue-600" />
-                        Evolução Mensal
-                    </CardTitle>
-                    <CardDescription>Receita, Custo e Margem ao longo do tempo</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="h-[350px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={financialData.monthlyTrend}>
-                                <defs>
-                                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#2bc196" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#2bc196" stopOpacity={0} />
-                                    </linearGradient>
-                                    <linearGradient id="colorCost" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                                <XAxis dataKey="month" />
-                                <YAxis yAxisId="left" tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} />
-                                <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => `${v}%`} domain={[40, 50]} />
-                                <Tooltip 
-                                    formatter={(value, name) => {
-                                        if (name === 'margin') return [`${value.toFixed(1)}%`, 'Margem'];
-                                        return [formatCurrency(value), name === 'revenue' ? 'Receita' : name === 'cost' ? 'Custo' : 'Líquido'];
-                                    }}
-                                />
-                                <Legend />
-                                <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="#2bc196" fill="url(#colorRevenue)" name="Receita" />
-                                <Area yAxisId="left" type="monotone" dataKey="cost" stroke="#ef4444" fill="url(#colorCost)" name="Custo" />
-                                <Line yAxisId="right" type="monotone" dataKey="margin" stroke="#8b5cf6" strokeWidth={2} dot={{ fill: '#8b5cf6' }} name="Margem %" />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    </div>
-                </CardContent>
-            </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Receita Líquida</p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {formatCurrency(kpis.netRevenue)}
+                </p>
+              </div>
+              <div className="p-2 rounded-lg bg-purple-100">
+                <Wallet className="w-5 h-5 text-purple-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            {/* GMV by Method */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
-                        <CreditCard className="w-5 h-5 text-blue-600" />
-                        Volume por Método de Pagamento
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {financialData.gmvByMethod.map((method, idx) => (
-                            <div key={idx} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                                <div className="flex items-center gap-2 mb-2">
-                                    {method.name.includes('Pix') ? (
-                                        <QrCode className="w-5 h-5 text-green-600" />
-                                    ) : (
-                                        <CreditCard className="w-5 h-5 text-blue-600" />
-                                    )}
-                                    <span className="text-sm font-medium">{method.name}</span>
-                                </div>
-                                <p className="text-xl font-bold">{formatCurrency(method.value)}</p>
-                                <div className="mt-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                                    <div
-                                        className="h-2 rounded-full bg-gradient-to-r from-[#2bc196] to-[#3b82f6]"
-                                        style={{ width: `${method.percentage}%` }}
-                                    />
-                                </div>
-                                <p className="text-xs text-slate-500 mt-1">{method.percentage}% do total</p>
-                            </div>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-    );
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Margem Líquida</p>
+                <p className="text-2xl font-bold text-indigo-600">
+                  {kpis.margin.toFixed(2)}%
+                </p>
+                <p className="text-xs text-slate-400 mt-1">sobre GMV</p>
+              </div>
+              <div className="p-2 rounded-lg bg-indigo-100">
+                <BarChart3 className="w-5 h-5 text-indigo-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Revenue & Cost Analysis */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Revenue Breakdown */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Composição de Receitas</CardTitle>
+            <CardDescription>Breakdown detalhado por categoria</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {revenueBreakdown.map((item) => (
+                <div key={item.type} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className="text-sm font-bold text-emerald-600">
+                    {formatCurrency(item.amount)}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="h-[200px] mt-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <RePieChart>
+                  <Pie
+                    data={revenuePieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    dataKey="value"
+                  >
+                    {revenuePieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => formatCurrency(value)} />
+                </RePieChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Cost Breakdown */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Composição de Custos</CardTitle>
+            <CardDescription>Breakdown detalhado por categoria</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {costBreakdown.map((item) => (
+                <div key={item.type} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className="text-sm font-bold text-red-600">
+                    {formatCurrency(item.amount)}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="h-[200px] mt-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={costBreakdown} layout="horizontal">
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis type="number" tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
+                  <YAxis type="category" dataKey="label" width={120} tick={{ fontSize: 11 }} />
+                  <Tooltip formatter={(value) => formatCurrency(value)} />
+                  <Bar dataKey="amount" fill="#ef4444" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Pre-Chargeback ROI */}
+      <Card className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-200">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="w-5 h-5 text-orange-600" />
+            Resultado de Pré-Chargebacks (Alertas)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="p-4 bg-white dark:bg-slate-800 rounded-lg">
+              <p className="text-sm text-slate-500">Alertas Recebidos</p>
+              <p className="text-2xl font-bold">145</p>
+            </div>
+            <div className="p-4 bg-white dark:bg-slate-800 rounded-lg">
+              <p className="text-sm text-slate-500">Valor em Risco</p>
+              <p className="text-2xl font-bold text-orange-600">{formatCurrency(87500)}</p>
+            </div>
+            <div className="p-4 bg-white dark:bg-slate-800 rounded-lg">
+              <p className="text-sm text-slate-500">Custo dos Alertas</p>
+              <p className="text-2xl font-bold text-red-600">{formatCurrency(7250)}</p>
+            </div>
+            <div className="p-4 bg-white dark:bg-slate-800 rounded-lg">
+              <p className="text-sm text-slate-500">ROI Pré-CB</p>
+              <p className="text-2xl font-bold text-emerald-600">+1,107%</p>
+              <p className="text-xs text-slate-500 mt-1">CB evitados - Custo</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Trend Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Tendência de Receitas, Custos e Margem</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={[
+                { month: 'Ago', revenue: 245000, costs: 180000, margin: 26.5 },
+                { month: 'Set', revenue: 280000, costs: 195000, margin: 30.4 },
+                { month: 'Out', revenue: 320000, costs: 210000, margin: 34.4 },
+                { month: 'Nov', revenue: 385000, costs: 245000, margin: 36.4 },
+                { month: 'Dez', revenue: 420000, costs: 270000, margin: 35.7 },
+                { month: 'Jan', revenue: kpis.totalRevenue || 450000, costs: kpis.totalCosts || 285000, margin: kpis.margin }
+              ]}>
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#2bc196" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#2bc196" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorCosts" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="month" />
+                <YAxis yAxisId="left" tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
+                <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => `${v}%`} />
+                <Tooltip 
+                  formatter={(value, name) => {
+                    if (name === 'Margem %') return `${value}%`;
+                    return formatCurrency(value);
+                  }}
+                />
+                <Legend />
+                <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="#2bc196" fill="url(#colorRevenue)" name="Receita" />
+                <Area yAxisId="left" type="monotone" dataKey="costs" stroke="#ef4444" fill="url(#colorCosts)" name="Custos" />
+                <Line yAxisId="right" type="monotone" dataKey="margin" stroke="#8b5cf6" strokeWidth={2} name="Margem %" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Detailed Table */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Análise Detalhada por Transação</CardTitle>
+            <div className="flex gap-2">
+              <Input 
+                placeholder="Buscar..." 
+                className="w-64"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Select value={methodFilter} onValueChange={setMethodFilter}>
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="credit_card">Cartão</SelectItem>
+                  <SelectItem value="pix">Pix</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <DataTable
+            columns={[
+              { key: 'created_date', label: 'Data', render: (v) => new Date(v).toLocaleDateString('pt-BR') },
+              { key: 'merchant_name', label: 'Cliente' },
+              { key: 'method', label: 'Método', render: (v) => v === 'credit_card' ? 'Cartão' : v === 'pix' ? 'Pix' : v },
+              { key: 'amount', label: 'Volume', render: (v) => formatCurrency(v) },
+              { key: 'transaction_id', label: 'ID' }
+            ]}
+            data={transactions.filter(t => methodFilter === 'all' || t.method === methodFilter)}
+            pagination
+            pageSize={20}
+          />
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

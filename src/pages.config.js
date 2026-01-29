@@ -214,6 +214,7 @@ import AdminIntPaymentAgenda from './pages/AdminIntPaymentAgenda';
 import AdminIntFinancialResults from './pages/AdminIntFinancialResults';
 import AdminIntClientProfitability from './pages/AdminIntClientProfitability';
 import AdminIntClientSplitDetail from './pages/AdminIntClientSplitDetail';
+import AdminIntLimitRequests from './pages/AdminIntLimitRequests';
 import __Layout from './Layout.jsx';
 
 
@@ -385,6 +386,7 @@ export const PAGES = {
     "AdminIntFinancialResults": AdminIntFinancialResults,
     "AdminIntClientProfitability": AdminIntClientProfitability,
     "AdminIntClientSplitDetail": AdminIntClientSplitDetail,
+    "AdminIntLimitRequests": AdminIntLimitRequests,
 }
 
 export const pagesConfig = {
