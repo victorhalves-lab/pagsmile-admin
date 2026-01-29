@@ -1,7 +1,20 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown, Target, DollarSign, CreditCard, QrCode, ArrowUpRight, AlertTriangle } from 'lucide-react';
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  Target, 
+  DollarSign, 
+  CreditCard, 
+  QrCode, 
+  AlertTriangle,
+  Sparkles,
+  Trophy,
+  Activity
+} from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export default function PerformanceIndicators({ transactions = [] }) {
   const formatCurrency = (value) => {
@@ -30,18 +43,21 @@ export default function PerformanceIndicators({ transactions = [] }) {
   const avgTicketCard = cardTransactions.length > 0 ? cardGMV / cardTransactions.length : 0;
   const avgTicketPix = pixTransactions.length > 0 ? pixGMV / pixTransactions.length : 0;
 
-  const benchmarkApproval = 87.5; // Mock benchmark
+  const benchmarkApproval = 87.5;
 
   const indicators = [
     {
       id: 'approval_rate',
-      label: 'Taxa de Aprovação Global',
+      label: 'Taxa de Aprovação',
       value: approvalRate,
       format: 'percentage',
       icon: Target,
       benchmark: benchmarkApproval,
       showGauge: true,
-      color: approvalRate >= benchmarkApproval ? 'emerald' : approvalRate >= benchmarkApproval - 5 ? 'yellow' : 'red'
+      color: approvalRate >= benchmarkApproval ? 'emerald' : approvalRate >= benchmarkApproval - 5 ? 'amber' : 'red',
+      iconBg: 'bg-gradient-to-br from-[#2bc196] to-emerald-600',
+      cardBg: 'bg-gradient-to-br from-emerald-50 via-white to-white',
+      borderColor: 'border-emerald-200'
     },
     {
       id: 'avg_ticket',
@@ -50,7 +66,10 @@ export default function PerformanceIndicators({ transactions = [] }) {
       format: 'currency',
       icon: DollarSign,
       change: 3.5,
-      color: 'blue'
+      color: 'blue',
+      iconBg: 'bg-gradient-to-br from-blue-400 to-blue-600',
+      cardBg: 'bg-gradient-to-br from-blue-50 via-white to-white',
+      borderColor: 'border-blue-200'
     },
     {
       id: 'avg_ticket_card',
@@ -59,7 +78,10 @@ export default function PerformanceIndicators({ transactions = [] }) {
       format: 'currency',
       icon: CreditCard,
       comparison: avgTicketPix,
-      color: 'purple'
+      color: 'purple',
+      iconBg: 'bg-gradient-to-br from-purple-400 to-purple-600',
+      cardBg: 'bg-gradient-to-br from-purple-50 via-white to-white',
+      borderColor: 'border-purple-200'
     },
     {
       id: 'avg_ticket_pix',
@@ -68,7 +90,10 @@ export default function PerformanceIndicators({ transactions = [] }) {
       format: 'currency',
       icon: QrCode,
       comparison: avgTicketCard,
-      color: 'teal'
+      color: 'teal',
+      iconBg: 'bg-gradient-to-br from-teal-400 to-teal-600',
+      cardBg: 'bg-gradient-to-br from-teal-50 via-white to-white',
+      borderColor: 'border-teal-200'
     },
   ];
 
@@ -78,98 +103,131 @@ export default function PerformanceIndicators({ transactions = [] }) {
     return val;
   };
 
-  const getColorClasses = (color) => {
-    const colors = {
-      emerald: { bg: 'bg-emerald-100', text: 'text-emerald-600', border: 'border-emerald-200' },
-      yellow: { bg: 'bg-yellow-100', text: 'text-yellow-600', border: 'border-yellow-200' },
-      red: { bg: 'bg-red-100', text: 'text-red-600', border: 'border-red-200' },
-      blue: { bg: 'bg-blue-100', text: 'text-blue-600', border: 'border-blue-200' },
-      purple: { bg: 'bg-purple-100', text: 'text-purple-600', border: 'border-purple-200' },
-      teal: { bg: 'bg-teal-100', text: 'text-teal-600', border: 'border-teal-200' },
-    };
-    return colors[color] || colors.blue;
-  };
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {indicators.map((indicator) => {
-        const Icon = indicator.icon;
-        const colors = getColorClasses(indicator.color);
+    <div>
+      <div className="flex items-center gap-2 mb-4">
+        <Activity className="w-5 h-5 text-[#2bc196]" />
+        <h2 className="text-lg font-bold text-slate-800 dark:text-white">Performance & Indicadores</h2>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {indicators.map((indicator) => {
+          const IconComponent = indicator.icon;
 
-        return (
-          <div
-            key={indicator.id}
-            className="bg-white rounded-xl border border-gray-100 p-5 hover:shadow-md transition-shadow"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500 mb-1">{indicator.label}</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {formatValue(indicator.value, indicator.format)}
-                </p>
-              </div>
-              <div className={cn("p-2.5 rounded-lg", colors.bg)}>
-                <Icon className={cn("w-5 h-5", colors.text)} />
-              </div>
-            </div>
-
-            {/* Gauge for approval rate */}
-            {indicator.showGauge && indicator.benchmark && (
-              <div className="space-y-2">
-                <Progress value={indicator.value} className="h-2" />
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-gray-500">Você: {indicator.value.toFixed(1)}%</span>
-                  <span className="text-gray-500">Benchmark: {indicator.benchmark}%</span>
-                </div>
-                {indicator.value >= indicator.benchmark ? (
-                  <div className="flex items-center gap-1 text-xs text-emerald-600 font-medium">
-                    <TrendingUp className="w-3 h-3" />
-                    {(indicator.value - indicator.benchmark).toFixed(1)}p.p. acima do mercado
+          return (
+            <Card
+              key={indicator.id}
+              className={cn(
+                "hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group border-2",
+                indicator.cardBg,
+                indicator.borderColor
+              )}
+            >
+              {/* Decorative glow */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-current opacity-5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
+              
+              <CardContent className="p-6 relative">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={cn(
+                    "w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300",
+                    indicator.iconBg
+                  )}>
+                    <IconComponent className="w-6 h-6 text-white" />
                   </div>
-                ) : (
-                  <div className="flex items-center gap-1 text-xs text-red-600 font-medium">
-                    <AlertTriangle className="w-3 h-3" />
-                    {(indicator.benchmark - indicator.value).toFixed(1)}p.p. abaixo do mercado
+                  {indicator.percentage !== undefined && (
+                    <Badge className={cn(
+                      "text-xs font-bold border-0 shadow-sm",
+                      indicator.percentage >= 85 
+                        ? "bg-emerald-100 text-emerald-700" 
+                        : indicator.percentage >= 70
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-red-100 text-red-700"
+                    )}>
+                      {indicator.percentage.toFixed(1)}%
+                    </Badge>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">{indicator.label}</p>
+                  <p className="text-3xl font-black text-slate-800 dark:text-white">
+                    {formatValue(indicator.value, indicator.format)}
+                  </p>
+                </div>
+
+                {/* Gauge for approval rate */}
+                {indicator.showGauge && indicator.benchmark && (
+                  <div className="space-y-2 mt-4">
+                    <div className="relative">
+                      <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-emerald-400 to-[#2bc196] rounded-full transition-all duration-500"
+                          style={{ width: `${Math.min(indicator.value, 100)}%` }}
+                        />
+                      </div>
+                      <div 
+                        className="absolute top-1/2 -translate-y-1/2 w-1 h-4 bg-slate-400 rounded-full"
+                        style={{ left: `${indicator.benchmark}%` }}
+                        title={`Benchmark: ${indicator.benchmark}%`}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-500 font-medium">Meta: {indicator.benchmark}%</span>
+                      {indicator.value >= indicator.benchmark ? (
+                        <div className="flex items-center gap-1 text-emerald-600 font-bold">
+                          <Trophy className="w-3 h-3" />
+                          +{(indicator.value - indicator.benchmark).toFixed(1)}p.p.
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 text-red-600 font-bold">
+                          <AlertTriangle className="w-3 h-3" />
+                          -{(indicator.benchmark - indicator.value).toFixed(1)}p.p.
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
-              </div>
-            )}
 
-            {/* Change indicator */}
-            {indicator.change !== undefined && (
-              <div className="flex items-center gap-1.5 mt-2">
-                <span className={cn(
-                  "flex items-center gap-1 text-xs font-medium",
-                  indicator.change > 0 ? 'text-emerald-600' : 'text-red-600'
-                )}>
-                  {indicator.change > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                  {Math.abs(indicator.change).toFixed(1)}%
-                </span>
-                <span className="text-xs text-gray-400">vs período anterior</span>
-              </div>
-            )}
+                {/* Change indicator */}
+                {indicator.change !== undefined && (
+                  <div className="flex items-center gap-2 mt-3">
+                    <div className={cn(
+                      "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold",
+                      indicator.change > 0 
+                        ? 'bg-emerald-100 text-emerald-700' 
+                        : 'bg-red-100 text-red-700'
+                    )}>
+                      {indicator.change > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                      {Math.abs(indicator.change).toFixed(1)}%
+                    </div>
+                    <span className="text-xs text-slate-400">vs anterior</span>
+                  </div>
+                )}
 
-            {/* Comparison */}
-            {indicator.comparison !== undefined && (
-              <div className="mt-2 pt-2 border-t border-gray-100">
-                <p className="text-xs text-gray-500">
-                  {indicator.value > indicator.comparison ? (
-                    <span className="text-emerald-600 font-medium">
-                      {formatCurrency(indicator.value - indicator.comparison)} maior {indicator.id.includes('card') ? 'que Pix' : 'que Cartão'}
-                    </span>
-                  ) : indicator.value < indicator.comparison ? (
-                    <span className="text-red-600 font-medium">
-                      {formatCurrency(indicator.comparison - indicator.value)} menor {indicator.id.includes('card') ? 'que Pix' : 'que Cartão'}
-                    </span>
-                  ) : (
-                    <span className="text-gray-600">Igual ao outro método</span>
-                  )}
-                </p>
-              </div>
-            )}
-          </div>
-        );
-      })}
+                {/* Comparison */}
+                {indicator.comparison !== undefined && indicator.value > 0 && (
+                  <div className="mt-3 pt-3 border-t border-dashed border-slate-200 dark:border-slate-700">
+                    <p className="text-xs text-slate-500">
+                      {indicator.value > indicator.comparison ? (
+                        <span className="text-emerald-600 font-bold flex items-center gap-1">
+                          <TrendingUp className="w-3 h-3" />
+                          {formatCurrency(indicator.value - indicator.comparison)} maior
+                        </span>
+                      ) : indicator.value < indicator.comparison ? (
+                        <span className="text-red-600 font-bold flex items-center gap-1">
+                          <TrendingDown className="w-3 h-3" />
+                          {formatCurrency(indicator.comparison - indicator.value)} menor
+                        </span>
+                      ) : (
+                        <span className="text-slate-600 font-medium">Igual</span>
+                      )}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }

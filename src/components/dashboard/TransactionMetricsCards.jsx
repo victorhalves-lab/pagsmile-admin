@@ -5,7 +5,9 @@ import {
   XCircle, 
   Clock, 
   RotateCcw,
-  ShieldAlert
+  ShieldAlert,
+  TrendingUp,
+  Sparkles
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -44,10 +46,11 @@ export default function TransactionMetricsCards({ transactions = [] }) {
       value: approvedValue,
       percentage: approvalRate,
       icon: CheckCircle,
-      color: 'emerald',
-      bgColor: 'bg-emerald-100',
+      iconBg: 'bg-gradient-to-br from-emerald-400 to-[#2bc196]',
+      cardBg: 'bg-gradient-to-br from-emerald-50 via-white to-white',
+      borderColor: 'border-emerald-200',
       textColor: 'text-emerald-600',
-      borderColor: 'border-emerald-200'
+      shadowColor: 'shadow-emerald-200/50'
     },
     {
       id: 'declined',
@@ -56,10 +59,11 @@ export default function TransactionMetricsCards({ transactions = [] }) {
       value: declinedValue,
       percentage: declineRate,
       icon: XCircle,
-      color: 'red',
-      bgColor: 'bg-red-100',
-      textColor: 'text-red-600',
+      iconBg: 'bg-gradient-to-br from-red-400 to-red-600',
+      cardBg: 'bg-gradient-to-br from-red-50 via-white to-white',
       borderColor: 'border-red-200',
+      textColor: 'text-red-600',
+      shadowColor: 'shadow-red-200/50',
       alert: declineRate > 15
     },
     {
@@ -68,10 +72,11 @@ export default function TransactionMetricsCards({ transactions = [] }) {
       count: pending.length,
       value: pending.reduce((sum, t) => sum + (t.amount || 0), 0),
       icon: Clock,
-      color: 'amber',
-      bgColor: 'bg-amber-100',
+      iconBg: 'bg-gradient-to-br from-amber-400 to-orange-500',
+      cardBg: 'bg-gradient-to-br from-amber-50 via-white to-white',
+      borderColor: 'border-amber-200',
       textColor: 'text-amber-600',
-      borderColor: 'border-amber-200'
+      shadowColor: 'shadow-amber-200/50'
     },
     {
       id: 'refunded',
@@ -79,10 +84,11 @@ export default function TransactionMetricsCards({ transactions = [] }) {
       count: refunded.length,
       value: refundedValue,
       icon: RotateCcw,
-      color: 'purple',
-      bgColor: 'bg-purple-100',
+      iconBg: 'bg-gradient-to-br from-purple-400 to-purple-600',
+      cardBg: 'bg-gradient-to-br from-purple-50 via-white to-white',
+      borderColor: 'border-purple-200',
       textColor: 'text-purple-600',
-      borderColor: 'border-purple-200'
+      shadowColor: 'shadow-purple-200/50'
     },
     {
       id: 'chargebacks',
@@ -90,58 +96,82 @@ export default function TransactionMetricsCards({ transactions = [] }) {
       count: chargebacks.length,
       value: chargebackValue,
       icon: ShieldAlert,
-      color: 'rose',
-      bgColor: 'bg-rose-100',
-      textColor: 'text-rose-600',
+      iconBg: 'bg-gradient-to-br from-rose-400 to-rose-600',
+      cardBg: 'bg-gradient-to-br from-rose-50 via-white to-white',
       borderColor: 'border-rose-200',
+      textColor: 'text-rose-600',
+      shadowColor: 'shadow-rose-200/50',
       alert: chargebacks.length > 0
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-      {metrics.map((metric) => {
-        const Icon = metric.icon;
-        
-        return (
-          <Card 
-            key={metric.id}
-            className={cn(
-              "hover:shadow-lg transition-all duration-300 relative overflow-hidden group border-slate-100"
-            )}
-          >
-            <CardContent className="p-4">
-              {metric.alert && (
-                <div className="absolute top-2 right-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
-                  <div className="w-2 h-2 bg-red-500 rounded-full absolute top-0 left-0" />
-                </div>
+    <div>
+      <div className="flex items-center gap-2 mb-4">
+        <Sparkles className="w-5 h-5 text-[#2bc196]" />
+        <h2 className="text-lg font-bold text-slate-800 dark:text-white">Métricas de Transações</h2>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {metrics.map((metric) => {
+          const IconComponent = metric.icon;
+          
+          return (
+            <Card 
+              key={metric.id}
+              className={cn(
+                "hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group border-2",
+                metric.cardBg,
+                metric.borderColor
               )}
+            >
+              {/* Decorative glow */}
+              <div className="absolute top-0 right-0 w-24 h-24 bg-current opacity-5 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2" />
+              
+              <CardContent className="p-5 relative">
+                {metric.alert && (
+                  <div className="absolute top-3 right-3">
+                    <div className="relative">
+                      <div className="w-2 h-2 bg-red-500 rounded-full animate-ping absolute" />
+                      <div className="w-2 h-2 bg-red-500 rounded-full" />
+                    </div>
+                  </div>
+                )}
 
-              <div className="flex items-start justify-between mb-3">
-                <div className={cn("p-2 rounded-xl transition-colors duration-300", metric.bgColor)}>
-                  <Icon className={cn("w-5 h-5", metric.textColor)} />
+                <div className="flex items-start justify-between mb-4">
+                  <div className={cn(
+                    "w-11 h-11 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300",
+                    metric.iconBg,
+                    metric.shadowColor
+                  )}>
+                    <IconComponent className="w-5 h-5 text-white" />
+                  </div>
+                  {metric.percentage !== undefined && (
+                    <Badge className={cn(
+                      "text-xs font-bold border-0",
+                      metric.percentage >= 85 ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"
+                    )}>
+                      {metric.percentage.toFixed(1)}%
+                    </Badge>
+                  )}
                 </div>
-                {metric.percentage !== undefined && (
-                  <Badge variant="outline" className="text-xs font-bold border-0 bg-slate-50 text-slate-600">
-                    {metric.percentage.toFixed(1)}%
-                  </Badge>
-                )}
-              </div>
 
-              <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">{metric.label}</p>
-                <p className="text-2xl font-black text-slate-900 group-hover:scale-105 transition-transform origin-left">{metric.count}</p>
-                {metric.value > 0 && (
-                  <p className={cn("text-xs font-bold mt-1", metric.textColor)}>
-                    {formatCurrency(metric.value)}
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">{metric.label}</p>
+                  <p className="text-3xl font-black text-slate-800 dark:text-white group-hover:scale-105 transition-transform origin-left">
+                    {metric.count}
                   </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        );
-      })}
+                  {metric.value > 0 && (
+                    <p className={cn("text-sm font-bold mt-2 flex items-center gap-1", metric.textColor)}>
+                      <TrendingUp className="w-3 h-3" />
+                      {formatCurrency(metric.value)}
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }
