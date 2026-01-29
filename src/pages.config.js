@@ -68,6 +68,7 @@ import AdminIntCommSMTP from './pages/AdminIntCommSMTP';
 import AdminIntCommSenders from './pages/AdminIntCommSenders';
 import AdminIntCommTemplates from './pages/AdminIntCommTemplates';
 import AdminIntCommercialInsights from './pages/AdminIntCommercialInsights';
+import AdminIntCompliance from './pages/AdminIntCompliance';
 import AdminIntControlLists from './pages/AdminIntControlLists';
 import AdminIntCreateProposal from './pages/AdminIntCreateProposal';
 import AdminIntDashboard from './pages/AdminIntDashboard';
@@ -208,9 +209,11 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntCompliance from './pages/AdminIntCompliance';
 import AdminIntConciliation from './pages/AdminIntConciliation';
 import AdminIntPaymentAgenda from './pages/AdminIntPaymentAgenda';
+import AdminIntFinancialResults from './pages/AdminIntFinancialResults';
+import AdminIntClientProfitability from './pages/AdminIntClientProfitability';
+import AdminIntClientSplitDetail from './pages/AdminIntClientSplitDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -236,6 +239,7 @@ export const PAGES = {
     "AdminIntCommSenders": AdminIntCommSenders,
     "AdminIntCommTemplates": AdminIntCommTemplates,
     "AdminIntCommercialInsights": AdminIntCommercialInsights,
+    "AdminIntCompliance": AdminIntCompliance,
     "AdminIntControlLists": AdminIntControlLists,
     "AdminIntCreateProposal": AdminIntCreateProposal,
     "AdminIntDashboard": AdminIntDashboard,
@@ -376,9 +380,11 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntCompliance": AdminIntCompliance,
     "AdminIntConciliation": AdminIntConciliation,
     "AdminIntPaymentAgenda": AdminIntPaymentAgenda,
+    "AdminIntFinancialResults": AdminIntFinancialResults,
+    "AdminIntClientProfitability": AdminIntClientProfitability,
+    "AdminIntClientSplitDetail": AdminIntClientSplitDetail,
 }
 
 export const pagesConfig = {
