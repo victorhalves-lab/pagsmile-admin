@@ -215,6 +215,7 @@ import AdminIntFinancialResults from './pages/AdminIntFinancialResults';
 import AdminIntClientProfitability from './pages/AdminIntClientProfitability';
 import AdminIntClientSplitDetail from './pages/AdminIntClientSplitDetail';
 import AdminIntLimitRequests from './pages/AdminIntLimitRequests';
+import AdminIntWithdrawalApprovals from './pages/AdminIntWithdrawalApprovals';
 import __Layout from './Layout.jsx';
 
 
@@ -387,6 +388,7 @@ export const PAGES = {
     "AdminIntClientProfitability": AdminIntClientProfitability,
     "AdminIntClientSplitDetail": AdminIntClientSplitDetail,
     "AdminIntLimitRequests": AdminIntLimitRequests,
+    "AdminIntWithdrawalApprovals": AdminIntWithdrawalApprovals,
 }
 
 export const pagesConfig = {
