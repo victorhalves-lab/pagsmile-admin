@@ -1,32 +1,77 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
-import KPICard from '@/components/dashboard/KPICard';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
-import { ShieldAlert, Users, AlertTriangle, Eye, Zap, AlertCircle } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+import { 
+    ShieldAlert, Users, AlertTriangle, Eye, Zap, AlertCircle, TrendingUp, TrendingDown,
+    ArrowUpRight, ArrowDownRight, Shield, CreditCard, Building2, ChevronRight, Sparkles,
+    Clock, CheckCircle2, XCircle, RefreshCw, FileText, Ban
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const RiskGauge = ({ value, label, limit, color = "#10B981" }) => {
-    const percentage = Math.min((value / limit) * 100, 100);
+const KPICard = ({ title, value, subtitle, icon: Icon, trend, trendValue, color = "emerald", alert }) => {
+    const colorClasses = {
+        emerald: { bg: "bg-emerald-50 dark:bg-emerald-900/20", icon: "text-emerald-600 dark:text-emerald-400", border: "border-emerald-100 dark:border-emerald-800" },
+        blue: { bg: "bg-blue-50 dark:bg-blue-900/20", icon: "text-blue-600 dark:text-blue-400", border: "border-blue-100 dark:border-blue-800" },
+        red: { bg: "bg-red-50 dark:bg-red-900/20", icon: "text-red-600 dark:text-red-400", border: "border-red-100 dark:border-red-800" },
+        amber: { bg: "bg-amber-50 dark:bg-amber-900/20", icon: "text-amber-600 dark:text-amber-400", border: "border-amber-100 dark:border-amber-800" },
+        purple: { bg: "bg-purple-50 dark:bg-purple-900/20", icon: "text-purple-600 dark:text-purple-400", border: "border-purple-100 dark:border-purple-800" },
+    };
+    const colors = colorClasses[color];
+
     return (
-        <div className="flex flex-col items-center">
-            <span className="text-xs font-semibold text-slate-500 uppercase mb-2">{label}</span>
-            <div className="relative w-32 h-16 overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-full bg-slate-100 rounded-t-full" />
-                <div 
-                    className="absolute top-0 left-0 w-full h-full rounded-t-full transition-all duration-500 origin-bottom scale-0"
-                    style={{ 
-                        backgroundColor: value > limit ? '#EF4444' : value > limit * 0.7 ? '#F59E0B' : color,
-                        transform: `rotate(${percentage * 1.8 - 180}deg)` 
-                    }}
-                />
+        <div className={cn("p-4 rounded-xl border bg-white dark:bg-slate-900", colors.border, alert && "ring-2 ring-red-500/20")}>
+            <div className="flex items-start justify-between mb-2">
+                <div className={cn("p-2 rounded-lg", colors.bg)}>
+                    <Icon className={cn("w-4 h-4", colors.icon)} />
+                </div>
+                {trend && (
+                    <div className={cn("flex items-center gap-0.5 text-xs font-medium", trend === 'up' ? 'text-red-500' : 'text-emerald-600')}>
+                        {trend === 'up' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                        {trendValue}
+                    </div>
+                )}
             </div>
-            <div className="mt-2 text-center">
-                <span className="text-xl font-bold">{value}%</span>
-                <span className="text-xs text-slate-400 block">Limite: {limit}%</span>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-0.5">{title}</p>
+            <p className="text-lg font-bold text-slate-900 dark:text-white">{value}</p>
+            {subtitle && <p className="text-[10px] text-slate-400 mt-0.5">{subtitle}</p>}
+        </div>
+    );
+};
+
+const RiskGauge = ({ value, label, limit, sublabel }) => {
+    const percentage = Math.min((value / limit) * 100, 100);
+    const isAlert = value > limit * 0.8;
+    const isWarning = value > limit * 0.6;
+    const gaugeColor = isAlert ? '#EF4444' : isWarning ? '#F59E0B' : '#10B981';
+    
+    return (
+        <div className="flex flex-col items-center p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+            <span className="text-[10px] font-semibold text-slate-500 uppercase mb-3">{label}</span>
+            <div className="relative w-28 h-14">
+                <svg viewBox="0 0 100 50" className="w-full h-full">
+                    <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#E2E8F0" strokeWidth="8" strokeLinecap="round" />
+                    <path 
+                        d="M 10 50 A 40 40 0 0 1 90 50" 
+                        fill="none" 
+                        stroke={gaugeColor} 
+                        strokeWidth="8" 
+                        strokeLinecap="round"
+                        strokeDasharray={`${percentage * 1.26} 126`}
+                        className="transition-all duration-500"
+                    />
+                </svg>
             </div>
+            <div className="mt-1 text-center">
+                <span className={cn("text-xl font-bold", isAlert ? "text-red-600" : isWarning ? "text-amber-600" : "text-emerald-600")}>{value}%</span>
+                <span className="text-[10px] text-slate-400 block">Limite: {limit}%</span>
+            </div>
+            {sublabel && <span className="text-[10px] text-slate-500 mt-1">{sublabel}</span>}
         </div>
     );
 };
