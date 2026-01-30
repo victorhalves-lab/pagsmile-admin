@@ -1,9 +1,9 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import ptTranslations from './locales/pt.json';
-import enTranslations from './locales/en.json';
-import zhTranslations from './locales/zh.json';
+import ptTranslations from './locales/pt';
+import enTranslations from './locales/en';
+import zhTranslations from './locales/zh';
 
 // Get saved language or default to Portuguese
 const savedLanguage = localStorage.getItem('app_language') || 'pt';
