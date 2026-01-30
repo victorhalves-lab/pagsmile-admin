@@ -226,6 +226,9 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
+import AdminIntComplianceFormLink from './pages/AdminIntComplianceFormLink';
+import AdminIntComplianceAudit from './pages/AdminIntComplianceAudit';
+import AdminIntComplianceHelena from './pages/AdminIntComplianceHelena';
 import __Layout from './Layout.jsx';
 
 
@@ -409,6 +412,9 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
+    "AdminIntComplianceFormLink": AdminIntComplianceFormLink,
+    "AdminIntComplianceAudit": AdminIntComplianceAudit,
+    "AdminIntComplianceHelena": AdminIntComplianceHelena,
 }
 
 export const pagesConfig = {
