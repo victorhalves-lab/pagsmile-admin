@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import PageHeader from '@/components/common/PageHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,7 @@ import TechnicalView from '@/components/admin-interno/dashboard/v3/TechnicalView
 import AlertsView from '@/components/admin-interno/dashboard/v3/AlertsView';
 
 export default function AdminIntDashboard() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('executiva');
   const [period, setPeriod] = useState('today');
   const [compareWith, setCompareWith] = useState('previous');
@@ -65,17 +67,17 @@ export default function AdminIntDashboard() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <PageHeader 
-            title="Dashboard Operacional"
-            subtitle="Visão consolidada de todos os métodos de pagamento"
+            title={t('admin_interno.dashboard')}
+            subtitle={t('admin_interno.subtitle')}
             breadcrumbs={[
-              { label: "Admin Interno", page: "AdminIntDashboard" },
-              { label: "Dashboard", page: "AdminIntDashboard" }
+              { label: t('modules.admin_interno'), page: "AdminIntDashboard" },
+              { label: t('menu.dashboard'), page: "AdminIntDashboard" }
             ]}
           />
           <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
-            <span>Última atualização: {lastUpdate.toLocaleTimeString('pt-BR')}</span>
+            <span>{t('dashboard.last_update')}: {lastUpdate.toLocaleTimeString()}</span>
             <span>•</span>
-            <span>Próxima em {nextRefresh}s</span>
+            <span>{t('dashboard.next_in')} {nextRefresh}s</span>
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           </div>
         </div>
@@ -85,30 +87,30 @@ export default function AdminIntDashboard() {
           <Select value={period} onValueChange={setPeriod}>
             <SelectTrigger className="w-[160px]">
               <CalendarIcon className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Período" />
+              <SelectValue placeholder={t('common.period')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="today">Hoje</SelectItem>
-              <SelectItem value="yesterday">Ontem</SelectItem>
-              <SelectItem value="last7">Últimos 7 dias</SelectItem>
-              <SelectItem value="last30">Últimos 30 dias</SelectItem>
-              <SelectItem value="thisMonth">Este Mês</SelectItem>
-              <SelectItem value="lastMonth">Mês Passado</SelectItem>
-              <SelectItem value="thisYear">Este Ano</SelectItem>
-              <SelectItem value="custom">Personalizado</SelectItem>
+              <SelectItem value="today">{t('common.today')}</SelectItem>
+              <SelectItem value="yesterday">{t('common.yesterday')}</SelectItem>
+              <SelectItem value="last7">{t('common.last_7_days')}</SelectItem>
+              <SelectItem value="last30">{t('common.last_30_days')}</SelectItem>
+              <SelectItem value="thisMonth">{t('common.this_month')}</SelectItem>
+              <SelectItem value="lastMonth">{t('common.last_month')}</SelectItem>
+              <SelectItem value="thisYear">{t('common.this_year')}</SelectItem>
+              <SelectItem value="custom">{t('common.custom')}</SelectItem>
             </SelectContent>
           </Select>
 
           {/* Compare With */}
           <Select value={compareWith} onValueChange={setCompareWith}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Comparar com" />
+              <SelectValue placeholder={t('common.compare_with')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="previous">Período Anterior</SelectItem>
-              <SelectItem value="lastYear">Mesmo Período Ano Anterior</SelectItem>
-              <SelectItem value="meta">Meta</SelectItem>
-              <SelectItem value="none">Não comparar</SelectItem>
+              <SelectItem value="previous">{t('common.previous_period')}</SelectItem>
+              <SelectItem value="lastYear">{t('common.same_period_last_year')}</SelectItem>
+              <SelectItem value="meta">{t('common.goal')}</SelectItem>
+              <SelectItem value="none">{t('common.no_compare')}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -120,9 +122,9 @@ export default function AdminIntDashboard() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>Exportar PDF</DropdownMenuItem>
-              <DropdownMenuItem>Exportar Excel</DropdownMenuItem>
-              <DropdownMenuItem>Exportar CSV</DropdownMenuItem>
+              <DropdownMenuItem>{t('common.export_pdf')}</DropdownMenuItem>
+              <DropdownMenuItem>{t('common.export_excel')}</DropdownMenuItem>
+              <DropdownMenuItem>{t('common.export_csv')}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -150,14 +152,14 @@ export default function AdminIntDashboard() {
             <Sparkles className="w-5 h-5 text-emerald-500" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">DIA Insights</h3>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">{t('admin_interno.dia_insights_title')}</h3>
             <p className="text-xs text-slate-600 dark:text-slate-400">
-              ⚠️ 3 merchants com CB Ratio acima de 0.7% • 📈 TPV 15% acima da média • 🔔 12 KYCs pendentes • 💰 R$ 890k em saques pendentes
+              ⚠️ 3 {t('admin_interno.merchants_high_cb')} • 📈 {t('admin_interno.tpv_above_average')} 15% • 🔔 12 {t('admin_interno.pending_kycs')} • 💰 R$ 890k {t('admin_interno.pending_withdrawals')}
             </p>
           </div>
         </div>
         <Button size="sm" variant="ghost" className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50">
-          Ver detalhes
+          {t('common.see_details')}
         </Button>
       </div>
 
@@ -166,42 +168,42 @@ export default function AdminIntDashboard() {
         <TabsList className="flex flex-wrap h-auto p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
           {/* Visões Consolidadas */}
           <TabsTrigger value="executiva" className="gap-2 py-2.5 px-4">
-            <LayoutDashboard className="w-4 h-4" /> Executiva
+            <LayoutDashboard className="w-4 h-4" /> {t('dashboard.views.executive')}
           </TabsTrigger>
           <TabsTrigger value="operacional" className="gap-2 py-2.5 px-4">
-            <Activity className="w-4 h-4" /> Operacional
+            <Activity className="w-4 h-4" /> {t('dashboard.views.operational')}
           </TabsTrigger>
           <TabsTrigger value="financeira" className="gap-2 py-2.5 px-4">
-            <Wallet className="w-4 h-4" /> Financeira
+            <Wallet className="w-4 h-4" /> {t('dashboard.views.financial')}
           </TabsTrigger>
           <TabsTrigger value="pl" className="gap-2 py-2.5 px-4">
-            <TrendingUp className="w-4 h-4" /> P&L
+            <TrendingUp className="w-4 h-4" /> {t('dashboard.views.pl')}
           </TabsTrigger>
           <TabsTrigger value="risco" className="gap-2 py-2.5 px-4">
-            <ShieldAlert className="w-4 h-4" /> Risco
+            <ShieldAlert className="w-4 h-4" /> {t('dashboard.views.risk')}
           </TabsTrigger>
 
           <div className="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1 self-center" />
 
           {/* Visões por Método */}
           <TabsTrigger value="cartao" className="gap-2 py-2.5 px-4">
-            <CreditCard className="w-4 h-4 text-blue-500" /> Cartão
+            <CreditCard className="w-4 h-4 text-blue-500" /> {t('dashboard.views.card')}
           </TabsTrigger>
           <TabsTrigger value="pix" className="gap-2 py-2.5 px-4">
-            <QrCode className="w-4 h-4 text-green-500" /> PIX
+            <QrCode className="w-4 h-4 text-green-500" /> {t('dashboard.views.pix')}
           </TabsTrigger>
           <TabsTrigger value="boleto" className="gap-2 py-2.5 px-4">
-            <FileText className="w-4 h-4 text-amber-500" /> Boleto
+            <FileText className="w-4 h-4 text-amber-500" /> {t('dashboard.views.boleto')}
           </TabsTrigger>
 
           <div className="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1 self-center" />
 
           {/* Técnico e Alertas */}
           <TabsTrigger value="tecnico" className="gap-2 py-2.5 px-4">
-            <Server className="w-4 h-4" /> Técnico
+            <Server className="w-4 h-4" /> {t('dashboard.views.technical')}
           </TabsTrigger>
           <TabsTrigger value="alertas" className="gap-2 py-2.5 px-4 relative">
-            <Bell className="w-4 h-4" /> Alertas
+            <Bell className="w-4 h-4" /> {t('dashboard.views.alerts')}
             {alertCount > 0 && (
               <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-[10px]">
                 {alertCount}
