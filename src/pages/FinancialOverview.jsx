@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
@@ -50,6 +51,7 @@ const formatCurrency = (value) => {
 };
 
 export default function FinancialOverview() {
+  const { t } = useTranslation();
   const [period, setPeriod] = useState('30');
 
   const { data: entries = [], isLoading: entriesLoading } = useQuery({
@@ -156,31 +158,31 @@ export default function FinancialOverview() {
   };
 
   const quickLinks = [
-    { label: 'Extrato', icon: FileText, page: 'FinancialStatement', color: 'bg-blue-100 text-blue-600' },
-    { label: 'Agenda de Recebíveis', icon: Calendar, page: 'ReceivablesAgenda', color: 'bg-green-100 text-green-600' },
-    { label: 'Antecipação', icon: Zap, page: 'Anticipation', color: 'bg-purple-100 text-purple-600' },
-    { label: 'Split', icon: ArrowLeftRight, page: 'SplitManagement', color: 'bg-indigo-100 text-indigo-600' },
-    { label: 'Saques', icon: ArrowUpFromLine, page: 'Withdrawals', color: 'bg-orange-100 text-orange-600' },
+    { labelKey: 'financial.statement', icon: FileText, page: 'FinancialStatement', color: 'bg-blue-100 text-blue-600' },
+    { labelKey: 'financial.receivables', icon: Calendar, page: 'ReceivablesAgenda', color: 'bg-green-100 text-green-600' },
+    { labelKey: 'financial.anticipation', icon: Zap, page: 'Anticipation', color: 'bg-purple-100 text-purple-600' },
+    { labelKey: 'menu.split', icon: ArrowLeftRight, page: 'SplitManagement', color: 'bg-indigo-100 text-indigo-600' },
+    { labelKey: 'financial.withdrawals', icon: ArrowUpFromLine, page: 'Withdrawals', color: 'bg-orange-100 text-orange-600' },
   ];
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Financeiro"
-        subtitle="Visão completa dos seus saldos e movimentações"
-        breadcrumbs={[{ label: 'Financeiro' }]}
+        title={t('financial.title')}
+        subtitle={t('financial.overview')}
+        breadcrumbs={[{ label: t('financial.title') }]}
         actions={
           <div className="flex gap-2">
             <Button variant="outline" asChild>
               <Link to={createPageUrl('FinancialStatement')}>
                 <FileText className="w-4 h-4 mr-2" />
-                Ver Extrato
+                {t('financial.statement')}
               </Link>
             </Button>
             <Button className="bg-green-600 hover:bg-green-700" asChild>
               <Link to={createPageUrl('Withdrawals')}>
                 <ArrowUpFromLine className="w-4 h-4 mr-2" />
-                Sacar
+                {t('financial.withdraw')}
               </Link>
             </Button>
           </div>
@@ -205,7 +207,7 @@ export default function FinancialOverview() {
             <div className={cn("p-2 rounded-lg", link.color)}>
               <link.icon className="w-5 h-5" />
             </div>
-            <span className="font-medium text-sm">{link.label}</span>
+            <span className="font-medium text-sm">{t(link.labelKey)}</span>
           </Link>
         ))}
       </div>

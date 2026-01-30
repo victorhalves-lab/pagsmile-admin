@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -13,21 +14,22 @@ import DeclineAnalysisView from '@/components/transactions/DeclineAnalysisView';
 import PaymentRecoveryAgentView from '@/components/transactions/PaymentRecoveryAgentView';
 
 export default function Transactions() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('all');
 
   return (
     <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
       <PageHeader
-        title="Transações"
-        subtitle="Gerencie todas as suas transações de pagamento"
+        title={t('transactions.title')}
+        subtitle={t('transactions.subtitle') || t('transactions.title')}
         breadcrumbs={[
-          { label: 'Transações', page: 'Transactions' }
+          { label: t('transactions.title'), page: 'Transactions' }
         ]}
         actions={
           <>
             <Button variant="outline">
               <Download className="w-4 h-4 mr-2" />
-              Exportar
+              {t('common.export')}
             </Button>
           </>
         }
@@ -35,12 +37,12 @@ export default function Transactions() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="h-auto flex-wrap gap-1 p-1">
-          <TabsTrigger value="all">Todas</TabsTrigger>
-          <TabsTrigger value="card">Cartão</TabsTrigger>
-          <TabsTrigger value="pix">Pix</TabsTrigger>
+          <TabsTrigger value="all">{t('transactions.all')}</TabsTrigger>
+          <TabsTrigger value="card">{t('transactions.card')}</TabsTrigger>
+          <TabsTrigger value="pix">{t('transactions.pix')}</TabsTrigger>
           <TabsTrigger value="declines" className="gap-1.5">
             <AlertTriangle className="w-4 h-4" />
-            Análise de Recusas
+            {t('menu.decline_analysis')}
           </TabsTrigger>
           <TabsTrigger value="recovery" className="gap-1.5">
             <Sparkles className="w-4 h-4" />

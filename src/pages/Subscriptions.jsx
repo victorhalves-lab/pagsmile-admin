@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
@@ -87,6 +88,7 @@ const healthConfig = {
 };
 
 export default function Subscriptions() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('all');
@@ -298,28 +300,28 @@ export default function Subscriptions() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Assinaturas"
-        subtitle="Gerencie suas assinaturas e recorrências"
+        title={t('subscriptions.title')}
+        subtitle={t('subscriptions.title')}
         breadcrumbs={[
-          { label: 'Assinaturas', page: 'Subscriptions' }
+          { label: t('subscriptions.title'), page: 'Subscriptions' }
         ]}
         actions={
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => navigate(createPageUrl('SubscriptionPlans'))}>
               <Settings className="w-4 h-4 mr-2" />
-              Planos
+              {t('subscriptions.plans')}
             </Button>
             <Button variant="outline" onClick={() => navigate(createPageUrl('DunningSettings'))}>
               <RefreshCw className="w-4 h-4 mr-2" />
-              Dunning
+              {t('menu.dunning')}
             </Button>
             <Button variant="outline" onClick={() => navigate(createPageUrl('SubscriptionAnalytics'))}>
               <BarChart3 className="w-4 h-4 mr-2" />
-              Analytics
+              {t('menu.analytics')}
             </Button>
             <Button className="bg-[#00D26A] hover:bg-[#00A854]">
               <Plus className="w-4 h-4 mr-2" />
-              Nova Assinatura
+              {t('common.new')} {t('subscriptions.title')}
             </Button>
           </div>
         }

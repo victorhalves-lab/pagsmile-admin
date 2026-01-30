@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
@@ -62,6 +63,7 @@ import EmptyState from '@/components/common/EmptyState';
 import ShareOptions from '@/components/payment-links/ShareOptions';
 
 export default function PaymentLinks() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('table');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -340,10 +342,10 @@ export default function PaymentLinks() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Links de Pagamento"
-        subtitle="Crie e gerencie seus links de cobrança"
+        title={t('payment_links.title')}
+        subtitle={t('payment_links.title')}
         breadcrumbs={[
-          { label: 'Links de Pagamento', page: 'PaymentLinks' }
+          { label: t('payment_links.title'), page: 'PaymentLinks' }
         ]}
         actions={
           <div className="flex gap-2">
@@ -356,7 +358,7 @@ export default function PaymentLinks() {
               onClick={() => navigate(createPageUrl('PaymentLinkCreate'))}
             >
               <Plus className="w-4 h-4 mr-2" />
-              Novo Link
+              {t('payment_links.create_link')}
             </Button>
           </div>
         }
@@ -365,7 +367,7 @@ export default function PaymentLinks() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
-          title="Links Ativos"
+          title={t('payment_links.active_links')}
           value={activeLinks.length}
           format="number"
           icon={Link2}
@@ -373,7 +375,7 @@ export default function PaymentLinks() {
           iconColor="text-blue-600"
         />
         <KPICard
-          title="Total Arrecadado"
+          title={t('payment_links.total_collected')}
           value={totalCollected}
           format="currency"
           change={15.3}
@@ -382,7 +384,7 @@ export default function PaymentLinks() {
           iconColor="text-emerald-600"
         />
         <KPICard
-          title="Total de Vendas"
+          title={t('dashboard.total_transactions')}
           value={totalSales}
           format="number"
           icon={BarChart3}
@@ -390,7 +392,7 @@ export default function PaymentLinks() {
           iconColor="text-purple-600"
         />
         <KPICard
-          title="Conversão Média"
+          title={t('checkout.conversion_rate')}
           value={avgConversion}
           format="percentage"
           icon={TrendingUp}
