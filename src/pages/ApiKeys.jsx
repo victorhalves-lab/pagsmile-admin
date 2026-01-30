@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { 
@@ -51,6 +52,7 @@ import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
 
 export default function ApiKeys() {
+  const { t } = useTranslation();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [showSecret, setShowSecret] = useState({});
   const [newKey, setNewKey] = useState({
@@ -207,11 +209,11 @@ export default function ApiKeys() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Chaves de API"
-        subtitle="Gerencie suas credenciais de integração"
+        title={t('integrations.api_keys')}
+        subtitle={t('integrations.title')}
         breadcrumbs={[
-          { label: 'Integrações', page: 'Integrations' },
-          { label: 'API Keys', page: 'ApiKeys' }
+          { label: t('menu.integrations'), page: 'Integrations' },
+          { label: t('integrations.api_keys'), page: 'ApiKeys' }
         ]}
         actions={
           <Button 
@@ -219,7 +221,7 @@ export default function ApiKeys() {
             onClick={() => setIsCreateOpen(true)}
           >
             <Plus className="w-4 h-4 mr-2" />
-            Nova Chave
+            {t('integrations.generate_key')}
           </Button>
         }
       />

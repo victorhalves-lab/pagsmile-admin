@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/common/PageHeader';
@@ -24,6 +25,7 @@ import {
 } from 'lucide-react';
 
 export default function DisputeDashboard() {
+  const { t } = useTranslation();
   const { data: disputes = [], isLoading: loadingDisputes } = useQuery({
     queryKey: ['disputes'],
     queryFn: () => base44.entities.Dispute.list('-created_date', 100)
@@ -131,17 +133,17 @@ export default function DisputeDashboard() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Dashboard de Disputas"
-        subtitle="Monitore chargebacks, ratios e compliance com as bandeiras"
+        title={t('disputes.title')}
+        subtitle={t('disputes.title')}
         actions={
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />
-              Exportar
+              {t('common.export')}
             </Button>
             <Button variant="outline" size="sm">
               <FileText className="w-4 h-4 mr-2" />
-              Relatório
+              {t('reports.title')}
             </Button>
           </div>
         }

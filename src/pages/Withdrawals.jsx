@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/common/PageHeader';
@@ -71,6 +72,7 @@ const statusConfig = {
 };
 
 export default function Withdrawals() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
   const [showAccountDialog, setShowAccountDialog] = useState(false);
@@ -166,16 +168,16 @@ export default function Withdrawals() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Saques"
-        subtitle="Transfira seu saldo disponível para sua conta bancária"
+        title={t('financial.withdrawals')}
+        subtitle={t('financial.withdrawals')}
         breadcrumbs={[
-          { label: 'Financeiro', href: 'Financial' },
-          { label: 'Saques' }
+          { label: t('financial.title'), href: 'Financial' },
+          { label: t('financial.withdrawals') }
         ]}
         actions={
           <Button onClick={() => setShowWithdrawDialog(true)}>
             <ArrowUpFromLine className="w-4 h-4 mr-2" />
-            Solicitar Saque
+            {t('financial.withdraw')}
           </Button>
         }
       />

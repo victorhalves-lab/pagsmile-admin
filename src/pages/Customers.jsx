@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
@@ -49,6 +50,7 @@ import StatusBadge from '@/components/common/StatusBadge';
 import KPICard from '@/components/dashboard/KPICard';
 
 export default function Customers() {
+  const { t } = useTranslation();
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -225,20 +227,20 @@ export default function Customers() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Clientes"
-        subtitle="Gerencie sua base de clientes"
+        title={t('customers.title')}
+        subtitle={t('customers.title')}
         breadcrumbs={[
-          { label: 'Clientes', page: 'Customers' }
+          { label: t('customers.title'), page: 'Customers' }
         ]}
         actions={
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setShowFilters(!showFilters)}>
               <Filter className="w-4 h-4 mr-2" />
-              Filtros
+              {t('common.filter')}
             </Button>
             <Button variant="outline">
               <Download className="w-4 h-4 mr-2" />
-              Exportar
+              {t('common.export')}
             </Button>
           </div>
         }
@@ -309,7 +311,7 @@ export default function Customers() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
-          title="Total de Clientes"
+          title={t('customers.total_customers')}
           value={totalCustomers}
           format="number"
           change={8.5}
@@ -318,7 +320,7 @@ export default function Customers() {
           iconColor="text-blue-600"
         />
         <KPICard
-          title="Novos (30 dias)"
+          title={t('customers.new_customers')}
           value={newCustomers}
           format="number"
           change={12.3}
@@ -327,7 +329,7 @@ export default function Customers() {
           iconColor="text-emerald-600"
         />
         <KPICard
-          title="Clientes Recorrentes"
+          title={t('customers.returning_customers')}
           value={recurringCustomers}
           format="number"
           change={5.2}
@@ -336,7 +338,7 @@ export default function Customers() {
           iconColor="text-purple-600"
         />
         <KPICard
-          title="LTV Médio"
+          title={t('customers.lifetime_value')}
           value={avgLTV}
           format="currency"
           change={3.8}
