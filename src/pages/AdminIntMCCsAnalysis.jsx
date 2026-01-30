@@ -45,6 +45,14 @@ import {
   Users,
   XCircle
 } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import PageHeader from '@/components/common/PageHeader';
 

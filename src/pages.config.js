@@ -100,6 +100,7 @@ import AdminIntLeadProfile from './pages/AdminIntLeadProfile';
 import AdminIntLimitRequests from './pages/AdminIntLimitRequests';
 import AdminIntMCCDetail from './pages/AdminIntMCCDetail';
 import AdminIntMCCs from './pages/AdminIntMCCs';
+import AdminIntMCCsAnalysis from './pages/AdminIntMCCsAnalysis';
 import AdminIntMEDsList from './pages/AdminIntMEDsList';
 import AdminIntMccIrregularities from './pages/AdminIntMccIrregularities';
 import AdminIntMerchantGroups from './pages/AdminIntMerchantGroups';
@@ -146,8 +147,8 @@ import AdminIntTransactionDetail from './pages/AdminIntTransactionDetail';
 import AdminIntTransactionReports from './pages/AdminIntTransactionReports';
 import AdminIntTransactions from './pages/AdminIntTransactions';
 import AdminIntTransactionsDashboard from './pages/AdminIntTransactionsDashboard';
-import AdminIntTransactionsList from './pages/AdminIntTransactionsList';
 import ApiKeys from './pages/ApiKeys';
+import AdminIntTransactionsList from './pages/AdminIntTransactionsList';
 import AdminIntUserDetail from './pages/AdminIntUserDetail';
 import AdminIntUsers from './pages/AdminIntUsers';
 import AdminIntWebhooks from './pages/AdminIntWebhooks';
@@ -225,7 +226,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntMCCsAnalysis from './pages/AdminIntMCCsAnalysis';
 import __Layout from './Layout.jsx';
 
 
@@ -283,6 +283,7 @@ export const PAGES = {
     "AdminIntLimitRequests": AdminIntLimitRequests,
     "AdminIntMCCDetail": AdminIntMCCDetail,
     "AdminIntMCCs": AdminIntMCCs,
+    "AdminIntMCCsAnalysis": AdminIntMCCsAnalysis,
     "AdminIntMEDsList": AdminIntMEDsList,
     "AdminIntMccIrregularities": AdminIntMccIrregularities,
     "AdminIntMerchantGroups": AdminIntMerchantGroups,
@@ -329,8 +330,8 @@ export const PAGES = {
     "AdminIntTransactionReports": AdminIntTransactionReports,
     "AdminIntTransactions": AdminIntTransactions,
     "AdminIntTransactionsDashboard": AdminIntTransactionsDashboard,
-    "AdminIntTransactionsList": AdminIntTransactionsList,
     "ApiKeys": ApiKeys,
+    "AdminIntTransactionsList": AdminIntTransactionsList,
     "AdminIntUserDetail": AdminIntUserDetail,
     "AdminIntUsers": AdminIntUsers,
     "AdminIntWebhooks": AdminIntWebhooks,
@@ -408,7 +409,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntMCCsAnalysis": AdminIntMCCsAnalysis,
 }
 
 export const pagesConfig = {
