@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import { useTranslation } from 'react-i18next';
 import {
   Eye,
   EyeOff,
@@ -28,6 +29,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 export default function IBHome() {
+  const { t } = useTranslation();
   const [showBalance, setShowBalance] = useState(true);
 
   const formatCurrency = (value) => {
@@ -61,10 +63,10 @@ export default function IBHome() {
   ];
 
   const quickActions = [
-    { icon: Send, label: 'Enviar Pix', page: 'IBPixSend', color: 'from-[#2bc196] to-emerald-600', bgLight: 'bg-emerald-50', textColor: 'text-emerald-600' },
-    { icon: QrCode, label: 'Receber Pix', page: 'IBPixReceive', color: 'from-blue-500 to-blue-600', bgLight: 'bg-blue-50', textColor: 'text-blue-600' },
-    { icon: Key, label: 'Minhas Chaves', page: 'IBPixKeys', color: 'from-violet-500 to-purple-600', bgLight: 'bg-violet-50', textColor: 'text-violet-600' },
-    { icon: CreditCard, label: 'Cartões', page: 'IBHome', color: 'from-amber-500 to-orange-500', bgLight: 'bg-amber-50', textColor: 'text-amber-600' },
+    { icon: Send, labelKey: 'internet_banking.send_pix', page: 'IBPixSend', color: 'from-[#2bc196] to-emerald-600', bgLight: 'bg-emerald-50', textColor: 'text-emerald-600' },
+    { icon: QrCode, labelKey: 'internet_banking.receive_pix', page: 'IBPixReceive', color: 'from-blue-500 to-blue-600', bgLight: 'bg-blue-50', textColor: 'text-blue-600' },
+    { icon: Key, labelKey: 'internet_banking.my_keys', page: 'IBPixKeys', color: 'from-violet-500 to-purple-600', bgLight: 'bg-violet-50', textColor: 'text-violet-600' },
+    { icon: CreditCard, labelKey: 'internet_banking.cards', page: 'IBHome', color: 'from-amber-500 to-orange-500', bgLight: 'bg-amber-50', textColor: 'text-amber-600' },
   ];
 
   return (
@@ -74,16 +76,16 @@ export default function IBHome() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Sparkles className="w-5 h-5 text-[#2bc196]" />
-            <span className="text-sm text-[#2bc196] font-medium">Bom dia!</span>
+            <span className="text-sm text-[#2bc196] font-medium">{t('internet_banking.good_morning')}</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Sua Conta Digital</h1>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-white">{t('internet_banking.your_digital_account')}</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-2 mt-1">
             <Clock className="w-4 h-4" />
-            Última atualização: agora mesmo
+            {t('internet_banking.last_update')}: {t('internet_banking.just_now')}
           </p>
         </div>
         <Badge className="bg-gradient-to-r from-[#2bc196] to-emerald-500 text-white border-0 px-3 py-1">
-          <CircleDollarSign className="w-3 h-3 mr-1" /> Conta Ativa
+          <CircleDollarSign className="w-3 h-3 mr-1" /> {t('internet_banking.account_active')}
         </Badge>
       </div>
 
@@ -101,7 +103,7 @@ export default function IBHome() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-slate-400 text-sm font-medium uppercase tracking-wide">Saldo Disponível</p>
+                    <p className="text-slate-400 text-sm font-medium uppercase tracking-wide">{t('internet_banking.available_balance')}</p>
                     <button onClick={() => setShowBalance(!showBalance)} className="text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10">
                       {showBalance ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                     </button>
@@ -118,7 +120,7 @@ export default function IBHome() {
                     <Lock className="w-4 h-4 text-amber-400" />
                   </div>
                   <div>
-                    <span className="text-xs text-slate-400 uppercase block">Bloqueado</span>
+                    <span className="text-xs text-slate-400 uppercase block">{t('internet_banking.blocked')}</span>
                     <span className="text-sm font-bold text-amber-400">{formatCurrency(balance.blocked)}</span>
                   </div>
                 </div>
@@ -128,7 +130,7 @@ export default function IBHome() {
                     <Banknote className="w-4 h-4 text-slate-300" />
                   </div>
                   <div>
-                    <span className="text-xs text-slate-400 uppercase block">Total</span>
+                    <span className="text-xs text-slate-400 uppercase block">{t('internet_banking.total')}</span>
                     <span className="text-sm font-bold text-white">{formatCurrency(balance.total)}</span>
                   </div>
                 </div>
@@ -145,7 +147,7 @@ export default function IBHome() {
                       <div className={cn("w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg", action.color)}>
                         <IconComponent className="w-5 h-5 text-white" />
                       </div>
-                      <span className="text-xs font-medium text-white">{action.label}</span>
+                      <span className="text-xs font-medium text-white">{t(action.labelKey)}</span>
                     </button>
                   </Link>
                 );
@@ -160,7 +162,7 @@ export default function IBHome() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Calendar className="w-5 h-5 text-[#2bc196]" />
-            <h2 className="text-lg font-bold text-slate-800 dark:text-white">Resumo do Mês</h2>
+            <h2 className="text-lg font-bold text-slate-800 dark:text-white">{t('internet_banking.month_summary')}</h2>
           </div>
           <Badge variant="outline" className="font-semibold border-[#2bc196] text-[#2bc196]">
             Janeiro 2026
@@ -176,8 +178,8 @@ export default function IBHome() {
                     <ArrowDownLeft className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <span className="text-sm font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wide">Entradas</span>
-                    <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70">Total recebido</p>
+                    <span className="text-sm font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wide">{t('internet_banking.entries')}</span>
+                    <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70">{t('internet_banking.total_received')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/50">
@@ -203,8 +205,8 @@ export default function IBHome() {
                     <ArrowUpRight className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <span className="text-sm font-bold text-red-700 dark:text-red-300 uppercase tracking-wide">Saídas</span>
-                    <p className="text-xs text-red-600/70 dark:text-red-400/70">Total enviado</p>
+                    <span className="text-sm font-bold text-red-700 dark:text-red-300 uppercase tracking-wide">{t('internet_banking.exits')}</span>
+                    <p className="text-xs text-red-600/70 dark:text-red-400/70">{t('internet_banking.total_sent')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-red-100 dark:bg-red-900/50">
@@ -231,13 +233,13 @@ export default function IBHome() {
               <Banknote className="w-5 h-5 text-white" />
             </div>
             <div>
-              <CardTitle className="text-lg font-bold text-slate-800 dark:text-white">Últimas Movimentações</CardTitle>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Suas transações recentes</p>
+              <CardTitle className="text-lg font-bold text-slate-800 dark:text-white">{t('internet_banking.recent_transactions')}</CardTitle>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t('internet_banking.your_recent_transactions')}</p>
             </div>
           </div>
           <Link to={createPageUrl('IBExtract')}>
             <Button variant="outline" size="sm" className="gap-2 border-[#2bc196] text-[#2bc196] hover:bg-[#2bc196] hover:text-white transition-all duration-300">
-              Ver extrato
+              {t('internet_banking.see_statement')}
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
@@ -267,7 +269,7 @@ export default function IBHome() {
                   </div>
                   <div>
                     <p className="font-semibold text-slate-800 dark:text-white">
-                      {transaction.type === 'received' ? 'Pix Recebido' : 'Pix Enviado'}
+                      {transaction.type === 'received' ? t('internet_banking.pix_received') : t('internet_banking.pix_sent')}
                     </p>
                     <p className="text-sm text-slate-500 dark:text-slate-400">{transaction.description}</p>
                     <div className="flex items-center gap-2 mt-1">
