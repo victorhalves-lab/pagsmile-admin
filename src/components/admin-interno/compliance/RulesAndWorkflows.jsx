@@ -23,7 +23,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Plus, Edit, Trash2, Play, Pause, Settings, Zap, Mail, Bell,
-  CheckCircle2, XCircle, AlertTriangle, ArrowRight, Copy, Save
+  CheckCircle2, XCircle, AlertTriangle, ArrowRight, Copy, Save, Eye
 } from 'lucide-react';
 
 // Mock rules
