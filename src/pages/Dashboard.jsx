@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { useTranslation } from 'react-i18next';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -46,6 +47,7 @@ import ConversionMetricsCards from '@/components/dashboard/ConversionMetricsCard
 import PixFlowCards from '@/components/dashboard/PixFlowCards.jsx';
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const [period, setPeriod] = React.useState('7d');
   const [activeView, setActiveView] = React.useState('executive');
 
@@ -87,8 +89,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen">
       <PageHeader
-        title="Dashboard Executivo"
-        subtitle="Visão completa da sua operação em tempo real"
+        title={t('dashboard.executive_dashboard')}
+        subtitle={t('dashboard.subtitle')}
         actions={
           <div className="flex items-center gap-3">
             <Select value={period} onValueChange={setPeriod}>
@@ -97,17 +99,17 @@ export default function Dashboard() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="24h">Hoje</SelectItem>
-                <SelectItem value="yesterday">Ontem</SelectItem>
-                <SelectItem value="7d">Últimos 7 dias</SelectItem>
-                <SelectItem value="30d">Este mês</SelectItem>
-                <SelectItem value="last_month">Mês anterior</SelectItem>
-                <SelectItem value="90d">Últimos 90 dias</SelectItem>
+                <SelectItem value="24h">{t('common.today')}</SelectItem>
+                <SelectItem value="yesterday">{t('common.yesterday')}</SelectItem>
+                <SelectItem value="7d">{t('common.last_7_days')}</SelectItem>
+                <SelectItem value="30d">{t('common.this_month')}</SelectItem>
+                <SelectItem value="last_month">{t('common.last_month')}</SelectItem>
+                <SelectItem value="90d">{t('common.last_90_days')}</SelectItem>
               </SelectContent>
             </Select>
             <Button variant="outline" size="sm">
               <Settings className="w-4 h-4 mr-2" />
-              Personalizar
+              {t('common.customize')}
             </Button>
           </div>
         }
@@ -140,8 +142,8 @@ export default function Dashboard() {
 
       {/* Volume Chart */}
       <ChartCard
-        title="Volume de Vendas"
-        subtitle="Comparativo Cartão vs Pix"
+        title={t('dashboard.sales_volume')}
+        subtitle={t('dashboard.card_vs_pix')}
         periodSelector
         selectedPeriod={period}
         onPeriodChange={setPeriod}
@@ -152,10 +154,10 @@ export default function Dashboard() {
       {/* Tabs for Different Views */}
       <Tabs value={activeView} onValueChange={setActiveView} className="space-y-6">
         <TabsList>
-          <TabsTrigger value="executive">Visão Executiva</TabsTrigger>
-          <TabsTrigger value="card">Performance Cartão</TabsTrigger>
-          <TabsTrigger value="pix">Performance Pix</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics Avançado</TabsTrigger>
+          <TabsTrigger value="executive">{t('dashboard.views.executive')}</TabsTrigger>
+          <TabsTrigger value="card">{t('dashboard.views.card_performance')}</TabsTrigger>
+          <TabsTrigger value="pix">{t('dashboard.views.pix_performance')}</TabsTrigger>
+          <TabsTrigger value="analytics">{t('dashboard.views.advanced_analytics')}</TabsTrigger>
         </TabsList>
 
         {/* Executive View */}
@@ -166,16 +168,16 @@ export default function Dashboard() {
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartCard
-              title="Métodos de Pagamento"
-              subtitle="Distribuição do volume"
+              title={t('dashboard.payment_methods')}
+              subtitle={t('dashboard.volume_distribution')}
               action
             >
               <PaymentMethodsChart />
             </ChartCard>
             
             <ChartCard
-              title="Taxa de Aprovação por Bandeira"
-              subtitle="Meta: 85%"
+              title={t('dashboard.approval_rate_by_brand')}
+              subtitle={`${t('common.goal')}: 85%`}
               action
             >
               <ApprovalRateChart target={85} />
