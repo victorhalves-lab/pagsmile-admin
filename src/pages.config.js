@@ -72,8 +72,11 @@ import AdminIntCommSenders from './pages/AdminIntCommSenders';
 import AdminIntCommTemplates from './pages/AdminIntCommTemplates';
 import AdminIntCommercialInsights from './pages/AdminIntCommercialInsights';
 import AdminIntCompliance from './pages/AdminIntCompliance';
+import AdminIntComplianceAudit from './pages/AdminIntComplianceAudit';
 import AdminIntComplianceDocs from './pages/AdminIntComplianceDocs';
+import AdminIntComplianceFormLink from './pages/AdminIntComplianceFormLink';
 import AdminIntComplianceForms from './pages/AdminIntComplianceForms';
+import AdminIntComplianceHelena from './pages/AdminIntComplianceHelena';
 import AdminIntComplianceQueue from './pages/AdminIntComplianceQueue';
 import AdminIntComplianceReview from './pages/AdminIntComplianceReview';
 import AdminIntComplianceRules from './pages/AdminIntComplianceRules';
@@ -144,17 +147,17 @@ import AdminIntSupport from './pages/AdminIntSupport';
 import AdminIntSystemLogs from './pages/AdminIntSystemLogs';
 import AdminIntTemplates from './pages/AdminIntTemplates';
 import AdminIntTransactionDetail from './pages/AdminIntTransactionDetail';
+import AdminIntUsers from './pages/AdminIntUsers';
 import AdminIntTransactionReports from './pages/AdminIntTransactionReports';
 import AdminIntTransactions from './pages/AdminIntTransactions';
 import AdminIntTransactionsDashboard from './pages/AdminIntTransactionsDashboard';
-import ApiKeys from './pages/ApiKeys';
 import AdminIntTransactionsList from './pages/AdminIntTransactionsList';
 import AdminIntUserDetail from './pages/AdminIntUserDetail';
-import AdminIntUsers from './pages/AdminIntUsers';
 import AdminIntWebhooks from './pages/AdminIntWebhooks';
 import AdminIntWithdrawalApprovals from './pages/AdminIntWithdrawalApprovals';
 import AdminIntWithdrawals from './pages/AdminIntWithdrawals';
 import Anticipation from './pages/Anticipation';
+import ApiKeys from './pages/ApiKeys';
 import CardTransactions from './pages/CardTransactions';
 import Chargebacks from './pages/Chargebacks';
 import CheckoutAnalytics from './pages/CheckoutAnalytics';
@@ -226,9 +229,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntComplianceFormLink from './pages/AdminIntComplianceFormLink';
-import AdminIntComplianceAudit from './pages/AdminIntComplianceAudit';
-import AdminIntComplianceHelena from './pages/AdminIntComplianceHelena';
 import __Layout from './Layout.jsx';
 
 
@@ -258,8 +258,11 @@ export const PAGES = {
     "AdminIntCommTemplates": AdminIntCommTemplates,
     "AdminIntCommercialInsights": AdminIntCommercialInsights,
     "AdminIntCompliance": AdminIntCompliance,
+    "AdminIntComplianceAudit": AdminIntComplianceAudit,
     "AdminIntComplianceDocs": AdminIntComplianceDocs,
+    "AdminIntComplianceFormLink": AdminIntComplianceFormLink,
     "AdminIntComplianceForms": AdminIntComplianceForms,
+    "AdminIntComplianceHelena": AdminIntComplianceHelena,
     "AdminIntComplianceQueue": AdminIntComplianceQueue,
     "AdminIntComplianceReview": AdminIntComplianceReview,
     "AdminIntComplianceRules": AdminIntComplianceRules,
@@ -330,17 +333,17 @@ export const PAGES = {
     "AdminIntSystemLogs": AdminIntSystemLogs,
     "AdminIntTemplates": AdminIntTemplates,
     "AdminIntTransactionDetail": AdminIntTransactionDetail,
+    "AdminIntUsers": AdminIntUsers,
     "AdminIntTransactionReports": AdminIntTransactionReports,
     "AdminIntTransactions": AdminIntTransactions,
     "AdminIntTransactionsDashboard": AdminIntTransactionsDashboard,
-    "ApiKeys": ApiKeys,
     "AdminIntTransactionsList": AdminIntTransactionsList,
     "AdminIntUserDetail": AdminIntUserDetail,
-    "AdminIntUsers": AdminIntUsers,
     "AdminIntWebhooks": AdminIntWebhooks,
     "AdminIntWithdrawalApprovals": AdminIntWithdrawalApprovals,
     "AdminIntWithdrawals": AdminIntWithdrawals,
     "Anticipation": Anticipation,
+    "ApiKeys": ApiKeys,
     "CardTransactions": CardTransactions,
     "Chargebacks": Chargebacks,
     "CheckoutAnalytics": CheckoutAnalytics,
@@ -412,9 +415,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntComplianceFormLink": AdminIntComplianceFormLink,
-    "AdminIntComplianceAudit": AdminIntComplianceAudit,
-    "AdminIntComplianceHelena": AdminIntComplianceHelena,
 }
 
 export const pagesConfig = {

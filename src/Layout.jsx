@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { useTranslation } from 'react-i18next';
+import '@/components/i18n/config';
+import LanguageSelector from '@/components/i18n/LanguageSelector';
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -63,337 +66,336 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-// Menu items for Admin Sub module
-const adminSubMenuItems = [
+// Menu items for Admin Sub module - using translation keys
+const getAdminSubMenuItems = (t) => [
   {
     id: 'dashboard',
-    label: 'Dashboard',
+    label: t('menu.dashboard'),
     icon: LayoutDashboard,
     page: 'Dashboard',
   },
   {
     id: 'transactions',
-    label: 'Transações',
+    label: t('menu.transactions'),
     icon: ArrowLeftRight,
     page: 'Transactions',
     badge: '24',
     submenu: [
-      { label: 'Todas as Transações', page: 'Transactions' },
-      { label: 'Cartão', page: 'CardTransactions' },
-      { label: 'Pix', page: 'PixTransactions' },
-      { label: 'Análise de Recusas', page: 'DeclineAnalysis' },
+      { label: t('menu.all_transactions'), page: 'Transactions' },
+      { label: t('menu.card'), page: 'CardTransactions' },
+      { label: t('menu.pix'), page: 'PixTransactions' },
+      { label: t('menu.decline_analysis'), page: 'DeclineAnalysis' },
     ]
   },
   {
     id: 'checkout',
-    label: 'Checkout',
+    label: t('menu.checkout'),
     icon: CreditCard,
     page: 'CheckoutBuilder',
     submenu: [
-      { label: 'Builder', page: 'CheckoutBuilder' },
-      { label: 'Meus Checkouts', page: 'Checkouts' },
-      { label: 'Templates', page: 'CheckoutTemplates' },
-      { label: 'Analytics', page: 'CheckoutAnalytics' },
-      { label: 'Converter Agent', page: 'ConverterAgent' },
+      { label: t('menu.builder'), page: 'CheckoutBuilder' },
+      { label: t('menu.my_checkouts'), page: 'Checkouts' },
+      { label: t('menu.templates'), page: 'CheckoutTemplates' },
+      { label: t('menu.analytics'), page: 'CheckoutAnalytics' },
+      { label: t('menu.converter_agent'), page: 'ConverterAgent' },
     ]
   },
   {
     id: 'links',
-    label: 'Links de Pagamento',
+    label: t('menu.payment_links'),
     icon: Link2,
     page: 'PaymentLinks',
     badge: '12',
   },
   {
     id: 'subscriptions',
-    label: 'Assinaturas',
+    label: t('menu.subscriptions'),
     icon: Repeat,
     page: 'Subscriptions',
     submenu: [
-      { label: 'Assinaturas', page: 'Subscriptions' },
-      { label: 'Planos', page: 'SubscriptionPlans' },
-      { label: 'Recorrência', page: 'Recurrence' },
-      { label: 'Dunning', page: 'DunningSettings' },
-      { label: 'Analytics', page: 'SubscriptionAnalytics' },
+      { label: t('menu.subscriptions'), page: 'Subscriptions' },
+      { label: t('menu.plans'), page: 'SubscriptionPlans' },
+      { label: t('menu.recurrence'), page: 'Recurrence' },
+      { label: t('menu.dunning'), page: 'DunningSettings' },
+      { label: t('menu.analytics'), page: 'SubscriptionAnalytics' },
     ]
   },
   {
     id: 'disputes',
-    label: 'Disputas',
+    label: t('menu.disputes'),
     icon: ShieldAlert,
     page: 'DisputeDashboard',
     badge: '3',
     badgeVariant: 'destructive',
     submenu: [
-      { label: 'Dashboard', page: 'DisputeDashboard' },
-      { label: 'Pré-Chargebacks', page: 'PreChargebacks' },
-      { label: 'Chargebacks', page: 'Chargebacks' },
-      { label: 'MEDs', page: 'MEDDashboard' },
+      { label: t('menu.dashboard'), page: 'DisputeDashboard' },
+      { label: t('menu.pre_chargebacks'), page: 'PreChargebacks' },
+      { label: t('menu.chargebacks'), page: 'Chargebacks' },
+      { label: t('menu.meds'), page: 'MEDDashboard' },
     ]
   },
   {
     id: 'financial',
-    label: 'Financeiro',
+    label: t('menu.financial'),
     icon: Wallet,
     page: 'FinancialOverview',
     submenu: [
-      { label: 'Visão Geral', page: 'FinancialOverview' },
-      { label: 'Extrato', page: 'FinancialStatement' },
-      { label: 'Agenda de Recebíveis', page: 'ReceivablesAgenda' },
-      { label: 'Taxas', page: 'Fees' },
-      { label: 'Tarifas', page: 'FeesAnalysis' },
-      { label: 'Antecipação', page: 'Anticipation' },
-      { label: 'Split', page: 'SplitManagement' },
+      { label: t('menu.overview'), page: 'FinancialOverview' },
+      { label: t('menu.statement'), page: 'FinancialStatement' },
+      { label: t('menu.receivables'), page: 'ReceivablesAgenda' },
+      { label: t('menu.fees'), page: 'Fees' },
+      { label: t('menu.tariffs'), page: 'FeesAnalysis' },
+      { label: t('menu.anticipation'), page: 'Anticipation' },
+      { label: t('menu.split'), page: 'SplitManagement' },
     ]
   },
   {
     id: 'withdrawals',
-    label: 'Saques',
+    label: t('menu.withdrawals'),
     icon: ArrowUpFromLine,
     page: 'Withdrawals',
   },
   {
     id: 'subaccounts',
-    label: 'Subcontas',
+    label: t('menu.subaccounts'),
     icon: Building2,
     page: 'SubaccountsDashboard',
     submenu: [
-      { label: 'Dashboard', page: 'SubaccountsDashboard' },
-      { label: 'Todas as Subcontas', page: 'SubaccountsList' },
-      { label: 'Onboarding', page: 'SubaccountOnboarding' },
+      { label: t('menu.dashboard'), page: 'SubaccountsDashboard' },
+      { label: t('menu.subaccounts'), page: 'SubaccountsList' },
+      { label: t('menu.onboarding'), page: 'SubaccountOnboarding' },
     ]
   },
   {
     id: 'customers',
-    label: 'Clientes',
+    label: t('menu.customers'),
     icon: UserCircle,
     page: 'Customers',
   },
   {
     id: 'analytics',
-    label: 'Analytics',
+    label: t('menu.analytics'),
     icon: BarChart3,
     page: 'Reports',
     submenu: [
-      { label: 'Relatórios', page: 'Reports' },
-      { label: 'Dashboards Customizados', page: 'CustomDashboards' },
+      { label: t('menu.reports'), page: 'Reports' },
+      { label: t('menu.custom_dashboards'), page: 'CustomDashboards' },
     ]
   },
   {
     id: 'integrations',
-    label: 'Integrações',
+    label: t('menu.integrations'),
     icon: Plug,
     page: 'ApiKeys',
     submenu: [
-      { label: 'Chaves de API', page: 'ApiKeys' },
-      { label: 'Webhooks', page: 'Webhooks' },
-      { label: 'Plugins e Conectores', page: 'Plugins' },
+      { label: t('menu.api_keys'), page: 'ApiKeys' },
+      { label: t('menu.webhooks'), page: 'Webhooks' },
+      { label: t('menu.plugins'), page: 'Plugins' },
     ]
   },
   {
     id: 'settings',
-    label: 'Configurações',
+    label: t('common.settings'),
     icon: Settings,
     page: 'SettingsPage',
   },
   {
     id: 'support',
-    label: 'Suporte',
+    label: t('menu.support'),
     icon: HelpCircle,
     page: 'Support',
   },
 ];
 
-// Menu items for Admin Interno module
-const adminInternoMenuItems = [
+// Menu items for Admin Interno module - using translation keys
+const getAdminInternoMenuItems = (t) => [
   {
     id: 'dashboard',
-    label: 'Dashboard',
+    label: t('menu.dashboard'),
     icon: LayoutDashboard,
     page: 'AdminIntDashboard',
   },
-
   {
     id: 'compliance',
-    label: 'KYC Compliance',
+    label: t('menu_admin.compliance'),
     icon: ShieldCheck,
     page: 'AdminIntCompliance',
     submenu: [
-      { label: 'Dashboard', page: 'AdminIntCompliance' },
-      { label: 'Fila de Compliance', page: 'AdminIntComplianceQueue' },
-      { label: 'Análise Manual', page: 'AdminIntComplianceReview' },
-      { label: 'Submissões', page: 'AdminIntComplianceSubmissions' },
-      { label: 'Gestão de Forms', page: 'AdminIntComplianceForms' },
-      { label: 'Documentos', page: 'AdminIntComplianceDocs' },
-      { label: 'Regras & Workflows', page: 'AdminIntComplianceRules' },
-      { label: 'Auditoria', page: 'AdminIntComplianceAudit' },
-      { label: 'Helena IA', page: 'AdminIntComplianceHelena' },
-      { label: 'Link do Formulário', page: 'AdminIntComplianceFormLink' },
+      { label: t('menu.dashboard'), page: 'AdminIntCompliance' },
+      { label: t('menu_admin.compliance_queue'), page: 'AdminIntComplianceQueue' },
+      { label: t('menu_admin.manual_analysis'), page: 'AdminIntComplianceReview' },
+      { label: t('menu_admin.submissions'), page: 'AdminIntComplianceSubmissions' },
+      { label: t('menu_admin.form_management'), page: 'AdminIntComplianceForms' },
+      { label: t('menu_admin.documents'), page: 'AdminIntComplianceDocs' },
+      { label: t('menu_admin.rules_workflows'), page: 'AdminIntComplianceRules' },
+      { label: t('menu_admin.audit'), page: 'AdminIntComplianceAudit' },
+      { label: t('menu_admin.helena_ai'), page: 'AdminIntComplianceHelena' },
+      { label: t('menu_admin.form_link'), page: 'AdminIntComplianceFormLink' },
     ]
   },
   {
     id: 'merchants',
-    label: 'Merchants',
+    label: t('menu_admin.merchants'),
     icon: Store,
     page: 'AdminIntMerchants',
     submenu: [
-      { label: 'Dashboard', page: 'AdminIntMerchants' },
-      { label: 'Lista de Merchants', page: 'AdminIntMerchantsList' },
-      { label: 'Perfil 360°', page: 'AdminIntMerchantProfile' },
-      { label: 'Subcontas', page: 'AdminIntSubaccounts' },
-      { label: 'Solicitações de Limite', page: 'AdminIntLimitRequests' },
-      { label: 'Grupos', page: 'AdminIntMerchantGroups' },
-      { label: 'Tags', page: 'AdminIntMerchantTags' },
-      { label: 'Relatórios', page: 'AdminIntMerchantReports' },
+      { label: t('menu.dashboard'), page: 'AdminIntMerchants' },
+      { label: t('menu_admin.merchant_list'), page: 'AdminIntMerchantsList' },
+      { label: t('menu_admin.profile_360'), page: 'AdminIntMerchantProfile' },
+      { label: t('menu.subaccounts'), page: 'AdminIntSubaccounts' },
+      { label: t('menu_admin.limit_requests'), page: 'AdminIntLimitRequests' },
+      { label: t('menu_admin.groups'), page: 'AdminIntMerchantGroups' },
+      { label: t('menu_admin.tags'), page: 'AdminIntMerchantTags' },
+      { label: t('menu.reports'), page: 'AdminIntMerchantReports' },
     ]
   },
   {
     id: 'transactions',
-    label: 'Transações',
+    label: t('menu.transactions'),
     icon: ArrowLeftRight,
     page: 'AdminIntTransactionsDashboard',
     submenu: [
-      { label: 'Dashboard', page: 'AdminIntTransactionsDashboard' },
-      { label: 'Lista de Transações', page: 'AdminIntTransactionsList' },
-      { label: 'Orquestração', page: 'AdminIntOrchestration' },
-      { label: 'Análise de BINs', page: 'AdminIntBINAnalysis' },
-      { label: 'Retry Intelligence', page: 'AdminIntRetryIntelligence' },
-      { label: 'Processamento em Lote', page: 'AdminIntBatchProcessing' },
-      { label: 'Conciliação', page: 'AdminIntReconciliation' },
-      { label: 'Relatórios', page: 'AdminIntTransactionReports' },
+      { label: t('menu.dashboard'), page: 'AdminIntTransactionsDashboard' },
+      { label: t('menu_admin.transaction_list'), page: 'AdminIntTransactionsList' },
+      { label: t('menu_admin.orchestration'), page: 'AdminIntOrchestration' },
+      { label: t('menu_admin.bin_analysis'), page: 'AdminIntBINAnalysis' },
+      { label: t('menu_admin.retry_intelligence'), page: 'AdminIntRetryIntelligence' },
+      { label: t('menu_admin.batch_processing'), page: 'AdminIntBatchProcessing' },
+      { label: t('menu_admin.reconciliation'), page: 'AdminIntReconciliation' },
+      { label: t('menu.reports'), page: 'AdminIntTransactionReports' },
     ]
   },
   {
     id: 'financial',
-    label: 'Financeiro',
+    label: t('menu.financial'),
     icon: DollarSign,
     page: 'AdminIntFinancialDashboard',
     submenu: [
-      { label: 'Dashboard', page: 'AdminIntFinancialDashboard' },
-      { label: 'Resultados Financeiros', page: 'AdminIntFinancialResults' },
-      { label: 'Rentabilidade por Cliente', page: 'AdminIntClientProfitability' },
-      { label: 'Conciliação', page: 'AdminIntConciliation' },
-      { label: 'Agenda de Pagamentos', page: 'AdminIntPaymentAgenda' },
-      { label: 'Liquidações', page: 'AdminIntSettlements' },
-      { label: 'Saques', page: 'AdminIntWithdrawals' },
-      { label: 'Antecipação', page: 'AdminIntAnticipations' },
-      { label: 'Extratos', page: 'AdminIntStatements' },
-      { label: 'Gestão de Saldos', page: 'AdminIntBalanceManagement' },
+      { label: t('menu.dashboard'), page: 'AdminIntFinancialDashboard' },
+      { label: t('menu_admin.financial_results'), page: 'AdminIntFinancialResults' },
+      { label: t('menu_admin.client_profitability'), page: 'AdminIntClientProfitability' },
+      { label: t('menu_admin.reconciliation'), page: 'AdminIntConciliation' },
+      { label: t('menu_admin.payment_agenda'), page: 'AdminIntPaymentAgenda' },
+      { label: t('menu_admin.settlements'), page: 'AdminIntSettlements' },
+      { label: t('menu.withdrawals'), page: 'AdminIntWithdrawals' },
+      { label: t('menu.anticipation'), page: 'AdminIntAnticipations' },
+      { label: t('menu_admin.statements'), page: 'AdminIntStatements' },
+      { label: t('menu_admin.balance_management'), page: 'AdminIntBalanceManagement' },
     ]
   },
   {
     id: 'risk',
-    label: 'Risco & Compliance',
+    label: t('menu_admin.risk'),
     icon: AlertTriangle,
     page: 'AdminIntRiskDashboard',
     submenu: [
-      { label: 'Dashboard de Risco', page: 'AdminIntRiskDashboard' },
-      { label: 'Monitoramento de Fraudes', page: 'AdminIntFraudMonitoring' },
-      { label: 'Chargebacks', page: 'AdminIntChargebacksList' },
-      { label: 'MEDs (PIX)', page: 'AdminIntMEDsList' },
-      { label: 'Regras de Risco', page: 'AdminIntRiskRules' },
-      { label: 'Listas de Controle', page: 'AdminIntControlLists' },
-      { label: 'Alertas', page: 'AdminIntRiskAlerts' },
-      { label: 'Compliance', page: 'AdminIntCompliance' },
+      { label: t('menu_admin.risk_dashboard'), page: 'AdminIntRiskDashboard' },
+      { label: t('menu_admin.fraud_monitoring'), page: 'AdminIntFraudMonitoring' },
+      { label: t('menu.chargebacks'), page: 'AdminIntChargebacksList' },
+      { label: t('menu.meds'), page: 'AdminIntMEDsList' },
+      { label: t('menu_admin.risk_rules'), page: 'AdminIntRiskRules' },
+      { label: t('menu_admin.control_lists'), page: 'AdminIntControlLists' },
+      { label: t('menu_admin.alerts'), page: 'AdminIntRiskAlerts' },
+      { label: t('menu_admin.compliance'), page: 'AdminIntCompliance' },
     ]
   },
   {
     id: 'reports',
-    label: 'Relatórios',
+    label: t('menu.reports'),
     icon: BarChart3,
     page: 'AdminIntReportsHub',
     submenu: [
-      { label: 'Central de Relatórios', page: 'AdminIntReportsHub' },
-      { label: 'Operacionais', page: 'AdminIntReportsOperational' },
-      { label: 'Financeiros', page: 'AdminIntReportsFinancial' },
-      { label: 'Risco', page: 'AdminIntReportsRisk' },
-      { label: 'Customizados', page: 'AdminIntReportsCustom' },
-      { label: 'Analytics e BI', page: 'AdminIntAnalytics' },
+      { label: t('menu_admin.reports_hub'), page: 'AdminIntReportsHub' },
+      { label: t('menu_admin.operational'), page: 'AdminIntReportsOperational' },
+      { label: t('menu.financial'), page: 'AdminIntReportsFinancial' },
+      { label: t('menu_admin.risk'), page: 'AdminIntReportsRisk' },
+      { label: t('menu_admin.custom'), page: 'AdminIntReportsCustom' },
+      { label: t('menu_admin.analytics_bi'), page: 'AdminIntAnalytics' },
     ]
   },
   {
     id: 'communication',
-    label: 'Comunicação',
+    label: t('menu_admin.communication'),
     icon: Mail,
     page: 'AdminIntCommDashboard',
     submenu: [
-      { label: 'Dashboard', page: 'AdminIntCommDashboard' },
-      { label: 'Régua de E-mails', page: 'AdminIntCommAutomations' },
-      { label: 'Templates', page: 'AdminIntCommTemplates' },
-      { label: 'Config SMTP', page: 'AdminIntCommSMTP' },
-      { label: 'Remetentes', page: 'AdminIntCommSenders' },
-      { label: 'Logs', page: 'AdminIntCommLogs' },
+      { label: t('menu.dashboard'), page: 'AdminIntCommDashboard' },
+      { label: t('menu_admin.email_automation'), page: 'AdminIntCommAutomations' },
+      { label: t('menu.templates'), page: 'AdminIntCommTemplates' },
+      { label: t('menu_admin.smtp_config'), page: 'AdminIntCommSMTP' },
+      { label: t('menu_admin.senders'), page: 'AdminIntCommSenders' },
+      { label: t('menu_admin.logs'), page: 'AdminIntCommLogs' },
     ]
   },
   {
     id: 'admin',
-    label: 'Administração',
+    label: t('menu_admin.administration'),
     icon: Settings,
     page: 'AdminIntSettings',
     submenu: [
-      { label: 'Configurações Gerais', page: 'AdminIntSettings' },
-      { label: 'Usuários', page: 'AdminIntUsers' },
-      { label: 'Perfis e Permissões', page: 'AdminIntProfiles' },
-      { label: 'Taxas Globais', page: 'AdminIntGlobalRates' },
-      { label: 'Parâmetros de Risco', page: 'AdminIntRiskParams' },
-      { label: 'Integrações', page: 'AdminIntIntegrations' },
-      { label: 'Templates', page: 'AdminIntTemplates' },
-      { label: 'Logs e Auditoria', page: 'AdminIntSystemLogs' },
-      { label: 'MCCs', page: 'AdminIntMCCs' },
-      { label: 'Análise MCCs', page: 'AdminIntMCCsAnalysis' },
-      { label: 'Parceiros & Custos', page: 'AdminIntPartners' },
-      { label: 'Planos de Taxas', page: 'AdminIntFeePlans' },
-      { label: 'Agentes IA', page: 'AdminIntAiAgents' },
+      { label: t('menu_admin.general_settings'), page: 'AdminIntSettings' },
+      { label: t('menu_admin.users'), page: 'AdminIntUsers' },
+      { label: t('menu_admin.profiles_permissions'), page: 'AdminIntProfiles' },
+      { label: t('menu_admin.global_rates'), page: 'AdminIntGlobalRates' },
+      { label: t('menu_admin.risk_params'), page: 'AdminIntRiskParams' },
+      { label: t('menu.integrations'), page: 'AdminIntIntegrations' },
+      { label: t('menu.templates'), page: 'AdminIntTemplates' },
+      { label: t('menu_admin.system_logs'), page: 'AdminIntSystemLogs' },
+      { label: t('menu_admin.mccs'), page: 'AdminIntMCCs' },
+      { label: t('menu_admin.mcc_analysis'), page: 'AdminIntMCCsAnalysis' },
+      { label: t('menu_admin.partners_costs'), page: 'AdminIntPartners' },
+      { label: t('menu_admin.rate_plans'), page: 'AdminIntFeePlans' },
+      { label: t('menu_admin.ai_agents'), page: 'AdminIntAiAgents' },
     ]
   }
 ];
 
-// Menu items for Internet Banking module
-const internetBankingMenuItems = [
+// Menu items for Internet Banking module - using translation keys
+const getInternetBankingMenuItems = (t) => [
   {
     id: 'ib-home',
-    label: 'Home',
+    label: t('menu_ib.home'),
     icon: Home,
     page: 'IBHome',
   },
   {
     id: 'ib-extrato',
-    label: 'Extrato',
+    label: t('menu_ib.statement'),
     icon: Receipt,
     page: 'IBExtract',
   },
   {
     id: 'ib-pix',
-    label: 'Pix',
+    label: t('menu_ib.pix'),
     icon: QrCode,
     page: 'IBPixSend',
     submenu: [
-      { label: 'Enviar Pix', page: 'IBPixSend', icon: Send },
-      { label: 'Receber Pix', page: 'IBPixReceive', icon: QrCode },
-      { label: 'Minhas Chaves', page: 'IBPixKeys', icon: KeyRound },
-      { label: 'Limites', page: 'IBPixLimits', icon: Gauge },
+      { label: t('menu_ib.send_pix'), page: 'IBPixSend', icon: Send },
+      { label: t('menu_ib.receive_pix'), page: 'IBPixReceive', icon: QrCode },
+      { label: t('menu_ib.my_keys'), page: 'IBPixKeys', icon: KeyRound },
+      { label: t('menu_ib.limits'), page: 'IBPixLimits', icon: Gauge },
     ]
   },
   {
     id: 'ib-comprovantes',
-    label: 'Comprovantes',
+    label: t('menu_ib.receipts'),
     icon: FileText,
     page: 'IBProofs',
   },
   {
     id: 'ib-config',
-    label: 'Configurações',
+    label: t('menu_ib.settings'),
     icon: Settings,
     page: 'IBSettings',
   },
 ];
 
 const aiAgents = [
-  { id: 'dia', label: 'DIA Copilot', description: 'Assistente inteligente', page: 'DIACopilot' },
-  { id: 'recovery', label: 'Recovery Agent', description: 'Recuperação de pagamentos', page: 'RecoveryAgent' },
-  { id: 'converter', label: 'Converter Agent', description: 'Otimização de checkout', page: 'ConverterAgent' },
-  { id: 'dispute', label: 'Dispute Manager', description: 'Gestão de disputas', page: 'DisputeAgentSettings' },
-  { id: 'origination', label: 'Origination Agent', description: 'Onboarding inteligente', page: 'OriginationAgentSettings' },
+  { id: 'dia', label: 'DIA Copilot', page: 'DIACopilot' },
+  { id: 'recovery', label: 'Recovery Agent', page: 'RecoveryAgent' },
+  { id: 'converter', label: 'Converter Agent', page: 'ConverterAgent' },
+  { id: 'dispute', label: 'Dispute Manager', page: 'DisputeAgentSettings' },
+  { id: 'origination', label: 'Origination Agent', page: 'OriginationAgentSettings' },
 ];
 
 // Páginas que não devem ter o layout admin
@@ -432,6 +434,7 @@ import { getLogoUrlByTheme } from '@/components/utils/branding';
 // DIAWidget removed as it is now integrated into the header panel
 
 export default function Layout({ children, currentPageName }) {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState(['transactions', 'financial', 'ib-pix']);
@@ -444,6 +447,11 @@ export default function Layout({ children, currentPageName }) {
     const savedModule = localStorage.getItem('currentModule');
     return savedModule || 'admin-sub';
   });
+
+  // Get menu items with translations
+  const adminSubMenuItems = getAdminSubMenuItems(t);
+  const adminInternoMenuItems = getAdminInternoMenuItems(t);
+  const internetBankingMenuItems = getInternetBankingMenuItems(t);
 
   // Auto-detect module based on current page
   useEffect(() => {
@@ -616,7 +624,7 @@ export default function Layout({ children, currentPageName }) {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-56">
-                  <DropdownMenuLabel className="text-xs text-slate-500 uppercase">Módulos</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-xs text-slate-500 uppercase">{t('modules.admin_sub')}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={() => handleModuleChange('admin-sub')}
@@ -627,8 +635,8 @@ export default function Layout({ children, currentPageName }) {
                         <Store className="w-4 h-4 text-blue-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium">Admin Sub</p>
-                        <p className="text-xs text-slate-500">Gestão de Pagamentos</p>
+                        <p className="font-medium">{t('modules.admin_sub')}</p>
+                        <p className="text-xs text-slate-500">{t('modules.admin_sub_desc')}</p>
                       </div>
                       {currentModule === 'admin-sub' && (
                         <Check className="w-4 h-4 text-[#2bc196]" />
@@ -644,8 +652,8 @@ export default function Layout({ children, currentPageName }) {
                         <Landmark className="w-4 h-4 text-emerald-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium">Internet Banking</p>
-                        <p className="text-xs text-slate-500">Conta Digital</p>
+                        <p className="font-medium">{t('modules.internet_banking')}</p>
+                        <p className="text-xs text-slate-500">{t('modules.internet_banking_desc')}</p>
                       </div>
                       {currentModule === 'internet-banking' && (
                         <Check className="w-4 h-4 text-[#2bc196]" />
@@ -661,15 +669,15 @@ export default function Layout({ children, currentPageName }) {
                         <ShieldCheck className="w-4 h-4 text-purple-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium">Admin Interno</p>
-                        <p className="text-xs text-slate-500">Gestão Interna</p>
+                        <p className="font-medium">{t('modules.admin_interno')}</p>
+                        <p className="text-xs text-slate-500">{t('modules.admin_interno_desc')}</p>
                       </div>
                       {currentModule === 'admin-interno' && (
                         <Check className="w-4 h-4 text-[#2bc196]" />
                       )}
                     </div>
                   </DropdownMenuItem>
-                </DropdownMenuContent>
+                  </DropdownMenuContent>
               </DropdownMenu>
             )}
           </div>
@@ -779,7 +787,7 @@ export default function Layout({ children, currentPageName }) {
                 <div className="px-3 mb-3 flex items-center gap-2">
                   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                    Agentes de IA
+                    {t('menu.ai_agents')}
                   </span>
                   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
                 </div>
@@ -838,12 +846,12 @@ export default function Layout({ children, currentPageName }) {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                  <DropdownMenuLabel>{t('common.my_account')}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Perfil</DropdownMenuItem>
-                  <DropdownMenuItem>Configurações</DropdownMenuItem>
+                  <DropdownMenuItem>{t('common.profile')}</DropdownMenuItem>
+                  <DropdownMenuItem>{t('common.settings')}</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-600">Sair</DropdownMenuItem>
+                  <DropdownMenuItem className="text-red-600">{t('common.logout')}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -892,6 +900,9 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* Language Selector */}
+              <LanguageSelector />
+
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
@@ -938,10 +949,10 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-80">
-                  <DropdownMenuLabel>Notificações</DropdownMenuLabel>
+                  <DropdownMenuLabel>{t('header.notifications')}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <div className="p-4 text-sm text-gray-500 text-center">
-                    Nenhuma notificação nova
+                    {t('header.no_notifications')}
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
