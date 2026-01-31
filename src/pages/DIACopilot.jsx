@@ -4,11 +4,13 @@ import { useTranslation } from 'react-i18next';
 import AgentChatInterface from '@/components/common/AgentChatInterface';
 import SimulatedActionButton from '@/components/common/SimulatedActionButton';
 import DynamicKpiCard from '@/components/common/DynamicKpiCard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import MetricImpactCard from '@/components/common/MetricImpactCard';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, TrendingUp, AlertTriangle, Zap, Link2, Settings } from 'lucide-react';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Progress } from '@/components/ui/progress';
+import { Sparkles, TrendingUp, AlertTriangle, Zap, Link2, Settings, CheckCircle2, DollarSign, CreditCard, QrCode, BarChart3, Clock, RefreshCw } from 'lucide-react';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
 export default function DIACopilot() {
   const { t } = useTranslation();
@@ -18,13 +20,15 @@ export default function DIACopilot() {
     "Como foi meu dia ontem?",
     "Minha aprovação caiu, por quê?",
     "Quanto deixei de vender por falha de pagamento?",
-    "Sugira mix PIX x Cartão",
+    "Sugira mix PIX x Cartão ideal",
     "Criar link de pagamento de R$ 350",
     "Quais chargebacks precisam de atenção?",
     "Analisar custo por adquirente",
     "Me ajuda a preparar o Dia das Mães",
     "Explicar linha do extrato",
-    "O que posso fazer para melhorar minha operação?"
+    "O que posso fazer para melhorar minha operação?",
+    "Compare minha performance com o mercado",
+    "Qual horário vendo mais?"
   ];
 
   const handleDIAMessage = (text) => {
@@ -126,6 +130,131 @@ export default function DIACopilot() {
       };
     }
 
+    if (text.toLowerCase().includes("mix") && (text.toLowerCase().includes("pix") || text.toLowerCase().includes("cartão"))) {
+      const mixData = [
+        { name: 'Cartão', value: 65, color: '#3b82f6' },
+        { name: 'PIX', value: 35, color: '#2bc196' }
+      ];
+      const idealMixData = [
+        { name: 'Cartão', value: 55, color: '#3b82f6' },
+        { name: 'PIX', value: 45, color: '#2bc196' }
+      ];
+
+      return {
+        role: 'assistant',
+        content: `📊 **Análise de Mix PIX x Cartão**\n\n**Seu mix atual**: 65% Cartão / 35% PIX\n**Mix ideal sugerido**: 55% Cartão / 45% PIX\n\n**Por que aumentar PIX?**\n• Custo 0.99% vs 2.8% do cartão\n• Confirmação instantânea\n• Menor fraude\n\n**Economia potencial**: R$ 4.200/mês`,
+        richContent: (
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="text-center">
+                <p className="text-xs text-slate-500 mb-2">Atual</p>
+                <ResponsiveContainer width="100%" height={80}>
+                  <PieChart>
+                    <Pie data={mixData} dataKey="value" innerRadius={20} outerRadius={35}>
+                      {mixData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="text-center">
+                <p className="text-xs text-slate-500 mb-2">Ideal</p>
+                <ResponsiveContainer width="100%" height={80}>
+                  <PieChart>
+                    <Pie data={idealMixData} dataKey="value" innerRadius={20} outerRadius={35}>
+                      {idealMixData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <SimulatedActionButton 
+              actionLabel="Desconto PIX ativado"
+              icon={QrCode}
+              size="sm"
+              className="w-full"
+            >
+              Ativar Desconto PIX (5% off)
+            </SimulatedActionButton>
+          </div>
+        )
+      };
+    }
+
+    if (text.toLowerCase().includes("chargeback")) {
+      return {
+        role: 'assistant',
+        content: `⚠️ **Chargebacks que Precisam de Atenção**\n\n**3 contestações com prazo próximo**:\n\n1. **R$ 890** - Visa - Prazo: 2 dias\n   → Alta chance de ganho (evidências fortes)\n\n2. **R$ 450** - Master - Prazo: 5 dias\n   → Precisa de comprovante de entrega\n\n3. **R$ 1.200** - Elo - Prazo: 7 dias\n   → Recomendo aceitar (cliente recorrente, baixa chance)`,
+        richContent: (
+          <div className="space-y-2">
+            <SimulatedActionButton 
+              actionLabel="Contestação enviada"
+              icon={CheckCircle2}
+              size="sm"
+              className="w-full"
+            >
+              Contestar #1 Automaticamente
+            </SimulatedActionButton>
+            <SimulatedActionButton 
+              actionLabel="Comprovante solicitado"
+              variant="outline"
+              size="sm"
+              className="w-full"
+            >
+              Solicitar Comprovante para #2
+            </SimulatedActionButton>
+          </div>
+        )
+      };
+    }
+
+    if (text.toLowerCase().includes("dia das mães") || text.toLowerCase().includes("preparar")) {
+      return {
+        role: 'assistant',
+        content: `🌸 **Preparação para Dia das Mães**\n\n**Análise do ano passado**:\n• Aumento de 180% nas vendas\n• Pico: 10-12 de maio\n• Ticket médio: +35%\n• 40% das vendas em parcelado\n\n**Checklist recomendado**:\n✅ Aumentar limite temporário\n✅ Habilitar 12x sem juros\n✅ Preparar estoque de gifts\n✅ Configurar recovery agressivo`,
+        richContent: (
+          <div className="space-y-2">
+            <div className="bg-pink-50 border border-pink-200 rounded-lg p-3">
+              <p className="text-xs font-medium text-pink-700">💡 Dica: Reserve R$ 5k em rolling reserve extra para o pico</p>
+            </div>
+            <SimulatedActionButton 
+              actionLabel="Configurações aplicadas"
+              icon={Settings}
+              size="sm"
+              className="w-full"
+            >
+              Aplicar Configurações de Campanha
+            </SimulatedActionButton>
+          </div>
+        )
+      };
+    }
+
+    if (text.toLowerCase().includes("horário") || text.toLowerCase().includes("quando vendo")) {
+      const hourlyData = [
+        { hora: '00-04h', vendas: 5 },
+        { hora: '04-08h', vendas: 12 },
+        { hora: '08-12h', vendas: 35 },
+        { hora: '12-16h', vendas: 45 },
+        { hora: '16-20h', vendas: 65 },
+        { hora: '20-00h', vendas: 38 }
+      ];
+
+      return {
+        role: 'assistant',
+        content: `⏰ **Análise de Horários de Venda**\n\n**Seu pico**: 16h-20h (65% do volume)\n**Horário fraco**: 00h-08h\n\n**Insights**:\n• Aproving rate é 5% melhor no horário comercial\n• Chargebacks concentram no período noturno\n• PIX domina à noite (menos fraude)`,
+        richContent: (
+          <ResponsiveContainer width="100%" height={120}>
+            <BarChart data={hourlyData}>
+              <XAxis dataKey="hora" tick={{ fontSize: 9 }} />
+              <YAxis tick={{ fontSize: 9 }} />
+              <Tooltip />
+              <Bar dataKey="vendas" fill="#2bc196" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        )
+      };
+    }
+
     // Resposta genérica
     return {
       role: 'assistant',
@@ -186,6 +315,42 @@ export default function DIACopilot() {
         </TabsContent>
 
         <TabsContent value="capabilities" className="space-y-4">
+          {/* Impact Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <MetricImpactCard
+              metricName="Tempo de Resposta"
+              before={30}
+              after={2}
+              unit=" min"
+              description="Perguntas respondidas instantaneamente"
+              target={1}
+            />
+            <MetricImpactCard
+              metricName="Satisfação"
+              before={65}
+              after={92}
+              unit="%"
+              description="NPS do atendimento"
+              target={95}
+            />
+            <MetricImpactCard
+              metricName="Ações Automáticas"
+              before={0}
+              after={85}
+              unit="%"
+              description="Configurações sem suporte"
+              target={90}
+            />
+            <MetricImpactCard
+              metricName="Revenue Recuperado"
+              before={0}
+              after={42}
+              unit="k R$"
+              description="Identificado pelo DIA"
+              target={50}
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DynamicKpiCard
               title="Dados Transacionais"
