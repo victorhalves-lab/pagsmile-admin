@@ -85,6 +85,8 @@ const fieldTypes = [
 ];
 
 export default function QuestionnaireManager() {
+  const [builderOpen, setBuilderOpen] = useState(false);
+  const [selectedQuestionnaire, setSelectedQuestionnaire] = useState(null);
   const [questionnaires, setQuestionnaires] = useState(mockQuestionnaires);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedQuestionnaire, setSelectedQuestionnaire] = useState(null);

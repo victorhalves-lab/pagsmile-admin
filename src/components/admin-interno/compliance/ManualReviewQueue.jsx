@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import DocumentUploadSimulator from '@/components/common/DocumentUploadSimulator';
+import EscalationSimulator from '@/components/common/EscalationSimulator';
 import {
   Select,
   SelectContent,
@@ -139,6 +141,9 @@ export default function ManualReviewQueue() {
   const [filterScore, setFilterScore] = useState('all');
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [analystNotes, setAnalystNotes] = useState('');
+  const [escalationModalOpen, setEscalationModalOpen] = useState(false);
+  const [documentViewerOpen, setDocumentViewerOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(null);
 
   const getScoreBadge = (score) => {
     if (score >= 80) return <Badge className="bg-green-100 text-green-700 border-0">Baixo Risco ({score})</Badge>;
@@ -464,9 +469,16 @@ export default function ManualReviewQueue() {
                             </div>
                             <div className="flex items-center gap-2">
                               {getStatusBadge(doc.status)}
-                              <Button variant="outline" size="sm">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedDocument(doc);
+                                  setDocumentViewerOpen(true);
+                                }}
+                              >
                                 <Eye className="w-4 h-4 mr-1" />
-                                Ver
+                                Ver Validação IA
                               </Button>
                               <Button variant="outline" size="sm">
                                 <Download className="w-4 h-4" />
@@ -494,9 +506,19 @@ export default function ManualReviewQueue() {
 
           <DialogFooter className="border-t pt-4 mt-4">
             <div className="flex items-center justify-between w-full">
-              <Button variant="outline" onClick={() => setSelectedSubmission(null)}>
-                Cancelar
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setSelectedSubmission(null)}>
+                  Cancelar
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setEscalationModalOpen(true)}
+                  className="gap-2"
+                >
+                  <AlertTriangle className="w-4 h-4" />
+                  Simular Escalação
+                </Button>
+              </div>
               <div className="flex gap-2">
                 <Button variant="outline" className="text-amber-600 border-amber-300 hover:bg-amber-50">
                   <Send className="w-4 h-4 mr-2" />
@@ -515,6 +537,22 @@ export default function ManualReviewQueue() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Document Viewer Modal */}
+      <Dialog open={documentViewerOpen} onOpenChange={setDocumentViewerOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Validação do Documento - {selectedDocument?.name}</DialogTitle>
+          </DialogHeader>
+          <DocumentUploadSimulator documentType={selectedDocument?.type || "CNH"} />
+        </DialogContent>
+      </Dialog>
+
+      {/* Escalation Simulator */}
+      <EscalationSimulator 
+        open={escalationModalOpen} 
+        onOpenChange={setEscalationModalOpen} 
+      />
     </div>
   );
 }

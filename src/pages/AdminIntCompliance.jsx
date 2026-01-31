@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageHeader from '@/components/common/PageHeader';
 import { 
   LayoutDashboard, Users, FileSearch, FileText, Settings2, 
-  FolderOpen, History, Brain, Link2
+  FolderOpen, History, Brain, Link2, RefreshCw, Zap, Cpu
 } from 'lucide-react';
 
 import ComplianceDashboard from '@/components/admin-interno/compliance/ComplianceDashboard';
@@ -16,6 +16,9 @@ import RulesAndWorkflows from '@/components/admin-interno/compliance/RulesAndWor
 import AuditHistory from '@/components/admin-interno/compliance/AuditHistory';
 import HelenaTraining from '@/components/admin-interno/compliance/HelenaTraining';
 import FormLinkGenerator from '@/components/admin-interno/compliance/FormLinkGenerator';
+import RevalidationManager from '@/components/admin-interno/compliance/RevalidationManager';
+import SpecialAnalysisHub from '@/components/admin-interno/compliance/SpecialAnalysisHub';
+import TechnologyStack from '@/components/admin-interno/compliance/TechnologyStack';
 
 export default function AdminIntCompliance() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -25,11 +28,14 @@ export default function AdminIntCompliance() {
     { id: 'queue', label: 'Fila de Compliance', icon: Users },
     { id: 'review', label: 'Análise Manual', icon: FileSearch },
     { id: 'submissions', label: 'Submissões', icon: FileText },
+    { id: 'revalidation', label: 'Revalidação', icon: RefreshCw },
+    { id: 'special', label: 'Análises Especiais', icon: Zap },
     { id: 'forms', label: 'Gestão de Forms', icon: Settings2 },
     { id: 'docs', label: 'Documentos', icon: FolderOpen },
     { id: 'rules', label: 'Regras', icon: Settings2 },
     { id: 'audit', label: 'Auditoria', icon: History },
     { id: 'helena', label: 'Helena IA', icon: Brain },
+    { id: 'tech', label: 'Stack Tecnológico', icon: Cpu },
     { id: 'link', label: 'Link do Formulário', icon: Link2 },
   ];
 
@@ -75,6 +81,14 @@ export default function AdminIntCompliance() {
             <AllSubmissionsList />
           </TabsContent>
           
+          <TabsContent value="revalidation" className="m-0">
+            <RevalidationManager />
+          </TabsContent>
+          
+          <TabsContent value="special" className="m-0">
+            <SpecialAnalysisHub />
+          </TabsContent>
+          
           <TabsContent value="forms" className="m-0">
             <QuestionnaireManager />
           </TabsContent>
@@ -93,6 +107,10 @@ export default function AdminIntCompliance() {
           
           <TabsContent value="helena" className="m-0">
             <HelenaTraining />
+          </TabsContent>
+          
+          <TabsContent value="tech" className="m-0">
+            <TechnologyStack />
           </TabsContent>
           
           <TabsContent value="link" className="m-0">

@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import MetricImpactCard from '@/components/common/MetricImpactCard';
 import {
   Brain, CheckCircle2, XCircle, Clock, Users, FileText, AlertTriangle,
   TrendingUp, TrendingDown, Sparkles, ArrowRight, BarChart3, PieChart,
-  Timer, Shield, Target, Zap
+  Timer, Shield, Target, Zap, Smile, DollarSign
 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, PieChart as RechartsPie, Pie, Cell,
@@ -139,6 +140,42 @@ export default function ComplianceDashboard() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Metric Impact Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <MetricImpactCard
+          metricName="Tempo de Conclusão"
+          before={7}
+          after={0.5}
+          unit=" dias"
+          description="Redução de 93% no tempo de onboarding"
+          target={0.25}
+        />
+        <MetricImpactCard
+          metricName="Taxa de Conversão"
+          before={35}
+          after={85}
+          unit="%"
+          description="Aumento de 142% na conclusão"
+          target={90}
+        />
+        <MetricImpactCard
+          metricName="NPS do Processo"
+          before={20}
+          after={82}
+          unit=" pts"
+          description="Satisfação excepcional"
+          target={80}
+        />
+        <MetricImpactCard
+          metricName="Custo por Onboarding"
+          before={150}
+          after={5}
+          unit=" R$"
+          description="Redução de 96.7% em custos"
+          target={3}
+        />
       </div>
 
       {/* Second Row KPIs */}

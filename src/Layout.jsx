@@ -934,7 +934,7 @@ export default function Layout({ children, currentPageName }) {
                   )}>
                     <Sparkles className="w-3 h-3 text-white" />
                   </div>
-                  <span className="font-medium">DIA Copilot</span>
+                  <span className="font-medium">{currentModule === 'admin-interno' ? 'PagSmile Copilot' : 'DIA Copilot'}</span>
                 </Button>
               )}
 
@@ -1009,7 +1009,7 @@ export default function Layout({ children, currentPageName }) {
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm dark:text-white">DIA Copilot</h3>
+                <h3 className="font-semibold text-sm dark:text-white">{currentModule === 'admin-interno' ? 'PagSmile Copilot' : 'DIA Copilot'}</h3>
                 <p className="text-xs text-gray-500 dark:text-slate-400">Assistente Inteligente</p>
               </div>
             </div>
