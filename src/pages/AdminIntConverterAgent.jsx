@@ -29,8 +29,13 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
+import AgentChatInterface from '@/components/agents/AgentChatInterface';
+import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
+import { processConverterAgentAdminMessage, converterAgentAdminQuickPrompts } from '@/components/agents/ConverterAgentChatLogic';
 
 export default function AdminIntConverterAgent() {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   // Global KPIs
   const globalKpis = {
     avgConversion: '74.2%',
@@ -352,6 +357,29 @@ export default function AdminIntConverterAgent() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Agent Chat Interface */}
+      <AgentChatInterface
+        agentName="converter_agent_admin"
+        agentDisplayName="Converter Agent"
+        agentDescription="Visão consolidada de conversão"
+        quickPrompts={converterAgentAdminQuickPrompts}
+        onProcessMessage={processConverterAgentAdminMessage}
+        welcomeMessage="Olá! 👋 Sou o Converter Agent na visão Admin. Posso ajudar a analisar a performance global de conversão, identificar merchants que precisam de atenção e gerenciar experimentos A/B. O que deseja saber?"
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+        accentColor="#3b82f6"
+      />
+
+      {/* Floating Button */}
+      <AgentFloatingButton
+        isOpen={isChatOpen}
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        agentName="Converter Agent"
+        accentColor="#3b82f6"
+      />
     </div>
   );
 }

@@ -32,8 +32,13 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, Legend, PieChart, Pie, Cell } from 'recharts';
+import AgentChatInterface from '@/components/agents/AgentChatInterface';
+import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
+import { processDisputeManagerAdminMessage, disputeManagerAdminQuickPrompts } from '@/components/agents/DisputeManagerChatLogic';
 
 export default function AdminIntDisputeManager() {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   // Global KPIs
   const globalKpis = {
     totalDisputes: 847,
@@ -411,6 +416,29 @@ export default function AdminIntDisputeManager() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Agent Chat Interface */}
+      <AgentChatInterface
+        agentName="dispute_manager_admin"
+        agentDisplayName="Dispute Manager"
+        agentDescription="Visão consolidada de disputas"
+        quickPrompts={disputeManagerAdminQuickPrompts}
+        onProcessMessage={processDisputeManagerAdminMessage}
+        welcomeMessage="Olá! 👋 Sou o Dispute Manager na visão Admin. Posso ajudar a analisar o volume global de disputas, identificar merchants críticos e gerenciar regras de automação. O que deseja saber?"
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+        accentColor="#ef4444"
+      />
+
+      {/* Floating Button */}
+      <AgentFloatingButton
+        isOpen={isChatOpen}
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        agentName="Dispute Manager"
+        accentColor="#ef4444"
+      />
     </div>
   );
 }
