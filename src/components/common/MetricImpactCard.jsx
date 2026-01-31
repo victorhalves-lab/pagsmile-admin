@@ -34,14 +34,11 @@ export default function MetricImpactCard({
               </p>
             </div>
             
-            <div className={cn(
-              "mx-4 p-2 rounded-full",
-              isPositive ? "bg-green-100" : "bg-red-100"
-            )}>
+            <div className="mx-4 flex items-center justify-center">
               {isPositive ? (
-                <TrendingUp className="w-5 h-5 text-green-600" />
+                <TrendingUp className="w-6 h-6 text-green-600" />
               ) : (
-                <TrendingDown className="w-5 h-5 text-red-600" />
+                <TrendingDown className="w-6 h-6 text-red-600" />
               )}
             </div>
             

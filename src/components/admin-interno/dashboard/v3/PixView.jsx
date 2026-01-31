@@ -63,33 +63,35 @@ function PixKPICard({ title, value, format, icon: Icon, trend, trendValue, subti
     ? formatCurrency(value) 
     : format === 'percent' 
       ? `${value.toFixed(1)}%` 
-      : value.toLocaleString ? value.toLocaleString('pt-BR') : value;
+      : (typeof value === 'number' && value.toLocaleString) ? value.toLocaleString('pt-BR') : value;
 
-  const variants = {
-    default: 'bg-white',
-    success: 'bg-green-50 border-green-200',
-    warning: 'bg-amber-50 border-amber-200'
+  const variantStyles = {
+    default: 'bg-white dark:bg-slate-900',
+    success: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+    warning: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800'
+  };
+
+  const iconColors = {
+    default: 'text-slate-500',
+    success: 'text-green-600',
+    warning: 'text-amber-600'
   };
 
   return (
-    <Card className={variants[variant]}>
-      <CardContent className="pt-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm font-medium text-slate-500">{title}</p>
-            <p className="text-2xl font-bold mt-1">{formattedValue}</p>
-            {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
-            {trend && (
-              <div className={`flex items-center gap-1 mt-2 text-sm ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
-                {trend === 'up' ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
-                <span>{trendValue}</span>
-              </div>
-            )}
-          </div>
-          <div className="p-3 rounded-xl bg-green-100">
-            <Icon className="w-6 h-6 text-green-600" />
-          </div>
+    <Card className={variantStyles[variant]}>
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">{title}</p>
+          {Icon && <Icon className={`w-5 h-5 flex-shrink-0 ${iconColors[variant]}`} />}
         </div>
+        <p className="text-xl font-bold text-slate-900 dark:text-white truncate">{formattedValue}</p>
+        {subtitle && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 whitespace-nowrap overflow-hidden text-ellipsis">{subtitle}</p>}
+        {trend && (
+          <div className={`flex items-center gap-1 mt-2 text-xs ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+            {trend === 'up' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+            <span>{trendValue}</span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -50,14 +50,14 @@ function KPICard({
   return (
     <Card className={cn("border", colors.border)}>
       <CardContent className="p-4">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{title}</p>
-            <p className="text-2xl font-bold text-gray-900 mt-1">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">{title}</p>
+            <p className="text-2xl font-bold text-gray-900 mt-1 truncate">
               {isLoading ? '---' : value}
             </p>
             {subtitle && (
-              <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
+              <p className="text-xs text-gray-500 mt-1 whitespace-nowrap overflow-hidden text-ellipsis">{subtitle}</p>
             )}
             {trend && trendValue !== undefined && (
               <div className={cn(
@@ -73,9 +73,7 @@ function KPICard({
               </div>
             )}
           </div>
-          <div className={cn("p-2 rounded-lg", colors.bg)}>
-            <Icon className={cn("w-5 h-5", colors.icon)} />
-          </div>
+          <Icon className={cn("w-5 h-5 flex-shrink-0", colors.icon)} />
         </div>
       </CardContent>
     </Card>

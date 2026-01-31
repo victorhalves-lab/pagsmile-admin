@@ -32,21 +32,17 @@ export default function DynamicKpiCard({
   return (
     <Card className={cn("relative overflow-hidden", className)}>
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">
             {title}
           </CardTitle>
-          {Icon && (
-            <div className={cn("p-2 rounded-lg", colorClasses[color])}>
-              <Icon className="w-4 h-4" />
-            </div>
-          )}
+          {Icon && <Icon className={cn("w-5 h-5 flex-shrink-0", colorClasses[color].split(' ')[0])} />}
         </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
           <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-bold text-slate-900 dark:text-white">
+            <p className="text-3xl font-bold text-slate-900 dark:text-white truncate">
               {prefix}{value}{suffix}
             </p>
             {TrendIcon && trendValue && (
@@ -58,7 +54,7 @@ export default function DynamicKpiCard({
           </div>
           
           {description && (
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">
               {description}
             </p>
           )}

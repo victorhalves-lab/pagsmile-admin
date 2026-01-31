@@ -35,17 +35,13 @@ export default function KPICard({
   return (
     <Card className={cn("overflow-hidden", className)}>
       <CardContent className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{title}</p>
-          {Icon && (
-            <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-              <Icon className="w-4 h-4 text-slate-600 dark:text-slate-300" />
-            </div>
-          )}
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <p className="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">{title}</p>
+          {Icon && <Icon className="w-5 h-5 text-slate-500 dark:text-slate-400 flex-shrink-0" />}
         </div>
         
         <div className="flex items-baseline gap-2 mb-1">
-          <h3 className={cn("text-2xl font-bold text-slate-900 dark:text-white", valueClassName)}>
+          <h3 className={cn("text-2xl font-bold text-slate-900 dark:text-white truncate", valueClassName)}>
             {value}
           </h3>
         </div>
