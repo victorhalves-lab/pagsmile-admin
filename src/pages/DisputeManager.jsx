@@ -1,429 +1,542 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
-import { 
-  Shield, 
-  Brain, 
-  TrendingUp, 
-  FileText,
-  Settings,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Sparkles,
-  Target,
-  DollarSign
-} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Slider } from '@/components/ui/slider';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { XCircle } from 'lucide-react';
-
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(value || 0);
-};
-
-import PageHeader from '@/components/common/PageHeader';
-import KPICard from '@/components/dashboard/KPICard';
-import StatusBadge from '@/components/common/StatusBadge';
+import { 
+  Sparkles, 
+  AlertTriangle, 
+  CheckCircle2, 
+  XCircle,
+  ArrowRight,
+  DollarSign,
+  Clock,
+  FileText,
+  Shield,
+  Target,
+  TrendingUp,
+  TrendingDown,
+  Search,
+  Filter,
+  Eye,
+  Download,
+  ChevronRight,
+  AlertCircle,
+  Gavel,
+  Scale,
+  Brain,
+  Zap,
+  BarChart3,
+  Calendar,
+  RefreshCw,
+  Settings
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 
 export default function DisputeManager() {
-  const [agentConfig, setAgentConfig] = useState({
-    enabled: true,
-    autoAnalysis: true,
-    autoRecommendation: true,
-    contestThreshold: 60,
-    autoRefundThreshold: 200,
-    autoRefundEnabled: false,
-  });
+  const [selectedTab, setSelectedTab] = useState('all');
+  const [selectedDispute, setSelectedDispute] = useState(null);
 
-  const { data: disputes = [] } = useQuery({
-    queryKey: ['disputes'],
-    queryFn: () => base44.entities.Dispute.list('-created_date', 100),
-  });
+  // KPI Data
+  const kpis = {
+    totalDisputes: 47,
+    openDisputes: 12,
+    totalValue: 'R$ 127.450,00',
+    winRate: 72,
+    avgResolutionTime: '8.3 dias',
+    potentialRecovery: 'R$ 89.200,00'
+  };
 
+  // Simulated disputes data
+  const disputes = [
+    {
+      id: 'CB-2024-001',
+      transactionId: 'TXN-847392',
+      type: 'chargeback',
+      status: 'pending',
+      amount: 2450.00,
+      customer: 'João Silva',
+      customerDocument: '***456.789-**',
+      reason: 'Fraude - Não Reconhece a Transação',
+      reasonCode: '10.4',
+      cardBrand: 'Visa',
+      openedDate: '2024-01-28',
+      deadline: '2024-02-12',
+      daysRemaining: 5,
+      aiWinProbability: 87,
+      aiRecommendation: 'contest',
+      aiJustification: 'Transação possui 3DS autenticado, IP do cliente compatível com histórico, e produto foi entregue conforme rastreamento.',
+      evidence: {
+        has3DS: true,
+        hasDeliveryProof: true,
+        hasCustomerHistory: true,
+        hasAntifraudApproval: true
+      }
+    },
+    {
+      id: 'CB-2024-002',
+      transactionId: 'TXN-847128',
+      type: 'chargeback',
+      status: 'in_analysis',
+      amount: 890.00,
+      customer: 'Maria Santos',
+      customerDocument: '***123.456-**',
+      reason: 'Produto/Serviço não recebido',
+      reasonCode: '13.1',
+      cardBrand: 'Mastercard',
+      openedDate: '2024-01-26',
+      deadline: '2024-02-10',
+      daysRemaining: 3,
+      aiWinProbability: 45,
+      aiRecommendation: 'accept',
+      aiJustification: 'Rastreamento mostra entrega, porém sem comprovante de recebimento assinado. Histórico de contestações do cliente.',
+      evidence: {
+        has3DS: false,
+        hasDeliveryProof: false,
+        hasCustomerHistory: true,
+        hasAntifraudApproval: true
+      }
+    },
+    {
+      id: 'CB-2024-003',
+      transactionId: 'TXN-846995',
+      type: 'pre_chargeback',
+      status: 'pending',
+      amount: 5200.00,
+      customer: 'Pedro Oliveira',
+      customerDocument: '***789.012-**',
+      reason: 'Alerta Ethoca - Suspeita de Fraude',
+      reasonCode: 'ETHOCA',
+      cardBrand: 'Visa',
+      openedDate: '2024-01-30',
+      deadline: '2024-02-01',
+      daysRemaining: 1,
+      aiWinProbability: 92,
+      aiRecommendation: 'contest',
+      aiJustification: 'Recomendação: Reembolso preventivo. Cliente com histórico limpo, valor alto. Reembolso evita chargeback e preserva ratio.',
+      evidence: {
+        has3DS: true,
+        hasDeliveryProof: true,
+        hasCustomerHistory: true,
+        hasAntifraudApproval: true
+      }
+    },
+    {
+      id: 'CB-2024-004',
+      transactionId: 'TXN-846501',
+      type: 'chargeback',
+      status: 'won',
+      amount: 1780.00,
+      customer: 'Ana Costa',
+      customerDocument: '***345.678-**',
+      reason: 'Transação Duplicada',
+      reasonCode: '12.6',
+      cardBrand: 'Elo',
+      openedDate: '2024-01-15',
+      deadline: '2024-01-30',
+      daysRemaining: 0,
+      aiWinProbability: 95,
+      aiRecommendation: 'contest',
+      aiJustification: 'Contestação bem-sucedida. Evidências comprovaram transação única.',
+      evidence: {
+        has3DS: true,
+        hasDeliveryProof: true,
+        hasCustomerHistory: true,
+        hasAntifraudApproval: true
+      }
+    },
+    {
+      id: 'CB-2024-005',
+      transactionId: 'TXN-846102',
+      type: 'chargeback',
+      status: 'lost',
+      amount: 3400.00,
+      customer: 'Carlos Mendes',
+      customerDocument: '***901.234-**',
+      reason: 'Fraude - Cartão Roubado',
+      reasonCode: '10.1',
+      cardBrand: 'Mastercard',
+      openedDate: '2024-01-10',
+      deadline: '2024-01-25',
+      daysRemaining: 0,
+      aiWinProbability: 15,
+      aiRecommendation: 'accept',
+      aiJustification: 'Transação sem 3DS, IP diferente do histórico, produto de alto risco.',
+      evidence: {
+        has3DS: false,
+        hasDeliveryProof: true,
+        hasCustomerHistory: false,
+        hasAntifraudApproval: false
+      }
+    }
+  ];
 
+  const getStatusBadge = (status) => {
+    const configs = {
+      pending: { label: 'Pendente', variant: 'outline', className: 'border-amber-500 text-amber-600 bg-amber-50' },
+      in_analysis: { label: 'Em Análise', variant: 'outline', className: 'border-blue-500 text-blue-600 bg-blue-50' },
+      contested: { label: 'Contestado', variant: 'outline', className: 'border-purple-500 text-purple-600 bg-purple-50' },
+      won: { label: 'Ganho', variant: 'outline', className: 'border-green-500 text-green-600 bg-green-50' },
+      lost: { label: 'Perdido', variant: 'outline', className: 'border-red-500 text-red-600 bg-red-50' }
+    };
+    const config = configs[status] || configs.pending;
+    return <Badge variant={config.variant} className={config.className}>{config.label}</Badge>;
+  };
 
-  // Calculate metrics
-  const managed = disputes.length;
-  const won = disputes.filter(d => d.status === 'won');
-  const lost = disputes.filter(d => d.status === 'lost');
-  const winRate = (won.length + lost.length) > 0 ? (won.length / (won.length + lost.length)) * 100 : 0;
-  const valueProtected = won.reduce((sum, d) => sum + (d.amount || 0), 0);
-  const avgWinProb = disputes.length > 0 
-    ? disputes.reduce((sum, d) => sum + (d.win_probability || 50), 0) / disputes.length 
-    : 0;
+  const getTypeBadge = (type) => {
+    if (type === 'pre_chargeback') {
+      return <Badge className="bg-purple-100 text-purple-700 border-purple-200">Pré-Chargeback</Badge>;
+    }
+    return <Badge className="bg-red-100 text-red-700 border-red-200">Chargeback</Badge>;
+  };
+
+  const filteredDisputes = selectedTab === 'all' 
+    ? disputes 
+    : disputes.filter(d => {
+        if (selectedTab === 'pending') return d.status === 'pending' || d.status === 'in_analysis';
+        if (selectedTab === 'high_probability') return d.aiWinProbability >= 70;
+        if (selectedTab === 'urgent') return d.daysRemaining <= 3 && d.status !== 'won' && d.status !== 'lost';
+        return true;
+      });
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Dispute & Chargeback Manager"
-        subtitle="Gestão inteligente de disputas com IA"
-        breadcrumbs={[
-          { label: 'Agentes de IA', page: 'DIACopilot' },
-          { label: 'Dispute Manager', page: 'DisputeManager' }
-        ]}
-        actions={
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={agentConfig.enabled}
-                onCheckedChange={(v) => setAgentConfig({ ...agentConfig, enabled: v })}
-              />
-              <Label className="text-sm">
-                {agentConfig.enabled ? 'Ativo' : 'Inativo'}
-              </Label>
-            </div>
-            <Button variant="outline">
-              <Settings className="w-4 h-4 mr-2" />
-              Configurações
-            </Button>
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center shadow-lg shadow-red-500/25">
+            <Gavel className="w-7 h-7 text-white" />
           </div>
-        }
-      />
-
-      {/* Status Card */}
-      <div className={cn(
-        "rounded-xl p-6 text-white",
-        agentConfig.enabled 
-          ? "bg-gradient-to-br from-red-500 to-orange-600" 
-          : "bg-gradient-to-br from-gray-400 to-gray-500"
-      )}>
-        <div className="flex items-start justify-between mb-4">
           <div>
-            <p className="text-white/80 text-sm mb-1">Status do Agente</p>
-            <p className="text-2xl font-bold">
-              {agentConfig.enabled ? 'Gestão Ativa' : 'Agente Desativado'}
-            </p>
-          </div>
-          <div className="p-3 bg-white/20 rounded-lg">
-            <Shield className="w-6 h-6" />
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Dispute Manager</h1>
+            <p className="text-slate-500 dark:text-slate-400">Gestor Inteligente de Disputas e Chargebacks</p>
           </div>
         </div>
-        
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <p className="text-white/60 text-xs mb-1">Disputas Gerenciadas</p>
-            <p className="text-lg font-semibold">{managed}</p>
-          </div>
-          <div>
-            <p className="text-white/60 text-xs mb-1">Win Rate</p>
-            <p className="text-lg font-semibold">{winRate.toFixed(0)}%</p>
-          </div>
-          <div>
-            <p className="text-white/60 text-xs mb-1">Valor Protegido</p>
-            <p className="text-lg font-semibold">{formatCurrency(valueProtected)}</p>
-          </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="sm">
+            <Download className="w-4 h-4 mr-2" />
+            Exportar
+          </Button>
+          <Link to={createPageUrl('DisputeAgentSettings')}>
+            <Button variant="outline" size="sm">
+              <Settings className="w-4 h-4 mr-2" />
+              Configurar
+            </Button>
+          </Link>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard
-          title="Disputas Gerenciadas"
-          value={managed}
-          format="number"
-          change={12.5}
-          icon={Shield}
-          iconBg="bg-red-100"
-          iconColor="text-red-600"
-        />
-        <KPICard
-          title="Win Rate"
-          value={winRate}
-          format="percentage"
-          change={5.2}
-          icon={TrendingUp}
-          iconBg="bg-emerald-100"
-          iconColor="text-emerald-600"
-        />
-        <KPICard
-          title="Valor Protegido"
-          value={valueProtected}
-          format="currency"
-          change={22.3}
-          icon={DollarSign}
-          iconBg="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <KPICard
-          title="Prob. Média de Vitória"
-          value={avgWinProb}
-          format="percentage"
-          icon={Target}
-          iconBg="bg-purple-100"
-          iconColor="text-purple-600"
-        />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <Card className="p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <AlertTriangle className="w-4 h-4 text-slate-400" />
+            <span className="text-xs text-slate-500">Total Disputas</span>
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.totalDisputes}</p>
+          <p className="text-xs text-slate-500">{kpis.openDisputes} abertas</p>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <DollarSign className="w-4 h-4 text-slate-400" />
+            <span className="text-xs text-slate-500">Valor Total</span>
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.totalValue}</p>
+          <p className="text-xs text-slate-500">em disputa</p>
+        </Card>
+
+        <Card className="p-4 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+          <div className="flex items-center gap-2 mb-2">
+            <Target className="w-4 h-4 text-green-600" />
+            <span className="text-xs text-green-600">Win Rate</span>
+          </div>
+          <p className="text-2xl font-bold text-green-700 dark:text-green-400">{kpis.winRate}%</p>
+          <p className="text-xs text-green-600">acima da média</p>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Clock className="w-4 h-4 text-slate-400" />
+            <span className="text-xs text-slate-500">Tempo Médio</span>
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.avgResolutionTime}</p>
+          <p className="text-xs text-slate-500">resolução</p>
+        </Card>
+
+        <Card className="p-4 bg-[#2bc196]/5 border-[#2bc196]/20">
+          <div className="flex items-center gap-2 mb-2">
+            <Zap className="w-4 h-4 text-[#2bc196]" />
+            <span className="text-xs text-[#2bc196]">Recuperação</span>
+          </div>
+          <p className="text-2xl font-bold text-[#2bc196]">{kpis.potentialRecovery}</p>
+          <p className="text-xs text-[#2bc196]">potencial</p>
+        </Card>
+
+        <Card className="p-4 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
+          <div className="flex items-center gap-2 mb-2">
+            <AlertCircle className="w-4 h-4 text-amber-600" />
+            <span className="text-xs text-amber-600">Urgentes</span>
+          </div>
+          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">3</p>
+          <p className="text-xs text-amber-600">prazo &lt; 3 dias</p>
+        </Card>
       </div>
 
-      {/* Tabs */}
-      <Tabs defaultValue="config" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="config">Configuração</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
-          <TabsTrigger value="learning">Aprendizado</TabsTrigger>
-        </TabsList>
+      {/* AI Insights */}
+      <Card className="border-[#2bc196]/20 bg-gradient-to-r from-[#2bc196]/5 to-transparent">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2bc196] to-[#5cf7cf] flex items-center justify-center">
+              <Brain className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-1">Análise IA do Dispute Manager</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                <strong>3 disputas</strong> com alta probabilidade de ganho (≥85%) aguardando ação. 
+                Valor total: <strong>R$ 8.530</strong>. 
+                Recomendação: contestar imediatamente para maximizar recuperação.
+              </p>
+            </div>
+            <Button className="bg-[#2bc196] hover:bg-[#2bc196]/90">
+              Contestar Todas
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
-        <TabsContent value="config" className="space-y-6">
-          {/* Auto Analysis */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
-            <h3 className="font-semibold text-gray-900 mb-4">Análise Automática</h3>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Análise Automática de Chargebacks</Label>
-                  <p className="text-sm text-gray-500">Calcular probabilidade de vitória automaticamente</p>
-                </div>
-                <Switch 
-                  checked={agentConfig.autoAnalysis}
-                  onCheckedChange={(v) => setAgentConfig({ ...agentConfig, autoAnalysis: v })}
-                />
+      {/* Disputes Table */}
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <CardTitle>Lista de Disputas</CardTitle>
+              <CardDescription>Gerencie e conteste chargebacks com apoio de IA</CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Input placeholder="Buscar por ID ou cliente..." className="pl-9 w-64" />
               </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Recomendação Automática</Label>
-                  <p className="text-sm text-gray-500">Sugerir contestar ou aceitar</p>
-                </div>
-                <Switch 
-                  checked={agentConfig.autoRecommendation}
-                  onCheckedChange={(v) => setAgentConfig({ ...agentConfig, autoRecommendation: v })}
-                />
-              </div>
-
-              {agentConfig.autoRecommendation && (
-                <div>
-                  <Label>Threshold para Contestação (%)</Label>
-                  <div className="flex items-center gap-4 mt-2">
-                    <Slider
-                      value={[agentConfig.contestThreshold]}
-                      onValueChange={(v) => setAgentConfig({ ...agentConfig, contestThreshold: v[0] })}
-                      max={90}
-                      min={40}
-                      step={5}
-                      className="flex-1"
-                    />
-                    <span className="text-sm font-semibold w-12">{agentConfig.contestThreshold}%</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Contestar apenas se probabilidade de vitória {'>'} {agentConfig.contestThreshold}%
-                  </p>
-                </div>
-              )}
+              <Button variant="outline" size="icon">
+                <Filter className="w-4 h-4" />
+              </Button>
             </div>
           </div>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="all" onValueChange={setSelectedTab}>
+            <TabsList className="mb-4">
+              <TabsTrigger value="all">Todas ({disputes.length})</TabsTrigger>
+              <TabsTrigger value="pending">Pendentes ({disputes.filter(d => d.status === 'pending' || d.status === 'in_analysis').length})</TabsTrigger>
+              <TabsTrigger value="high_probability">Alta Prob. Ganho ({disputes.filter(d => d.aiWinProbability >= 70).length})</TabsTrigger>
+              <TabsTrigger value="urgent">Urgentes ({disputes.filter(d => d.daysRemaining <= 3 && d.status !== 'won' && d.status !== 'lost').length})</TabsTrigger>
+            </TabsList>
 
-          {/* Pre-Chargebacks */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
-            <h3 className="font-semibold text-gray-900 mb-4">Pré-Chargebacks (Alertas)</h3>
-            
-            <div className="space-y-4">
+            <div className="border rounded-lg overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-slate-50 dark:bg-slate-800">
+                  <tr>
+                    <th className="text-left p-3 text-xs font-medium text-slate-500">ID</th>
+                    <th className="text-left p-3 text-xs font-medium text-slate-500">Tipo</th>
+                    <th className="text-left p-3 text-xs font-medium text-slate-500">Cliente</th>
+                    <th className="text-left p-3 text-xs font-medium text-slate-500">Motivo</th>
+                    <th className="text-right p-3 text-xs font-medium text-slate-500">Valor</th>
+                    <th className="text-center p-3 text-xs font-medium text-slate-500">Prob. Ganho</th>
+                    <th className="text-center p-3 text-xs font-medium text-slate-500">Prazo</th>
+                    <th className="text-center p-3 text-xs font-medium text-slate-500">Status</th>
+                    <th className="text-center p-3 text-xs font-medium text-slate-500">Recomendação IA</th>
+                    <th className="text-center p-3 text-xs font-medium text-slate-500">Ações</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {filteredDisputes.map((dispute) => (
+                    <tr key={dispute.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                      <td className="p-3">
+                        <div>
+                          <p className="font-medium text-sm text-slate-900 dark:text-white">{dispute.id}</p>
+                          <p className="text-xs text-slate-500">{dispute.transactionId}</p>
+                        </div>
+                      </td>
+                      <td className="p-3">{getTypeBadge(dispute.type)}</td>
+                      <td className="p-3">
+                        <div>
+                          <p className="text-sm text-slate-900 dark:text-white">{dispute.customer}</p>
+                          <p className="text-xs text-slate-500">{dispute.customerDocument}</p>
+                        </div>
+                      </td>
+                      <td className="p-3">
+                        <div className="max-w-[200px]">
+                          <p className="text-sm text-slate-900 dark:text-white truncate">{dispute.reason}</p>
+                          <p className="text-xs text-slate-500">{dispute.cardBrand} • {dispute.reasonCode}</p>
+                        </div>
+                      </td>
+                      <td className="p-3 text-right">
+                        <p className="font-semibold text-slate-900 dark:text-white">
+                          R$ {dispute.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </p>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex flex-col items-center">
+                          <span className={`text-sm font-bold ${
+                            dispute.aiWinProbability >= 70 ? 'text-green-600' : 
+                            dispute.aiWinProbability >= 40 ? 'text-amber-600' : 'text-red-600'
+                          }`}>
+                            {dispute.aiWinProbability}%
+                          </span>
+                          <Progress 
+                            value={dispute.aiWinProbability} 
+                            className="w-16 h-1.5"
+                          />
+                        </div>
+                      </td>
+                      <td className="p-3 text-center">
+                        {dispute.status !== 'won' && dispute.status !== 'lost' ? (
+                          <Badge variant="outline" className={
+                            dispute.daysRemaining <= 3 ? 'border-red-500 text-red-600 bg-red-50' : 
+                            dispute.daysRemaining <= 7 ? 'border-amber-500 text-amber-600 bg-amber-50' : ''
+                          }>
+                            {dispute.daysRemaining}d
+                          </Badge>
+                        ) : (
+                          <span className="text-xs text-slate-400">-</span>
+                        )}
+                      </td>
+                      <td className="p-3 text-center">{getStatusBadge(dispute.status)}</td>
+                      <td className="p-3 text-center">
+                        {dispute.status !== 'won' && dispute.status !== 'lost' && (
+                          <Badge className={
+                            dispute.aiRecommendation === 'contest' 
+                              ? 'bg-green-100 text-green-700 border-green-200' 
+                              : 'bg-slate-100 text-slate-700 border-slate-200'
+                          }>
+                            {dispute.aiRecommendation === 'contest' ? '✓ Contestar' : '✗ Aceitar'}
+                          </Badge>
+                        )}
+                      </td>
+                      <td className="p-3">
+                        <div className="flex items-center justify-center gap-1">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8"
+                            onClick={() => setSelectedDispute(dispute)}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                          {dispute.status !== 'won' && dispute.status !== 'lost' && (
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-8 w-8 text-[#2bc196] hover:text-[#2bc196] hover:bg-[#2bc196]/10"
+                            >
+                              <FileText className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Tabs>
+        </CardContent>
+      </Card>
+
+      {/* Dispute Detail Modal/Drawer */}
+      {selectedDispute && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedDispute(null)}>
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Reembolso Automático de Alertas</Label>
-                  <p className="text-sm text-gray-500">Para valores baixos, reembolsar automaticamente</p>
+                  <CardTitle>Detalhes da Disputa {selectedDispute.id}</CardTitle>
+                  <CardDescription>Transação {selectedDispute.transactionId}</CardDescription>
                 </div>
-                <Switch 
-                  checked={agentConfig.autoRefundEnabled}
-                  onCheckedChange={(v) => setAgentConfig({ ...agentConfig, autoRefundEnabled: v })}
-                />
+                <Button variant="ghost" size="icon" onClick={() => setSelectedDispute(null)}>
+                  <XCircle className="w-5 h-5" />
+                </Button>
               </div>
-
-              {agentConfig.autoRefundEnabled && (
-                <div>
-                  <Label>Valor Máximo para Auto-Reembolso (R$)</Label>
-                  <Input
-                    type="number"
-                    value={agentConfig.autoRefundThreshold}
-                    onChange={(e) => setAgentConfig({ 
-                      ...agentConfig, 
-                      autoRefundThreshold: parseFloat(e.target.value) || 0 
-                    })}
-                    placeholder="200"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Alertas com valor até {formatCurrency(agentConfig.autoRefundThreshold)} serão reembolsados automaticamente
-                  </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* AI Analysis */}
+              <div className="p-4 rounded-lg bg-gradient-to-r from-[#2bc196]/10 to-transparent border border-[#2bc196]/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <Brain className="w-5 h-5 text-[#2bc196]" />
+                  <h4 className="font-semibold text-slate-900 dark:text-white">Análise do Dispute Manager</h4>
                 </div>
-              )}
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="performance" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <h3 className="font-semibold text-gray-900 mb-4">Disputas por Resultado</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-emerald-600" />
-                    <span className="font-medium text-emerald-900">Vencidas</span>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-emerald-600">{won.length}</p>
-                    <p className="text-xs text-emerald-700">{formatCurrency(valueProtected)}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <XCircle className="w-5 h-5 text-red-600" />
-                    <span className="font-medium text-red-900">Perdidas</span>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-red-600">{lost.length}</p>
-                    <p className="text-xs text-red-700">
-                      {formatCurrency(lost.reduce((s, d) => s + (d.amount || 0), 0))}
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">{selectedDispute.aiJustification}</p>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <span className="text-xs text-slate-500">Probabilidade de Ganho</span>
+                    <p className={`text-2xl font-bold ${
+                      selectedDispute.aiWinProbability >= 70 ? 'text-green-600' : 
+                      selectedDispute.aiWinProbability >= 40 ? 'text-amber-600' : 'text-red-600'
+                    }`}>
+                      {selectedDispute.aiWinProbability}%
                     </p>
                   </div>
-                </div>
-
-                <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-blue-600" />
-                    <span className="font-medium text-blue-900">Em Andamento</span>
+                  <div>
+                    <span className="text-xs text-slate-500">Recomendação</span>
+                    <Badge className={`mt-1 ${
+                      selectedDispute.aiRecommendation === 'contest' 
+                        ? 'bg-green-100 text-green-700' 
+                        : 'bg-slate-100 text-slate-700'
+                    }`}>
+                      {selectedDispute.aiRecommendation === 'contest' ? 'Contestar' : 'Aceitar Perda'}
+                    </Badge>
                   </div>
-                  <p className="text-lg font-bold text-blue-600">
-                    {disputes.filter(d => d.status === 'open' || d.status === 'under_review').length}
-                  </p>
                 </div>
               </div>
-            </div>
 
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <h3 className="font-semibold text-gray-900 mb-4">Métricas do Agente</h3>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-600">Tempo Médio de Resposta</span>
-                    <span className="font-semibold">4.2 horas</span>
-                  </div>
-                  <Progress value={75} className="h-2" />
-                  <p className="text-xs text-gray-500 mt-1">Meta: {'<'} 6 horas</p>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-600">Taxa de Auto-Resolução</span>
-                    <span className="font-semibold">68%</span>
-                  </div>
-                  <Progress value={68} className="h-2" />
-                  <p className="text-xs text-gray-500 mt-1">Sem intervenção humana</p>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-600">Economia de Tempo</span>
-                    <span className="font-semibold">32 horas/mês</span>
-                  </div>
-                  <p className="text-xs text-emerald-600">vs processo manual</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* AI Insights */}
-          <div className="bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200 rounded-xl p-5">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Brain className="w-5 h-5 text-purple-600" />
-              </div>
+              {/* Evidence Checklist */}
               <div>
-                <h3 className="font-semibold text-purple-900">Insights do Agente</h3>
-                <p className="text-sm text-purple-700">Padrões identificados pela IA</p>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="bg-white/60 rounded-lg p-3">
-                <p className="text-sm text-gray-900">
-                  ✓ Disputas com reason code 4837 têm 85% de vitória quando enviamos comprovante de entrega
-                </p>
-              </div>
-              <div className="bg-white/60 rounded-lg p-3">
-                <p className="text-sm text-gray-900">
-                  ✓ Chargebacks às sextas-feiras têm 30% menos chance de vitória
-                </p>
-              </div>
-              <div className="bg-white/60 rounded-lg p-3">
-                <p className="text-sm text-gray-900">
-                  ✓ Transações acima de R$ 500 devem incluir assinatura digital nas evidências
-                </p>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="learning" className="space-y-6">
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
-            <h3 className="font-semibold text-gray-900 mb-4">Aprendizado Contínuo</h3>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium">Aprender com Resultados</p>
-                  <p className="text-sm text-gray-500">Melhorar recomendações baseado em histórico</p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium">Identificar Padrões</p>
-                  <p className="text-sm text-gray-500">Detectar tendências em disputas</p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-
-              <Separator />
-
-              <div>
-                <h4 className="font-medium mb-3">Padrões Aprendidos</h4>
-                <div className="space-y-2">
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-3">Checklist de Evidências</h4>
+                <div className="grid grid-cols-2 gap-3">
                   {[
-                    { pattern: 'Reason Code 4837', winRate: 85, sample: 23 },
-                    { pattern: 'BIN 123456', winRate: 72, sample: 15 },
-                    { pattern: 'Valor > R$ 1.000', winRate: 68, sample: 31 },
-                    { pattern: 'Cliente recorrente', winRate: 91, sample: 12 },
-                  ].map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                      <div>
-                        <p className="text-sm font-medium">{item.pattern}</p>
-                        <p className="text-xs text-gray-500">{item.sample} casos analisados</p>
-                      </div>
-                      <Badge className={cn(
-                        item.winRate >= 80 ? "bg-emerald-100 text-emerald-700" :
-                        item.winRate >= 60 ? "bg-yellow-100 text-yellow-700" : "bg-red-100 text-red-700"
-                      )}>
-                        {item.winRate}% vitória
-                      </Badge>
+                    { key: 'has3DS', label: 'Autenticação 3DS' },
+                    { key: 'hasDeliveryProof', label: 'Comprovante de Entrega' },
+                    { key: 'hasCustomerHistory', label: 'Histórico do Cliente' },
+                    { key: 'hasAntifraudApproval', label: 'Aprovação Antifraude' }
+                  ].map((item) => (
+                    <div 
+                      key={item.key}
+                      className={`p-3 rounded-lg border flex items-center gap-2 ${
+                        selectedDispute.evidence[item.key] 
+                          ? 'border-green-200 bg-green-50 dark:bg-green-900/20' 
+                          : 'border-red-200 bg-red-50 dark:bg-red-900/20'
+                      }`}
+                    >
+                      {selectedDispute.evidence[item.key] ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-600" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-red-600" />
+                      )}
+                      <span className="text-sm">{item.label}</span>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-4 border-t">
+                <Button className="flex-1 bg-[#2bc196] hover:bg-[#2bc196]/90">
+                  <FileText className="w-4 h-4 mr-2" />
+                  Gerar Dossiê de Contestação
+                </Button>
+                <Button variant="outline" className="flex-1">
+                  Aceitar Perda
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
