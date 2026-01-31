@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import PlanCard from '@/components/onboarding/PlanCard';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
+import LanguageSelector from '@/components/i18n/LanguageSelector';
 
 export default function PlanSelection() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState(null);
 
@@ -70,7 +73,11 @@ export default function PlanSelection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-6 px-4 pb-32 md:pb-8 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-6 px-4 pb-32 md:pb-8 flex flex-col items-center justify-center relative">
+      {/* Language Selector */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageSelector />
+      </div>
       <div className="max-w-7xl w-full mx-auto">
         {/* Header */}
         <div className="text-center mb-6">
@@ -81,8 +88,8 @@ export default function PlanSelection() {
               className="h-12"
             />
           </Link>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Escolha seu Plano</h1>
-          <p className="text-lg text-slate-500 font-medium">Etapa 2 de 3 - Selecione o plano ideal para seu negócio</p>
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">{t('onboarding.choose_plan')}</h1>
+          <p className="text-lg text-slate-500 font-medium">{t('onboarding.step_2_of_3')}</p>
           
           {/* Enhanced Progress Bar */}
           <div className="flex items-center justify-center gap-3 mt-4">
@@ -122,7 +129,7 @@ export default function PlanSelection() {
         <div className="flex justify-between items-center max-w-lg mx-auto fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-0">
           <Button variant="ghost" asChild>
             <Link to={createPageUrl('AccountCreationStep1')}>
-              <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
+              <ArrowLeft className="mr-2 h-4 w-4" /> {t('onboarding.back')}
             </Link>
           </Button>
           <Button 
@@ -131,7 +138,7 @@ export default function PlanSelection() {
             size="lg"
             className="bg-[#2bc196] hover:bg-[#239b7a] text-white shadow-lg shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 px-10 rounded-full font-bold transition-all transform hover:-translate-y-0.5"
           >
-            Continuar <ArrowRight className="ml-2 h-4 w-4" />
+            {t('onboarding.continue')} <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>

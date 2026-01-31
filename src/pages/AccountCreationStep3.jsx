@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,8 +12,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, ArrowRight, Building2, Search } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import SelectionButton from '@/components/ui/selection-button';
+import LanguageSelector from '@/components/i18n/LanguageSelector';
 
 export default function AccountCreationStep3() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -80,7 +83,11 @@ export default function AccountCreationStep3() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-4 pb-32 md:pb-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-4 pb-32 md:pb-8 relative">
+      {/* Language Selector */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageSelector />
+      </div>
       <Card className="w-full max-w-7xl shadow-2xl border border-slate-100 rounded-2xl overflow-hidden">
         <div className="h-2 bg-gradient-to-r from-[#2bc196] to-emerald-600 w-full" />
         <CardHeader className="text-center pb-4 pt-6 bg-white">
@@ -91,8 +98,8 @@ export default function AccountCreationStep3() {
               className="h-12 transition-all duration-300 hover:scale-105"
             />
           </Link>
-          <CardTitle className="text-3xl font-extrabold text-slate-900 tracking-tight">Dados da Empresa</CardTitle>
-          <CardDescription className="text-slate-500 text-base mt-2">Etapa 3 de 3 - Informações do seu negócio</CardDescription>
+          <CardTitle className="text-3xl font-extrabold text-slate-900 tracking-tight">{t('onboarding.company_data')}</CardTitle>
+          <CardDescription className="text-slate-500 text-base mt-2">{t('onboarding.step_3_of_3')}</CardDescription>
           
           {/* Enhanced Progress Bar */}
           <div className="flex items-center justify-center gap-3 mt-8">
@@ -119,11 +126,11 @@ export default function AccountCreationStep3() {
         <CardContent className="space-y-4 pt-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             <div className="space-y-2 md:col-span-4">
-              <Label htmlFor="cnpj">CNPJ</Label>
+              <Label htmlFor="cnpj">{t('onboarding.cnpj')}</Label>
               <div className="flex gap-2">
                 <Input 
                   id="cnpj" 
-                  placeholder="00.000.000/0000-00" 
+                  placeholder={t('onboarding.cnpj_placeholder')} 
                   value={formData.cnpj} 
                   onChange={handleChange}
                   className="flex-1"
@@ -135,29 +142,29 @@ export default function AccountCreationStep3() {
             </div>
             
             <div className="space-y-2 md:col-span-4">
-              <Label htmlFor="corporateName">Razão Social</Label>
+              <Label htmlFor="corporateName">{t('onboarding.corporate_name')}</Label>
               <Input id="corporateName" value={formData.corporateName} onChange={handleChange} className="bg-gray-50" />
             </div>
             
             <div className="space-y-2 md:col-span-4">
-              <Label htmlFor="tradeName">Nome Fantasia</Label>
+              <Label htmlFor="tradeName">{t('onboarding.trade_name')}</Label>
               <Input id="tradeName" value={formData.tradeName} onChange={handleChange} className="bg-gray-50" />
             </div>
             
             <div className="space-y-2 md:col-span-6">
-              <Label htmlFor="address">Endereço</Label>
+              <Label htmlFor="address">{t('onboarding.address')}</Label>
               <Input id="address" value={formData.address} onChange={handleChange} className="bg-gray-50" />
             </div>
             
             <div className="space-y-2 md:col-span-12">
-              <Label htmlFor="avgMonthlyRevenue">Faturamento Médio Mensal</Label>
+              <Label htmlFor="avgMonthlyRevenue">{t('onboarding.avg_monthly_revenue')}</Label>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 {[
-                  { value: '0-10k', label: 'Até R$ 10k' },
-                  { value: '10k-50k', label: 'R$ 10k - 50k' },
-                  { value: '50k-100k', label: 'R$ 50k - 100k' },
-                  { value: '100k-500k', label: 'R$ 100k - 500k' },
-                  { value: '500k+', label: '+ R$ 500k' }
+                  { value: '0-10k', label: t('onboarding.revenue_0_10k') },
+                  { value: '10k-50k', label: t('onboarding.revenue_10k_50k') },
+                  { value: '50k-100k', label: t('onboarding.revenue_50k_100k') },
+                  { value: '100k-500k', label: t('onboarding.revenue_100k_500k') },
+                  { value: '500k+', label: t('onboarding.revenue_500k_plus') }
                 ].map(opt => (
                   <SelectionButton
                     key={opt.value}
@@ -171,16 +178,16 @@ export default function AccountCreationStep3() {
             </div>
             
             <div className="space-y-2 md:col-span-12">
-              <Label htmlFor="businessType">Tipo de Negócio</Label>
+              <Label htmlFor="businessType">{t('onboarding.business_type')}</Label>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
                 {[
-                  { value: 'ecommerce', label: 'E-commerce' },
-                  { value: 'saas', label: 'SaaS' },
-                  { value: 'services', label: 'Serviços' },
-                  { value: 'retail', label: 'Varejo' },
-                  { value: 'marketplace', label: 'Marketplace' },
-                  { value: 'infoproducts', label: 'Infoprodutos' },
-                  { value: 'other', label: 'Outro' }
+                  { value: 'ecommerce', label: t('onboarding.type_ecommerce') },
+                  { value: 'saas', label: t('onboarding.type_saas') },
+                  { value: 'services', label: t('onboarding.type_services') },
+                  { value: 'retail', label: t('onboarding.type_retail') },
+                  { value: 'marketplace', label: t('onboarding.type_marketplace') },
+                  { value: 'infoproducts', label: t('onboarding.type_infoproducts') },
+                  { value: 'other', label: t('onboarding.type_other') }
                 ].map(opt => (
                   <SelectionButton
                     key={opt.value}
@@ -194,10 +201,10 @@ export default function AccountCreationStep3() {
             </div>
             
             <div className="space-y-2 md:col-span-6">
-              <Label htmlFor="whatSells">O que a empresa vende/transaciona</Label>
+              <Label htmlFor="whatSells">{t('onboarding.what_sells')}</Label>
               <Textarea 
                 id="whatSells" 
-                placeholder="Ex: Roupas, cosméticos..."
+                placeholder={t('onboarding.what_sells_placeholder')}
                 value={formData.whatSells} 
                 onChange={handleChange}
                 rows={2}
@@ -206,10 +213,10 @@ export default function AccountCreationStep3() {
             </div>
 
             <div className="space-y-2 md:col-span-6">
-              <Label htmlFor="businessModelDetails">Detalhes do modelo de Negócio</Label>
+              <Label htmlFor="businessModelDetails">{t('onboarding.business_model_details')}</Label>
               <Textarea 
                 id="businessModelDetails" 
-                placeholder="Detalhe seu modelo..."
+                placeholder={t('onboarding.business_model_placeholder')}
                 value={formData.businessModelDetails} 
                 onChange={handleChange}
                 rows={2}
@@ -218,10 +225,10 @@ export default function AccountCreationStep3() {
             </div>
 
             <div className="space-y-2 md:col-span-6">
-              <Label htmlFor="operationDetails">Detalhes da Operação</Label>
+              <Label htmlFor="operationDetails">{t('onboarding.operation_details')}</Label>
               <Textarea 
                 id="operationDetails" 
-                placeholder="Conte sobre sua operação..."
+                placeholder={t('onboarding.operation_placeholder')}
                 value={formData.operationDetails} 
                 onChange={handleChange}
                 rows={2}
@@ -230,13 +237,13 @@ export default function AccountCreationStep3() {
             </div>
             
             <div className="space-y-2 md:col-span-3">
-              <Label htmlFor="websiteOrSocial">Site ou Rede Social</Label>
-              <Input id="websiteOrSocial" placeholder="https://" value={formData.websiteOrSocial} onChange={handleChange} />
+              <Label htmlFor="websiteOrSocial">{t('onboarding.website_social')}</Label>
+              <Input id="websiteOrSocial" placeholder={t('onboarding.website_placeholder')} value={formData.websiteOrSocial} onChange={handleChange} />
             </div>
             
             <div className="space-y-2 md:col-span-3">
-              <Label htmlFor="positionInCompany">Cargo na empresa</Label>
-              <Input id="positionInCompany" placeholder="Ex: CEO, Diretor" value={formData.positionInCompany} onChange={handleChange} />
+              <Label htmlFor="positionInCompany">{t('onboarding.position_company')}</Label>
+              <Input id="positionInCompany" placeholder={t('onboarding.position_placeholder')} value={formData.positionInCompany} onChange={handleChange} />
             </div>
           </div>
         </CardContent>
@@ -244,7 +251,7 @@ export default function AccountCreationStep3() {
         <CardFooter className="flex justify-between pt-6 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-8">
           <Button variant="ghost" asChild>
             <Link to={createPageUrl('PlanSelection')}>
-              <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
+              <ArrowLeft className="mr-2 h-4 w-4" /> {t('onboarding.back')}
             </Link>
           </Button>
           <Button 
@@ -253,7 +260,7 @@ export default function AccountCreationStep3() {
             size="lg"
             className="bg-[#2bc196] hover:bg-[#239b7a] text-white shadow-lg shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 px-10 rounded-full font-bold transition-all transform hover:-translate-y-0.5"
           >
-            {loading ? 'Criando...' : 'Finalizar Cadastro'} <Building2 className="ml-2 h-4 w-4" />
+            {loading ? t('onboarding.creating') : t('onboarding.finish_registration')} <Building2 className="ml-2 h-4 w-4" />
           </Button>
         </CardFooter>
       </Card>
