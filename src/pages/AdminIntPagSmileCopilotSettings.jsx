@@ -2,49 +2,63 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Sparkles, 
-  Settings, 
-  Bell,
-  Mail,
-  Clock,
-  Target,
   Save,
+  RotateCcw,
   ArrowLeft,
-  CheckCircle2,
-  AlertTriangle,
-  Users,
+  Sparkles,
+  Bell,
   BarChart3,
-  Zap
+  AlertTriangle,
+  TrendingUp,
+  Clock,
+  Mail,
+  MessageSquare,
+  FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
-import { toast } from 'sonner';
 
 export default function AdminIntPagSmileCopilotSettings() {
   const [settings, setSettings] = useState({
-    dailySummary: true,
-    summaryTime: '09:00',
-    alertsEnabled: true,
-    chargebackThreshold: [1.5],
-    volumeAnomalyThreshold: [200],
-    kycQueueAlert: true,
-    kycQueueThreshold: [20],
-    rateOptimizationSuggestions: true,
-    portfolioHealthMonitoring: true,
-    emailNotifications: true,
-    slackIntegration: false,
-    autoApplyRecommendations: false
+    // General
+    copilotEnabled: true,
+    proactiveSuggestions: true,
+    
+    // Data Sources
+    tpvAnalysisEnabled: true,
+    merchantHealthEnabled: true,
+    revenueAnalysisEnabled: true,
+    riskMonitoringEnabled: true,
+    
+    // Alerts
+    volumeAnomalyAlert: true,
+    volumeAnomalyThreshold: 20,
+    churnRiskAlert: true,
+    churnRiskThreshold: 70,
+    revenueDropAlert: true,
+    revenueDropThreshold: 15,
+    
+    // Reports
+    weeklyReportEnabled: true,
+    weeklyReportDay: "monday",
+    monthlyReportEnabled: true,
+    
+    // Notifications
+    notifyByEmail: true,
+    notifyBySlack: false,
+    slackWebhook: "",
+    notifyEmails: "equipe@pagsmile.com"
   });
 
   const handleSave = () => {
-    toast.success('Configurações salvas com sucesso!');
+    alert('Configurações do PagSmile Copilot salvas com sucesso!');
   };
 
   return (
@@ -57,193 +71,285 @@ export default function AdminIntPagSmileCopilotSettings() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-900 dark:text-white">Configurações - PagSmile Copilot</h1>
-              <p className="text-sm text-slate-500">Personalize o comportamento do seu copiloto interno</p>
-            </div>
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+            <Sparkles className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Configurações do PagSmile Copilot</h1>
+            <p className="text-slate-500">Análises operacionais, alertas e relatórios</p>
           </div>
         </div>
-        <Button onClick={handleSave} className="bg-purple-600 hover:bg-purple-700">
-          <Save className="w-4 h-4 mr-2" />
-          Salvar Configurações
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline">
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Resetar
+          </Button>
+          <Button onClick={handleSave} className="bg-purple-600 hover:bg-purple-700">
+            <Save className="w-4 h-4 mr-2" />
+            Salvar
+          </Button>
+        </div>
       </div>
 
-      <Tabs defaultValue="alerts">
-        <TabsList>
+      <Tabs defaultValue="general">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="general">Geral</TabsTrigger>
           <TabsTrigger value="alerts">Alertas</TabsTrigger>
-          <TabsTrigger value="insights">Insights</TabsTrigger>
+          <TabsTrigger value="reports">Relatórios</TabsTrigger>
           <TabsTrigger value="notifications">Notificações</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="alerts" className="space-y-4">
+        {/* General Settings */}
+        <TabsContent value="general" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-500" />
-                Configuração de Alertas
-              </CardTitle>
+              <CardTitle>Configurações Gerais</CardTitle>
+              <CardDescription>Controle as funcionalidades do copilot</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 rounded-lg border">
                 <div>
-                  <Label>Alertas de Chargeback Ratio</Label>
-                  <p className="text-xs text-slate-500">Alertar quando merchant ultrapassar threshold</p>
+                  <Label className="text-base">Copilot Ativo</Label>
+                  <p className="text-sm text-slate-500">Habilita análises e insights automáticos</p>
                 </div>
                 <Switch 
-                  checked={settings.alertsEnabled} 
-                  onCheckedChange={(v) => setSettings({...settings, alertsEnabled: v})} 
-                />
-              </div>
-              
-              {settings.alertsEnabled && (
-                <div className="space-y-2 pl-4 border-l-2 border-purple-200">
-                  <Label>Threshold de Chargeback: {settings.chargebackThreshold}%</Label>
-                  <Slider 
-                    value={settings.chargebackThreshold} 
-                    onValueChange={(v) => setSettings({...settings, chargebackThreshold: v})}
-                    min={0.5}
-                    max={3}
-                    step={0.1}
-                  />
-                </div>
-              )}
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Alerta de Anomalia de Volume</Label>
-                  <p className="text-xs text-slate-500">Alertar quando volume variar significativamente</p>
-                </div>
-                <Switch checked={true} />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Threshold de Variação: {settings.volumeAnomalyThreshold}%</Label>
-                <Slider 
-                  value={settings.volumeAnomalyThreshold} 
-                  onValueChange={(v) => setSettings({...settings, volumeAnomalyThreshold: v})}
-                  min={50}
-                  max={500}
-                  step={10}
+                  checked={settings.copilotEnabled}
+                  onCheckedChange={(v) => setSettings({...settings, copilotEnabled: v})}
                 />
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 rounded-lg border">
                 <div>
-                  <Label>Alerta de Fila KYC</Label>
-                  <p className="text-xs text-slate-500">Alertar quando fila ultrapassar limite</p>
+                  <Label className="text-base">Sugestões Proativas</Label>
+                  <p className="text-sm text-slate-500">Copilot sugere ações automaticamente</p>
                 </div>
                 <Switch 
-                  checked={settings.kycQueueAlert} 
-                  onCheckedChange={(v) => setSettings({...settings, kycQueueAlert: v})} 
+                  checked={settings.proactiveSuggestions}
+                  onCheckedChange={(v) => setSettings({...settings, proactiveSuggestions: v})}
                 />
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="insights" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-purple-500" />
-                Geração de Insights
-              </CardTitle>
+              <CardTitle>Fontes de Dados</CardTitle>
+              <CardDescription>Selecione quais análises o copilot deve realizar</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {[
+                { key: 'tpvAnalysisEnabled', label: 'Análise de TPV', description: 'Volume de transações e tendências', icon: BarChart3, color: 'text-blue-600' },
+                { key: 'merchantHealthEnabled', label: 'Saúde dos Merchants', description: 'Churn, satisfação, performance', icon: TrendingUp, color: 'text-green-600' },
+                { key: 'revenueAnalysisEnabled', label: 'Análise de Receita', description: 'MDR, taxas, rentabilidade', icon: TrendingUp, color: 'text-emerald-600' },
+                { key: 'riskMonitoringEnabled', label: 'Monitoramento de Risco', description: 'Fraude, chargebacks, PLD', icon: AlertTriangle, color: 'text-red-600' },
+              ].map(({ key, label, description, icon: Icon, color }) => (
+                <div key={key} className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="flex items-center gap-3">
+                    <Icon className={`w-5 h-5 ${color}`} />
+                    <div>
+                      <Label className="text-base">{label}</Label>
+                      <p className="text-sm text-slate-500">{description}</p>
+                    </div>
+                  </div>
+                  <Switch 
+                    checked={settings[key]}
+                    onCheckedChange={(v) => setSettings({...settings, [key]: v})}
+                  />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Alerts Settings */}
+        <TabsContent value="alerts" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Alertas Automáticos</CardTitle>
+              <CardDescription>Configure quando o copilot deve alertar a equipe</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 rounded-lg border">
                 <div>
-                  <Label>Resumo Diário Automático</Label>
-                  <p className="text-xs text-slate-500">Receber resumo executivo todos os dias</p>
+                  <Label className="text-base">Anomalia de Volume</Label>
+                  <p className="text-sm text-slate-500">Alertar quando TPV variar significativamente</p>
                 </div>
-                <Switch 
-                  checked={settings.dailySummary} 
-                  onCheckedChange={(v) => setSettings({...settings, dailySummary: v})} 
-                />
-              </div>
-
-              {settings.dailySummary && (
-                <div className="space-y-2 pl-4 border-l-2 border-purple-200">
-                  <Label>Horário do Resumo</Label>
+                <div className="flex items-center gap-3">
                   <Input 
-                    type="time" 
-                    value={settings.summaryTime}
-                    onChange={(e) => setSettings({...settings, summaryTime: e.target.value})}
-                    className="w-32"
+                    type="number"
+                    value={settings.volumeAnomalyThreshold}
+                    onChange={(e) => setSettings({...settings, volumeAnomalyThreshold: Number(e.target.value)})}
+                    className="w-20"
+                    disabled={!settings.volumeAnomalyAlert}
+                  />
+                  <span className="text-sm text-slate-500">%</span>
+                  <Switch 
+                    checked={settings.volumeAnomalyAlert}
+                    onCheckedChange={(v) => setSettings({...settings, volumeAnomalyAlert: v})}
                   />
                 </div>
-              )}
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Sugestões de Otimização de Taxa</Label>
-                  <p className="text-xs text-slate-500">Análise automática de clusters para ajuste de taxas</p>
-                </div>
-                <Switch 
-                  checked={settings.rateOptimizationSuggestions} 
-                  onCheckedChange={(v) => setSettings({...settings, rateOptimizationSuggestions: v})} 
-                />
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 rounded-lg border">
                 <div>
-                  <Label>Monitoramento de Saúde do Portfólio</Label>
-                  <p className="text-xs text-slate-500">Classificação automática de merchants</p>
+                  <Label className="text-base">Risco de Churn</Label>
+                  <p className="text-sm text-slate-500">Alertar merchants com alto risco de churn</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Input 
+                    type="number"
+                    value={settings.churnRiskThreshold}
+                    onChange={(e) => setSettings({...settings, churnRiskThreshold: Number(e.target.value)})}
+                    className="w-20"
+                    disabled={!settings.churnRiskAlert}
+                  />
+                  <span className="text-sm text-slate-500">score</span>
+                  <Switch 
+                    checked={settings.churnRiskAlert}
+                    onCheckedChange={(v) => setSettings({...settings, churnRiskAlert: v})}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-lg border">
+                <div>
+                  <Label className="text-base">Queda de Receita</Label>
+                  <p className="text-sm text-slate-500">Alertar quando receita cair vs período anterior</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Input 
+                    type="number"
+                    value={settings.revenueDropThreshold}
+                    onChange={(e) => setSettings({...settings, revenueDropThreshold: Number(e.target.value)})}
+                    className="w-20"
+                    disabled={!settings.revenueDropAlert}
+                  />
+                  <span className="text-sm text-slate-500">%</span>
+                  <Switch 
+                    checked={settings.revenueDropAlert}
+                    onCheckedChange={(v) => setSettings({...settings, revenueDropAlert: v})}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Reports Settings */}
+        <TabsContent value="reports" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Relatórios Automáticos</CardTitle>
+              <CardDescription>Configure a geração automática de relatórios</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between p-4 rounded-lg border">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <Label className="text-base">Relatório Semanal</Label>
+                    <p className="text-sm text-slate-500">Resumo de performance da semana</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Select 
+                    value={settings.weeklyReportDay}
+                    onValueChange={(v) => setSettings({...settings, weeklyReportDay: v})}
+                    disabled={!settings.weeklyReportEnabled}
+                  >
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="monday">Segunda</SelectItem>
+                      <SelectItem value="tuesday">Terça</SelectItem>
+                      <SelectItem value="wednesday">Quarta</SelectItem>
+                      <SelectItem value="thursday">Quinta</SelectItem>
+                      <SelectItem value="friday">Sexta</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Switch 
+                    checked={settings.weeklyReportEnabled}
+                    onCheckedChange={(v) => setSettings({...settings, weeklyReportEnabled: v})}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-lg border">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-purple-600" />
+                  <div>
+                    <Label className="text-base">Relatório Mensal</Label>
+                    <p className="text-sm text-slate-500">Análise completa do mês</p>
+                  </div>
                 </div>
                 <Switch 
-                  checked={settings.portfolioHealthMonitoring} 
-                  onCheckedChange={(v) => setSettings({...settings, portfolioHealthMonitoring: v})} 
+                  checked={settings.monthlyReportEnabled}
+                  onCheckedChange={(v) => setSettings({...settings, monthlyReportEnabled: v})}
                 />
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="notifications" className="space-y-4">
+        {/* Notifications Settings */}
+        <TabsContent value="notifications" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Bell className="w-4 h-4 text-purple-500" />
-                Canais de Notificação
-              </CardTitle>
+              <CardTitle>Canais de Notificação</CardTitle>
+              <CardDescription>Defina como receber alertas e relatórios</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Email</Label>
-                  <p className="text-xs text-slate-500">Receber alertas por email</p>
+              <div className="flex items-center justify-between p-4 rounded-lg border">
+                <div className="flex items-center gap-3">
+                  <Mail className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <Label className="text-base">E-mail</Label>
+                    <p className="text-sm text-slate-500">Receber notificações por e-mail</p>
+                  </div>
                 </div>
                 <Switch 
-                  checked={settings.emailNotifications} 
-                  onCheckedChange={(v) => setSettings({...settings, emailNotifications: v})} 
+                  checked={settings.notifyByEmail}
+                  onCheckedChange={(v) => setSettings({...settings, notifyByEmail: v})}
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Integração Slack</Label>
-                  <p className="text-xs text-slate-500">Enviar alertas para canal do Slack</p>
+              {settings.notifyByEmail && (
+                <div className="space-y-2 pl-4 border-l-2 border-blue-200">
+                  <Label>E-mails de destino</Label>
+                  <Input 
+                    value={settings.notifyEmails}
+                    onChange={(e) => setSettings({...settings, notifyEmails: e.target.value})}
+                    placeholder="email1@pagsmile.com, email2@pagsmile.com"
+                  />
+                  <p className="text-xs text-slate-500">Separe múltiplos e-mails por vírgula</p>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between p-4 rounded-lg border">
+                <div className="flex items-center gap-3">
+                  <MessageSquare className="w-5 h-5 text-purple-600" />
+                  <div>
+                    <Label className="text-base">Slack</Label>
+                    <p className="text-sm text-slate-500">Integração com canal Slack</p>
+                  </div>
                 </div>
                 <Switch 
-                  checked={settings.slackIntegration} 
-                  onCheckedChange={(v) => setSettings({...settings, slackIntegration: v})} 
+                  checked={settings.notifyBySlack}
+                  onCheckedChange={(v) => setSettings({...settings, notifyBySlack: v})}
                 />
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200">
-                <div>
-                  <Label className="text-amber-700">Aplicar Recomendações Automaticamente</Label>
-                  <p className="text-xs text-amber-600">⚠️ Ações serão executadas sem confirmação</p>
+              {settings.notifyBySlack && (
+                <div className="space-y-2 pl-4 border-l-2 border-purple-200">
+                  <Label>Webhook URL do Slack</Label>
+                  <Input 
+                    value={settings.slackWebhook}
+                    onChange={(e) => setSettings({...settings, slackWebhook: e.target.value})}
+                    placeholder="https://hooks.slack.com/services/..."
+                  />
                 </div>
-                <Switch 
-                  checked={settings.autoApplyRecommendations} 
-                  onCheckedChange={(v) => setSettings({...settings, autoApplyRecommendations: v})} 
-                />
-              </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
