@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,9 +30,37 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import AgentChatInterface from '@/components/agents/AgentChatInterface';
+import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
+import AgentProactiveNotification from '@/components/agents/AgentProactiveNotification';
+import { processDIACopilotMessage, diaCopilotQuickPrompts, diaCopilotProactiveNotifications } from '@/components/agents/DIACopilotChatLogic';
 
 export default function DIACopilot() {
   const [selectedPeriod, setSelectedPeriod] = useState('today');
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [proactiveNotification, setProactiveNotification] = useState(null);
+  const [hasShownNotification, setHasShownNotification] = useState(false);
+
+  // Simula notificação proativa após alguns segundos na página
+  useEffect(() => {
+    if (!hasShownNotification) {
+      const timer = setTimeout(() => {
+        setProactiveNotification(diaCopilotProactiveNotifications[0]);
+        setHasShownNotification(true);
+      }, 8000); // 8 segundos após carregar a página
+      return () => clearTimeout(timer);
+    }
+  }, [hasShownNotification]);
+
+  const handleProactiveAction = (notification) => {
+    setProactiveNotification(null);
+    setIsChatOpen(true);
+  };
+
+  const handleProactiveDismiss = () => {
+    setProactiveNotification(null);
+  };
 
   // Simulated daily summary data
   const dailySummary = {
@@ -474,6 +502,38 @@ export default function DIACopilot() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Agent Chat Interface */}
+      <AgentChatInterface
+        agentName="dia_copilot"
+        agentDisplayName="DIA Copilot"
+        agentDescription="Assistente inteligente de pagamentos"
+        quickPrompts={diaCopilotQuickPrompts}
+        onProcessMessage={processDIACopilotMessage}
+        welcomeMessage="Olá! 👋 Sou o DIA Copilot, seu assistente inteligente para gestão de pagamentos. Como posso ajudar você hoje?"
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+        accentColor="#2bc196"
+      />
+
+      {/* Floating Button */}
+      <AgentFloatingButton
+        isOpen={isChatOpen}
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        agentName="DIA Copilot"
+        accentColor="#2bc196"
+        pulseNotification={!isChatOpen && !hasShownNotification}
+      />
+
+      {/* Proactive Notification */}
+      <AgentProactiveNotification
+        notification={proactiveNotification}
+        onAction={handleProactiveAction}
+        onDismiss={handleProactiveDismiss}
+        accentColor="#2bc196"
+      />
     </div>
   );
 }

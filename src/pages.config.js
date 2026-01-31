@@ -83,8 +83,12 @@ import AdminIntComplianceRules from './pages/AdminIntComplianceRules';
 import AdminIntComplianceSubmissions from './pages/AdminIntComplianceSubmissions';
 import AdminIntConciliation from './pages/AdminIntConciliation';
 import AdminIntControlLists from './pages/AdminIntControlLists';
+import AdminIntConverterAgent from './pages/AdminIntConverterAgent';
+import AdminIntConverterAgentSettings from './pages/AdminIntConverterAgentSettings';
 import AdminIntCreateProposal from './pages/AdminIntCreateProposal';
 import AdminIntDashboard from './pages/AdminIntDashboard';
+import AdminIntDisputeManager from './pages/AdminIntDisputeManager';
+import AdminIntDisputeManagerSettings from './pages/AdminIntDisputeManagerSettings';
 import AdminIntDocs from './pages/AdminIntDocs';
 import AdminIntFeePlanDetail from './pages/AdminIntFeePlanDetail';
 import AdminIntFeePlans from './pages/AdminIntFeePlans';
@@ -95,6 +99,8 @@ import AdminIntFraudMonitoring from './pages/AdminIntFraudMonitoring';
 import AdminIntGlobalParams from './pages/AdminIntGlobalParams';
 import AdminIntGlobalRates from './pages/AdminIntGlobalRates';
 import AdminIntGoalsPerformance from './pages/AdminIntGoalsPerformance';
+import AdminIntIdentityOnboarder from './pages/AdminIntIdentityOnboarder';
+import AdminIntIdentityOnboarderSettings from './pages/AdminIntIdentityOnboarderSettings';
 import AdminIntIntegrationDetail from './pages/AdminIntIntegrationDetail';
 import AdminIntIntegrations from './pages/AdminIntIntegrations';
 import AdminIntKYCQueue from './pages/AdminIntKYCQueue';
@@ -116,6 +122,7 @@ import AdminIntNewMerchant from './pages/AdminIntNewMerchant';
 import AdminIntOrchestration from './pages/AdminIntOrchestration';
 import AdminIntPLD from './pages/AdminIntPLD';
 import AdminIntPagSmileCopilot from './pages/AdminIntPagSmileCopilot';
+import AdminIntPagSmileCopilotSettings from './pages/AdminIntPagSmileCopilotSettings';
 import AdminIntPartnerDetail from './pages/AdminIntPartnerDetail';
 import AdminIntPartners from './pages/AdminIntPartners';
 import AdminIntPaymentAgenda from './pages/AdminIntPaymentAgenda';
@@ -124,6 +131,8 @@ import AdminIntPriceSimulator from './pages/AdminIntPriceSimulator';
 import AdminIntProfiles from './pages/AdminIntProfiles';
 import AdminIntProposalDetails from './pages/AdminIntProposalDetails';
 import AdminIntReconciliation from './pages/AdminIntReconciliation';
+import AdminIntRecoveryAgent from './pages/AdminIntRecoveryAgent';
+import AdminIntRecoveryAgentSettings from './pages/AdminIntRecoveryAgentSettings';
 import AdminIntReports from './pages/AdminIntReports';
 import AdminIntReportsCustom from './pages/AdminIntReportsCustom';
 import AdminIntReportsFinancial from './pages/AdminIntReportsFinancial';
@@ -147,9 +156,9 @@ import AdminIntSubaccounts from './pages/AdminIntSubaccounts';
 import AdminIntSupport from './pages/AdminIntSupport';
 import AdminIntSystemLogs from './pages/AdminIntSystemLogs';
 import AdminIntTemplates from './pages/AdminIntTemplates';
-import AdminIntTransactions from './pages/AdminIntTransactions';
 import AdminIntTransactionDetail from './pages/AdminIntTransactionDetail';
 import AdminIntTransactionReports from './pages/AdminIntTransactionReports';
+import AdminIntTransactions from './pages/AdminIntTransactions';
 import AdminIntTransactionsDashboard from './pages/AdminIntTransactionsDashboard';
 import AdminIntTransactionsList from './pages/AdminIntTransactionsList';
 import AdminIntUserDetail from './pages/AdminIntUserDetail';
@@ -231,15 +240,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntIdentityOnboarder from './pages/AdminIntIdentityOnboarder';
-import AdminIntRecoveryAgent from './pages/AdminIntRecoveryAgent';
-import AdminIntConverterAgent from './pages/AdminIntConverterAgent';
-import AdminIntDisputeManager from './pages/AdminIntDisputeManager';
-import AdminIntPagSmileCopilotSettings from './pages/AdminIntPagSmileCopilotSettings';
-import AdminIntRecoveryAgentSettings from './pages/AdminIntRecoveryAgentSettings';
-import AdminIntConverterAgentSettings from './pages/AdminIntConverterAgentSettings';
-import AdminIntDisputeManagerSettings from './pages/AdminIntDisputeManagerSettings';
-import AdminIntIdentityOnboarderSettings from './pages/AdminIntIdentityOnboarderSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -280,8 +280,12 @@ export const PAGES = {
     "AdminIntComplianceSubmissions": AdminIntComplianceSubmissions,
     "AdminIntConciliation": AdminIntConciliation,
     "AdminIntControlLists": AdminIntControlLists,
+    "AdminIntConverterAgent": AdminIntConverterAgent,
+    "AdminIntConverterAgentSettings": AdminIntConverterAgentSettings,
     "AdminIntCreateProposal": AdminIntCreateProposal,
     "AdminIntDashboard": AdminIntDashboard,
+    "AdminIntDisputeManager": AdminIntDisputeManager,
+    "AdminIntDisputeManagerSettings": AdminIntDisputeManagerSettings,
     "AdminIntDocs": AdminIntDocs,
     "AdminIntFeePlanDetail": AdminIntFeePlanDetail,
     "AdminIntFeePlans": AdminIntFeePlans,
@@ -292,6 +296,8 @@ export const PAGES = {
     "AdminIntGlobalParams": AdminIntGlobalParams,
     "AdminIntGlobalRates": AdminIntGlobalRates,
     "AdminIntGoalsPerformance": AdminIntGoalsPerformance,
+    "AdminIntIdentityOnboarder": AdminIntIdentityOnboarder,
+    "AdminIntIdentityOnboarderSettings": AdminIntIdentityOnboarderSettings,
     "AdminIntIntegrationDetail": AdminIntIntegrationDetail,
     "AdminIntIntegrations": AdminIntIntegrations,
     "AdminIntKYCQueue": AdminIntKYCQueue,
@@ -313,6 +319,7 @@ export const PAGES = {
     "AdminIntOrchestration": AdminIntOrchestration,
     "AdminIntPLD": AdminIntPLD,
     "AdminIntPagSmileCopilot": AdminIntPagSmileCopilot,
+    "AdminIntPagSmileCopilotSettings": AdminIntPagSmileCopilotSettings,
     "AdminIntPartnerDetail": AdminIntPartnerDetail,
     "AdminIntPartners": AdminIntPartners,
     "AdminIntPaymentAgenda": AdminIntPaymentAgenda,
@@ -321,6 +328,8 @@ export const PAGES = {
     "AdminIntProfiles": AdminIntProfiles,
     "AdminIntProposalDetails": AdminIntProposalDetails,
     "AdminIntReconciliation": AdminIntReconciliation,
+    "AdminIntRecoveryAgent": AdminIntRecoveryAgent,
+    "AdminIntRecoveryAgentSettings": AdminIntRecoveryAgentSettings,
     "AdminIntReports": AdminIntReports,
     "AdminIntReportsCustom": AdminIntReportsCustom,
     "AdminIntReportsFinancial": AdminIntReportsFinancial,
@@ -344,9 +353,9 @@ export const PAGES = {
     "AdminIntSupport": AdminIntSupport,
     "AdminIntSystemLogs": AdminIntSystemLogs,
     "AdminIntTemplates": AdminIntTemplates,
-    "AdminIntTransactions": AdminIntTransactions,
     "AdminIntTransactionDetail": AdminIntTransactionDetail,
     "AdminIntTransactionReports": AdminIntTransactionReports,
+    "AdminIntTransactions": AdminIntTransactions,
     "AdminIntTransactionsDashboard": AdminIntTransactionsDashboard,
     "AdminIntTransactionsList": AdminIntTransactionsList,
     "AdminIntUserDetail": AdminIntUserDetail,
@@ -428,15 +437,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntIdentityOnboarder": AdminIntIdentityOnboarder,
-    "AdminIntRecoveryAgent": AdminIntRecoveryAgent,
-    "AdminIntConverterAgent": AdminIntConverterAgent,
-    "AdminIntDisputeManager": AdminIntDisputeManager,
-    "AdminIntPagSmileCopilotSettings": AdminIntPagSmileCopilotSettings,
-    "AdminIntRecoveryAgentSettings": AdminIntRecoveryAgentSettings,
-    "AdminIntConverterAgentSettings": AdminIntConverterAgentSettings,
-    "AdminIntDisputeManagerSettings": AdminIntDisputeManagerSettings,
-    "AdminIntIdentityOnboarderSettings": AdminIntIdentityOnboarderSettings,
 }
 
 export const pagesConfig = {
