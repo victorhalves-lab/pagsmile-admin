@@ -5,6 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Sparkles, 
   TrendingUp, 
@@ -35,7 +38,10 @@ import {
   Brain,
   Percent,
   Building2,
-  Scale
+  Scale,
+  Save,
+  Mail,
+  MessageSquare
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
@@ -47,6 +53,30 @@ export default function AdminIntPagSmileCopilot() {
   const [selectedPeriod, setSelectedPeriod] = useState('today');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  // Copilot Settings State
+  const [copilotSettings, setCopilotSettings] = useState({
+    copilotEnabled: true,
+    proactiveSuggestions: true,
+    tpvAnalysisEnabled: true,
+    merchantHealthEnabled: true,
+    revenueAnalysisEnabled: true,
+    riskMonitoringEnabled: true,
+    volumeAnomalyAlert: true,
+    volumeAnomalyThreshold: 20,
+    churnRiskAlert: true,
+    churnRiskThreshold: 70,
+    revenueDropAlert: true,
+    revenueDropThreshold: 15,
+    weeklyReportEnabled: true,
+    weeklyReportDay: "monday",
+    monthlyReportEnabled: true,
+    notifyByEmail: true,
+    notifyBySlack: false,
+    slackWebhook: "",
+    notifyEmails: "equipe@pagsmile.com"
+  });
 
   // Executive Summary Data
   const executiveSummary = {
@@ -524,47 +554,312 @@ export default function AdminIntPagSmileCopilot() {
         </CardContent>
       </Card>
 
-      {/* Quick Navigation */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-purple-600" />
-            <CardTitle>Navegação Rápida</CardTitle>
+      {/* Copilot Settings Section */}
+      <Tabs defaultValue="dashboard" onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+          <TabsTrigger value="settings">Configurações do Copilot</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="dashboard" className="space-y-6">
+          {/* Quick Navigation */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-purple-600" />
+                <CardTitle>Navegação Rápida</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Link to={createPageUrl('AdminIntRecoveryAgent')}>
+                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:shadow-md transition-all cursor-pointer group">
+                    <RefreshCw className="w-8 h-8 text-purple-600 mb-2 group-hover:rotate-180 transition-transform duration-500" />
+                    <p className="font-medium text-slate-900 dark:text-white">Recovery Agent</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Recuperação de pagamentos</p>
+                  </div>
+                </Link>
+                <Link to={createPageUrl('AdminIntDisputeManager')}>
+                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:shadow-md transition-all cursor-pointer group">
+                    <Shield className="w-8 h-8 text-purple-600 mb-2 group-hover:scale-110 transition-transform" />
+                    <p className="font-medium text-slate-900 dark:text-white">Dispute Manager</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Gestão de disputas</p>
+                  </div>
+                </Link>
+                <Link to={createPageUrl('AdminIntIdentityOnboarder')}>
+                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:shadow-md transition-all cursor-pointer group">
+                    <Users className="w-8 h-8 text-purple-600 mb-2 group-hover:scale-110 transition-transform" />
+                    <p className="font-medium text-slate-900 dark:text-white">Identity Onboarder</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">KYC/KYB Copilot</p>
+                  </div>
+                </Link>
+                <Link to={createPageUrl('AdminIntConverterAgent')}>
+                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:shadow-md transition-all cursor-pointer group">
+                    <TrendingUp className="w-8 h-8 text-purple-600 mb-2 group-hover:scale-110 transition-transform" />
+                    <p className="font-medium text-slate-900 dark:text-white">Converter Agent</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Otimização de checkout</p>
+                  </div>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="settings" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* General & Data Sources */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-600" />
+                  Configurações Gerais
+                </CardTitle>
+                <CardDescription>Controle as funcionalidades do copilot</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div>
+                    <Label className="text-base">Copilot Ativo</Label>
+                    <p className="text-sm text-slate-500">Habilita análises e insights automáticos</p>
+                  </div>
+                  <Switch 
+                    checked={copilotSettings.copilotEnabled}
+                    onCheckedChange={(v) => setCopilotSettings({...copilotSettings, copilotEnabled: v})}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div>
+                    <Label className="text-base">Sugestões Proativas</Label>
+                    <p className="text-sm text-slate-500">Copilot sugere ações automaticamente</p>
+                  </div>
+                  <Switch 
+                    checked={copilotSettings.proactiveSuggestions}
+                    onCheckedChange={(v) => setCopilotSettings({...copilotSettings, proactiveSuggestions: v})}
+                  />
+                </div>
+
+                <div className="pt-4 border-t">
+                  <Label className="text-sm font-medium mb-3 block">Fontes de Dados</Label>
+                  {[
+                    { key: 'tpvAnalysisEnabled', label: 'Análise de TPV', icon: BarChart3, color: 'text-blue-600' },
+                    { key: 'merchantHealthEnabled', label: 'Saúde dos Merchants', icon: TrendingUp, color: 'text-green-600' },
+                    { key: 'revenueAnalysisEnabled', label: 'Análise de Receita', icon: DollarSign, color: 'text-emerald-600' },
+                    { key: 'riskMonitoringEnabled', label: 'Monitoramento de Risco', icon: AlertTriangle, color: 'text-red-600' },
+                  ].map(({ key, label, icon: Icon, color }) => (
+                    <div key={key} className="flex items-center justify-between p-3 rounded-lg border mb-2">
+                      <div className="flex items-center gap-2">
+                        <Icon className={`w-4 h-4 ${color}`} />
+                        <Label className="text-sm">{label}</Label>
+                      </div>
+                      <Switch 
+                        checked={copilotSettings[key]}
+                        onCheckedChange={(v) => setCopilotSettings({...copilotSettings, [key]: v})}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Alerts */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Bell className="w-5 h-5 text-purple-600" />
+                  Alertas Automáticos
+                </CardTitle>
+                <CardDescription>Configure quando o copilot deve alertar a equipe</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div>
+                    <Label className="text-sm">Anomalia de Volume</Label>
+                    <p className="text-xs text-slate-500">Alertar quando TPV variar</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input 
+                      type="number"
+                      value={copilotSettings.volumeAnomalyThreshold}
+                      onChange={(e) => setCopilotSettings({...copilotSettings, volumeAnomalyThreshold: Number(e.target.value)})}
+                      className="w-16 h-8"
+                      disabled={!copilotSettings.volumeAnomalyAlert}
+                    />
+                    <span className="text-xs text-slate-500">%</span>
+                    <Switch 
+                      checked={copilotSettings.volumeAnomalyAlert}
+                      onCheckedChange={(v) => setCopilotSettings({...copilotSettings, volumeAnomalyAlert: v})}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div>
+                    <Label className="text-sm">Risco de Churn</Label>
+                    <p className="text-xs text-slate-500">Merchants com alto risco</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input 
+                      type="number"
+                      value={copilotSettings.churnRiskThreshold}
+                      onChange={(e) => setCopilotSettings({...copilotSettings, churnRiskThreshold: Number(e.target.value)})}
+                      className="w-16 h-8"
+                      disabled={!copilotSettings.churnRiskAlert}
+                    />
+                    <span className="text-xs text-slate-500">score</span>
+                    <Switch 
+                      checked={copilotSettings.churnRiskAlert}
+                      onCheckedChange={(v) => setCopilotSettings({...copilotSettings, churnRiskAlert: v})}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div>
+                    <Label className="text-sm">Queda de Receita</Label>
+                    <p className="text-xs text-slate-500">Vs período anterior</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input 
+                      type="number"
+                      value={copilotSettings.revenueDropThreshold}
+                      onChange={(e) => setCopilotSettings({...copilotSettings, revenueDropThreshold: Number(e.target.value)})}
+                      className="w-16 h-8"
+                      disabled={!copilotSettings.revenueDropAlert}
+                    />
+                    <span className="text-xs text-slate-500">%</span>
+                    <Switch 
+                      checked={copilotSettings.revenueDropAlert}
+                      onCheckedChange={(v) => setCopilotSettings({...copilotSettings, revenueDropAlert: v})}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link to={createPageUrl('AdminIntRecoveryAgent')}>
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:shadow-md transition-all cursor-pointer group">
-                <RefreshCw className="w-8 h-8 text-purple-600 mb-2 group-hover:rotate-180 transition-transform duration-500" />
-                <p className="font-medium text-slate-900 dark:text-white">Recovery Agent</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Recuperação de pagamentos</p>
-              </div>
-            </Link>
-            <Link to={createPageUrl('AdminIntDisputeManager')}>
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:shadow-md transition-all cursor-pointer group">
-                <Shield className="w-8 h-8 text-purple-600 mb-2 group-hover:scale-110 transition-transform" />
-                <p className="font-medium text-slate-900 dark:text-white">Dispute Manager</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Gestão de disputas</p>
-              </div>
-            </Link>
-            <Link to={createPageUrl('AdminIntIdentityOnboarder')}>
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:shadow-md transition-all cursor-pointer group">
-                <Users className="w-8 h-8 text-purple-600 mb-2 group-hover:scale-110 transition-transform" />
-                <p className="font-medium text-slate-900 dark:text-white">Identity Onboarder</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">KYC/KYB Copilot</p>
-              </div>
-            </Link>
-            <Link to={createPageUrl('AdminIntConverterAgent')}>
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:shadow-md transition-all cursor-pointer group">
-                <TrendingUp className="w-8 h-8 text-purple-600 mb-2 group-hover:scale-110 transition-transform" />
-                <p className="font-medium text-slate-900 dark:text-white">Converter Agent</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Otimização de checkout</p>
-              </div>
-            </Link>
+
+          {/* Reports & Notifications */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-purple-600" />
+                  Relatórios Automáticos
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-blue-600" />
+                    <div>
+                      <Label className="text-sm">Relatório Semanal</Label>
+                      <p className="text-xs text-slate-500">Resumo de performance</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Select 
+                      value={copilotSettings.weeklyReportDay}
+                      onValueChange={(v) => setCopilotSettings({...copilotSettings, weeklyReportDay: v})}
+                      disabled={!copilotSettings.weeklyReportEnabled}
+                    >
+                      <SelectTrigger className="w-28 h-8">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="monday">Segunda</SelectItem>
+                        <SelectItem value="tuesday">Terça</SelectItem>
+                        <SelectItem value="wednesday">Quarta</SelectItem>
+                        <SelectItem value="friday">Sexta</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Switch 
+                      checked={copilotSettings.weeklyReportEnabled}
+                      onCheckedChange={(v) => setCopilotSettings({...copilotSettings, weeklyReportEnabled: v})}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-purple-600" />
+                    <div>
+                      <Label className="text-sm">Relatório Mensal</Label>
+                      <p className="text-xs text-slate-500">Análise completa</p>
+                    </div>
+                  </div>
+                  <Switch 
+                    checked={copilotSettings.monthlyReportEnabled}
+                    onCheckedChange={(v) => setCopilotSettings({...copilotSettings, monthlyReportEnabled: v})}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-purple-600" />
+                  Canais de Notificação
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-blue-600" />
+                    <Label className="text-sm">E-mail</Label>
+                  </div>
+                  <Switch 
+                    checked={copilotSettings.notifyByEmail}
+                    onCheckedChange={(v) => setCopilotSettings({...copilotSettings, notifyByEmail: v})}
+                  />
+                </div>
+
+                {copilotSettings.notifyByEmail && (
+                  <div className="pl-4 border-l-2 border-blue-200">
+                    <Label className="text-xs">E-mails de destino</Label>
+                    <Input 
+                      value={copilotSettings.notifyEmails}
+                      onChange={(e) => setCopilotSettings({...copilotSettings, notifyEmails: e.target.value})}
+                      placeholder="email1@pagsmile.com, email2@pagsmile.com"
+                      className="h-8 mt-1"
+                    />
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-purple-600" />
+                    <Label className="text-sm">Slack</Label>
+                  </div>
+                  <Switch 
+                    checked={copilotSettings.notifyBySlack}
+                    onCheckedChange={(v) => setCopilotSettings({...copilotSettings, notifyBySlack: v})}
+                  />
+                </div>
+
+                {copilotSettings.notifyBySlack && (
+                  <div className="pl-4 border-l-2 border-purple-200">
+                    <Label className="text-xs">Webhook URL do Slack</Label>
+                    <Input 
+                      value={copilotSettings.slackWebhook}
+                      onChange={(e) => setCopilotSettings({...copilotSettings, slackWebhook: e.target.value})}
+                      placeholder="https://hooks.slack.com/services/..."
+                      className="h-8 mt-1"
+                    />
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
+
+          <div className="flex justify-end">
+            <Button className="bg-purple-600 hover:bg-purple-700">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar Configurações do Copilot
+            </Button>
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* Agent Chat Interface */}
       <AgentChatInterface
