@@ -225,7 +225,7 @@ export default function DisputeManager() {
             <Download className="w-4 h-4 mr-2" />
             Exportar
           </Button>
-          <Link to={createPageUrl('DisputeAgentSettings')}>
+          <Link to={createPageUrl('DisputeManagerSettings')}>
             <Button variant="outline" size="sm">
               <Settings className="w-4 h-4 mr-2" />
               Configurar

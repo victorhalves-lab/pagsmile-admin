@@ -195,10 +195,12 @@ export default function ConverterAgent() {
             <TrendingUp className="w-3 h-3 mr-1" />
             +{liftPercentage}% lift atual
           </Badge>
-          <Button variant="outline" size="sm">
-            <Settings className="w-4 h-4 mr-2" />
-            Configurar
-          </Button>
+          <Link to={createPageUrl('ConverterAgentSettings')}>
+            <Button variant="outline" size="sm">
+              <Settings className="w-4 h-4 mr-2" />
+              Configurar
+            </Button>
+          </Link>
         </div>
       </div>
 
