@@ -620,5 +620,147 @@ export default {
     close_window: "关闭窗口",
     start_verification: "开始验证",
     of: "/"
+  },
+  
+  // Compliance Form Fields
+  compliance_forms: {
+    // Step 1 - Identification
+    company_identification: "公司识别",
+    basic_registration_data: "基本注册数据",
+    cnpj: "税务登记号 (CNPJ)",
+    cnpj_placeholder: "00.000.000/0000-00",
+    activity_start_date: "业务开始日期",
+    corporate_name: "法定名称",
+    corporate_name_placeholder: "输入完整法定名称",
+    trade_name: "商号",
+    trade_name_placeholder: "公司商业名称（可选）",
+    
+    // Step 2 - Company Type
+    company_type: "公司类型",
+    legal_nature_structure: "法律性质和结构",
+    company_type_field: "公司类型",
+    ltda: "有限责任",
+    ltda_desc: "有限责任公司",
+    sa: "股份公司",
+    sa_desc: "股份有限公司",
+    eireli: "独资企业",
+    eireli_desc: "个人独资企业",
+    mei: "微型企业",
+    mei_desc: "微型企业主",
+    slu: "单人有限",
+    slu_desc: "单人有限责任公司",
+    other: "其他",
+    other_desc: "其他法律性质",
+    employees_count: "员工数量",
+    
+    // Step 3 - Address
+    commercial_address: "商业地址",
+    headquarters_branches: "总部和分支机构位置",
+    registered_address: "注册商业地址",
+    address_placeholder: "街道、门牌号、单元、区、市、省、邮编",
+    zip_code: "邮政编码",
+    state: "省/州",
+    state_placeholder: "省/州",
+    other_offices: "其他办公室/分支机构",
+    other_offices_placeholder: "如有，请列出分支地址（可选）",
+    
+    // Step 4 - Activity
+    economic_activity: "经济活动",
+    cnae_description: "行业代码和业务描述",
+    main_cnae: "主要行业代码",
+    main_cnae_placeholder: "主要行业代码和描述",
+    secondary_cnaes: "次要行业代码",
+    secondary_cnaes_placeholder: "列出次要代码（如有，可选）",
+    activity_description: "详细活动描述",
+    activity_description_placeholder: "详细描述贵公司的业务、提供的产品或服务，以及如何在市场上运营...",
+    
+    // Step 5 - Volume
+    financial_volume: "财务量",
+    transaction_estimates: "交易量估算",
+    estimated_monthly_volume: "预估月交易量",
+    currency_placeholder: "¥ 0.00",
+    monthly_transactions_help: "预期每月交易总额",
+    average_ticket: "平均客单价",
+    average_ticket_help: "平均交易金额",
+    monthly_transactions: "月交易数量",
+    monthly_transactions_placeholder: "例如：1000",
+    annual_revenue: "年营收",
+    
+    // Step 6 - Client Profile
+    client_profile: "客户档案",
+    target_audience: "目标受众和位置",
+    client_type: "客户类型",
+    individual: "个人",
+    individual_desc: "面向终端消费者销售",
+    business: "企业",
+    business_desc: "面向其他企业销售",
+    both: "两者兼有",
+    both_desc: "同时服务个人和企业",
+    international_proportion: "国际客户比例",
+    main_clients: "主要客户",
+    main_clients_placeholder: "列出主要客户或服务的细分市场（可选）",
+    
+    // Step 7 - Responsibles
+    company_responsibles: "公司负责人",
+    main_contacts: "主要联系人",
+    legal_representative: "法定代表人/主要负责人",
+    full_name: "全名",
+    responsible_name_placeholder: "负责人姓名",
+    cpf: "身份证号",
+    cpf_placeholder: "000.000.000-00",
+    email: "邮箱",
+    email_placeholder: "email@company.com",
+    phone: "电话",
+    phone_placeholder: "(00) 00000-0000",
+    financial_contact: "财务联系人（如不同）",
+    financial_name_placeholder: "财务联系人姓名",
+    financial_email_placeholder: "finance@company.com",
+    
+    // Step 8 - PLD Sanctions
+    pld_sanctions: "反洗钱 - 制裁与限制",
+    sanctions_verification: "与限制名单关联的核实",
+    yes: "是",
+    no: "否",
+    sanctions_lists_question: "是否有任何合伙人、董事或管理人员在国际制裁名单上？",
+    sanctions_lists_detail: "详细描述哪些名单及相关情况",
+    sanctioned_countries_question: "公司是否与被制裁国家有商业往来？",
+    sanctioned_countries_detail: "哪些国家以及什么类型的联系（出口、进口、合作等）",
+    sanctioned_control_question: "公司是否由制裁名单上的个人或实体控制？",
+    sanctioned_control_detail: "详细说明控制类型和关系",
+    
+    // Step 9 - PLD Risks
+    pld_risks: "反洗钱 - 风险分析",
+    risk_assessment: "洗钱风险评估",
+    pep_question: "是否有任何合伙人或管理人员是政治公众人物（PEP）？",
+    pep_detail: "提供姓名、政治职位或担任的公职",
+    money_laundering_question: "公司是否曾因洗钱被调查或定罪？",
+    money_laundering_detail: "描述历史和当前情况",
+    atypical_operations_question: "公司是否进行非典型或现金交易？",
+    atypical_operations_detail: "描述这些操作的性质",
+    
+    // Step 10 - PLD Operation
+    pld_operation: "反洗钱 - 运营控制",
+    compliance_procedures: "内部合规程序",
+    pld_policy_question: "公司是否有书面的反洗钱/反恐融资内部政策？",
+    pld_policy_detail: "简要描述政策及其最后更新时间",
+    pld_training_question: "公司是否定期对员工进行反洗钱/反恐融资培训？",
+    pld_training_detail: "提供培训频率和范围",
+    kyc_procedures_question: "公司是否有KYC（了解您的客户）程序？",
+    kyc_procedures_detail: "描述用于了解和验证客户的程序",
+    
+    // Step 11 - Confirmation
+    confirmation_declarations: "确认与声明",
+    final_review: "最终审核和条款接受",
+    almost_there: "即将完成！",
+    review_message: "请在完成前检查所提供的所有信息。完成此步骤后，您将被引导至文件提交。",
+    declaration_1: "我声明所提供的所有信息均为真实，并符合公司的实际情况，承诺告知任何相关变更。",
+    declaration_2: "我授权PagSmile进行必要的查询和核实，以验证向机构和信用局提供的注册信息。",
+    declaration_3_prefix: "我已阅读并同意PagSmile的",
+    terms_of_use: "使用条款",
+    and: "和",
+    privacy_policy: "隐私政策",
+    declaration_3_suffix: "。",
+    security_notice: "安全提示：",
+    security_message: "您的数据受端到端加密保护，并按照数据保护法规进行处理。"
   }
 };

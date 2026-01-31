@@ -620,5 +620,147 @@ export default {
     close_window: "Fechar Janela",
     start_verification: "Iniciar Verificação",
     of: "de"
+  },
+  
+  // Compliance Form Fields
+  compliance_forms: {
+    // Step 1 - Identification
+    company_identification: "Identificação da Empresa",
+    basic_registration_data: "Dados básicos de cadastro",
+    cnpj: "CNPJ",
+    cnpj_placeholder: "00.000.000/0000-00",
+    activity_start_date: "Início das Atividades",
+    corporate_name: "Razão Social",
+    corporate_name_placeholder: "Digite a razão social completa",
+    trade_name: "Nome Fantasia",
+    trade_name_placeholder: "Nome comercial da empresa (opcional)",
+    
+    // Step 2 - Company Type
+    company_type: "Tipo de Empresa",
+    legal_nature_structure: "Natureza jurídica e estrutura",
+    company_type_field: "Tipo de Empresa",
+    ltda: "LTDA",
+    ltda_desc: "Sociedade Limitada",
+    sa: "S.A.",
+    sa_desc: "Sociedade Anônima",
+    eireli: "EIRELI",
+    eireli_desc: "Empresa Individual",
+    mei: "MEI",
+    mei_desc: "Microempreendedor",
+    slu: "SLU",
+    slu_desc: "Sociedade Limitada Unipessoal",
+    other: "Outro",
+    other_desc: "Outra natureza jurídica",
+    employees_count: "Quantidade de Colaboradores",
+    
+    // Step 3 - Address
+    commercial_address: "Endereço Comercial",
+    headquarters_branches: "Localização da sede e filiais",
+    registered_address: "Endereço Comercial Registrado",
+    address_placeholder: "Rua, Número, Complemento, Bairro, Cidade, Estado, CEP",
+    zip_code: "CEP",
+    state: "Estado",
+    state_placeholder: "UF",
+    other_offices: "Outros Escritórios / Filiais",
+    other_offices_placeholder: "Se houver, liste os endereços das filiais (opcional)",
+    
+    // Step 4 - Activity
+    economic_activity: "Atividade Econômica",
+    cnae_description: "CNAE e descrição do negócio",
+    main_cnae: "CNAE Principal",
+    main_cnae_placeholder: "Código e Descrição do CNAE Principal",
+    secondary_cnaes: "CNAEs Secundários",
+    secondary_cnaes_placeholder: "Liste os CNAEs secundários, se houver (opcional)",
+    activity_description: "Descrição Detalhada da Atividade",
+    activity_description_placeholder: "Descreva detalhadamente o que sua empresa faz, quais produtos ou serviços oferece, e como opera no mercado...",
+    
+    // Step 5 - Volume
+    financial_volume: "Volumetria Financeira",
+    transaction_estimates: "Estimativas de volume transacionado",
+    estimated_monthly_volume: "Volume Estimado por Mês",
+    currency_placeholder: "R$ 0,00",
+    monthly_transactions_help: "Valor total esperado de transações mensais",
+    average_ticket: "Ticket Médio",
+    average_ticket_help: "Valor médio por transação",
+    monthly_transactions: "Quantidade de Transações/Mês",
+    monthly_transactions_placeholder: "Ex: 1000",
+    annual_revenue: "Faturamento Anual",
+    
+    // Step 6 - Client Profile
+    client_profile: "Perfil dos Clientes",
+    target_audience: "Público-alvo e localização",
+    client_type: "Tipo de Clientes",
+    individual: "Pessoa Física",
+    individual_desc: "Vende para consumidores finais",
+    business: "Pessoa Jurídica",
+    business_desc: "Vende para outras empresas",
+    both: "Ambos",
+    both_desc: "Atende PF e PJ",
+    international_proportion: "Proporção de Clientes Internacionais",
+    main_clients: "Principais Clientes",
+    main_clients_placeholder: "Liste os principais clientes ou segmentos que atende (opcional)",
+    
+    // Step 7 - Responsibles
+    company_responsibles: "Responsáveis pela Empresa",
+    main_contacts: "Contatos principais",
+    legal_representative: "Representante Legal / Responsável Principal",
+    full_name: "Nome Completo",
+    responsible_name_placeholder: "Nome do responsável",
+    cpf: "CPF",
+    cpf_placeholder: "000.000.000-00",
+    email: "E-mail",
+    email_placeholder: "email@empresa.com",
+    phone: "Telefone",
+    phone_placeholder: "(00) 00000-0000",
+    financial_contact: "Contato Financeiro (se diferente)",
+    financial_name_placeholder: "Nome do contato financeiro",
+    financial_email_placeholder: "financeiro@empresa.com",
+    
+    // Step 8 - PLD Sanctions
+    pld_sanctions: "PLD - Sanções e Restrições",
+    sanctions_verification: "Verificação de vínculos com listas restritivas",
+    yes: "Sim",
+    no: "Não",
+    sanctions_lists_question: "Algum sócio, diretor ou administrador está em listas de sanções internacionais?",
+    sanctions_lists_detail: "Descreva detalhadamente quais listas e as circunstâncias",
+    sanctioned_countries_question: "A empresa possui vínculos comerciais com países sancionados?",
+    sanctioned_countries_detail: "Quais países e qual o tipo de vínculo (exportação, importação, parceria, etc.)",
+    sanctioned_control_question: "A empresa é controlada por pessoa ou entidade que está em lista de sanções?",
+    sanctioned_control_detail: "Detalhe o tipo de controle e a relação",
+    
+    // Step 9 - PLD Risks
+    pld_risks: "PLD - Análise de Riscos",
+    risk_assessment: "Avaliação de riscos de lavagem de dinheiro",
+    pep_question: "Algum sócio ou administrador é Pessoa Politicamente Exposta (PEP)?",
+    pep_detail: "Informe o nome, cargo político ou função pública exercida",
+    money_laundering_question: "A empresa já foi investigada ou condenada por lavagem de dinheiro?",
+    money_laundering_detail: "Descreva o histórico e situação atual",
+    atypical_operations_question: "A empresa realiza operações com valores atípicos ou em espécie?",
+    atypical_operations_detail: "Descreva a natureza dessas operações",
+    
+    // Step 10 - PLD Operation
+    pld_operation: "PLD - Controles Operacionais",
+    compliance_procedures: "Procedimentos internos de compliance",
+    pld_policy_question: "A empresa possui política interna de PLD/FT documentada?",
+    pld_policy_detail: "Descreva resumidamente a política e quando foi atualizada pela última vez",
+    pld_training_question: "A empresa realiza treinamentos periódicos sobre PLD/FT com os colaboradores?",
+    pld_training_detail: "Informe a frequência e abrangência dos treinamentos",
+    kyc_procedures_question: "A empresa possui procedimentos de KYC (Conheça seu Cliente)?",
+    kyc_procedures_detail: "Descreva os procedimentos adotados para conhecer e validar clientes",
+    
+    // Step 11 - Confirmation
+    confirmation_declarations: "Confirmação e Declarações",
+    final_review: "Revisão final e aceite dos termos",
+    almost_there: "Quase lá!",
+    review_message: "Por favor, revise todas as informações fornecidas antes de finalizar. Após esta etapa, você será direcionado para o envio de documentos.",
+    declaration_1: "Declaro que todas as informações fornecidas são verdadeiras e correspondem à realidade da empresa, comprometendo-me a informar qualquer alteração relevante.",
+    declaration_2: "Autorizo a PagSmile a realizar consultas e verificações necessárias para validação das informações cadastrais junto a órgãos e bureaus de crédito.",
+    declaration_3_prefix: "Li e concordo com os",
+    terms_of_use: "Termos de Uso",
+    and: "e a",
+    privacy_policy: "Política de Privacidade",
+    declaration_3_suffix: "da PagSmile.",
+    security_notice: "Segurança:",
+    security_message: "Seus dados são protegidos com criptografia de ponta a ponta e tratados de acordo com a Lei Geral de Proteção de Dados (LGPD)."
   }
 };

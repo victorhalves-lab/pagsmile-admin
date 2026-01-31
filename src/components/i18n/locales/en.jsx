@@ -620,5 +620,147 @@ export default {
     close_window: "Close Window",
     start_verification: "Start Verification",
     of: "of"
+  },
+  
+  // Compliance Form Fields
+  compliance_forms: {
+    // Step 1 - Identification
+    company_identification: "Company Identification",
+    basic_registration_data: "Basic registration data",
+    cnpj: "Tax ID (CNPJ)",
+    cnpj_placeholder: "00.000.000/0000-00",
+    activity_start_date: "Activity Start Date",
+    corporate_name: "Legal Name",
+    corporate_name_placeholder: "Enter the full legal name",
+    trade_name: "Trade Name",
+    trade_name_placeholder: "Commercial name of the company (optional)",
+    
+    // Step 2 - Company Type
+    company_type: "Company Type",
+    legal_nature_structure: "Legal nature and structure",
+    company_type_field: "Company Type",
+    ltda: "LLC",
+    ltda_desc: "Limited Liability Company",
+    sa: "Corp.",
+    sa_desc: "Corporation",
+    eireli: "Sole Prop.",
+    eireli_desc: "Sole Proprietorship",
+    mei: "Micro",
+    mei_desc: "Microentrepreneur",
+    slu: "Single LLC",
+    slu_desc: "Single-Member LLC",
+    other: "Other",
+    other_desc: "Other legal nature",
+    employees_count: "Number of Employees",
+    
+    // Step 3 - Address
+    commercial_address: "Commercial Address",
+    headquarters_branches: "Headquarters and branches location",
+    registered_address: "Registered Commercial Address",
+    address_placeholder: "Street, Number, Suite, District, City, State, ZIP",
+    zip_code: "ZIP Code",
+    state: "State",
+    state_placeholder: "State",
+    other_offices: "Other Offices / Branches",
+    other_offices_placeholder: "If any, list branch addresses (optional)",
+    
+    // Step 4 - Activity
+    economic_activity: "Economic Activity",
+    cnae_description: "Industry code and business description",
+    main_cnae: "Main Industry Code",
+    main_cnae_placeholder: "Main Industry Code and Description",
+    secondary_cnaes: "Secondary Industry Codes",
+    secondary_cnaes_placeholder: "List secondary codes, if any (optional)",
+    activity_description: "Detailed Activity Description",
+    activity_description_placeholder: "Describe in detail what your company does, what products or services it offers, and how it operates in the market...",
+    
+    // Step 5 - Volume
+    financial_volume: "Financial Volume",
+    transaction_estimates: "Transaction volume estimates",
+    estimated_monthly_volume: "Estimated Monthly Volume",
+    currency_placeholder: "$ 0.00",
+    monthly_transactions_help: "Total expected monthly transaction value",
+    average_ticket: "Average Ticket",
+    average_ticket_help: "Average transaction value",
+    monthly_transactions: "Monthly Transactions",
+    monthly_transactions_placeholder: "E.g.: 1000",
+    annual_revenue: "Annual Revenue",
+    
+    // Step 6 - Client Profile
+    client_profile: "Client Profile",
+    target_audience: "Target audience and location",
+    client_type: "Client Type",
+    individual: "Individuals",
+    individual_desc: "Sells to final consumers",
+    business: "Businesses",
+    business_desc: "Sells to other companies",
+    both: "Both",
+    both_desc: "Serves individuals and businesses",
+    international_proportion: "International Clients Proportion",
+    main_clients: "Main Clients",
+    main_clients_placeholder: "List main clients or segments served (optional)",
+    
+    // Step 7 - Responsibles
+    company_responsibles: "Company Responsibles",
+    main_contacts: "Main contacts",
+    legal_representative: "Legal Representative / Main Responsible",
+    full_name: "Full Name",
+    responsible_name_placeholder: "Responsible person's name",
+    cpf: "Personal ID",
+    cpf_placeholder: "000.000.000-00",
+    email: "Email",
+    email_placeholder: "email@company.com",
+    phone: "Phone",
+    phone_placeholder: "(00) 00000-0000",
+    financial_contact: "Financial Contact (if different)",
+    financial_name_placeholder: "Financial contact name",
+    financial_email_placeholder: "finance@company.com",
+    
+    // Step 8 - PLD Sanctions
+    pld_sanctions: "AML - Sanctions and Restrictions",
+    sanctions_verification: "Verification of links with restrictive lists",
+    yes: "Yes",
+    no: "No",
+    sanctions_lists_question: "Is any partner, director, or administrator on international sanctions lists?",
+    sanctions_lists_detail: "Describe in detail which lists and the circumstances",
+    sanctioned_countries_question: "Does the company have commercial ties with sanctioned countries?",
+    sanctioned_countries_detail: "Which countries and what type of link (export, import, partnership, etc.)",
+    sanctioned_control_question: "Is the company controlled by a person or entity on a sanctions list?",
+    sanctioned_control_detail: "Detail the type of control and relationship",
+    
+    // Step 9 - PLD Risks
+    pld_risks: "AML - Risk Analysis",
+    risk_assessment: "Money laundering risk assessment",
+    pep_question: "Is any partner or administrator a Politically Exposed Person (PEP)?",
+    pep_detail: "Provide the name, political position, or public function held",
+    money_laundering_question: "Has the company been investigated or convicted for money laundering?",
+    money_laundering_detail: "Describe the history and current situation",
+    atypical_operations_question: "Does the company perform atypical or cash operations?",
+    atypical_operations_detail: "Describe the nature of these operations",
+    
+    // Step 10 - PLD Operation
+    pld_operation: "AML - Operational Controls",
+    compliance_procedures: "Internal compliance procedures",
+    pld_policy_question: "Does the company have a documented AML/CFT internal policy?",
+    pld_policy_detail: "Briefly describe the policy and when it was last updated",
+    pld_training_question: "Does the company conduct periodic AML/CFT training with employees?",
+    pld_training_detail: "Provide the frequency and scope of trainings",
+    kyc_procedures_question: "Does the company have KYC (Know Your Customer) procedures?",
+    kyc_procedures_detail: "Describe the procedures adopted to know and validate customers",
+    
+    // Step 11 - Confirmation
+    confirmation_declarations: "Confirmation and Declarations",
+    final_review: "Final review and terms acceptance",
+    almost_there: "Almost there!",
+    review_message: "Please review all the information provided before finishing. After this step, you will be directed to document submission.",
+    declaration_1: "I declare that all information provided is true and corresponds to the company's reality, committing to inform any relevant changes.",
+    declaration_2: "I authorize PagSmile to perform necessary consultations and verifications for validation of registration information with agencies and credit bureaus.",
+    declaration_3_prefix: "I have read and agree to the",
+    terms_of_use: "Terms of Use",
+    and: "and the",
+    privacy_policy: "Privacy Policy",
+    declaration_3_suffix: "of PagSmile.",
+    security_notice: "Security:",
+    security_message: "Your data is protected with end-to-end encryption and handled in accordance with data protection laws."
   }
 };
