@@ -218,15 +218,15 @@ export default function FinancialOverview() {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Fluxo de Caixa</CardTitle>
+              <CardTitle className="text-lg">{t('financial.cash_flow')}</CardTitle>
               <Select value={period} onValueChange={setPeriod}>
                 <SelectTrigger className="w-[140px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="7">7 dias</SelectItem>
-                  <SelectItem value="15">15 dias</SelectItem>
-                  <SelectItem value="30">30 dias</SelectItem>
+                  <SelectItem value="7">7 {t('financial.days')}</SelectItem>
+                  <SelectItem value="15">15 {t('financial.days')}</SelectItem>
+                  <SelectItem value="30">30 {t('financial.days')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -251,7 +251,7 @@ export default function FinancialOverview() {
                     stackId="1"
                     stroke="#10b981" 
                     fill="#d1fae5"
-                    name="Entradas"
+                    name={t('financial.entries')}
                   />
                   <Area 
                     type="monotone" 
@@ -259,7 +259,7 @@ export default function FinancialOverview() {
                     stackId="2"
                     stroke="#ef4444" 
                     fill="#fee2e2"
-                    name="Saídas"
+                    name={t('financial.exits')}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -267,11 +267,11 @@ export default function FinancialOverview() {
             <div className="flex justify-center gap-6 mt-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="text-sm text-gray-600">Entradas</span>
+                <span className="text-sm text-gray-600">{t('financial.entries')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500" />
-                <span className="text-sm text-gray-600">Saídas</span>
+                <span className="text-sm text-gray-600">{t('financial.exits')}</span>
               </div>
             </div>
           </CardContent>
@@ -281,10 +281,10 @@ export default function FinancialOverview() {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Próximos Recebíveis</CardTitle>
+              <CardTitle className="text-lg">{t('financial.next_receivables')}</CardTitle>
               <Button variant="ghost" size="sm" asChild>
                 <Link to={createPageUrl('ReceivablesAgenda')}>
-                  Ver Agenda
+                  {t('financial.view_schedule')}
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </Link>
               </Button>
@@ -306,7 +306,7 @@ export default function FinancialOverview() {
               </ResponsiveContainer>
             </div>
             <div className="flex items-center justify-between pt-4 border-t mt-4">
-              <span className="text-sm text-gray-600">Total a receber</span>
+              <span className="text-sm text-gray-600">{t('financial.total_receivable')}</span>
               <span className="text-xl font-bold text-blue-600">
                 {formatCurrency(balances.pending)}
               </span>
@@ -319,10 +319,10 @@ export default function FinancialOverview() {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">Últimas Movimentações</CardTitle>
+            <CardTitle className="text-lg">{t('financial.recent_movements')}</CardTitle>
             <Button variant="outline" size="sm" asChild>
               <Link to={createPageUrl('FinancialStatement')}>
-                Ver Extrato Completo
+                {t('financial.view_full_statement')}
               </Link>
             </Button>
           </div>
@@ -362,7 +362,7 @@ export default function FinancialOverview() {
             ))}
             {entries.length === 0 && (
               <div className="text-center py-8 text-gray-500">
-                Nenhuma movimentação recente
+                {t('financial.no_recent_movements')}
               </div>
             )}
           </div>

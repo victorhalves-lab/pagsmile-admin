@@ -63,16 +63,17 @@ const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
 };
 
-const statusConfig = {
-  pending: { label: 'Pendente', color: 'bg-yellow-100 text-yellow-700', icon: Clock },
-  processing: { label: 'Processando', color: 'bg-blue-100 text-blue-700', icon: Loader2 },
-  completed: { label: 'Concluído', color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
-  failed: { label: 'Falhou', color: 'bg-red-100 text-red-700', icon: XCircle },
-  cancelled: { label: 'Cancelado', color: 'bg-gray-100 text-gray-700', icon: XCircle },
-};
+const getStatusConfig = (t) => ({
+  pending: { label: t('common.pending'), color: 'bg-yellow-100 text-yellow-700', icon: Clock },
+  processing: { label: t('common.processing'), color: 'bg-blue-100 text-blue-700', icon: Loader2 },
+  completed: { label: t('common.completed'), color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
+  failed: { label: t('common.failed'), color: 'bg-red-100 text-red-700', icon: XCircle },
+  cancelled: { label: t('common.cancelled'), color: 'bg-gray-100 text-gray-700', icon: XCircle },
+});
 
 export default function Withdrawals() {
   const { t } = useTranslation();
+  const statusConfig = getStatusConfig(t);
   const queryClient = useQueryClient();
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
   const [showAccountDialog, setShowAccountDialog] = useState(false);
@@ -187,10 +188,10 @@ export default function Withdrawals() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-green-700">Saldo Disponível para Saque</p>
+              <p className="text-sm text-green-700">{t('financial.available_for_withdrawal')}</p>
               <p className="text-3xl font-bold text-green-800">{formatCurrency(availableBalance)}</p>
               <p className="text-xs text-green-600 mt-1">
-                Mínimo para saque: {formatCurrency(minWithdrawal)}
+                {t('financial.min_withdrawal')}: {formatCurrency(minWithdrawal)}
               </p>
             </div>
             <div className="p-4 bg-green-100 rounded-full">
@@ -202,9 +203,9 @@ export default function Withdrawals() {
 
       <Tabs defaultValue="history" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="history">Histórico de Saques</TabsTrigger>
-          <TabsTrigger value="accounts">Contas Bancárias</TabsTrigger>
-          <TabsTrigger value="auto">Saque Automático</TabsTrigger>
+          <TabsTrigger value="history">{t('financial.withdrawal_history')}</TabsTrigger>
+          <TabsTrigger value="accounts">{t('financial.bank_accounts')}</TabsTrigger>
+          <TabsTrigger value="auto">{t('financial.auto_withdrawal')}</TabsTrigger>
         </TabsList>
 
         {/* History Tab */}
@@ -212,10 +213,10 @@ export default function Withdrawals() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Histórico de Saques</CardTitle>
+                <CardTitle className="text-lg">{t('financial.withdrawal_history')}</CardTitle>
                 <Button variant="outline" size="sm">
                   <Download className="w-4 h-4 mr-2" />
-                  Exportar
+                  {t('financial.export')}
                 </Button>
               </div>
             </CardHeader>
@@ -224,13 +225,13 @@ export default function Withdrawals() {
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-gray-50">
-                      <TableHead>Data</TableHead>
-                      <TableHead>Valor</TableHead>
-                      <TableHead>Taxa</TableHead>
-                      <TableHead>Líquido</TableHead>
-                      <TableHead>Destino</TableHead>
-                      <TableHead>Tipo</TableHead>
-                      <TableHead>Status</TableHead>
+                      <TableHead>{t('financial.date')}</TableHead>
+                      <TableHead>{t('financial.value')}</TableHead>
+                      <TableHead>{t('financial.fee_label')}</TableHead>
+                      <TableHead>{t('financial.net')}</TableHead>
+                      <TableHead>{t('financial.destination')}</TableHead>
+                      <TableHead>{t('financial.type')}</TableHead>
+                      <TableHead>{t('common.status')}</TableHead>
                       <TableHead></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -255,7 +256,7 @@ export default function Withdrawals() {
                             {formatCurrency(withdrawal.amount)}
                           </TableCell>
                           <TableCell className="text-red-600">
-                            {withdrawal.fee > 0 ? `-${formatCurrency(withdrawal.fee)}` : 'Grátis'}
+                            {withdrawal.fee > 0 ? `-${formatCurrency(withdrawal.fee)}` : t('financial.free')}
                           </TableCell>
                           <TableCell className="font-semibold text-green-600">
                             {formatCurrency(withdrawal.net_amount)}
@@ -277,7 +278,7 @@ export default function Withdrawals() {
                           </TableCell>
                           <TableCell>
                             <Badge variant="outline" className="capitalize">
-                              {withdrawal.type === 'manual' ? 'Manual' : 'Automático'}
+                              {withdrawal.type === 'manual' ? t('financial.manual') : t('financial.automatic')}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -305,7 +306,7 @@ export default function Withdrawals() {
               {withdrawals.length === 0 && (
                 <div className="text-center py-12 text-gray-500">
                   <ArrowUpFromLine className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p>Nenhum saque realizado ainda</p>
+                  <p>{t('financial.no_withdrawals')}</p>
                 </div>
               )}
             </CardContent>
@@ -318,12 +319,12 @@ export default function Withdrawals() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg">Contas Bancárias</CardTitle>
-                  <CardDescription>Gerencie suas contas para receber saques</CardDescription>
+                  <CardTitle className="text-lg">{t('financial.bank_accounts')}</CardTitle>
+                  <CardDescription>{t('financial.manage_accounts')}</CardDescription>
                 </div>
                 <Button onClick={() => setShowAccountDialog(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Adicionar Conta
+                  {t('financial.add_account')}
                 </Button>
               </div>
             </CardHeader>
@@ -350,7 +351,7 @@ export default function Withdrawals() {
                           <div className="flex items-center gap-2">
                             <p className="font-medium">{account.bank_name}</p>
                             {account.is_primary && (
-                              <Badge className="bg-green-100 text-green-700 text-xs">Principal</Badge>
+                              <Badge className="bg-green-100 text-green-700 text-xs">{t('financial.primary')}</Badge>
                             )}
                           </div>
                           <p className="text-sm text-gray-500">
@@ -367,12 +368,12 @@ export default function Withdrawals() {
                         {account.is_validated ? (
                           <Badge className="bg-green-100 text-green-700">
                             <CheckCircle2 className="w-3 h-3 mr-1" />
-                            Validada
+                            {t('financial.validated')}
                           </Badge>
                         ) : (
                           <Badge className="bg-yellow-100 text-yellow-700">
                             <AlertTriangle className="w-3 h-3 mr-1" />
-                            Pendente
+                            {t('financial.pending')}
                           </Badge>
                         )}
                       </div>
@@ -382,10 +383,10 @@ export default function Withdrawals() {
               ) : (
                 <div className="text-center py-12 text-gray-500">
                   <Building2 className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p>Nenhuma conta bancária cadastrada</p>
+                  <p>{t('financial.no_bank_accounts')}</p>
                   <Button className="mt-4" onClick={() => setShowAccountDialog(true)}>
                     <Plus className="w-4 h-4 mr-2" />
-                    Adicionar Conta
+                    {t('financial.add_account')}
                   </Button>
                 </div>
               )}
@@ -399,18 +400,18 @@ export default function Withdrawals() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="w-5 h-5" />
-                Configurações de Saque Automático
+                {t('financial.auto_withdrawal_settings')}
               </CardTitle>
               <CardDescription>
-                Configure para sacar automaticamente quando atingir as condições definidas
+                {t('financial.auto_withdrawal_desc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div>
-                  <Label className="text-base text-blue-900">Habilitar Saque Automático</Label>
+                  <Label className="text-base text-blue-900">{t('financial.enable_auto_withdrawal')}</Label>
                   <p className="text-sm text-blue-700">
-                    Sacar automaticamente quando atingir as condições
+                    {t('financial.auto_when_conditions')}
                   </p>
                 </div>
                 <Switch
@@ -423,7 +424,7 @@ export default function Withdrawals() {
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Frequência</Label>
+                      <Label>{t('financial.frequency')}</Label>
                       <Select
                         value={config.auto_frequency}
                         onValueChange={(value) => handleConfigChange('auto_frequency', value)}
@@ -432,17 +433,17 @@ export default function Withdrawals() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="daily">Diário</SelectItem>
-                          <SelectItem value="weekly">Semanal</SelectItem>
-                          <SelectItem value="biweekly">Quinzenal</SelectItem>
-                          <SelectItem value="monthly">Mensal</SelectItem>
+                          <SelectItem value="daily">{t('financial.daily')}</SelectItem>
+                          <SelectItem value="weekly">{t('financial.weekly')}</SelectItem>
+                          <SelectItem value="biweekly">{t('financial.biweekly')}</SelectItem>
+                          <SelectItem value="monthly">{t('financial.monthly')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     {config.auto_frequency === 'weekly' && (
                       <div className="space-y-2">
-                        <Label>Dia da Semana</Label>
+                        <Label>{t('financial.day_of_week')}</Label>
                         <Select
                           value={String(config.auto_day_of_week || 1)}
                           onValueChange={(value) => handleConfigChange('auto_day_of_week', parseInt(value))}
@@ -451,11 +452,11 @@ export default function Withdrawals() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="1">Segunda-feira</SelectItem>
-                            <SelectItem value="2">Terça-feira</SelectItem>
-                            <SelectItem value="3">Quarta-feira</SelectItem>
-                            <SelectItem value="4">Quinta-feira</SelectItem>
-                            <SelectItem value="5">Sexta-feira</SelectItem>
+                            <SelectItem value="1">{t('financial.monday')}</SelectItem>
+                            <SelectItem value="2">{t('financial.tuesday')}</SelectItem>
+                            <SelectItem value="3">{t('financial.wednesday')}</SelectItem>
+                            <SelectItem value="4">{t('financial.thursday')}</SelectItem>
+                            <SelectItem value="5">{t('financial.friday')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -464,37 +465,37 @@ export default function Withdrawals() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Valor mínimo para sacar</Label>
+                      <Label>{t('financial.min_amount_withdraw')}</Label>
                       <Input
                         type="number"
                         value={config.min_amount_to_withdraw}
                         onChange={(e) => handleConfigChange('min_amount_to_withdraw', parseFloat(e.target.value))}
                       />
                       <p className="text-xs text-gray-500">
-                        Só sacar se saldo disponível for maior que este valor
+                        {t('financial.min_amount_help')}
                       </p>
                     </div>
                     <div className="space-y-2">
-                      <Label>Manter saldo mínimo</Label>
+                      <Label>{t('financial.keep_min_balance')}</Label>
                       <Input
                         type="number"
                         value={config.keep_minimum_balance}
                         onChange={(e) => handleConfigChange('keep_minimum_balance', parseFloat(e.target.value))}
                       />
                       <p className="text-xs text-gray-500">
-                        Deixar este valor na conta como reserva
+                        {t('financial.keep_min_help')}
                       </p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Conta de Destino Padrão</Label>
+                    <Label>{t('financial.default_destination_account')}</Label>
                     <Select
                       value={config.default_bank_account_id || ''}
                       onValueChange={(value) => handleConfigChange('default_bank_account_id', value)}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecione uma conta..." />
+                        <SelectValue placeholder={t('financial.select_account')} />
                       </SelectTrigger>
                       <SelectContent>
                         {bankAccounts.map(account => (
@@ -508,8 +509,8 @@ export default function Withdrawals() {
 
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <Label>Notificar saques automáticos</Label>
-                      <p className="text-xs text-gray-500">Receber e-mail quando um saque automático for executado</p>
+                      <Label>{t('financial.notify_auto_withdrawals')}</Label>
+                      <p className="text-xs text-gray-500">{t('financial.notify_auto_help')}</p>
                     </div>
                     <Switch
                       checked={config.notification_enabled}
@@ -527,20 +528,20 @@ export default function Withdrawals() {
       <Dialog open={showWithdrawDialog} onOpenChange={setShowWithdrawDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Solicitar Saque</DialogTitle>
+            <DialogTitle>{t('financial.request_withdrawal')}</DialogTitle>
             <DialogDescription>
-              Transfira seu saldo disponível para sua conta bancária
+              {t('financial.transfer_available')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             <div className="p-4 bg-green-50 rounded-lg">
-              <p className="text-sm text-green-700">Saldo Disponível</p>
+              <p className="text-sm text-green-700">{t('financial.available_balance')}</p>
               <p className="text-2xl font-bold text-green-800">{formatCurrency(availableBalance)}</p>
             </div>
 
             <div className="space-y-2">
-              <Label>Valor do Saque</Label>
+              <Label>{t('financial.withdrawal_amount')}</Label>
               <Input
                 type="number"
                 value={withdrawAmount}
@@ -560,13 +561,13 @@ export default function Withdrawals() {
                   size="sm"
                   onClick={() => setWithdrawAmount(String(availableBalance))}
                 >
-                  Tudo
+                  {t('financial.all')}
                 </Button>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>Tipo de Transferência</Label>
+              <Label>{t('financial.transfer_type')}</Label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setWithdrawType('pix')}
@@ -581,7 +582,7 @@ export default function Withdrawals() {
                   )} />
                   <div className="text-left">
                     <p className="font-medium text-sm">Pix</p>
-                    <p className="text-xs text-gray-500">Instantâneo</p>
+                    <p className="text-xs text-gray-500">{t('financial.instant')}</p>
                   </div>
                 </button>
                 <button
@@ -597,17 +598,17 @@ export default function Withdrawals() {
                   )} />
                   <div className="text-left">
                     <p className="font-medium text-sm">TED</p>
-                    <p className="text-xs text-gray-500">D+0 ou D+1</p>
+                    <p className="text-xs text-gray-500">{t('financial.d0_d1')}</p>
                   </div>
                 </button>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>Conta de Destino</Label>
+              <Label>{t('financial.destination_account')}</Label>
               <Select value={selectedAccountId} onValueChange={setSelectedAccountId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione uma conta..." />
+                  <SelectValue placeholder={t('financial.select_account')} />
                 </SelectTrigger>
                 <SelectContent>
                   {bankAccounts.map(account => (
@@ -622,7 +623,7 @@ export default function Withdrawals() {
             {config.withdrawal_fee_type !== 'free' && (
               <div className="p-3 bg-yellow-50 rounded-lg text-sm">
                 <p className="text-yellow-700">
-                  Taxa de saque: {config.withdrawal_fee_type === 'fixed' 
+                  {t('financial.withdrawal_fee')}: {config.withdrawal_fee_type === 'fixed' 
                     ? formatCurrency(config.withdrawal_fee_value)
                     : `${config.withdrawal_fee_value}%`
                   }
@@ -633,7 +634,7 @@ export default function Withdrawals() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowWithdrawDialog(false)}>
-              Cancelar
+              {t('common.cancel')}
             </Button>
             <Button 
               onClick={handleWithdraw}
@@ -644,7 +645,7 @@ export default function Withdrawals() {
               ) : (
                 <ArrowUpFromLine className="w-4 h-4 mr-2" />
               )}
-              Confirmar Saque
+              {t('financial.confirm_withdrawal')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -46,7 +46,7 @@ export default function Transactions() {
           </TabsTrigger>
           <TabsTrigger value="recovery" className="gap-1.5">
             <Sparkles className="w-4 h-4" />
-            Recovery Agent
+            {t('transactions.recovery_agent')}
             <Badge className="ml-1 bg-[#00D26A] text-white px-1.5 py-0 text-xs">AI</Badge>
           </TabsTrigger>
         </TabsList>
