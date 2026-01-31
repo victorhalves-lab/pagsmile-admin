@@ -7,6 +7,8 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
 import { 
   Sparkles, 
   AlertTriangle, 
@@ -41,7 +43,9 @@ import {
   ShieldCheck,
   Fingerprint,
   ScanFace,
-  Globe
+  Globe,
+  Save,
+  Bell
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
@@ -64,6 +68,24 @@ export default function AdminIntIdentityOnboarder() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Helena AI Settings State
+  const [helenaSettings, setHelenaSettings] = useState({
+    helenaEnabled: true,
+    autoApproveThreshold: 80,
+    autoRejectThreshold: 30,
+    highRiskMCCAutoApproveLimit: 70,
+    requireManualForHighRiskMCC: true,
+    mccWeight: 25,
+    addressWeight: 20,
+    documentWeight: 25,
+    pepWeight: 15,
+    financialWeight: 15,
+    pepCheckRequired: true,
+    sanctionsCheckRequired: true,
+    addressVerificationRequired: true,
+    livenessRequired: true
+  });
 
   // KPIs
   const kpis = {
@@ -279,10 +301,11 @@ export default function AdminIntIdentityOnboarder() {
 
       {/* Main Tabs */}
       <Tabs defaultValue="simulator" onValueChange={setSelectedTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="simulator">Simulador de Onboarding</TabsTrigger>
           <TabsTrigger value="queue">Fila de Análise ({kpis.pendingAnalysis})</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="helena-config">Configurações Helena AI</TabsTrigger>
         </TabsList>
 
         {/* Simulator Tab */}
@@ -675,6 +698,204 @@ export default function AdminIntIdentityOnboarder() {
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </TabsContent>
+
+        {/* Helena AI Config Tab */}
+        <TabsContent value="helena-config" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Thresholds */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="w-5 h-5 text-indigo-600" />
+                  Thresholds de Decisão
+                </CardTitle>
+                <CardDescription>Defina os limites para decisões automáticas da Helena</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div>
+                    <Label className="text-base">Helena AI Ativa</Label>
+                    <p className="text-sm text-slate-500">Habilita análise automática de KYC/KYB</p>
+                  </div>
+                  <Switch 
+                    checked={helenaSettings.helenaEnabled}
+                    onCheckedChange={(v) => setHelenaSettings({...helenaSettings, helenaEnabled: v})}
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <Label>Threshold de Auto-Aprovação: <span className="text-green-600 font-bold">{helenaSettings.autoApproveThreshold}</span></Label>
+                  <Slider 
+                    value={[helenaSettings.autoApproveThreshold]}
+                    onValueChange={([v]) => setHelenaSettings({...helenaSettings, autoApproveThreshold: v})}
+                    min={60}
+                    max={95}
+                    step={5}
+                  />
+                  <p className="text-xs text-slate-500">Score Helena acima deste valor = aprovação automática</p>
+                </div>
+
+                <div className="space-y-3">
+                  <Label>Threshold de Auto-Rejeição: <span className="text-red-600 font-bold">{helenaSettings.autoRejectThreshold}</span></Label>
+                  <Slider 
+                    value={[helenaSettings.autoRejectThreshold]}
+                    onValueChange={([v]) => setHelenaSettings({...helenaSettings, autoRejectThreshold: v})}
+                    min={10}
+                    max={50}
+                    step={5}
+                  />
+                  <p className="text-xs text-slate-500">Score Helena abaixo deste valor = rejeição automática</p>
+                </div>
+
+                <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-600" />
+                    <Label className="text-amber-800">Zona de Revisão Manual</Label>
+                  </div>
+                  <p className="text-sm text-amber-700">
+                    Scores entre {helenaSettings.autoRejectThreshold} e {helenaSettings.autoApproveThreshold} serão encaminhados para análise manual.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <Label>Limite Auto-Aprovação MCCs Alto Risco: <span className="font-bold">{helenaSettings.highRiskMCCAutoApproveLimit}</span></Label>
+                  <Slider 
+                    value={[helenaSettings.highRiskMCCAutoApproveLimit]}
+                    onValueChange={([v]) => setHelenaSettings({...helenaSettings, highRiskMCCAutoApproveLimit: v})}
+                    min={50}
+                    max={90}
+                    step={5}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-lg border">
+                  <div>
+                    <Label className="text-sm">Exigir Revisão Manual p/ Alto Risco</Label>
+                    <p className="text-xs text-slate-500">Mesmo com score alto</p>
+                  </div>
+                  <Switch 
+                    checked={helenaSettings.requireManualForHighRiskMCC}
+                    onCheckedChange={(v) => setHelenaSettings({...helenaSettings, requireManualForHighRiskMCC: v})}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Risk Weights */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Scale className="w-5 h-5 text-indigo-600" />
+                  Pesos de Risco no Score
+                </CardTitle>
+                <CardDescription>Ajuste a importância de cada fator (total deve ser 100%)</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[
+                  { key: 'mccWeight', label: 'MCC / Atividade', icon: Target },
+                  { key: 'addressWeight', label: 'Validação de Endereço', icon: Building2 },
+                  { key: 'documentWeight', label: 'Documentos', icon: FileText },
+                  { key: 'pepWeight', label: 'PEP / Sanções', icon: ShieldCheck },
+                  { key: 'financialWeight', label: 'Perfil Financeiro', icon: Scale },
+                ].map(({ key, label, icon: Icon }) => (
+                  <div key={key} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4 text-slate-500" />
+                        <Label className="text-sm">{label}</Label>
+                      </div>
+                      <span className="font-bold text-sm">{helenaSettings[key]}%</span>
+                    </div>
+                    <Slider 
+                      value={[helenaSettings[key]]}
+                      onValueChange={([v]) => setHelenaSettings({...helenaSettings, [key]: v})}
+                      min={5}
+                      max={40}
+                      step={5}
+                    />
+                  </div>
+                ))}
+
+                <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800">
+                  <p className="text-sm font-medium">
+                    Total: {helenaSettings.mccWeight + helenaSettings.addressWeight + helenaSettings.documentWeight + helenaSettings.pepWeight + helenaSettings.financialWeight}%
+                  </p>
+                  {(helenaSettings.mccWeight + helenaSettings.addressWeight + helenaSettings.documentWeight + helenaSettings.pepWeight + helenaSettings.financialWeight) !== 100 && (
+                    <p className="text-xs text-amber-600 mt-1">⚠️ O total deve ser 100%</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Validations */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Validações Obrigatórias</CardTitle>
+              <CardDescription>Defina quais verificações são requeridas no processo de KYC/KYB</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5 text-red-600" />
+                    <div>
+                      <Label className="text-sm">Verificação PEP</Label>
+                      <Badge className="bg-red-100 text-red-700 text-xs ml-2">Crítico</Badge>
+                    </div>
+                  </div>
+                  <Switch 
+                    checked={helenaSettings.pepCheckRequired}
+                    onCheckedChange={(v) => setHelenaSettings({...helenaSettings, pepCheckRequired: v})}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-red-600" />
+                    <div>
+                      <Label className="text-sm">Verificação Sanções</Label>
+                      <Badge className="bg-red-100 text-red-700 text-xs ml-2">Crítico</Badge>
+                    </div>
+                  </div>
+                  <Switch 
+                    checked={helenaSettings.sanctionsCheckRequired}
+                    onCheckedChange={(v) => setHelenaSettings({...helenaSettings, sanctionsCheckRequired: v})}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="flex items-center gap-2">
+                    <Building2 className="w-5 h-5 text-blue-600" />
+                    <Label className="text-sm">Validação Endereço</Label>
+                  </div>
+                  <Switch 
+                    checked={helenaSettings.addressVerificationRequired}
+                    onCheckedChange={(v) => setHelenaSettings({...helenaSettings, addressVerificationRequired: v})}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="flex items-center gap-2">
+                    <ScanFace className="w-5 h-5 text-indigo-600" />
+                    <Label className="text-sm">Liveness + Facematch</Label>
+                  </div>
+                  <Switch 
+                    checked={helenaSettings.livenessRequired}
+                    onCheckedChange={(v) => setHelenaSettings({...helenaSettings, livenessRequired: v})}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="flex justify-end">
+            <Button className="bg-indigo-600 hover:bg-indigo-700">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar Configurações Helena AI
+            </Button>
           </div>
         </TabsContent>
       </Tabs>
