@@ -35,10 +35,15 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import AgentChatInterface from '@/components/agents/AgentChatInterface';
+import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
+import { processDisputeManagerMessage, disputeManagerQuickPrompts } from '@/components/agents/DisputeManagerChatLogic';
 
 export default function DisputeManager() {
   const [selectedTab, setSelectedTab] = useState('all');
   const [selectedDispute, setSelectedDispute] = useState(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // KPI Data
   const kpis = {
@@ -537,6 +542,29 @@ export default function DisputeManager() {
           </Card>
         </div>
       )}
+
+      {/* Agent Chat Interface */}
+      <AgentChatInterface
+        agentName="dispute_manager"
+        agentDisplayName="Dispute Manager"
+        agentDescription="Gestor inteligente de disputas"
+        quickPrompts={disputeManagerQuickPrompts}
+        onProcessMessage={processDisputeManagerMessage}
+        welcomeMessage="Olá! 👋 Sou o Dispute Manager, seu assistente para gestão de chargebacks e disputas. Posso ajudar a analisar casos, gerar contestações e configurar regras automáticas. Como posso ajudar?"
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+        accentColor="#ef4444"
+      />
+
+      {/* Floating Button */}
+      <AgentFloatingButton
+        isOpen={isChatOpen}
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        agentName="Dispute Manager"
+        accentColor="#ef4444"
+      />
     </div>
   );
 }

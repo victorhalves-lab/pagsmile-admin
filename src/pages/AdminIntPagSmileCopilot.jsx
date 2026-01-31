@@ -39,9 +39,14 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import AgentChatInterface from '@/components/agents/AgentChatInterface';
+import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
+import { processPagSmileCopilotMessage, pagSmileCopilotQuickPrompts } from '@/components/agents/PagSmileCopilotChatLogic';
 
 export default function AdminIntPagSmileCopilot() {
   const [selectedPeriod, setSelectedPeriod] = useState('today');
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Executive Summary Data
   const executiveSummary = {
@@ -560,6 +565,29 @@ export default function AdminIntPagSmileCopilot() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Agent Chat Interface */}
+      <AgentChatInterface
+        agentName="pagsmile_copilot"
+        agentDisplayName="PagSmile Copilot"
+        agentDescription="Copiloto interno de operações"
+        quickPrompts={pagSmileCopilotQuickPrompts}
+        onProcessMessage={processPagSmileCopilotMessage}
+        welcomeMessage="Olá! 👋 Sou o PagSmile Copilot, seu assistente para gestão de operações internas. Posso ajudar com análise de TPV, merchants, receita, alertas e muito mais. O que você gostaria de saber?"
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+        accentColor="#a855f7"
+      />
+
+      {/* Floating Button */}
+      <AgentFloatingButton
+        isOpen={isChatOpen}
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        agentName="PagSmile Copilot"
+        accentColor="#a855f7"
+      />
     </div>
   );
 }

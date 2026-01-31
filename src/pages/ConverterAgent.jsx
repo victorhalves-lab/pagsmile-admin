@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Textarea } from '@/components/ui/textarea';
 import { 
   TrendingUp, 
   TrendingDown,
@@ -43,6 +44,9 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, Legend, FunnelChart, Funnel, LabelList, Cell } from 'recharts';
+import AgentChatInterface from '@/components/agents/AgentChatInterface';
+import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
+import { processConverterAgentMessage, converterAgentQuickPrompts } from '@/components/agents/ConverterAgentChatLogic';
 
 export default function ConverterAgent() {
   // Control states
@@ -59,6 +63,11 @@ export default function ConverterAgent() {
   const [conversionRate, setConversionRate] = useState(72);
   const [abandonRate, setAbandonRate] = useState(28);
   const [liftPercentage, setLiftPercentage] = useState(0);
+  
+  // Chat states
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [nlScenarioInput, setNlScenarioInput] = useState('');
 
   // Calculate metrics based on controls
   useEffect(() => {
@@ -692,6 +701,29 @@ export default function ConverterAgent() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Agent Chat Interface */}
+      <AgentChatInterface
+        agentName="converter_agent"
+        agentDisplayName="Converter Agent"
+        agentDescription="Otimizador de checkout e conversão"
+        quickPrompts={converterAgentQuickPrompts}
+        onProcessMessage={processConverterAgentMessage}
+        welcomeMessage="Olá! 👋 Sou o Converter Agent, especialista em otimização de checkout. Posso ajudar a criar testes A/B, analisar conversão e criar regras de personalização. Como posso ajudar?"
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+        accentColor="#3b82f6"
+      />
+
+      {/* Floating Button */}
+      <AgentFloatingButton
+        isOpen={isChatOpen}
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        agentName="Converter Agent"
+        accentColor="#3b82f6"
+      />
     </div>
   );
 }

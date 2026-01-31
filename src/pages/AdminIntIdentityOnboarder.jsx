@@ -45,6 +45,9 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import AgentChatInterface from '@/components/agents/AgentChatInterface';
+import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
+import { processIdentityOnboarderMessage, identityOnboarderQuickPrompts } from '@/components/agents/IdentityOnboarderChatLogic';
 
 export default function AdminIntIdentityOnboarder() {
   const [selectedTab, setSelectedTab] = useState('simulator');
@@ -59,6 +62,8 @@ export default function AdminIntIdentityOnboarder() {
   });
   const [simulationResults, setSimulationResults] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // KPIs
   const kpis = {
@@ -673,6 +678,29 @@ export default function AdminIntIdentityOnboarder() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Agent Chat Interface */}
+      <AgentChatInterface
+        agentName="identity_onboarder"
+        agentDisplayName="Identity Onboarder"
+        agentDescription="KYC/KYB Copilot - Helena AI"
+        quickPrompts={identityOnboarderQuickPrompts}
+        onProcessMessage={processIdentityOnboarderMessage}
+        welcomeMessage="Olá! 👋 Sou o Identity Onboarder, assistente para análise KYC/KYB. Posso ajudar a analisar casos, detalhar red flags, configurar a Helena AI e gerenciar a fila. Como posso ajudar?"
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+        accentColor="#6366f1"
+      />
+
+      {/* Floating Button */}
+      <AgentFloatingButton
+        isOpen={isChatOpen}
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        agentName="Identity Onboarder"
+        accentColor="#6366f1"
+      />
     </div>
   );
 }
