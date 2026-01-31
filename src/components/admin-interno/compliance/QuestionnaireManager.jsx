@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import DecisionFlowVisualizer from '@/components/common/DecisionFlowVisualizer';
 import {
   Select,
   SelectContent,
@@ -85,8 +86,6 @@ const fieldTypes = [
 ];
 
 export default function QuestionnaireManager() {
-  const [builderOpen, setBuilderOpen] = useState(false);
-  const [selectedQuestionnaire, setSelectedQuestionnaire] = useState(null);
   const [questionnaires, setQuestionnaires] = useState(mockQuestionnaires);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedQuestionnaire, setSelectedQuestionnaire] = useState(null);

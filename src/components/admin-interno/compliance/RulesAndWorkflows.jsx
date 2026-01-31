@@ -4,7 +4,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
+import DecisionFlowVisualizer from '@/components/common/DecisionFlowVisualizer';
+import SimulatedActionButton from '@/components/common/SimulatedActionButton';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -13,430 +15,242 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Plus, Edit, Trash2, Play, Pause, Settings, Zap, Mail, Bell,
-  CheckCircle2, XCircle, AlertTriangle, ArrowRight, Copy, Save, Eye
+  Plus, Edit, Trash2, Play, Pause, Settings, CheckCircle2, AlertTriangle,
+  GitBranch, Filter, Bell, User
 } from 'lucide-react';
 
-// Mock rules
 const mockRules = [
   {
-    id: 'R001',
-    name: 'Aprovação Automática - Score Alto',
-    description: 'Aprova automaticamente submissões com score Helena ≥ 85 e sem red flags',
+    id: 'rule_001',
+    name: 'Auto-Aprovação Score Alto',
+    description: 'Aprova automaticamente quando Helena Score >= 80',
     type: 'auto_approve',
     status: 'active',
     priority: 1,
     conditions: [
-      { field: 'helena_score', operator: 'greater_than', value: '85' },
-      { field: 'helena_red_flags', operator: 'equals', value: '0' },
+      { field: 'helena_score', operator: 'greater_than', value: '80' }
     ],
-    executions_count: 892,
-    last_executed: '2024-01-28T14:30:00'
+    actions: [
+      { action_type: 'set_status', parameters: { status: 'ai_approved' } }
+    ],
+    executions_count: 892
   },
   {
-    id: 'R002',
-    name: 'Rejeição Automática - Score Crítico',
-    description: 'Rejeita automaticamente submissões com score Helena < 25',
+    id: 'rule_002',
+    name: 'Rejeição Automática Score Crítico',
+    description: 'Rejeita automaticamente quando Helena Score < 30',
     type: 'auto_reject',
+    status: 'active',
+    priority: 1,
+    conditions: [
+      { field: 'helena_score', operator: 'less_than', value: '30' }
+    ],
+    actions: [
+      { action_type: 'set_status', parameters: { status: 'ai_rejected' } }
+    ],
+    executions_count: 156
+  },
+  {
+    id: 'rule_003',
+    name: 'Análise Manual Faixa Intermediária',
+    description: 'Encaminha para análise manual scores entre 30-80',
+    type: 'manual_review',
     status: 'active',
     priority: 2,
     conditions: [
-      { field: 'helena_score', operator: 'less_than', value: '25' },
+      { field: 'helena_score', operator: 'greater_than', value: '30' },
+      { field: 'helena_score', operator: 'less_than', value: '80' }
     ],
-    executions_count: 156,
-    last_executed: '2024-01-28T12:15:00'
+    logic_operator: 'AND',
+    actions: [
+      { action_type: 'set_status', parameters: { status: 'manual_review' } },
+      { action_type: 'send_notification', parameters: { template: 'manual_review_needed' } }
+    ],
+    executions_count: 199
   },
   {
-    id: 'R003',
-    name: 'Encaminhamento Manual - PEP Detectado',
-    description: 'Encaminha para análise manual se sócio é PEP',
+    id: 'rule_004',
+    name: 'Atribuição Automática para Analista Senior',
+    description: 'Atribui casos com PEP para analistas seniores',
     type: 'manual_review',
     status: 'active',
-    priority: 3,
+    priority: 1,
     conditions: [
-      { field: 'is_pep', operator: 'equals', value: 'true' },
+      { field: 'helena_red_flags', operator: 'contains', value: 'PEP detectado' }
     ],
-    executions_count: 45,
-    last_executed: '2024-01-27T09:45:00'
-  },
-  {
-    id: 'R004',
-    name: 'Solicitação de Documentos - Endereço Antigo',
-    description: 'Solicita novo comprovante se documento tem mais de 90 dias',
-    type: 'request_documents',
-    status: 'active',
-    priority: 4,
-    conditions: [
-      { field: 'address_doc_age_days', operator: 'greater_than', value: '90' },
+    actions: [
+      { action_type: 'assign_analyst', parameters: { role: 'senior_analyst' } },
+      { action_type: 'add_flag', parameters: { flag: 'PEP_DETECTED' } }
     ],
-    executions_count: 78,
-    last_executed: '2024-01-28T10:20:00'
-  },
-];
-
-// Mock notification templates
-const mockNotifications = [
-  {
-    id: 'N001',
-    name: 'Aprovação de Cadastro',
-    trigger: 'status_approved',
-    channel: 'email',
-    subject: 'Seu cadastro foi aprovado!',
-    status: 'active'
-  },
-  {
-    id: 'N002',
-    name: 'Solicitação de Documentos',
-    trigger: 'documents_requested',
-    channel: 'email',
-    subject: 'Documentos pendentes para seu cadastro',
-    status: 'active'
-  },
-  {
-    id: 'N003',
-    name: 'Rejeição de Cadastro',
-    trigger: 'status_rejected',
-    channel: 'email',
-    subject: 'Atualização sobre seu cadastro',
-    status: 'active'
-  },
-];
-
-const ruleTypes = [
-  { value: 'auto_approve', label: 'Aprovação Automática', color: 'bg-green-100 text-green-700' },
-  { value: 'auto_reject', label: 'Rejeição Automática', color: 'bg-red-100 text-red-700' },
-  { value: 'manual_review', label: 'Encaminhar Manual', color: 'bg-amber-100 text-amber-700' },
-  { value: 'request_documents', label: 'Solicitar Documentos', color: 'bg-blue-100 text-blue-700' },
-  { value: 'notification', label: 'Enviar Notificação', color: 'bg-purple-100 text-purple-700' },
-];
-
-const conditionFields = [
-  { value: 'helena_score', label: 'Score Helena' },
-  { value: 'helena_red_flags', label: 'Quantidade de Red Flags' },
-  { value: 'is_pep', label: 'É PEP' },
-  { value: 'document_type', label: 'Tipo de Documento' },
-  { value: 'business_type', label: 'Tipo de Empresa' },
-  { value: 'mcc', label: 'MCC' },
-  { value: 'revenue', label: 'Faturamento Mensal' },
-  { value: 'address_doc_age_days', label: 'Idade do Comprovante de Endereço' },
-];
-
-const operators = [
-  { value: 'equals', label: 'Igual a' },
-  { value: 'not_equals', label: 'Diferente de' },
-  { value: 'greater_than', label: 'Maior que' },
-  { value: 'less_than', label: 'Menor que' },
-  { value: 'contains', label: 'Contém' },
-  { value: 'not_contains', label: 'Não contém' },
+    executions_count: 24
+  }
 ];
 
 export default function RulesAndWorkflows() {
   const [rules, setRules] = useState(mockRules);
-  const [notifications, setNotifications] = useState(mockNotifications);
-  const [isRuleEditorOpen, setIsRuleEditorOpen] = useState(false);
+  const [editorOpen, setEditorOpen] = useState(false);
   const [selectedRule, setSelectedRule] = useState(null);
-  const [isNotificationEditorOpen, setIsNotificationEditorOpen] = useState(false);
+  const [visualizerOpen, setVisualizerOpen] = useState(false);
 
-  const getRuleTypeBadge = (type) => {
-    const config = ruleTypes.find(t => t.value === type);
-    return <Badge className={`${config?.color || 'bg-slate-100'} border-0`}>{config?.label || type}</Badge>;
+  const typeConfig = {
+    auto_approve: { label: 'Auto-Aprovação', color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
+    auto_reject: { label: 'Auto-Rejeição', color: 'bg-red-100 text-red-700', icon: AlertTriangle },
+    manual_review: { label: 'Análise Manual', color: 'bg-amber-100 text-amber-700', icon: User },
+    request_documents: { label: 'Solicitar Docs', color: 'bg-blue-100 text-blue-700', icon: Filter },
+    notification: { label: 'Notificação', color: 'bg-purple-100 text-purple-700', icon: Bell }
   };
 
-  const toggleRuleStatus = (ruleId) => {
-    setRules(rules.map(r => 
-      r.id === ruleId ? { ...r, status: r.status === 'active' ? 'inactive' : 'active' } : r
-    ));
-  };
-
-  const openRuleEditor = (rule = null) => {
+  const openEditor = (rule = null) => {
     setSelectedRule(rule);
-    setIsRuleEditorOpen(true);
+    setEditorOpen(true);
   };
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="rules" className="w-full">
-        <TabsList className="grid grid-cols-3 w-full max-w-md">
-          <TabsTrigger value="rules">Regras</TabsTrigger>
-          <TabsTrigger value="notifications">Notificações</TabsTrigger>
-          <TabsTrigger value="thresholds">Thresholds</TabsTrigger>
-        </TabsList>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold">Regras de Compliance</h3>
+          <p className="text-sm text-slate-500">Automatize decisões com regras configuráveis</p>
+        </div>
+        <Button onClick={() => openEditor()} className="gap-2">
+          <Plus className="w-4 h-4" />
+          Nova Regra
+        </Button>
+      </div>
 
-        {/* Rules Tab */}
-        <TabsContent value="rules" className="mt-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold">Regras de Automação</h3>
-              <p className="text-sm text-slate-500">Configure regras para automação do processo de compliance</p>
+      {/* Stats */}
+      <div className="grid grid-cols-4 gap-4">
+        <Card className="border-green-200 bg-green-50">
+          <CardContent className="pt-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-green-600">
+                {rules.filter(r => r.type === 'auto_approve').length}
+              </p>
+              <p className="text-xs text-slate-600">Auto-Aprovação</p>
             </div>
-            <Button onClick={() => openRuleEditor()} className="bg-[#2bc196] hover:bg-[#239b7a]">
-              <Plus className="w-4 h-4 mr-2" />
-              Nova Regra
-            </Button>
-          </div>
-
-          {/* Rules Stats */}
-          <div className="grid grid-cols-4 gap-4">
-            <Card>
-              <CardContent className="pt-4 pb-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold">{rules.length}</p>
-                  <p className="text-xs text-slate-500">Total de Regras</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-green-200 bg-green-50/50">
-              <CardContent className="pt-4 pb-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-green-600">
-                    {rules.filter(r => r.status === 'active').length}
-                  </p>
-                  <p className="text-xs text-slate-500">Ativas</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-blue-200 bg-blue-50/50">
-              <CardContent className="pt-4 pb-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-blue-600">
-                    {rules.reduce((acc, r) => acc + r.executions_count, 0).toLocaleString()}
-                  </p>
-                  <p className="text-xs text-slate-500">Execuções Totais</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-purple-200 bg-purple-50/50">
-              <CardContent className="pt-4 pb-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-purple-600">98.5%</p>
-                  <p className="text-xs text-slate-500">Taxa de Sucesso</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Rules List */}
-          <div className="space-y-3">
-            {rules.map((rule) => (
-              <Card key={rule.id} className={rule.status === 'inactive' ? 'opacity-60' : ''}>
-                <CardContent className="pt-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-slate-500 font-mono">#{rule.priority}</span>
-                        <Switch
-                          checked={rule.status === 'active'}
-                          onCheckedChange={() => toggleRuleStatus(rule.id)}
-                        />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-medium">{rule.name}</h4>
-                          {getRuleTypeBadge(rule.type)}
-                        </div>
-                        <p className="text-sm text-slate-500 mt-1">{rule.description}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right text-sm">
-                        <p className="font-medium">{rule.executions_count.toLocaleString()}</p>
-                        <p className="text-slate-500">execuções</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Button variant="outline" size="sm" onClick={() => openRuleEditor(rule)}>
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Conditions Preview */}
-                  <div className="mt-3 pt-3 border-t flex items-center gap-2 flex-wrap">
-                    <span className="text-xs text-slate-500">Condições:</span>
-                    {rule.conditions.map((cond, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs font-mono">
-                        {conditionFields.find(f => f.value === cond.field)?.label || cond.field}
-                        {' '}
-                        {operators.find(o => o.value === cond.operator)?.label || cond.operator}
-                        {' '}
-                        {cond.value}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* Notifications Tab */}
-        <TabsContent value="notifications" className="mt-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold">Templates de Notificação</h3>
-              <p className="text-sm text-slate-500">Configure e-mails e notificações automáticas</p>
+          </CardContent>
+        </Card>
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-red-600">
+                {rules.filter(r => r.type === 'auto_reject').length}
+              </p>
+              <p className="text-xs text-slate-600">Auto-Rejeição</p>
             </div>
-            <Button onClick={() => setIsNotificationEditorOpen(true)} className="bg-[#2bc196] hover:bg-[#239b7a]">
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Template
-            </Button>
-          </div>
+          </CardContent>
+        </Card>
+        <Card className="border-amber-200 bg-amber-50">
+          <CardContent className="pt-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-amber-600">
+                {rules.filter(r => r.type === 'manual_review').length}
+              </p>
+              <p className="text-xs text-slate-600">Revisão Manual</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="pt-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-blue-600">
+                {rules.filter(r => r.status === 'active').length}
+              </p>
+              <p className="text-xs text-slate-600">Regras Ativas</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {notifications.map((notif) => (
-              <Card key={notif.id}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-slate-400" />
-                      {notif.name}
-                    </CardTitle>
-                    <Badge className={notif.status === 'active' ? 'bg-green-100 text-green-700 border-0' : 'bg-slate-100 text-slate-700 border-0'}>
-                      {notif.status === 'active' ? 'Ativo' : 'Inativo'}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Zap className="w-4 h-4 text-amber-500" />
-                      <span className="text-slate-500">Gatilho:</span>
-                      <Badge variant="outline" className="text-xs">{notif.trigger}</Badge>
+      {/* Rules List */}
+      <div className="space-y-3">
+        {rules.map((rule) => {
+          const config = typeConfig[rule.type];
+          const Icon = config.icon;
+          
+          return (
+            <Card key={rule.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="pt-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-3 flex-1">
+                    <div className={`w-10 h-10 rounded-lg ${config.color} flex items-center justify-center`}>
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <div className="p-2 bg-slate-50 rounded text-xs">
-                      <p className="text-slate-500">Assunto:</p>
-                      <p className="font-medium">{notif.subject}</p>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="font-semibold">{rule.name}</h4>
+                        <Badge className={config.color}>{config.label}</Badge>
+                        <Badge variant="outline" className="text-xs">Prioridade {rule.priority}</Badge>
+                      </div>
+                      <p className="text-sm text-slate-600 mb-2">{rule.description}</p>
+                      
+                      {/* Conditions Preview */}
+                      <div className="flex items-center gap-2 text-xs">
+                        <GitBranch className="w-3 h-3 text-slate-400" />
+                        <span className="text-slate-500">
+                          {rule.conditions.length} condição(ões) • {rule.actions.length} ação(ões)
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 text-xs ml-2"
+                          onClick={() => {
+                            setSelectedRule(rule);
+                            setVisualizerOpen(true);
+                          }}
+                        >
+                          Ver Fluxo
+                        </Button>
+                      </div>
+
+                      {/* Execution Stats */}
+                      <div className="mt-2 text-xs text-slate-500">
+                        Executada {rule.executions_count.toLocaleString()} vezes
+                      </div>
                     </div>
                   </div>
-                  <div className="flex gap-2 mt-4">
-                    <Button variant="outline" size="sm" className="flex-1">
-                      <Edit className="w-4 h-4 mr-1" />
-                      Editar
+
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => openEditor(rule)}>
+                      <Edit className="w-4 h-4" />
                     </Button>
-                    <Button variant="outline" size="sm">
-                      <Eye className="w-4 h-4" />
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className={rule.status === 'active' ? 'text-amber-600' : 'text-green-600'}
+                    >
+                      {rule.status === 'active' ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-red-600">
+                      <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* Thresholds Tab */}
-        <TabsContent value="thresholds" className="mt-6 space-y-6">
-          <div>
-            <h3 className="text-lg font-semibold">Configuração de Thresholds</h3>
-            <p className="text-sm text-slate-500">Defina os limites globais para o processo de compliance</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  Aprovação Automática
-                </CardTitle>
-                <CardDescription>Score mínimo para aprovação automática pela Helena</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Score mínimo:</label>
-                  <Input type="number" defaultValue="85" className="max-w-[150px]" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Switch defaultChecked />
-                  <span className="text-sm">Exigir zero red flags</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Switch defaultChecked />
-                  <span className="text-sm">Exigir documentação completa</span>
                 </div>
               </CardContent>
             </Card>
+          );
+        })}
+      </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <XCircle className="w-5 h-5 text-red-600" />
-                  Rejeição Automática
-                </CardTitle>
-                <CardDescription>Score máximo para rejeição automática pela Helena</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Score máximo:</label>
-                  <Input type="number" defaultValue="25" className="max-w-[150px]" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Switch defaultChecked />
-                  <span className="text-sm">Rejeitar se CNPJ irregular</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Switch defaultChecked />
-                  <span className="text-sm">Rejeitar se documento adulterado</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="col-span-2">
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-amber-600" />
-                  Faixa de Análise Manual
-                </CardTitle>
-                <CardDescription>Submissões nesta faixa de score serão encaminhadas para revisão humana</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-8">
-                  <div className="flex-1">
-                    <div className="h-8 bg-gradient-to-r from-red-500 via-amber-500 to-green-500 rounded-lg relative">
-                      <div className="absolute left-[25%] top-0 bottom-0 w-px bg-white" />
-                      <div className="absolute left-[85%] top-0 bottom-0 w-px bg-white" />
-                    </div>
-                    <div className="flex justify-between mt-2 text-xs text-slate-500">
-                      <span>0</span>
-                      <span>25 (Rejeição Auto)</span>
-                      <span>85 (Aprovação Auto)</span>
-                      <span>100</span>
-                    </div>
-                  </div>
-                  <div className="text-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-                    <p className="text-2xl font-bold text-amber-600">26-84</p>
-                    <p className="text-xs text-amber-700">Análise Manual</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="flex justify-end">
-            <Button className="bg-[#2bc196] hover:bg-[#239b7a]">
-              <Save className="w-4 h-4 mr-2" />
-              Salvar Configurações
-            </Button>
-          </div>
-        </TabsContent>
-      </Tabs>
+      {/* Flow Visualizer Modal */}
+      <Dialog open={visualizerOpen} onOpenChange={setVisualizerOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Fluxo de Decisão: {selectedRule?.name}</DialogTitle>
+          </DialogHeader>
+          <DecisionFlowVisualizer 
+            rule={{
+              condition: selectedRule?.conditions.map(c => `${c.field} ${c.operator} ${c.value}`).join(' AND '),
+              action: selectedRule?.actions[0]?.action_type
+            }}
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* Rule Editor Modal */}
-      <Dialog open={isRuleEditorOpen} onOpenChange={setIsRuleEditorOpen}>
-        <DialogContent className="max-w-2xl">
+      <Dialog open={editorOpen} onOpenChange={setEditorOpen}>
+        <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>
               {selectedRule ? `Editar Regra: ${selectedRule.name}` : 'Nova Regra'}
@@ -450,7 +264,7 @@ export default function RulesAndWorkflows() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Nome da Regra</label>
-                <Input placeholder="Ex: Aprovação Automática" defaultValue={selectedRule?.name || ''} />
+                <Input placeholder="Ex: Auto-aprovação score alto" defaultValue={selectedRule?.name} />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Tipo</label>
@@ -459,9 +273,11 @@ export default function RulesAndWorkflows() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {ruleTypes.map(type => (
-                      <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
-                    ))}
+                    <SelectItem value="auto_approve">Auto-Aprovação</SelectItem>
+                    <SelectItem value="auto_reject">Auto-Rejeição</SelectItem>
+                    <SelectItem value="manual_review">Análise Manual</SelectItem>
+                    <SelectItem value="request_documents">Solicitar Documentos</SelectItem>
+                    <SelectItem value="notification">Notificação</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -469,81 +285,83 @@ export default function RulesAndWorkflows() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Descrição</label>
-              <Textarea 
-                placeholder="Descreva o objetivo desta regra..."
-                defaultValue={selectedRule?.description || ''}
-              />
+              <Textarea placeholder="Descreva o propósito da regra..." defaultValue={selectedRule?.description} />
             </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Condições</label>
-                <Button variant="outline" size="sm">
-                  <Plus className="w-4 h-4 mr-1" />
+            <Card className="border-blue-200 bg-blue-50/50">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm">Condições</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="grid grid-cols-3 gap-3">
+                  <Select defaultValue="helena_score">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Campo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="helena_score">Helena Score</SelectItem>
+                      <SelectItem value="helena_red_flags">Red Flags</SelectItem>
+                      <SelectItem value="document_count">Qtd Documentos</SelectItem>
+                      <SelectItem value="time_in_queue">Tempo na Fila</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select defaultValue="greater_than">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Operador" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="equals">Igual a</SelectItem>
+                      <SelectItem value="not_equals">Diferente de</SelectItem>
+                      <SelectItem value="greater_than">Maior que</SelectItem>
+                      <SelectItem value="less_than">Menor que</SelectItem>
+                      <SelectItem value="contains">Contém</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input placeholder="Valor" defaultValue="80" />
+                </div>
+                <Button variant="outline" size="sm" className="w-full gap-2">
+                  <Plus className="w-3 h-3" />
                   Adicionar Condição
                 </Button>
-              </div>
-              
-              <div className="space-y-2">
-                {(selectedRule?.conditions || [{ field: '', operator: '', value: '' }]).map((cond, idx) => (
-                  <div key={idx} className="flex items-center gap-2 p-3 border rounded-lg bg-slate-50">
-                    <Select defaultValue={cond.field}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Campo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {conditionFields.map(field => (
-                          <SelectItem key={field.value} value={field.value}>{field.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Select defaultValue={cond.operator}>
-                      <SelectTrigger className="w-[150px]">
-                        <SelectValue placeholder="Operador" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {operators.map(op => (
-                          <SelectItem key={op.value} value={op.value}>{op.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Input placeholder="Valor" defaultValue={cond.value} className="flex-1" />
-                    <Button variant="ghost" size="sm" className="text-red-600">
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Prioridade</label>
-                <Input type="number" defaultValue={selectedRule?.priority || 1} />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Status</label>
-                <Select defaultValue={selectedRule?.status || 'active'}>
+            <Card className="border-green-200 bg-green-50/50">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm">Ações</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Select defaultValue="set_status">
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Tipo de ação" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Ativa</SelectItem>
-                    <SelectItem value="inactive">Inativa</SelectItem>
+                    <SelectItem value="set_status">Alterar Status</SelectItem>
+                    <SelectItem value="send_notification">Enviar Notificação</SelectItem>
+                    <SelectItem value="assign_analyst">Atribuir Analista</SelectItem>
+                    <SelectItem value="request_document">Solicitar Documento</SelectItem>
+                    <SelectItem value="add_flag">Adicionar Flag</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-            </div>
+                <Button variant="outline" size="sm" className="w-full gap-2">
+                  <Plus className="w-3 h-3" />
+                  Adicionar Ação
+                </Button>
+              </CardContent>
+            </Card>
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsRuleEditorOpen(false)}>
+            <Button variant="outline" onClick={() => setEditorOpen(false)}>
               Cancelar
             </Button>
-            <Button className="bg-[#2bc196] hover:bg-[#239b7a]">
-              <Save className="w-4 h-4 mr-2" />
+            <SimulatedActionButton
+              actionLabel="Regra salva com sucesso"
+              icon={CheckCircle2}
+              onSimulatedAction={() => setEditorOpen(false)}
+            >
               Salvar Regra
-            </Button>
+            </SimulatedActionButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
