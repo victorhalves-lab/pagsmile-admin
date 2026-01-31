@@ -48,25 +48,20 @@ export default function KPICardEnhanced({
     )}>
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-1">
-          <div className="flex flex-col">
-            <span className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1 tracking-wide">{title}</span>
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1 tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">{title}</span>
             <div className="flex items-baseline gap-1">
-              <h3 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+              <h3 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white tracking-tight truncate">
                 {prefix}{value}{suffix}
               </h3>
             </div>
           </div>
           
-          <div className={cn(
-            "p-2.5 rounded-xl transition-colors duration-300",
-            "bg-slate-50 dark:bg-slate-800 group-hover:bg-[#00D26A]/10 dark:group-hover:bg-[#00D26A]/20"
-          )}>
-            {Icon ? (
-              <Icon className="w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:text-[#00D26A] transition-colors" />
-            ) : (
-              <Activity className="w-5 h-5 text-slate-500 group-hover:text-[#00D26A]" />
-            )}
-          </div>
+          {Icon ? (
+            <Icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", statusColor.text)} />
+          ) : (
+            <Activity className={cn("w-5 h-5 flex-shrink-0 transition-colors", statusColor.text)} />
+          )}
         </div>
 
         <div className="flex items-end justify-between mt-4">
@@ -84,7 +79,7 @@ export default function KPICardEnhanced({
               </div>
             )}
             {description && (
-              <span className="text-xs text-slate-400 dark:text-slate-500 ml-1">
+              <span className="text-xs text-slate-400 dark:text-slate-500 ml-1 whitespace-nowrap overflow-hidden text-ellipsis">
                 {description}
               </span>
             )}

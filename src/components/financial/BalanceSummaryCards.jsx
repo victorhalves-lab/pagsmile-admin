@@ -46,12 +46,10 @@ export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
         <CardContent className="p-5 flex flex-col justify-between h-full">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <div className="p-1.5 bg-emerald-100 rounded-md">
-                <Wallet className="w-4 h-4 text-emerald-600" />
-              </div>
-              <p className="text-sm font-medium text-emerald-800">Saldo Disponível</p>
+              <Wallet className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+              <p className="text-sm font-medium text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis">Saldo Disponível</p>
             </div>
-            <p className="text-2xl font-bold text-emerald-700 mt-1">{formatCurrency(available)}</p>
+            <p className="text-2xl font-bold text-emerald-700 mt-1 truncate">{formatCurrency(available)}</p>
           </div>
           <Button 
             className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
@@ -69,10 +67,8 @@ export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
           <div>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-blue-50 rounded-md">
-                  <Clock className="w-4 h-4 text-blue-500" />
-                </div>
-                <p className="text-sm font-medium text-gray-600">A Liberar</p>
+                <Clock className="w-5 h-5 text-blue-500 flex-shrink-0" />
+                <p className="text-sm font-medium text-gray-600 whitespace-nowrap overflow-hidden text-ellipsis">A Liberar</p>
               </div>
               <TooltipProvider>
                 <Tooltip>
@@ -81,7 +77,7 @@ export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{formatCurrency(pending)}</p>
+            <p className="text-2xl font-bold text-gray-900 truncate">{formatCurrency(pending)}</p>
             
             <div className="mt-3 space-y-1">
               {pendingBreakdown.slice(0, 2).map((item, i) => (
@@ -110,10 +106,8 @@ export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
           <div>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-orange-50 rounded-md">
-                  <Lock className="w-4 h-4 text-orange-500" />
-                </div>
-                <p className="text-sm font-medium text-gray-600">Bloqueado</p>
+                <Lock className="w-5 h-5 text-orange-500 flex-shrink-0" />
+                <p className="text-sm font-medium text-gray-600 whitespace-nowrap overflow-hidden text-ellipsis">Bloqueado</p>
               </div>
               <TooltipProvider>
                 <Tooltip>
@@ -122,7 +116,7 @@ export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{formatCurrency(blocked)}</p>
+            <p className="text-2xl font-bold text-gray-900 truncate">{formatCurrency(blocked)}</p>
             
             <div className="mt-3 space-y-1">
               {blockedBreakdown.slice(0, 2).map((item, i) => (
@@ -151,10 +145,8 @@ export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
           <div>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-purple-100 rounded-md">
-                  <Truck className="w-4 h-4 text-purple-600" />
-                </div>
-                <p className="text-sm font-medium text-gray-600">Em Trânsito</p>
+                <Truck className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                <p className="text-sm font-medium text-gray-600 whitespace-nowrap overflow-hidden text-ellipsis">Em Trânsito</p>
               </div>
               <TooltipProvider>
                 <Tooltip>
@@ -163,7 +155,7 @@ export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{formatCurrency(inTransit)}</p>
+            <p className="text-2xl font-bold text-gray-900 truncate">{formatCurrency(inTransit)}</p>
             <p className="text-xs text-purple-600 mt-2 bg-purple-100 inline-block px-2 py-0.5 rounded-full font-medium">
               Aguardando Banco
             </p>
@@ -184,12 +176,10 @@ export default function BalanceSummaryCards({ balances, isLoading, onAction }) {
       <Card className="border-gray-200 bg-gray-50/50 shadow-sm">
         <CardContent className="p-5 flex flex-col justify-center h-full">
           <div className="flex items-center gap-2 mb-2">
-            <div className="p-1.5 bg-gray-200 rounded-md">
-              <DollarSign className="w-4 h-4 text-gray-600" />
-            </div>
-            <p className="text-sm font-medium text-gray-600">Saldo Total</p>
+            <DollarSign className="w-5 h-5 text-gray-600 flex-shrink-0" />
+            <p className="text-sm font-medium text-gray-600 whitespace-nowrap overflow-hidden text-ellipsis">Saldo Total</p>
           </div>
-          <p className="text-2xl font-bold text-gray-900 mb-1">{formatCurrency(total)}</p>
+          <p className="text-2xl font-bold text-gray-900 mb-1 truncate">{formatCurrency(total)}</p>
           <p className="text-xs text-gray-500">Soma de todos os saldos</p>
           <div className="mt-4 pt-4 border-t border-gray-200">
              <Button 

@@ -99,14 +99,14 @@ export default function KPICard({
     )}>
       <CardContent className="p-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-2">
-          <p className={cn("text-[10px] font-bold uppercase tracking-wider", colors.text)}>{title}</p>
-          {Icon && <Icon className={cn("w-4 h-4", colors.text)} />}
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <p className={cn("text-[10px] font-bold uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis", colors.text)}>{title}</p>
+          {Icon && <Icon className={cn("w-5 h-5 flex-shrink-0", colors.text)} />}
         </div>
 
         {/* Value */}
         <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2 truncate">
-          {prefix}{typeof value === 'number' ? value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : value}{suffix}
+          {prefix}{typeof value === 'number' ? value.toLocaleString('pt-BR') : value}{suffix}
         </h3>
 
         {/* Change + Mini Chart */}
