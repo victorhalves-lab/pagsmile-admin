@@ -1,11 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import FormSection from '@/components/compliance/FormSection';
 import { ShieldAlert } from 'lucide-react';
 import SelectionButton from '@/components/ui/selection-button';
 
-const PLDQuestion = ({ id, label, detailLabel, formData, handleChange }) => (
+const PLDQuestion = ({ id, label, detailLabel, formData, handleChange, yesLabel, noLabel }) => (
   <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
     <Label className="text-sm font-semibold text-slate-700">{label}</Label>
     <div className="flex gap-4">
@@ -14,14 +15,14 @@ const PLDQuestion = ({ id, label, detailLabel, formData, handleChange }) => (
         selected={formData[id] === 'sim'} 
         onClick={() => handleChange(id, 'sim')}
       >
-        Sim
+        {yesLabel}
       </SelectionButton>
       <SelectionButton 
         className="flex-1" 
         selected={formData[id] === 'nao'} 
         onClick={() => handleChange(id, 'nao')}
       >
-        Não
+        {noLabel}
       </SelectionButton>
     </div>
     {formData[id] === 'sim' && (
@@ -36,29 +37,37 @@ const PLDQuestion = ({ id, label, detailLabel, formData, handleChange }) => (
 );
 
 export default function Step8_PLDSancoes({ formData, handleChange }) {
+  const { t } = useTranslation();
+  
   return (
-    <FormSection title="PLD - Sanções e Restrições" subtitle="Verificação de vínculos com listas restritivas" icon={ShieldAlert}>
+    <FormSection title={t('compliance_forms.pld_sanctions')} subtitle={t('compliance_forms.sanctions_verification')} icon={ShieldAlert}>
       <div className="space-y-6">
         <PLDQuestion 
           id="sancoes_listas" 
-          label="Algum sócio, diretor ou administrador está em listas de sanções internacionais?" 
-          detailLabel="Descreva detalhadamente quais listas e as circunstâncias"
+          label={t('compliance_forms.sanctions_lists_question')} 
+          detailLabel={t('compliance_forms.sanctions_lists_detail')}
           formData={formData} 
-          handleChange={handleChange} 
+          handleChange={handleChange}
+          yesLabel={t('compliance_forms.yes')}
+          noLabel={t('compliance_forms.no')}
         />
         <PLDQuestion 
           id="sancoes_paises" 
-          label="A empresa possui vínculos comerciais com países sancionados?" 
-          detailLabel="Quais países e qual o tipo de vínculo (exportação, importação, parceria, etc.)"
+          label={t('compliance_forms.sanctioned_countries_question')} 
+          detailLabel={t('compliance_forms.sanctioned_countries_detail')}
           formData={formData} 
-          handleChange={handleChange} 
+          handleChange={handleChange}
+          yesLabel={t('compliance_forms.yes')}
+          noLabel={t('compliance_forms.no')}
         />
         <PLDQuestion 
           id="sancoes_controle" 
-          label="A empresa é controlada por pessoa ou entidade que está em lista de sanções?" 
-          detailLabel="Detalhe o tipo de controle e a relação"
+          label={t('compliance_forms.sanctioned_control_question')} 
+          detailLabel={t('compliance_forms.sanctioned_control_detail')}
           formData={formData} 
-          handleChange={handleChange} 
+          handleChange={handleChange}
+          yesLabel={t('compliance_forms.yes')}
+          noLabel={t('compliance_forms.no')}
         />
       </div>
     </FormSection>

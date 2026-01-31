@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -6,34 +7,36 @@ import FormSection from '@/components/compliance/FormSection';
 import { Briefcase } from 'lucide-react';
 
 export default function Step4_Atividade({ formData, handleChange }) {
+  const { t } = useTranslation();
+  
   return (
-    <FormSection title="Atividade Econômica" subtitle="CNAE e descrição do negócio" icon={Briefcase}>
+    <FormSection title={t('compliance_forms.economic_activity')} subtitle={t('compliance_forms.cnae_description')} icon={Briefcase}>
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">CNAE Principal *</Label>
+          <Label className="text-sm font-semibold text-slate-700">{t('compliance_forms.main_cnae')} *</Label>
           <Input 
             className="h-12 text-base"
-            placeholder="Código e Descrição do CNAE Principal" 
+            placeholder={t('compliance_forms.main_cnae_placeholder')} 
             value={formData.cnaePrincipal || ''} 
             onChange={(e) => handleChange('cnaePrincipal', e.target.value)} 
           />
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">CNAEs Secundários</Label>
+          <Label className="text-sm font-semibold text-slate-700">{t('compliance_forms.secondary_cnaes')}</Label>
           <Textarea 
             className="min-h-[80px] text-base resize-none"
-            placeholder="Liste os CNAEs secundários, se houver (opcional)" 
+            placeholder={t('compliance_forms.secondary_cnaes_placeholder')} 
             value={formData.cnaesSecundarios || ''} 
             onChange={(e) => handleChange('cnaesSecundarios', e.target.value)} 
           />
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-slate-700">Descrição Detalhada da Atividade *</Label>
+          <Label className="text-sm font-semibold text-slate-700">{t('compliance_forms.activity_description')} *</Label>
           <Textarea 
             className="min-h-[120px] text-base resize-none"
-            placeholder="Descreva detalhadamente o que sua empresa faz, quais produtos ou serviços oferece, e como opera no mercado..." 
+            placeholder={t('compliance_forms.activity_description_placeholder')} 
             value={formData.descricaoAtividade || ''} 
             onChange={(e) => handleChange('descricaoAtividade', e.target.value)} 
           />

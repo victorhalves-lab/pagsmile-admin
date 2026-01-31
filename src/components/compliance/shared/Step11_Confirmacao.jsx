@@ -1,12 +1,15 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import FormSection from '@/components/compliance/FormSection';
 import { CheckCircle, FileCheck, Shield } from 'lucide-react';
 
 export default function Step11_Confirmacao({ formData, handleChange }) {
+  const { t } = useTranslation();
+  
   return (
-    <FormSection title="Confirmação e Declarações" subtitle="Revisão final e aceite dos termos" icon={CheckCircle}>
+    <FormSection title={t('compliance_forms.confirmation_declarations')} subtitle={t('compliance_forms.final_review')} icon={CheckCircle}>
       <div className="space-y-8">
         <div className="p-6 bg-emerald-50 rounded-xl border border-emerald-200">
           <div className="flex items-start gap-4">
@@ -14,10 +17,9 @@ export default function Step11_Confirmacao({ formData, handleChange }) {
               <FileCheck className="w-6 h-6 text-emerald-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-emerald-800 text-lg">Quase lá!</h3>
+              <h3 className="font-semibold text-emerald-800 text-lg">{t('compliance_forms.almost_there')}</h3>
               <p className="text-emerald-700 mt-1">
-                Por favor, revise todas as informações fornecidas antes de finalizar. 
-                Após esta etapa, você será direcionado para o envio de documentos.
+                {t('compliance_forms.review_message')}
               </p>
             </div>
           </div>
@@ -32,8 +34,7 @@ export default function Step11_Confirmacao({ formData, handleChange }) {
               className="mt-1 h-6 w-6"
             />
             <Label htmlFor="declaracao1" className="text-base text-slate-700 cursor-pointer leading-relaxed">
-              Declaro que todas as informações fornecidas são verdadeiras e correspondem à realidade 
-              da empresa, comprometendo-me a informar qualquer alteração relevante.
+              {t('compliance_forms.declaration_1')}
             </Label>
           </div>
 
@@ -45,8 +46,7 @@ export default function Step11_Confirmacao({ formData, handleChange }) {
               className="mt-1 h-6 w-6"
             />
             <Label htmlFor="declaracao2" className="text-base text-slate-700 cursor-pointer leading-relaxed">
-              Autorizo a PagSmile a realizar consultas e verificações necessárias para 
-              validação das informações cadastrais junto a órgãos e bureaus de crédito.
+              {t('compliance_forms.declaration_2')}
             </Label>
           </div>
 
@@ -58,8 +58,7 @@ export default function Step11_Confirmacao({ formData, handleChange }) {
               className="mt-1 h-6 w-6"
             />
             <Label htmlFor="declaracao3" className="text-base text-slate-700 cursor-pointer leading-relaxed">
-              Li e concordo com os <a href="#" className="text-[#2bc196] underline">Termos de Uso</a> e 
-              a <a href="#" className="text-[#2bc196] underline">Política de Privacidade</a> da PagSmile.
+              {t('compliance_forms.declaration_3_prefix')} <a href="#" className="text-[#2bc196] underline">{t('compliance_forms.terms_of_use')}</a> {t('compliance_forms.and')} <a href="#" className="text-[#2bc196] underline">{t('compliance_forms.privacy_policy')}</a> {t('compliance_forms.declaration_3_suffix')}
             </Label>
           </div>
         </div>
@@ -68,8 +67,7 @@ export default function Step11_Confirmacao({ formData, handleChange }) {
           <div className="flex items-start gap-4">
             <Shield className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
             <p className="text-blue-700 text-sm">
-              <strong>Segurança:</strong> Seus dados são protegidos com criptografia de ponta a ponta 
-              e tratados de acordo com a Lei Geral de Proteção de Dados (LGPD).
+              <strong>{t('compliance_forms.security_notice')}</strong> {t('compliance_forms.security_message')}
             </p>
           </div>
         </div>
