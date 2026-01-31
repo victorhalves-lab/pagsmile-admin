@@ -285,51 +285,51 @@ export default function RecoveryAgent() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card className="p-4 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="w-4 h-4 text-amber-600" />
-            <span className="text-xs text-amber-600">GMV em Risco</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-amber-600 whitespace-nowrap overflow-hidden text-ellipsis">GMV em Risco</span>
+            <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">{kpis.gmvAtRisk}</p>
+          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400 truncate">{kpis.gmvAtRisk}</p>
         </Card>
 
         <Card className="p-4 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-          <div className="flex items-center gap-2 mb-2">
-            <CheckCircle2 className="w-4 h-4 text-green-600" />
-            <span className="text-xs text-green-600">GMV Recuperado</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-green-600 whitespace-nowrap overflow-hidden text-ellipsis">GMV Recuperado</span>
+            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-green-700 dark:text-green-400">{kpis.gmvRecovered}</p>
+          <p className="text-2xl font-bold text-green-700 dark:text-green-400 truncate">{kpis.gmvRecovered}</p>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Target className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Taxa Recovery</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Taxa Recovery</span>
+            <Target className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.recoveryRate}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.recoveryRate}</p>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Tempo Resposta</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Tempo Resposta</span>
+            <Zap className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.avgResponseTime}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.avgResponseTime}</p>
         </Card>
 
         <Card className="p-4 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
-          <div className="flex items-center gap-2 mb-2">
-            <XCircle className="w-4 h-4 text-red-600" />
-            <span className="text-xs text-red-600">Perdas Evitáveis</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-red-600 whitespace-nowrap overflow-hidden text-ellipsis">Perdas Evitáveis</span>
+            <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-red-700 dark:text-red-400">{kpis.avoidableLosses}</p>
+          <p className="text-2xl font-bold text-red-700 dark:text-red-400 truncate">{kpis.avoidableLosses}</p>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Send className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Comunicações</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Comunicações</span>
+            <Send className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.communicationsSent.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.communicationsSent.toLocaleString()}</p>
         </Card>
       </div>
 

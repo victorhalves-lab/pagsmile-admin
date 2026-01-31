@@ -178,6 +178,7 @@ import ComplianceFullKYC from './pages/ComplianceFullKYC';
 import ComplianceOnboardingStart from './pages/ComplianceOnboardingStart';
 import CompliancePixOnly from './pages/CompliancePixOnly';
 import ConverterAgent from './pages/ConverterAgent';
+import ConverterAgentSettings from './pages/ConverterAgentSettings';
 import CustomDashboards from './pages/CustomDashboards';
 import CustomerDetail from './pages/CustomerDetail';
 import Customers from './pages/Customers';
@@ -188,6 +189,7 @@ import DisputeAgentSettings from './pages/DisputeAgentSettings';
 import DisputeContestation from './pages/DisputeContestation';
 import DisputeDashboard from './pages/DisputeDashboard';
 import DisputeManager from './pages/DisputeManager';
+import DisputeManagerSettings from './pages/DisputeManagerSettings';
 import Disputes from './pages/Disputes';
 import DocumentUploadFull from './pages/DocumentUploadFull';
 import DocumentUploadPix from './pages/DocumentUploadPix';
@@ -240,8 +242,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import ConverterAgentSettings from './pages/ConverterAgentSettings';
-import DisputeManagerSettings from './pages/DisputeManagerSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -377,6 +377,7 @@ export const PAGES = {
     "ComplianceOnboardingStart": ComplianceOnboardingStart,
     "CompliancePixOnly": CompliancePixOnly,
     "ConverterAgent": ConverterAgent,
+    "ConverterAgentSettings": ConverterAgentSettings,
     "CustomDashboards": CustomDashboards,
     "CustomerDetail": CustomerDetail,
     "Customers": Customers,
@@ -387,6 +388,7 @@ export const PAGES = {
     "DisputeContestation": DisputeContestation,
     "DisputeDashboard": DisputeDashboard,
     "DisputeManager": DisputeManager,
+    "DisputeManagerSettings": DisputeManagerSettings,
     "Disputes": Disputes,
     "DocumentUploadFull": DocumentUploadFull,
     "DocumentUploadPix": DocumentUploadPix,
@@ -439,8 +441,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "ConverterAgentSettings": ConverterAgentSettings,
-    "DisputeManagerSettings": DisputeManagerSettings,
 }
 
 export const pagesConfig = {

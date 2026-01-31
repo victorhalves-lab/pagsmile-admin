@@ -207,35 +207,35 @@ export default function ConverterAgent() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="p-4 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-green-600">Taxa de Conversão</span>
-            <Badge className="bg-green-500 text-white text-xs">{kpis.conversionChange}</Badge>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-green-600 whitespace-nowrap overflow-hidden text-ellipsis">Taxa de Conversão</span>
+            <Badge className="bg-green-500 text-white text-xs flex-shrink-0">{kpis.conversionChange}</Badge>
           </div>
-          <p className="text-2xl font-bold text-green-700 dark:text-green-400">{kpis.currentConversion}</p>
+          <p className="text-2xl font-bold text-green-700 dark:text-green-400 truncate">{kpis.currentConversion}</p>
         </Card>
 
         <Card className="p-4 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-red-600">Taxa de Abandono</span>
-            <Badge className="bg-green-500 text-white text-xs">{kpis.abandonChange}</Badge>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-red-600 whitespace-nowrap overflow-hidden text-ellipsis">Taxa de Abandono</span>
+            <Badge className="bg-green-500 text-white text-xs flex-shrink-0">{kpis.abandonChange}</Badge>
           </div>
-          <p className="text-2xl font-bold text-red-700 dark:text-red-400">{kpis.abandonRate}</p>
+          <p className="text-2xl font-bold text-red-700 dark:text-red-400 truncate">{kpis.abandonRate}</p>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-500">Tempo Médio</span>
-            <Badge variant="outline" className="text-xs border-green-500 text-green-600">{kpis.timeChange}</Badge>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Tempo Médio</span>
+            <Badge variant="outline" className="text-xs border-green-500 text-green-600 flex-shrink-0">{kpis.timeChange}</Badge>
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.avgCheckoutTime}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.avgCheckoutTime}</p>
         </Card>
 
         <Card className="p-4 bg-[#2bc196]/10 border-[#2bc196]/20">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-[#2bc196]">Revenue Incremental</span>
-            <Badge className="bg-[#2bc196] text-white text-xs">{kpis.revenueChange}</Badge>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-[#2bc196] whitespace-nowrap overflow-hidden text-ellipsis">Revenue Incremental</span>
+            <Badge className="bg-[#2bc196] text-white text-xs flex-shrink-0">{kpis.revenueChange}</Badge>
           </div>
-          <p className="text-2xl font-bold text-[#2bc196]">{kpis.incrementalRevenue}</p>
+          <p className="text-2xl font-bold text-[#2bc196] truncate">{kpis.incrementalRevenue}</p>
         </Card>
       </div>
 

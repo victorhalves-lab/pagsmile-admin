@@ -237,56 +237,56 @@ export default function DisputeManager() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Total Disputas</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Total Disputas</span>
+            <AlertTriangle className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.totalDisputes}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.totalDisputes}</p>
           <p className="text-xs text-slate-500">{kpis.openDisputes} abertas</p>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Valor Total</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Valor Total</span>
+            <DollarSign className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.totalValue}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.totalValue}</p>
           <p className="text-xs text-slate-500">em disputa</p>
         </Card>
 
         <Card className="p-4 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-          <div className="flex items-center gap-2 mb-2">
-            <Target className="w-4 h-4 text-green-600" />
-            <span className="text-xs text-green-600">Win Rate</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-green-600 whitespace-nowrap overflow-hidden text-ellipsis">Win Rate</span>
+            <Target className="w-5 h-5 text-green-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-green-700 dark:text-green-400">{kpis.winRate}%</p>
+          <p className="text-2xl font-bold text-green-700 dark:text-green-400 truncate">{kpis.winRate}%</p>
           <p className="text-xs text-green-600">acima da média</p>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Clock className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Tempo Médio</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Tempo Médio</span>
+            <Clock className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.avgResolutionTime}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.avgResolutionTime}</p>
           <p className="text-xs text-slate-500">resolução</p>
         </Card>
 
         <Card className="p-4 bg-[#2bc196]/5 border-[#2bc196]/20">
-          <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-4 h-4 text-[#2bc196]" />
-            <span className="text-xs text-[#2bc196]">Recuperação</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-[#2bc196] whitespace-nowrap overflow-hidden text-ellipsis">Recuperação</span>
+            <Zap className="w-5 h-5 text-[#2bc196] flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-[#2bc196]">{kpis.potentialRecovery}</p>
+          <p className="text-2xl font-bold text-[#2bc196] truncate">{kpis.potentialRecovery}</p>
           <p className="text-xs text-[#2bc196]">potencial</p>
         </Card>
 
         <Card className="p-4 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertCircle className="w-4 h-4 text-amber-600" />
-            <span className="text-xs text-amber-600">Urgentes</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-amber-600 whitespace-nowrap overflow-hidden text-ellipsis">Urgentes</span>
+            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">3</p>
+          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400 truncate">3</p>
           <p className="text-xs text-amber-600">prazo &lt; 3 dias</p>
         </Card>
       </div>
