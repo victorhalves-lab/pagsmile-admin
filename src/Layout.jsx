@@ -390,12 +390,21 @@ const getInternetBankingMenuItems = (t) => [
   },
 ];
 
-const aiAgents = [
-  { id: 'dia', label: 'DIA Copilot', page: 'DIACopilot' },
-  { id: 'recovery', label: 'Recovery Agent', page: 'RecoveryAgent' },
-  { id: 'converter', label: 'Converter Agent', page: 'ConverterAgent' },
-  { id: 'dispute', label: 'Dispute Manager', page: 'DisputeAgentSettings' },
-  { id: 'origination', label: 'Origination Agent', page: 'OriginationAgentSettings' },
+// AI Agents for Admin Sub (Merchant-facing)
+const aiAgentsAdminSub = [
+  { id: 'dia', label: 'DIA Copilot', page: 'DIACopilot', description: 'Copiloto do Merchant' },
+  { id: 'recovery', label: 'Recovery Agent', page: 'RecoveryAgent', description: 'Recuperador de Pagamentos' },
+  { id: 'converter', label: 'Converter Agent', page: 'ConverterAgent', description: 'Otimizador de Checkout' },
+  { id: 'dispute', label: 'Dispute Manager', page: 'DisputeManager', description: 'Gestor de Disputas' },
+];
+
+// AI Agents for Admin Interno (Internal PagSmile)
+const aiAgentsAdminInterno = [
+  { id: 'pagsmile-copilot', label: 'PagSmile Copilot', page: 'AdminIntPagSmileCopilot', description: 'Copiloto Interno' },
+  { id: 'recovery-int', label: 'Recovery Agent', page: 'AdminIntRecoveryAgent', description: 'Recuperador de Pagamentos' },
+  { id: 'converter-int', label: 'Converter Agent', page: 'AdminIntConverterAgent', description: 'Otimizador de Checkout' },
+  { id: 'dispute-int', label: 'Dispute Manager', page: 'AdminIntDisputeManager', description: 'Gestor de Disputas' },
+  { id: 'identity', label: 'Identity Onboarder', page: 'AdminIntIdentityOnboarder', description: 'KYC/KYB Copilot' },
 ];
 
 // Páginas que não devem ter o layout admin
@@ -426,7 +435,15 @@ const adminInternoPages = [
   'AdminIntReportsHub', 'AdminIntReportsOperational', 'AdminIntReportsFinancial', 'AdminIntReportsRisk', 'AdminIntReportsCustom', 'AdminIntAnalytics',
   'AdminIntCommDashboard', 'AdminIntCommAutomations', 'AdminIntCommTemplates', 'AdminIntCommSMTP', 'AdminIntCommSenders', 'AdminIntCommLogs',
   'AdminIntRisk', 'AdminIntPreChargebacks', 'AdminIntChargebacks', 'AdminIntAntifraud',
-  'AdminIntMCCs', 'AdminIntMCCsAnalysis', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings'
+  'AdminIntMCCs', 'AdminIntMCCsAnalysis', 'AdminIntPartners', 'AdminIntFeePlans', 'AdminIntAiAgents', 'AdminIntSupport', 'AdminIntReports', 'AdminIntSettings',
+  // AI Agent Pages - Admin Interno
+  'AdminIntPagSmileCopilot', 'AdminIntPagSmileCopilotSettings',
+  'AdminIntRecoveryAgent', 'AdminIntRecoveryAgentSettings',
+  'AdminIntConverterAgent', 'AdminIntConverterAgentSettings',
+  'AdminIntDisputeManager', 'AdminIntDisputeManagerSettings',
+  'AdminIntIdentityOnboarder', 'AdminIntIdentityOnboarderSettings',
+  // Agent Configuration Hub
+  'AdminIntAgentConfigHub'
 ];
 
 import { Sun, Moon } from 'lucide-react';
@@ -781,7 +798,7 @@ export default function Layout({ children, currentPageName }) {
               ))}
             </nav>
 
-            {/* AI Agents Section - Only for Admin Sub */}
+            {/* AI Agents Section - For Admin Sub */}
             {sidebarOpen && currentModule === 'admin-sub' && (
               <div className="px-3 mt-8">
                 <div className="px-3 mb-3 flex items-center gap-2">
@@ -792,7 +809,7 @@ export default function Layout({ children, currentPageName }) {
                   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
                 </div>
                 <div className="space-y-1">
-                {aiAgents.map((agent) => (
+                {aiAgentsAdminSub.map((agent) => (
                   <Link
                     key={agent.id}
                     to={createPageUrl(agent.page)}
@@ -814,9 +831,58 @@ export default function Layout({ children, currentPageName }) {
                     )}>
                        <Sparkles className="w-3.5 h-3.5" />
                     </div>
-                    <span className="relative z-10 font-medium">{agent.label}</span>
+                    <div className="flex-1 relative z-10">
+                      <span className="font-medium block">{agent.label}</span>
+                      <span className="text-[10px] text-slate-500 group-hover:text-slate-400">{agent.description}</span>
+                    </div>
                     {isActivePage(agent.page) && (
                         <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                    )}
+                  </Link>
+                ))}
+                </div>
+              </div>
+            )}
+            
+            {/* AI Agents Section - For Admin Interno */}
+            {sidebarOpen && currentModule === 'admin-interno' && (
+              <div className="px-3 mt-8">
+                <div className="px-3 mb-3 flex items-center gap-2">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+                  <span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest">
+                    Agentes IA
+                  </span>
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+                </div>
+                <div className="space-y-1">
+                {aiAgentsAdminInterno.map((agent) => (
+                  <Link
+                    key={agent.id}
+                    to={createPageUrl(agent.page)}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all group relative overflow-hidden",
+                      isActivePage(agent.page)
+                        ? "text-white"
+                        : "text-slate-400 hover:text-white"
+                    )}
+                  >
+                    {isActivePage(agent.page) && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-transparent opacity-50" />
+                    )}
+                    <div className={cn(
+                      "relative w-6 h-6 flex items-center justify-center rounded-lg transition-all duration-300 shadow-lg",
+                      isActivePage(agent.page) 
+                          ? "bg-gradient-to-br from-purple-500 to-indigo-600 text-white shadow-purple-500/25" 
+                          : "bg-slate-800/50 text-slate-500 group-hover:bg-purple-500/20 group-hover:text-purple-400 border border-slate-700/50 group-hover:border-purple-500/30"
+                    )}>
+                       <Sparkles className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex-1 relative z-10">
+                      <span className="font-medium block">{agent.label}</span>
+                      <span className="text-[10px] text-slate-500 group-hover:text-slate-400">{agent.description}</span>
+                    </div>
+                    {isActivePage(agent.page) && (
+                        <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
                     )}
                   </Link>
                 ))}
@@ -995,7 +1061,7 @@ export default function Layout({ children, currentPageName }) {
         </main>
       </div>
 
-      {/* AI Assistant Panel - Unified for Admin Sub & Admin Interno */}
+      {/* Quick Access Panel - Navigate to Agent Pages */}
       {showAIPanel && (
         <div className="fixed right-0 top-0 h-full w-96 bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 shadow-xl z-50 animate-in slide-in-from-right duration-300">
           <div className="flex items-center justify-between p-4 border-b dark:border-slate-800">
@@ -1009,8 +1075,8 @@ export default function Layout({ children, currentPageName }) {
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm dark:text-white">{currentModule === 'admin-interno' ? 'PagSmile Copilot' : 'DIA Copilot'}</h3>
-                <p className="text-xs text-gray-500 dark:text-slate-400">Assistente Inteligente</p>
+                <h3 className="font-semibold text-sm dark:text-white">{currentModule === 'admin-interno' ? 'Agentes IA' : 'Agentes IA'}</h3>
+                <p className="text-xs text-gray-500 dark:text-slate-400">Acesso Rápido</p>
               </div>
             </div>
             <Button variant="ghost" size="icon" onClick={() => setShowAIPanel(false)}>
@@ -1018,65 +1084,53 @@ export default function Layout({ children, currentPageName }) {
             </Button>
           </div>
           
-          <div className="p-4 h-[calc(100%-140px)] overflow-y-auto">
-            <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 mb-4">
-              <p className="text-sm text-slate-600 dark:text-slate-300">
-                {currentModule === 'admin-interno' 
-                  ? "Olá! Sou o DIA. Estou monitorando todos os merchants e operações. O que você gostaria de analisar?"
-                  : "Olá! Sou o DIA, seu assistente financeiro. Como posso ajudar com sua conta hoje?"}
-              </p>
-            </div>
+          <div className="p-4 h-[calc(100%-80px)] overflow-y-auto">
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase mb-3">
+              Acesse os Agentes
+            </p>
             
             <div className="space-y-2">
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">
-                {currentModule === 'admin-interno' ? "Insights Operacionais" : "Sugestões"}
-              </p>
-              
-              {currentModule === 'admin-interno' ? (
-                <>
-                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors text-sm dark:text-slate-200">
-                    ⚠️ 3 merchants com ratio de chargeback alto
-                  </button>
-                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors text-sm dark:text-slate-200">
-                    🚀 5 novos leads qualificados hoje
-                  </button>
-                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors text-sm dark:text-slate-200">
-                    📋 12 validações de KYC pendentes
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#2bc196] hover:bg-[#2bc196]/5 dark:hover:bg-[#2bc196]/10 transition-colors text-sm dark:text-slate-200">
-                    📊 Analisar taxa de aprovação do mês
-                  </button>
-                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#2bc196] hover:bg-[#2bc196]/5 dark:hover:bg-[#2bc196]/10 transition-colors text-sm dark:text-slate-200">
-                    💰 Ver oportunidades de recuperação
-                  </button>
-                  <button className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#2bc196] hover:bg-[#2bc196]/5 dark:hover:bg-[#2bc196]/10 transition-colors text-sm dark:text-slate-200">
-                    ⚠️ Disputas que precisam de atenção
-                  </button>
-                </>
-              )}
+              {(currentModule === 'admin-interno' ? aiAgentsAdminInterno : aiAgentsAdminSub).map((agent) => (
+                <Link
+                  key={agent.id}
+                  to={createPageUrl(agent.page)}
+                  onClick={() => setShowAIPanel(false)}
+                  className={cn(
+                    "flex items-center gap-3 p-3 rounded-lg border transition-all group",
+                    currentModule === 'admin-interno'
+                      ? "border-slate-200 dark:border-slate-700 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20"
+                      : "border-slate-200 dark:border-slate-700 hover:border-[#2bc196] hover:bg-[#2bc196]/5 dark:hover:bg-[#2bc196]/10"
+                  )}
+                >
+                  <div className={cn(
+                    "w-10 h-10 rounded-lg flex items-center justify-center",
+                    currentModule === 'admin-interno'
+                      ? "bg-purple-100 dark:bg-purple-900/30"
+                      : "bg-[#2bc196]/10 dark:bg-[#2bc196]/20"
+                  )}>
+                    <Sparkles className={cn(
+                      "w-5 h-5",
+                      currentModule === 'admin-interno'
+                        ? "text-purple-600 dark:text-purple-400"
+                        : "text-[#2bc196]"
+                    )} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-sm dark:text-slate-200">{agent.label}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{agent.description}</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300" />
+                </Link>
+              ))}
             </div>
-          </div>
-          
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t dark:border-slate-800 bg-white dark:bg-slate-900">
-            <div className="relative">
-              <Input 
-                placeholder="Digite sua pergunta..." 
-                className="pr-10 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus-visible:ring-offset-0" 
-              />
-              <Button 
-                size="icon" 
-                className={cn(
-                  "absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7",
-                  currentModule === 'admin-interno'
-                    ? "bg-purple-600 hover:bg-purple-700"
-                    : "bg-[#2bc196] hover:bg-[#239b7a]"
-                )}
-              >
-                <ChevronRight className="w-4 h-4" />
-              </Button>
+            
+            <div className="mt-6 p-4 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">💡 Dica</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {currentModule === 'admin-interno' 
+                  ? "Acesse cada agente para ver suas funcionalidades completas, métricas de desempenho e configurações."
+                  : "Explore os agentes de IA para otimizar sua operação, recuperar pagamentos e melhorar conversões."}
+              </p>
             </div>
           </div>
         </div>

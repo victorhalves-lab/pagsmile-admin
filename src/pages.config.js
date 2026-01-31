@@ -115,6 +115,7 @@ import AdminIntMerchantsList from './pages/AdminIntMerchantsList';
 import AdminIntNewMerchant from './pages/AdminIntNewMerchant';
 import AdminIntOrchestration from './pages/AdminIntOrchestration';
 import AdminIntPLD from './pages/AdminIntPLD';
+import AdminIntPagSmileCopilot from './pages/AdminIntPagSmileCopilot';
 import AdminIntPartnerDetail from './pages/AdminIntPartnerDetail';
 import AdminIntPartners from './pages/AdminIntPartners';
 import AdminIntPaymentAgenda from './pages/AdminIntPaymentAgenda';
@@ -146,13 +147,13 @@ import AdminIntSubaccounts from './pages/AdminIntSubaccounts';
 import AdminIntSupport from './pages/AdminIntSupport';
 import AdminIntSystemLogs from './pages/AdminIntSystemLogs';
 import AdminIntTemplates from './pages/AdminIntTemplates';
-import AdminIntTransactionDetail from './pages/AdminIntTransactionDetail';
-import AdminIntUsers from './pages/AdminIntUsers';
-import AdminIntTransactionReports from './pages/AdminIntTransactionReports';
 import AdminIntTransactions from './pages/AdminIntTransactions';
+import AdminIntTransactionDetail from './pages/AdminIntTransactionDetail';
+import AdminIntTransactionReports from './pages/AdminIntTransactionReports';
 import AdminIntTransactionsDashboard from './pages/AdminIntTransactionsDashboard';
 import AdminIntTransactionsList from './pages/AdminIntTransactionsList';
 import AdminIntUserDetail from './pages/AdminIntUserDetail';
+import AdminIntUsers from './pages/AdminIntUsers';
 import AdminIntWebhooks from './pages/AdminIntWebhooks';
 import AdminIntWithdrawalApprovals from './pages/AdminIntWithdrawalApprovals';
 import AdminIntWithdrawals from './pages/AdminIntWithdrawals';
@@ -203,6 +204,7 @@ import LandingPage from './pages/LandingPage';
 import LivenessFacematchStep from './pages/LivenessFacematchStep';
 import LivenessSimulation from './pages/LivenessSimulation';
 import MEDDashboard from './pages/MEDDashboard';
+import OnboardingAgentChat from './pages/OnboardingAgentChat';
 import OriginationAgent from './pages/OriginationAgent';
 import OriginationAgentSettings from './pages/OriginationAgentSettings';
 import PaymentLinkCreate from './pages/PaymentLinkCreate';
@@ -229,8 +231,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntPagSmileCopilot from './pages/AdminIntPagSmileCopilot';
-import OnboardingAgentChat from './pages/OnboardingAgentChat';
 import __Layout from './Layout.jsx';
 
 
@@ -303,6 +303,7 @@ export const PAGES = {
     "AdminIntNewMerchant": AdminIntNewMerchant,
     "AdminIntOrchestration": AdminIntOrchestration,
     "AdminIntPLD": AdminIntPLD,
+    "AdminIntPagSmileCopilot": AdminIntPagSmileCopilot,
     "AdminIntPartnerDetail": AdminIntPartnerDetail,
     "AdminIntPartners": AdminIntPartners,
     "AdminIntPaymentAgenda": AdminIntPaymentAgenda,
@@ -334,13 +335,13 @@ export const PAGES = {
     "AdminIntSupport": AdminIntSupport,
     "AdminIntSystemLogs": AdminIntSystemLogs,
     "AdminIntTemplates": AdminIntTemplates,
-    "AdminIntTransactionDetail": AdminIntTransactionDetail,
-    "AdminIntUsers": AdminIntUsers,
-    "AdminIntTransactionReports": AdminIntTransactionReports,
     "AdminIntTransactions": AdminIntTransactions,
+    "AdminIntTransactionDetail": AdminIntTransactionDetail,
+    "AdminIntTransactionReports": AdminIntTransactionReports,
     "AdminIntTransactionsDashboard": AdminIntTransactionsDashboard,
     "AdminIntTransactionsList": AdminIntTransactionsList,
     "AdminIntUserDetail": AdminIntUserDetail,
+    "AdminIntUsers": AdminIntUsers,
     "AdminIntWebhooks": AdminIntWebhooks,
     "AdminIntWithdrawalApprovals": AdminIntWithdrawalApprovals,
     "AdminIntWithdrawals": AdminIntWithdrawals,
@@ -391,6 +392,7 @@ export const PAGES = {
     "LivenessFacematchStep": LivenessFacematchStep,
     "LivenessSimulation": LivenessSimulation,
     "MEDDashboard": MEDDashboard,
+    "OnboardingAgentChat": OnboardingAgentChat,
     "OriginationAgent": OriginationAgent,
     "OriginationAgentSettings": OriginationAgentSettings,
     "PaymentLinkCreate": PaymentLinkCreate,
@@ -417,8 +419,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntPagSmileCopilot": AdminIntPagSmileCopilot,
-    "OnboardingAgentChat": OnboardingAgentChat,
 }
 
 export const pagesConfig = {
