@@ -58,11 +58,9 @@ const ConversionCard = ({
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center', c.icon)}>
-              <Icon className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-xs font-medium text-slate-500 uppercase">{title}</p>
+            <Icon className={cn("w-5 h-5 flex-shrink-0", c.text)} />
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-slate-500 uppercase whitespace-nowrap overflow-hidden text-ellipsis">{title}</p>
               <p className="text-xs text-slate-400">{approved.toLocaleString('pt-BR')} / {total.toLocaleString('pt-BR')}</p>
             </div>
           </div>

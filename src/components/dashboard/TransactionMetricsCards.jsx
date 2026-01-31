@@ -132,11 +132,11 @@ export default function TransactionMetricsCards({ transactions = [] }) {
                 )}
 
                 {/* Header */}
-                <div className="flex items-center justify-between mb-2">
-                  <IconComponent className={cn("w-4 h-4", metric.textColor)} />
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <IconComponent className={cn("w-5 h-5 flex-shrink-0", metric.textColor)} />
                   {metric.percentage !== undefined && (
                     <span className={cn(
-                      "text-[10px] font-bold px-1.5 py-0.5 rounded",
+                      "text-[10px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap",
                       metric.percentage >= 85 ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"
                     )}>
                       {metric.percentage.toFixed(1)}%
@@ -145,8 +145,8 @@ export default function TransactionMetricsCards({ transactions = [] }) {
                 </div>
 
                 {/* Content */}
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-0.5">{metric.label}</p>
-                <p className="text-2xl font-bold text-slate-800 dark:text-white">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">{metric.label}</p>
+                <p className="text-2xl font-bold text-slate-800 dark:text-white truncate">
                   {metric.count}
                 </p>
                 {metric.value > 0 && (

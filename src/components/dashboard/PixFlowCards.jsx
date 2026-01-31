@@ -91,11 +91,9 @@ export default function PixFlowCards({ transactions = [] }) {
           <CardContent className="p-5">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center shadow-sm">
-                  <ArrowDownLeft className="w-6 h-6 text-emerald-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-emerald-800">PIX Entrada</p>
+                <ArrowDownLeft className="w-6 h-6 text-emerald-600 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis">PIX Entrada</p>
                   <p className="text-xs text-emerald-600">Recebimentos</p>
                 </div>
               </div>
@@ -108,7 +106,7 @@ export default function PixFlowCards({ transactions = [] }) {
               </div>
             </div>
 
-            <p className="text-3xl font-bold text-emerald-900 mb-3">{formatCurrency(metrics.pixInVolume)}</p>
+            <p className="text-3xl font-bold text-emerald-900 mb-3 truncate">{formatCurrency(metrics.pixInVolume)}</p>
 
             <div className="grid grid-cols-3 gap-2">
               <div className="bg-white/60 rounded-lg p-2 text-center">
@@ -132,11 +130,9 @@ export default function PixFlowCards({ transactions = [] }) {
           <CardContent className="p-5">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center shadow-sm">
-                  <ArrowUpRight className="w-6 h-6 text-red-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-red-800">PIX Saída</p>
+                <ArrowUpRight className="w-6 h-6 text-red-600 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-red-800 whitespace-nowrap overflow-hidden text-ellipsis">PIX Saída</p>
                   <p className="text-xs text-red-600">Envios / Devoluções</p>
                 </div>
               </div>
@@ -149,7 +145,7 @@ export default function PixFlowCards({ transactions = [] }) {
               </div>
             </div>
 
-            <p className="text-3xl font-bold text-red-900 mb-3">{formatCurrency(metrics.pixOutVolume)}</p>
+            <p className="text-3xl font-bold text-red-900 mb-3 truncate">{formatCurrency(metrics.pixOutVolume)}</p>
 
             <div className="grid grid-cols-3 gap-2">
               <div className="bg-white/60 rounded-lg p-2 text-center">
@@ -173,11 +169,9 @@ export default function PixFlowCards({ transactions = [] }) {
           <CardContent className="p-5">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center shadow-sm">
-                  <Wallet className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-blue-800">Saldo Líquido PIX</p>
+                <Wallet className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-blue-800 whitespace-nowrap overflow-hidden text-ellipsis">Saldo Líquido PIX</p>
                   <p className="text-xs text-blue-600">Entrada - Saída</p>
                 </div>
               </div>
@@ -191,7 +185,7 @@ export default function PixFlowCards({ transactions = [] }) {
             </div>
 
             <p className={cn(
-              "text-3xl font-bold mb-3",
+              "text-3xl font-bold mb-3 truncate",
               metrics.netBalance >= 0 ? "text-blue-900" : "text-red-900"
             )}>
               {formatCurrency(metrics.netBalance)}

@@ -111,11 +111,11 @@ export default function GMVCards({ data = {}, loading = false }) {
                 )}>
                   <CardContent className="p-4">
                     {/* Header with label and icon */}
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={cn("text-[10px] font-bold tracking-wider", metric.accentColor)}>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className={cn("text-[10px] font-bold tracking-wider whitespace-nowrap overflow-hidden text-ellipsis", metric.accentColor)}>
                         {metric.label}
                       </span>
-                      <IconComponent className={cn("w-4 h-4", metric.iconColor)} />
+                      <IconComponent className={cn("w-5 h-5 flex-shrink-0", metric.iconColor)} />
                     </div>
 
                     {/* Value */}
