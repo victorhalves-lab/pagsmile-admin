@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { createPageUrl } from '@/components/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,8 +11,10 @@ import { Link } from 'react-router-dom';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
 import { cn } from "@/lib/utils";
 import SelectionButton from '@/components/ui/selection-button';
+import LanguageSelector from '@/components/i18n/LanguageSelector';
 
 export default function AccountCreationStep1() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
@@ -44,7 +47,11 @@ export default function AccountCreationStep1() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-2 md:p-4 pb-24 md:pb-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50 p-2 md:p-4 pb-24 md:pb-4 relative">
+      {/* Language Selector */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageSelector />
+      </div>
       <Card className="w-full max-w-5xl rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#003459]/80 backdrop-blur-sm">
         <CardHeader className="text-center pb-0 pt-4 space-y-1">
                         <Link to={createPageUrl('LandingPage')} className="inline-flex items-center justify-center mb-1 hover:opacity-80 transition-opacity">
@@ -55,8 +62,8 @@ export default function AccountCreationStep1() {
                           />
                         </Link>
           <div className="space-y-1">
-            <CardTitle className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Crie sua conta</CardTitle>
-            <CardDescription className="text-base text-slate-500 dark:text-slate-400">Dados do Responsável</CardDescription>
+            <CardTitle className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">{t('onboarding.create_account')}</CardTitle>
+            <CardDescription className="text-base text-slate-500 dark:text-slate-400">{t('onboarding.responsible_data')}</CardDescription>
           </div>
           
           {/* Enhanced Progress Bar */}
@@ -86,57 +93,57 @@ export default function AccountCreationStep1() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                 <div className="space-y-2 md:col-span-6">
-                  <Label htmlFor="fullName">Nome Completo</Label>
-                  <Input id="fullName" placeholder="Seu nome completo" value={formData.fullName} onChange={handleChange} />
+                  <Label htmlFor="fullName">{t('onboarding.full_name')}</Label>
+                  <Input id="fullName" placeholder={t('onboarding.full_name_placeholder')} value={formData.fullName} onChange={handleChange} />
                 </div>
                 
                 <div className="space-y-2 md:col-span-3">
-                  <Label htmlFor="cpf">CPF</Label>
-                  <Input id="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} />
+                  <Label htmlFor="cpf">{t('onboarding.cpf')}</Label>
+                  <Input id="cpf" placeholder={t('onboarding.cpf_placeholder')} value={formData.cpf} onChange={handleChange} />
                 </div>
                 
                 <div className="space-y-2 md:col-span-3">
-                  <Label htmlFor="phone">Telefone</Label>
-                  <Input id="phone" placeholder="(11) 99999-9999" value={formData.phone} onChange={handleChange} />
+                  <Label htmlFor="phone">{t('onboarding.phone')}</Label>
+                  <Input id="phone" placeholder={t('onboarding.phone_placeholder')} value={formData.phone} onChange={handleChange} />
                 </div>
                 
                 <div className="space-y-2 md:col-span-6">
-                  <Label htmlFor="email">E-mail</Label>
-                  <Input id="email" type="email" placeholder="seu@email.com" value={formData.email} onChange={handleChange} />
+                  <Label htmlFor="email">{t('onboarding.email')}</Label>
+                  <Input id="email" type="email" placeholder={t('onboarding.email_placeholder')} value={formData.email} onChange={handleChange} />
                 </div>
 
                 <div className="space-y-2 md:col-span-3">
-                  <Label htmlFor="birthDate">Data de Nascimento</Label>
+                  <Label htmlFor="birthDate">{t('onboarding.birth_date')}</Label>
                   <Input id="birthDate" type="date" value={formData.birthDate} onChange={handleChange} />
                 </div>
                 
                 <div className="space-y-2 md:col-span-3">
-                  <Label className="text-sm font-bold text-[#2bc196]">Representante Legal?</Label>
+                  <Label className="text-sm font-bold text-[#2bc196]">{t('onboarding.legal_representative')}</Label>
                   <div className="flex gap-2">
                     <SelectionButton
                       className="flex-1"
                       selected={formData.isRepresentative === 'yes'}
                       onClick={() => setFormData(p => ({...p, isRepresentative: 'yes'}))}
                     >
-                      Sim
+                      {t('onboarding.yes')}
                     </SelectionButton>
                     <SelectionButton
                       className="flex-1"
                       selected={formData.isRepresentative === 'no'}
                       onClick={() => setFormData(p => ({...p, isRepresentative: 'no'}))}
                     >
-                      Não
+                      {t('onboarding.no')}
                     </SelectionButton>
                   </div>
                 </div>
                 
                 <div className="space-y-2 md:col-span-6">
-                  <Label htmlFor="password">Senha</Label>
-                  <Input id="password" type="password" placeholder="••••••••" value={formData.password} onChange={handleChange} />
+                  <Label htmlFor="password">{t('onboarding.password')}</Label>
+                  <Input id="password" type="password" placeholder={t('onboarding.password_placeholder')} value={formData.password} onChange={handleChange} />
                 </div>
                 <div className="space-y-2 md:col-span-6">
-                  <Label htmlFor="confirmPassword">Confirmar Senha</Label>
-                  <Input id="confirmPassword" type="password" placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} />
+                  <Label htmlFor="confirmPassword">{t('onboarding.confirm_password')}</Label>
+                  <Input id="confirmPassword" type="password" placeholder={t('onboarding.password_placeholder')} value={formData.confirmPassword} onChange={handleChange} />
                 </div>
 
                 <div className="md:col-span-12 pt-2">
@@ -154,16 +161,16 @@ export default function AccountCreationStep1() {
                           {formData.agreeToTerms ? (
                               <>
                                   <CheckCircle2 className="w-4 h-4" />
-                                  Concordo
+                                  {t('onboarding.i_agree')}
                               </>
                           ) : (
                               <>
-                                  Aceitar Termos
+                                  {t('onboarding.accept_terms')}
                               </>
                           )}
                       </button>
                       <p className="text-sm text-slate-500 text-center sm:text-left">
-                          Ao continuar, você concorda com nossos <Link to="#" className="text-[#2bc196] font-semibold hover:underline">Termos de Uso</Link> e <Link to="#" className="text-[#2bc196] font-semibold hover:underline">Política de Privacidade</Link>.
+                          {t('onboarding.terms_text')} <Link to="#" className="text-[#2bc196] font-semibold hover:underline">{t('onboarding.terms_of_use')}</Link> {t('onboarding.and')} <Link to="#" className="text-[#2bc196] font-semibold hover:underline">{t('onboarding.privacy_policy')}</Link>.
                       </p>
                   </div>
                 </div>
@@ -177,9 +184,9 @@ export default function AccountCreationStep1() {
                                   </div>
 
                                   <div className="space-y-1">
-                                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Verifique sua identidade</h3>
+                                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('onboarding.verify_identity')}</h3>
                                     <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
-                                      Como deseja receber o código?
+                                      {t('onboarding.how_receive_code')}
                                     </p>
                                   </div>
 
@@ -200,7 +207,7 @@ export default function AccountCreationStep1() {
                                           )}>
                                               <Mail className="w-3 h-3" />
                                           </div>
-                                          <span className="font-semibold text-xs">Via E-mail</span>
+                                          <span className="font-semibold text-xs">{t('onboarding.via_email')}</span>
                                       </button>
 
                                       <button
@@ -219,12 +226,12 @@ export default function AccountCreationStep1() {
                                           )}>
                                               <Smartphone className="w-3 h-3" />
                                           </div>
-                                          <span className="font-semibold text-xs">Via SMS</span>
+                                          <span className="font-semibold text-xs">{t('onboarding.via_sms')}</span>
                                       </button>
                                   </div>
 
                 <div className="bg-[#2bc196]/5 border border-[#2bc196]/10 rounded-lg p-3 max-w-xs mx-auto">
-                <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Código enviado para</p>
+                <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">{t('onboarding.code_sent_to')}</p>
                 <p className="font-mono font-medium text-slate-700 dark:text-slate-300 truncate">
                   {verificationMethod === 'email' ? formData.email : formData.phone}
                 </p>
@@ -232,10 +239,10 @@ export default function AccountCreationStep1() {
               </div>
 
               <div className="space-y-3 max-w-xs mx-auto">
-                <Label htmlFor="verificationCode" className="text-center block text-slate-700">Código de 6 dígitos</Label>
+                <Label htmlFor="verificationCode" className="text-center block text-slate-700">{t('onboarding.six_digit_code')}</Label>
                 <Input 
                   id="verificationCode" 
-                  placeholder="000 000" 
+                  placeholder={t('onboarding.code_placeholder')} 
                   value={verificationCode} 
                   onChange={(e) => setVerificationCode(e.target.value)}
                   className="text-center text-2xl tracking-[0.5em] font-mono font-bold h-14 border-slate-300 focus:border-[#2bc196] focus:ring-[#2bc196]/20"
@@ -244,7 +251,7 @@ export default function AccountCreationStep1() {
               </div>
 
               <p className="text-sm text-slate-500 text-center">
-                Não recebeu o código? <button className="text-[#2bc196] font-semibold hover:underline hover:text-[#239b7a] transition-colors ml-1">Reenviar agora</button>
+                {t('onboarding.didnt_receive')} <button className="text-[#2bc196] font-semibold hover:underline hover:text-[#239b7a] transition-colors ml-1">{t('onboarding.resend_now')}</button>
               </p>
             </div>
           )}
@@ -255,10 +262,10 @@ export default function AccountCreationStep1() {
             <>
               <div className="flex justify-between w-full">
                 <Button variant="ghost" className="text-slate-500 hover:text-slate-900 hover:bg-slate-100" asChild>
-                  <Link to={createPageUrl('LandingPage')}><ArrowLeft className="mr-2 h-4 w-4" /> Voltar</Link>
+                  <Link to={createPageUrl('LandingPage')}><ArrowLeft className="mr-2 h-4 w-4" /> {t('onboarding.back')}</Link>
                 </Button>
                 <Button onClick={handleNext} size="lg" className="bg-[#2bc196] hover:bg-[#239b7a] text-white font-bold px-10 rounded-full shadow-lg shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 transition-all hover:-translate-y-0.5">
-                  Continuar <ArrowRight className="ml-2 h-4 w-4" />
+                  {t('onboarding.continue')} <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
               <div className="w-full text-center mt-4">
@@ -268,17 +275,17 @@ export default function AccountCreationStep1() {
                   rel="noopener noreferrer"
                   className="text-sm text-[#2bc196] hover:text-[#239b7a] hover:underline font-medium transition-colors"
                 >
-                  Receber proposta personalizada →
+                  {t('onboarding.custom_proposal_link')}
                 </a>
               </div>
             </>
           ) : (
             <>
               <Button variant="ghost" onClick={() => setShowVerification(false)} className="text-slate-500 hover:text-slate-900 hover:bg-slate-100">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t('onboarding.back')}
               </Button>
               <Button onClick={handleVerify} size="lg" className="bg-[#2bc196] hover:bg-[#239b7a] text-white font-bold px-10 rounded-full shadow-lg shadow-[#2bc196]/20 hover:shadow-[#2bc196]/40 transition-all hover:-translate-y-0.5">
-                Confirmar e Avançar <ArrowRight className="ml-2 h-4 w-4" />
+                {t('onboarding.confirm_and_proceed')} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </>
           )}
