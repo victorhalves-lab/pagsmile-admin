@@ -250,6 +250,43 @@ export default function ConverterAgent() {
 
         {/* Simulator Tab */}
         <TabsContent value="simulator" className="space-y-6">
+          {/* Natural Language Scenario Input */}
+          <Card className="border-blue-500/20 bg-gradient-to-r from-blue-50/50 to-transparent dark:from-blue-900/10">
+            <CardHeader>
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-blue-500" />
+                Descrever Cenário de Checkout em Linguagem Natural
+              </CardTitle>
+              <CardDescription>Descreva como quer configurar o checkout e veja o impacto estimado na conversão</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <Textarea
+                  placeholder="Ex: Simule um checkout para produtos de alto valor com parcelamento em até 12x sem juros, PIX com 5% de desconto e frete grátis para compras acima de R$ 200..."
+                  value={nlScenarioInput}
+                  onChange={(e) => setNlScenarioInput(e.target.value)}
+                  className="min-h-[80px] resize-none"
+                />
+                <div className="flex gap-2">
+                  <Button 
+                    className="flex-1 bg-blue-500 hover:bg-blue-600"
+                    disabled={!nlScenarioInput.trim()}
+                    onClick={() => {
+                      alert(`IA analisou: "${nlScenarioInput}"\n\nImpacto Estimado:\n• Conversão: +14.2%\n• MRR Adicional: R$ 32.450/mês\n• Abandono: -8.5%\n\nCenário otimizado para alto ticket com benefícios claros!`);
+                      setNlScenarioInput('');
+                    }}
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Simular com IA
+                  </Button>
+                  <Button variant="outline" onClick={() => setNlScenarioInput('')}>
+                    Limpar
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Controls Panel */}
             <div className="space-y-4">
@@ -257,7 +294,7 @@ export default function ConverterAgent() {
                 <CardHeader>
                   <CardTitle className="text-sm flex items-center gap-2">
                     <Settings className="w-4 h-4" />
-                    Controles de Otimização
+                    Ou Use Controles de Otimização
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-5">

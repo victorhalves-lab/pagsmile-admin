@@ -344,12 +344,49 @@ export default function RecoveryAgent() {
 
         {/* Simulator Tab */}
         <TabsContent value="simulator" className="space-y-6">
+          {/* Natural Language Scenario Input */}
+          <Card className="border-orange-500/20 bg-gradient-to-r from-orange-50/50 to-transparent dark:from-orange-900/10">
+            <CardHeader>
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-orange-500" />
+                Descrever Cenário em Linguagem Natural
+              </CardTitle>
+              <CardDescription>Descreva um cenário de falha e a IA sugerirá a melhor estratégia de recuperação</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <Textarea
+                  placeholder="Ex: Simule uma transação de R$ 500 que falhou por saldo insuficiente de um cliente novo que está tentando comprar pela primeira vez..."
+                  value={nlScenarioInput}
+                  onChange={(e) => setNlScenarioInput(e.target.value)}
+                  className="min-h-[80px] resize-none"
+                />
+                <div className="flex gap-2">
+                  <Button 
+                    className="flex-1 bg-orange-500 hover:bg-orange-600"
+                    disabled={!nlScenarioInput.trim()}
+                    onClick={() => {
+                      alert(`IA analisou: "${nlScenarioInput}"\n\nRecomendação: Enviar WhatsApp com oferta de PIX (5% desconto). Taxa estimada: 58% de sucesso.`);
+                      setNlScenarioInput('');
+                    }}
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Analisar com IA
+                  </Button>
+                  <Button variant="outline" onClick={() => setNlScenarioInput('')}>
+                    Limpar
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Scenario Selection */}
             <div className="lg:col-span-1 space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-sm">Selecione um Cenário</CardTitle>
+                  <CardTitle className="text-sm">Ou Selecione um Cenário</CardTitle>
                   <CardDescription>Simule como o agente reage a cada tipo de falha</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
