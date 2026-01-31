@@ -36,11 +36,11 @@ export default function AdminIntCompliance() {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="QIC Compliance" 
+        title="KYC Compliance" 
         subtitle="Central de Compliance, KYC/KYB e Análise de Risco com Helena IA"
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
-          { label: 'QIC Compliance', page: 'AdminIntCompliance' }
+          { label: 'KYC Compliance', page: 'AdminIntCompliance' }
         ]}
       />
 
