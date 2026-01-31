@@ -28,9 +28,14 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, Legend, PieChart, Pie, Cell } from 'recharts';
+import AgentChatInterface from '@/components/agents/AgentChatInterface';
+import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
+import { processRecoveryAgentAdminMessage, recoveryAgentAdminQuickPrompts } from '@/components/agents/RecoveryAgentChatLogic';
 
 export default function AdminIntRecoveryAgent() {
   const [selectedMerchant, setSelectedMerchant] = useState(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Global KPIs
   const globalKpis = {
@@ -317,6 +322,29 @@ export default function AdminIntRecoveryAgent() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Agent Chat Interface */}
+      <AgentChatInterface
+        agentName="recovery_agent_admin"
+        agentDisplayName="Recovery Agent"
+        agentDescription="Visão consolidada de recuperação"
+        quickPrompts={recoveryAgentAdminQuickPrompts}
+        onProcessMessage={processRecoveryAgentAdminMessage}
+        welcomeMessage="Olá! 👋 Sou o Recovery Agent na visão Admin. Posso ajudar a analisar a performance global de recuperação, identificar merchants que precisam de atenção e sugerir otimizações. O que deseja saber?"
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+        accentColor="#f97316"
+      />
+
+      {/* Floating Button */}
+      <AgentFloatingButton
+        isOpen={isChatOpen}
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        agentName="Recovery Agent"
+        accentColor="#f97316"
+      />
     </div>
   );
 }

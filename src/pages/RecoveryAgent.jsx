@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { 
   RefreshCw, 
   DollarSign, 
@@ -41,6 +42,9 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, Legend, PieChart, Pie, Cell } from 'recharts';
+import AgentChatInterface from '@/components/agents/AgentChatInterface';
+import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
+import { processRecoveryAgentMessage, recoveryAgentQuickPrompts } from '@/components/agents/RecoveryAgentChatLogic';
 
 export default function RecoveryAgent() {
   const [selectedScenario, setSelectedScenario] = useState(null);
@@ -49,6 +53,9 @@ export default function RecoveryAgent() {
   const [recoveryResult, setRecoveryResult] = useState(null);
   const [liveMode, setLiveMode] = useState(false);
   const [liveFeed, setLiveFeed] = useState([]);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [nlScenarioInput, setNlScenarioInput] = useState('');
 
   // KPIs
   const kpis = {
@@ -712,6 +719,29 @@ export default function RecoveryAgent() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Agent Chat Interface */}
+      <AgentChatInterface
+        agentName="recovery_agent"
+        agentDisplayName="Recovery Agent"
+        agentDescription="Assistente de recuperação de pagamentos"
+        quickPrompts={recoveryAgentQuickPrompts}
+        onProcessMessage={processRecoveryAgentMessage}
+        welcomeMessage="Olá! 👋 Sou o Recovery Agent, seu assistente para recuperação de pagamentos. Posso ajudar a analisar transações, sugerir comunicações e maximizar sua taxa de recuperação. Como posso ajudar?"
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+        accentColor="#f97316"
+      />
+
+      {/* Floating Button */}
+      <AgentFloatingButton
+        isOpen={isChatOpen}
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        agentName="Recovery Agent"
+        accentColor="#f97316"
+      />
     </div>
   );
 }
