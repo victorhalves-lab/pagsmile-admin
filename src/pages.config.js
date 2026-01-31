@@ -229,6 +229,8 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
+import AdminIntPagSmileCopilot from './pages/AdminIntPagSmileCopilot';
+import OnboardingAgentChat from './pages/OnboardingAgentChat';
 import __Layout from './Layout.jsx';
 
 
@@ -415,6 +417,8 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
+    "AdminIntPagSmileCopilot": AdminIntPagSmileCopilot,
+    "OnboardingAgentChat": OnboardingAgentChat,
 }
 
 export const pagesConfig = {
