@@ -618,6 +618,7 @@ export default {
     facial_match_approved: "Comparação facial aprovada",
     document_verified: "Documento verificado",
     close_window: "Fechar Janela",
-    start_verification: "Iniciar Verificação"
+    start_verification: "Iniciar Verificação",
+    of: "de"
   }
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,8 +8,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink, CheckCircle2, Loader2, Mail, Shield, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import LanguageSelector from '@/components/i18n/LanguageSelector';
 
 export default function LivenessFacematchStep() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [partnerEmail, setPartnerEmail] = useState('');
   const [linkGenerated, setLinkGenerated] = useState(false);
@@ -66,13 +69,13 @@ export default function LivenessFacematchStep() {
             {!linkGenerated ? (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="partnerEmail">E-mail do Sócio Principal</Label>
+                  <Label htmlFor="partnerEmail">{t('onboarding.partner_email')}</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input
                       id="partnerEmail"
                       type="email"
-                      placeholder="email.socio@empresa.com"
+                      placeholder={t('onboarding.partner_email_placeholder')}
                       value={partnerEmail}
                       onChange={(e) => setPartnerEmail(e.target.value)}
                       className="pl-10"
@@ -85,7 +88,7 @@ export default function LivenessFacematchStep() {
                   disabled={!partnerEmail}
                   className="w-full bg-[#00D26A] hover:bg-[#00A854]"
                 >
-                  Gerar Link de Verificação
+                  {t('onboarding.generate_verification_link')}
                 </Button>
               </>
             ) : (
@@ -101,8 +104,8 @@ export default function LivenessFacematchStep() {
                       <>
                         <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
                         <div>
-                          <p className="font-medium text-blue-700">Link enviado!</p>
-                          <p className="text-sm text-blue-600">Aguardando conclusão da verificação...</p>
+                          <p className="font-medium text-blue-700">{t('onboarding.link_sent')}</p>
+                          <p className="text-sm text-blue-600">{t('onboarding.awaiting_completion')}</p>
                         </div>
                       </>
                     )}
@@ -110,8 +113,8 @@ export default function LivenessFacematchStep() {
                       <>
                         <CheckCircle2 className="w-6 h-6 text-green-500" />
                         <div>
-                          <p className="font-medium text-green-700">Verificação Concluída!</p>
-                          <p className="text-sm text-green-600">Sua identidade foi verificada com sucesso.</p>
+                          <p className="font-medium text-green-700">{t('onboarding.verification_completed')}</p>
+                          <p className="text-sm text-green-600">{t('onboarding.identity_verified')}</p>
                         </div>
                       </>
                     )}
@@ -119,8 +122,8 @@ export default function LivenessFacematchStep() {
                       <>
                         <AlertCircle className="w-6 h-6 text-red-500" />
                         <div>
-                          <p className="font-medium text-red-700">Verificação Falhou</p>
-                          <p className="text-sm text-red-600">Por favor, tente novamente.</p>
+                          <p className="font-medium text-red-700">{t('onboarding.verification_failed')}</p>
+                          <p className="text-sm text-red-600">{t('onboarding.try_again')}</p>
                         </div>
                       </>
                     )}
@@ -132,8 +135,7 @@ export default function LivenessFacematchStep() {
                   <Alert className="bg-amber-50 border-amber-200">
                     <AlertCircle className="h-4 w-4 text-amber-600" />
                     <AlertDescription className="text-amber-700">
-                      <strong>Modo Demonstração:</strong> Clique no botão abaixo para simular o processo 
-                      de Liveness/Facematch que seria realizado pelo sócio.
+                      <strong>{t('onboarding.demo_mode')}</strong> {t('onboarding.demo_description')}
                     </AlertDescription>
                   </Alert>
                   
@@ -143,13 +145,13 @@ export default function LivenessFacematchStep() {
                     className="w-full border-2 border-dashed"
                   >
                     <ExternalLink className="mr-2 h-4 w-4" /> 
-                    Abrir Simulação Externa
+                    {t('onboarding.open_external_simulation')}
                   </Button>
                 </div>
 
                 {livenessStatus === 'completed' && (
                   <Button onClick={handleContinue} className="w-full bg-[#00D26A] hover:bg-[#00A854]">
-                    Continuar para o Dashboard
+                    {t('onboarding.continue_to_dashboard')}
                   </Button>
                 )}
               </div>
@@ -159,7 +161,7 @@ export default function LivenessFacematchStep() {
           <CardFooter className="justify-center pt-0">
             <Button variant="ghost" size="sm" asChild>
               <Link to={createPageUrl('Dashboard')}>
-                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar ao Dashboard
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t('onboarding.back_to_dashboard')}
               </Link>
             </Button>
           </CardFooter>

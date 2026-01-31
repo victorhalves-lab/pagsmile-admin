@@ -618,6 +618,7 @@ export default {
     facial_match_approved: "Facial match approved",
     document_verified: "Document verified",
     close_window: "Close Window",
-    start_verification: "Start Verification"
+    start_verification: "Start Verification",
+    of: "of"
   }
 };

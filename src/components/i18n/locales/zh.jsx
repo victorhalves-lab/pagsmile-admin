@@ -618,6 +618,7 @@ export default {
     facial_match_approved: "面部匹配通过",
     document_verified: "证件已验证",
     close_window: "关闭窗口",
-    start_verification: "开始验证"
+    start_verification: "开始验证",
+    of: "/"
   }
 };

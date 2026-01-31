@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, Upload, CheckCircle2, FileText, X, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import LanguageSelector from '@/components/i18n/LanguageSelector';
 
 // Removed 'required: true' to make them optional as requested
 const requiredDocuments = [
@@ -21,6 +23,7 @@ const requiredDocuments = [
 ];
 
 export default function DocumentUploadPix() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [uploadedDocs, setUploadedDocs] = useState({});
 
@@ -49,7 +52,11 @@ export default function DocumentUploadPix() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4 px-4 flex flex-col items-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4 px-4 flex flex-col items-center relative">
+      {/* Language Selector */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageSelector />
+      </div>
       <div className="w-full max-w-6xl">
         {/* Header */}
         <div className="text-center mb-6">
@@ -58,10 +65,10 @@ export default function DocumentUploadPix() {
             alt="PagSmile Logo"
             className="h-8 mx-auto mb-2"
           />
-          <h1 className="text-xl font-bold text-gray-800">Upload de Documentos</h1>
+          <h1 className="text-xl font-bold text-gray-800">{t('onboarding.document_upload')}</h1>
           <div className="max-w-md mx-auto mt-2 flex items-center gap-3">
              <Progress value={progressPercent} className="h-1.5 flex-1" />
-             <span className="text-xs text-gray-500 font-medium whitespace-nowrap">{uploadedCount} de {totalCount}</span>
+             <span className="text-xs text-gray-500 font-medium whitespace-nowrap">{uploadedCount} {t('common.of')} {totalCount}</span>
           </div>
         </div>
 
@@ -102,7 +109,7 @@ export default function DocumentUploadPix() {
                 <div className="mt-2 w-full">
                   {isUploaded ? (
                     <div className="text-[10px] text-green-600 font-medium text-center bg-green-100/50 rounded py-1">
-                      Enviado
+                      {t('onboarding.uploaded')}
                     </div>
                   ) : (
                     <Button 
@@ -111,7 +118,7 @@ export default function DocumentUploadPix() {
                       onClick={() => handleFileSelect(doc.id)}
                       className="w-full h-7 text-xs border-dashed border-slate-300 hover:border-[#00c295] hover:text-[#00c295]"
                     >
-                      <Upload className="w-3 h-3 mr-1" /> Upload
+                      <Upload className="w-3 h-3 mr-1" /> {t('onboarding.upload')}
                     </Button>
                   )}
                 </div>
@@ -124,7 +131,7 @@ export default function DocumentUploadPix() {
         <div className="flex justify-between items-center max-w-4xl mx-auto">
           <Button variant="ghost" asChild size="sm">
             <Link to={createPageUrl('CompliancePixOnly')}>
-              <ArrowLeft className="mr-2 h-3 w-3" /> Voltar
+              <ArrowLeft className="mr-2 h-3 w-3" /> {t('onboarding.back')}
             </Link>
           </Button>
           <Button 
@@ -132,7 +139,7 @@ export default function DocumentUploadPix() {
             size="sm"
             className="bg-[#00D26A] hover:bg-[#00A854] px-8 rounded-full font-bold"
           >
-            Continuar <ArrowRight className="ml-2 h-3 w-3" />
+            {t('onboarding.continue')} <ArrowRight className="ml-2 h-3 w-3" />
           </Button>
         </div>
       </div>

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import LanguageSelector from '@/components/i18n/LanguageSelector';
 
 // Shared Components
 import Step1_Identificacao from '@/components/compliance/shared/Step1_Identificacao';
@@ -26,6 +28,7 @@ import Section10Marketplace from '@/components/compliance/full/Section10Marketpl
 import Section11SegurancaCartao from '@/components/compliance/full/Section11SegurancaCartao';
 
 export default function ComplianceFullKYC() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState(1);
   const totalSections = 16;
@@ -73,22 +76,22 @@ export default function ComplianceFullKYC() {
   const progressPercent = (currentSection / totalSections) * 100;
 
   const steps = [
-    { title: 'Identificação', Component: Step1_Identificacao },
-    { title: 'Tipo de Empresa', Component: Step2_TipoEmpresa },
-    { title: 'Endereço', Component: Step3_Endereco },
-    { title: 'Atividade', Component: Step4_Atividade },
-    { title: 'Volumetria', Component: Step5_Volumetria },
-    { title: 'Perfil de Clientes', Component: Step6_PerfilClientes },
-    { title: 'Responsáveis', Component: Step7_Responsaveis },
-    { title: 'UBO', Component: Section4UBO },
-    { title: 'Sócios', Component: Section5Socios },
-    { title: 'Licenciamento', Component: Section3Licenciamento },
-    { title: 'Marketplace', Component: Section10Marketplace },
-    { title: 'Segurança Cartão', Component: Section11SegurancaCartao },
-    { title: 'PLD - Sanções', Component: Step8_PLDSancoes },
-    { title: 'PLD - Riscos', Component: Step9_PLDRiscos },
-    { title: 'PLD - Operação', Component: Step10_PLDOperacao },
-    { title: 'Confirmação', Component: Step11_Confirmacao },
+    { title: t('onboarding.step_identification'), Component: Step1_Identificacao },
+    { title: t('onboarding.step_company_type'), Component: Step2_TipoEmpresa },
+    { title: t('onboarding.step_address'), Component: Step3_Endereco },
+    { title: t('onboarding.step_activity'), Component: Step4_Atividade },
+    { title: t('onboarding.step_volume'), Component: Step5_Volumetria },
+    { title: t('onboarding.step_client_profile'), Component: Step6_PerfilClientes },
+    { title: t('onboarding.step_responsibles'), Component: Step7_Responsaveis },
+    { title: t('onboarding.step_ubo'), Component: Section4UBO },
+    { title: t('onboarding.step_partners'), Component: Section5Socios },
+    { title: t('onboarding.step_licensing'), Component: Section3Licenciamento },
+    { title: t('onboarding.step_marketplace'), Component: Section10Marketplace },
+    { title: t('onboarding.step_card_security'), Component: Section11SegurancaCartao },
+    { title: t('onboarding.step_pld_sanctions'), Component: Step8_PLDSancoes },
+    { title: t('onboarding.step_pld_risks'), Component: Step9_PLDRiscos },
+    { title: t('onboarding.step_pld_operation'), Component: Step10_PLDOperacao },
+    { title: t('onboarding.step_confirmation'), Component: Step11_Confirmacao },
   ];
 
   const CurrentComponent = steps[currentSection - 1]?.Component;
@@ -105,9 +108,12 @@ export default function ComplianceFullKYC() {
               alt="PagSmile Logo"
               className="h-8"
             />
-            <div className="text-right">
-              <h1 className="text-lg font-bold text-slate-800">Compliance Completo (KYC/KYB)</h1>
-              <p className="text-sm text-slate-500">{currentTitle}</p>
+            <div className="flex items-center gap-4">
+              <LanguageSelector />
+              <div className="text-right">
+                <h1 className="text-lg font-bold text-slate-800">{t('onboarding.compliance_full')}</h1>
+                <p className="text-sm text-slate-500">{currentTitle}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -118,10 +124,10 @@ export default function ComplianceFullKYC() {
         <div className="max-w-5xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-slate-600">
-              Etapa {currentSection} de {totalSections}
+              {t('onboarding.step_x_of_y', { current: currentSection, total: totalSections })}
             </span>
             <span className="text-sm font-medium text-[#2bc196]">
-              {Math.round(progressPercent)}% concluído
+              {t('onboarding.percent_completed', { percent: Math.round(progressPercent) })}
             </span>
           </div>
           <Progress value={progressPercent} className="h-2" />
@@ -206,22 +212,22 @@ export default function ComplianceFullKYC() {
           {currentSection === 1 ? (
             <Button variant="outline" size="lg" asChild className="gap-2">
               <Link to={createPageUrl('ComplianceOnboardingStart')}>
-                <ArrowLeft className="w-4 h-4" /> Voltar
+                <ArrowLeft className="w-4 h-4" /> {t('onboarding.back')}
               </Link>
             </Button>
           ) : (
             <Button variant="outline" size="lg" onClick={handlePrevious} className="gap-2">
-              <ArrowLeft className="w-4 h-4" /> Anterior
+              <ArrowLeft className="w-4 h-4" /> {t('onboarding.previous')}
             </Button>
           )}
           
           {currentSection < totalSections ? (
             <Button size="lg" onClick={handleNext} className="bg-[#2bc196] hover:bg-[#239b7a] text-white gap-2 px-8">
-              Próxima <ArrowRight className="w-4 h-4" />
+              {t('onboarding.next')} <ArrowRight className="w-4 h-4" />
             </Button>
           ) : (
             <Button size="lg" onClick={handleSubmit} className="bg-[#2bc196] hover:bg-[#239b7a] text-white gap-2 px-8">
-              Finalizar <Check className="w-4 h-4" />
+              {t('onboarding.finish')} <Check className="w-4 h-4" />
             </Button>
           )}
         </div>
