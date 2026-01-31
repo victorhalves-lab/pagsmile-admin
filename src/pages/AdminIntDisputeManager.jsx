@@ -5,6 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { 
   Gavel, 
   DollarSign, 
@@ -27,7 +30,10 @@ import {
   Shield,
   FileText,
   Brain,
-  AlertCircle
+  AlertCircle,
+  Save,
+  Bell,
+  Users
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
@@ -39,6 +45,32 @@ import { processDisputeManagerAdminMessage, disputeManagerAdminQuickPrompts } fr
 export default function AdminIntDisputeManager() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  
+  // Settings state for Rules & Automation tab
+  const [settings, setSettings] = useState({
+    agentEnabled: true,
+    autoContestHighProbability: true,
+    minWinProbabilityForAutoContest: 85,
+    enableAutoAcceptGlobal: true,
+    globalAutoAcceptMaxValue: 100,
+    escalateHighValue: true,
+    globalHighValueThreshold: 10000,
+    monitorChargebackRatio: true,
+    ratioAlertThreshold: 1.0,
+    ratioCriticalThreshold: 1.5,
+    autoBlockAboveCritical: false,
+    notifyNewDispute: true,
+    notifyHighValue: true,
+    highValueNotificationThreshold: 5000
+  });
+
+  // Automation rules mock data
+  const automationRules = [
+    { id: 1, name: 'Auto-aceitar disputas < R$100', condition: 'valor < 100 AND motivo = "desistência"', action: 'Aceitar automaticamente', status: 'active' },
+    { id: 2, name: 'Contestar alta probabilidade', condition: 'win_probability >= 85%', action: 'Iniciar contestação automática', status: 'active' },
+    { id: 3, name: 'Escalar valores altos', condition: 'valor >= 10000', action: 'Escalar para supervisor', status: 'active' },
+    { id: 4, name: 'Alertar ratio crítico', condition: 'chargeback_ratio >= 1.5%', action: 'Bloquear processamento', status: 'inactive' }
+  ];
   // Global KPIs
   const globalKpis = {
     totalDisputes: 847,
@@ -205,11 +237,12 @@ export default function AdminIntDisputeManager() {
 
       {/* Main Content */}
       <Tabs defaultValue="overview">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="merchants">Por Merchant</TabsTrigger>
           <TabsTrigger value="types">Por Tipo</TabsTrigger>
           <TabsTrigger value="ai">AI Insights</TabsTrigger>
+          <TabsTrigger value="rules">Regras e Automações</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -414,6 +447,184 @@ export default function AdminIntDisputeManager() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Rules & Automation Tab */}
+        <TabsContent value="rules" className="space-y-6">
+          {/* Automation Rules Table */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-red-600" />
+                    Regras de Automação de Disputas
+                  </CardTitle>
+                  <CardDescription>Regras ativas que automatizam a gestão de disputas</CardDescription>
+                </div>
+                <Button size="sm" className="bg-red-600 hover:bg-red-700">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Nova Regra
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {automationRules.map((rule) => (
+                  <div 
+                    key={rule.id}
+                    className={`flex items-center justify-between p-4 rounded-lg border-2 transition-all ${
+                      rule.status === 'active' 
+                        ? 'border-green-200 bg-green-50/50 dark:bg-green-900/10' 
+                        : 'border-slate-200 bg-slate-50 dark:bg-slate-800'
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        rule.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-slate-200 text-slate-500'
+                      }`}>
+                        <Zap className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-slate-900 dark:text-white">{rule.name}</p>
+                        <p className="text-xs text-slate-500 font-mono">{rule.condition}</p>
+                        <p className="text-sm text-slate-600 mt-1">→ {rule.action}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Badge className={rule.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}>
+                        {rule.status === 'active' ? 'Ativa' : 'Inativa'}
+                      </Badge>
+                      <Switch checked={rule.status === 'active'} />
+                      <Button variant="ghost" size="icon">
+                        <Settings className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Global Settings */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Automação de Contestação</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 rounded-lg border">
+                  <div>
+                    <Label className="text-sm">Agente Ativo Globalmente</Label>
+                    <p className="text-xs text-slate-500">Habilita gestão automática</p>
+                  </div>
+                  <Switch 
+                    checked={settings.agentEnabled}
+                    onCheckedChange={(v) => setSettings({...settings, agentEnabled: v})}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-lg border">
+                  <div>
+                    <Label className="text-sm">Contestar Auto (Alta Prob.)</Label>
+                    <p className="text-xs text-slate-500">Inicia sem intervenção manual</p>
+                  </div>
+                  <Switch 
+                    checked={settings.autoContestHighProbability}
+                    onCheckedChange={(v) => setSettings({...settings, autoContestHighProbability: v})}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs">Prob. Mínima para Auto-Contestar: {settings.minWinProbabilityForAutoContest}%</Label>
+                  <Slider 
+                    value={[settings.minWinProbabilityForAutoContest]}
+                    onValueChange={([v]) => setSettings({...settings, minWinProbabilityForAutoContest: v})}
+                    min={70}
+                    max={95}
+                    step={5}
+                    disabled={!settings.autoContestHighProbability}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs">Valor Máx. Auto-Aceitar</Label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-500">R$</span>
+                    <Input 
+                      type="number"
+                      value={settings.globalAutoAcceptMaxValue}
+                      onChange={(e) => setSettings({...settings, globalAutoAcceptMaxValue: Number(e.target.value)})}
+                      className="w-24 h-8 text-sm"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Monitoramento de Ratio</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 rounded-lg border">
+                  <div>
+                    <Label className="text-sm">Monitorar CB Ratio</Label>
+                    <p className="text-xs text-slate-500">Acompanha ratio por merchant</p>
+                  </div>
+                  <Switch 
+                    checked={settings.monitorChargebackRatio}
+                    onCheckedChange={(v) => setSettings({...settings, monitorChargebackRatio: v})}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs">Threshold de Alerta: {settings.ratioAlertThreshold}%</Label>
+                  <Slider 
+                    value={[settings.ratioAlertThreshold * 10]}
+                    onValueChange={([v]) => setSettings({...settings, ratioAlertThreshold: v / 10})}
+                    min={5}
+                    max={20}
+                    step={1}
+                    disabled={!settings.monitorChargebackRatio}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs">Threshold Crítico: {settings.ratioCriticalThreshold}%</Label>
+                  <Slider 
+                    value={[settings.ratioCriticalThreshold * 10]}
+                    onValueChange={([v]) => setSettings({...settings, ratioCriticalThreshold: v / 10})}
+                    min={10}
+                    max={30}
+                    step={1}
+                    disabled={!settings.monitorChargebackRatio}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-lg border bg-red-50 dark:bg-red-900/20">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-red-600" />
+                    <div>
+                      <Label className="text-sm">Bloquear Acima do Crítico</Label>
+                      <p className="text-xs text-slate-500">Suspende processamento</p>
+                    </div>
+                  </div>
+                  <Switch 
+                    checked={settings.autoBlockAboveCritical}
+                    onCheckedChange={(v) => setSettings({...settings, autoBlockAboveCritical: v})}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="flex justify-end">
+            <Button className="bg-red-600 hover:bg-red-700">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar Configurações
+            </Button>
+          </div>
         </TabsContent>
       </Tabs>
 
