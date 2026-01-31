@@ -234,6 +234,12 @@ import Withdrawals from './pages/Withdrawals';
 import AdminIntIdentityOnboarder from './pages/AdminIntIdentityOnboarder';
 import AdminIntRecoveryAgent from './pages/AdminIntRecoveryAgent';
 import AdminIntConverterAgent from './pages/AdminIntConverterAgent';
+import AdminIntDisputeManager from './pages/AdminIntDisputeManager';
+import AdminIntPagSmileCopilotSettings from './pages/AdminIntPagSmileCopilotSettings';
+import AdminIntRecoveryAgentSettings from './pages/AdminIntRecoveryAgentSettings';
+import AdminIntConverterAgentSettings from './pages/AdminIntConverterAgentSettings';
+import AdminIntDisputeManagerSettings from './pages/AdminIntDisputeManagerSettings';
+import AdminIntIdentityOnboarderSettings from './pages/AdminIntIdentityOnboarderSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -425,6 +431,12 @@ export const PAGES = {
     "AdminIntIdentityOnboarder": AdminIntIdentityOnboarder,
     "AdminIntRecoveryAgent": AdminIntRecoveryAgent,
     "AdminIntConverterAgent": AdminIntConverterAgent,
+    "AdminIntDisputeManager": AdminIntDisputeManager,
+    "AdminIntPagSmileCopilotSettings": AdminIntPagSmileCopilotSettings,
+    "AdminIntRecoveryAgentSettings": AdminIntRecoveryAgentSettings,
+    "AdminIntConverterAgentSettings": AdminIntConverterAgentSettings,
+    "AdminIntDisputeManagerSettings": AdminIntDisputeManagerSettings,
+    "AdminIntIdentityOnboarderSettings": AdminIntIdentityOnboarderSettings,
 }
 
 export const pagesConfig = {
