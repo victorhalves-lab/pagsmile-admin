@@ -232,6 +232,8 @@ import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
 import AdminIntIdentityOnboarder from './pages/AdminIntIdentityOnboarder';
+import AdminIntRecoveryAgent from './pages/AdminIntRecoveryAgent';
+import AdminIntConverterAgent from './pages/AdminIntConverterAgent';
 import __Layout from './Layout.jsx';
 
 
@@ -421,6 +423,8 @@ export const PAGES = {
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
     "AdminIntIdentityOnboarder": AdminIntIdentityOnboarder,
+    "AdminIntRecoveryAgent": AdminIntRecoveryAgent,
+    "AdminIntConverterAgent": AdminIntConverterAgent,
 }
 
 export const pagesConfig = {

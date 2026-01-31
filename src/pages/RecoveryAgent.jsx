@@ -1,359 +1,647 @@
 import React, { useState, useEffect } from 'react';
-import PageHeader from '@/components/common/PageHeader';
-import { useTranslation } from 'react-i18next';
-import DynamicKpiCard from '@/components/common/DynamicKpiCard';
-import MetricImpactCard from '@/components/common/MetricImpactCard';
-import SimulatedCheckoutIframe from '@/components/common/SimulatedCheckoutIframe';
-import SimulatedActionButton from '@/components/common/SimulatedActionButton';
-import AgentChatInterface from '@/components/common/AgentChatInterface';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { LifeBuoy, CreditCard, QrCode, Zap, TrendingUp, AlertTriangle, CheckCircle, Mail, MessageSquare, Clock, RefreshCw, DollarSign, Phone, Send } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { 
+  RefreshCw, 
+  DollarSign, 
+  TrendingUp, 
+  AlertTriangle, 
+  CheckCircle2, 
+  XCircle,
+  ArrowRight,
+  CreditCard,
+  QrCode,
+  Smartphone,
+  Mail,
+  MessageSquare,
+  Bell,
+  Clock,
+  Zap,
+  Play,
+  Settings,
+  Target,
+  BarChart3,
+  Sparkles,
+  Phone,
+  Send,
+  ChevronRight,
+  Loader2,
+  WalletCards,
+  Split,
+  RotateCcw,
+  Percent
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, Legend, PieChart, Pie, Cell } from 'recharts';
-import { toast } from 'sonner';
 
 export default function RecoveryAgent() {
-  const { t } = useTranslation();
-  const [scenarioModalOpen, setScenarioModalOpen] = useState(false);
-  const [selectedScenario, setSelectedScenario] = useState('');
-  const [pixDiscount, setPixDiscount] = useState([5]);
-  const [retryEnabled, setRetryEnabled] = useState(true);
+  const [selectedScenario, setSelectedScenario] = useState(null);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simulationStep, setSimulationStep] = useState(0);
+  const [recoveryResult, setRecoveryResult] = useState(null);
+  const [liveMode, setLiveMode] = useState(false);
+  const [liveFeed, setLiveFeed] = useState([]);
 
-  const [liveRecoveryFeed, setLiveRecoveryFeed] = useState([]);
-  const [simulatingLive, setSimulatingLive] = useState(false);
+  // KPIs
+  const kpis = {
+    gmvAtRisk: 'R$ 127.450',
+    gmvRecovered: 'R$ 68.230',
+    recoveryRate: '53.5%',
+    avgResponseTime: '0.8s',
+    avoidableLosses: 'R$ 32.180',
+    communicationsSent: 4250
+  };
 
+  // Scenarios with detailed actions
   const scenarios = [
-    { id: 'nsf', label: 'Saldo Insuficiente (NSF)', impact: '35%', recovery: '60%' },
-    { id: 'limit', label: 'Limite Excedido', impact: '25%', recovery: '45%' },
-    { id: 'fraud_suspect', label: 'Suspeita de Fraude', impact: '20%', recovery: '70%' },
-    { id: 'expired', label: 'Cartão Expirado', impact: '10%', recovery: '55%' },
-    { id: 'timeout', label: 'Timeout/Erro Técnico', impact: '10%', recovery: '80%' },
-    { id: 'abandon', label: 'Abandono de Checkout', impact: '40%', recovery: '35%' }
+    {
+      id: 'nsf',
+      name: 'Saldo Insuficiente',
+      description: 'Cliente não tem saldo suficiente no cartão',
+      icon: WalletCards,
+      color: 'amber',
+      impact: '35%',
+      recoveryRate: '62%',
+      actions: [
+        { type: 'primary', label: 'Oferecer PIX com 5% desconto', icon: QrCode },
+        { type: 'secondary', label: 'Sugerir outro cartão', icon: CreditCard },
+        { type: 'fallback', label: 'Enviar link por WhatsApp', icon: MessageSquare }
+      ],
+      checkoutAction: {
+        title: 'Ops! Saldo insuficiente',
+        message: 'Que tal pagar com PIX e ganhar 5% de desconto?',
+        primaryButton: 'Pagar com PIX (R$ 142,50)',
+        secondaryButton: 'Usar Outro Cartão'
+      }
+    },
+    {
+      id: 'limit',
+      name: 'Limite Excedido',
+      description: 'Valor da compra excede o limite disponível',
+      icon: AlertTriangle,
+      color: 'red',
+      impact: '25%',
+      recoveryRate: '48%',
+      actions: [
+        { type: 'primary', label: 'Dividir em 2 cartões', icon: Split },
+        { type: 'secondary', label: 'Parcelar valor', icon: CreditCard },
+        { type: 'fallback', label: 'Oferecer PIX', icon: QrCode }
+      ],
+      checkoutAction: {
+        title: 'Limite excedido neste cartão',
+        message: 'Divida o pagamento em dois cartões para concluir a compra.',
+        primaryButton: 'Dividir Pagamento',
+        secondaryButton: 'Pagar Metade Agora'
+      }
+    },
+    {
+      id: 'pix_pending',
+      name: 'PIX Não Finalizado',
+      description: 'Cliente gerou QR Code mas não pagou',
+      icon: QrCode,
+      color: 'blue',
+      impact: '20%',
+      recoveryRate: '71%',
+      actions: [
+        { type: 'primary', label: 'Enviar lembrete WhatsApp', icon: MessageSquare },
+        { type: 'secondary', label: 'Estender prazo do QR', icon: Clock },
+        { type: 'fallback', label: 'Oferecer cartão', icon: CreditCard }
+      ],
+      checkoutAction: {
+        title: 'Seu PIX ainda está aberto!',
+        message: 'O QR Code expira em 15 minutos. Escaneie agora para garantir sua compra.',
+        primaryButton: 'Ver QR Code Novamente',
+        secondaryButton: 'Pagar com Cartão'
+      }
+    },
+    {
+      id: 'abandon',
+      name: 'Abandono de Checkout',
+      description: 'Cliente saiu antes de concluir',
+      icon: XCircle,
+      color: 'slate',
+      impact: '40%',
+      recoveryRate: '35%',
+      actions: [
+        { type: 'primary', label: 'Email de recuperação', icon: Mail },
+        { type: 'secondary', label: 'Push notification', icon: Bell },
+        { type: 'fallback', label: 'WhatsApp com desconto', icon: MessageSquare }
+      ],
+      checkoutAction: {
+        title: 'Você esqueceu algo!',
+        message: 'Seus itens ainda estão no carrinho. Finalize em até 30min e ganhe frete grátis!',
+        primaryButton: 'Finalizar Compra',
+        secondaryButton: 'Ver Carrinho'
+      }
+    },
+    {
+      id: 'timeout',
+      name: 'Erro Técnico / Timeout',
+      description: 'Falha na comunicação com adquirente',
+      icon: RotateCcw,
+      color: 'purple',
+      impact: '10%',
+      recoveryRate: '85%',
+      actions: [
+        { type: 'primary', label: 'Retry automático', icon: RefreshCw },
+        { type: 'secondary', label: 'Roteamento alternativo', icon: ArrowRight },
+        { type: 'fallback', label: 'Oferecer PIX', icon: QrCode }
+      ],
+      checkoutAction: {
+        title: 'Processando novamente...',
+        message: 'Detectamos uma instabilidade. Tentando novamente automaticamente.',
+        primaryButton: 'Aguarde...',
+        secondaryButton: 'Tentar com PIX'
+      }
+    }
   ];
 
-  const channelPerformance = [
-    { channel: 'WhatsApp', sent: 1250, opened: 890, converted: 312, rate: 35 },
-    { channel: 'Email', sent: 2100, opened: 630, converted: 126, rate: 20 },
-    { channel: 'SMS', sent: 850, opened: 510, converted: 102, rate: 20 },
-    { channel: 'Push', sent: 1800, opened: 720, converted: 108, rate: 15 }
+  // Channel performance data
+  const channelData = [
+    { channel: 'WhatsApp', sent: 1250, converted: 438, rate: 35 },
+    { channel: 'Email', sent: 2100, converted: 420, rate: 20 },
+    { channel: 'SMS', sent: 850, converted: 170, rate: 20 },
+    { channel: 'Push', sent: 950, converted: 143, rate: 15 }
   ];
 
-  // Simular feed em tempo real
+  // Recovery evolution
+  const recoveryEvolution = [
+    { month: 'Set', atRisk: 85, recovered: 42 },
+    { month: 'Out', atRisk: 92, recovered: 48 },
+    { month: 'Nov', atRisk: 105, recovered: 55 },
+    { month: 'Dez', atRisk: 118, recovered: 62 },
+    { month: 'Jan', atRisk: 127, recovered: 68 }
+  ];
+
+  // Live feed simulation
   useEffect(() => {
-    if (simulatingLive) {
-      const mockEvents = [
-        { type: 'decline', customer: 'João S.', amount: 289, reason: 'NSF', action: 'PIX oferecido', status: 'pending' },
-        { type: 'recovery', customer: 'Maria L.', amount: 450, reason: 'Limite', action: 'Split aceito', status: 'recovered' },
-        { type: 'abandon', customer: 'Carlos M.', amount: 178, reason: 'Abandono', action: 'WhatsApp enviado', status: 'pending' },
-        { type: 'recovery', customer: 'Ana P.', amount: 890, reason: 'Timeout', action: 'Retry sucesso', status: 'recovered' },
-        { type: 'decline', customer: 'Pedro R.', amount: 345, reason: 'Fraude', action: 'Roteamento alternativo', status: 'processing' }
+    if (liveMode) {
+      const events = [
+        { customer: 'João S.', amount: 289, scenario: 'NSF', action: 'PIX oferecido', status: 'pending' },
+        { customer: 'Maria L.', amount: 450, scenario: 'Limite', action: 'Split aceito', status: 'recovered' },
+        { customer: 'Carlos M.', amount: 178, scenario: 'Abandono', action: 'WhatsApp enviado', status: 'pending' },
+        { customer: 'Ana P.', amount: 890, scenario: 'Timeout', action: 'Retry sucesso', status: 'recovered' },
+        { customer: 'Pedro R.', amount: 345, scenario: 'PIX Pendente', action: 'Lembrete enviado', status: 'pending' }
       ];
 
       const interval = setInterval(() => {
-        const randomEvent = mockEvents[Math.floor(Math.random() * mockEvents.length)];
-        setLiveRecoveryFeed(prev => [{
-          ...randomEvent,
-          timestamp: new Date().toLocaleTimeString(),
-          id: Date.now()
-        }, ...prev].slice(0, 10));
-      }, 3000);
+        const event = events[Math.floor(Math.random() * events.length)];
+        setLiveFeed(prev => [{
+          ...event,
+          id: Date.now(),
+          time: new Date().toLocaleTimeString()
+        }, ...prev].slice(0, 8));
+      }, 2500);
 
       return () => clearInterval(interval);
     }
-  }, [simulatingLive]);
+  }, [liveMode]);
 
-  const recoveryData = [
-    { month: 'Set', gmv: 18500, recovered: 8300 },
-    { month: 'Out', gmv: 21200, recovered: 9800 },
-    { month: 'Nov', gmv: 24800, recovered: 12400 },
-    { month: 'Dez', gmv: 28300, recovered: 14200 },
-    { month: 'Jan', gmv: 32100, recovered: 16500 }
-  ];
-
-  const handleScenarioSimulation = (scenario) => {
+  // Run scenario simulation
+  const runSimulation = (scenario) => {
     setSelectedScenario(scenario);
-    setScenarioModalOpen(true);
-  };
+    setIsSimulating(true);
+    setSimulationStep(0);
+    setRecoveryResult(null);
 
-  const renderScenarioAction = () => {
-    const actions = {
-      nsf: {
-        title: "Ação: Oferecer PIX com Desconto",
-        message: "Ops! Saldo insuficiente. Que tal pagar com PIX com 5% de desconto?",
-        buttons: ["Pagar com PIX", "Usar Outro Cartão"]
-      },
-      limit: {
-        title: "Ação: Sugerir Split em Dois Cartões",
-        message: "Limite excedido. Que tal dividir o pagamento em dois cartões?",
-        buttons: ["Dividir Pagamento", "Tentar Outro Cartão"]
-      },
-      fraud_suspect: {
-        title: "Ação: Retry em Outro Adquirente",
-        message: "Processando com outro parceiro... ⏳",
-        buttons: []
-      },
-      expired: {
-        title: "Ação: Account Updater",
-        message: "Atualizando dados do cartão automaticamente...",
-        buttons: ["Usar Carteira Digital"]
-      },
-      timeout: {
-        title: "Ação: Retry Automático",
-        message: "Tentando novamente em 3 segundos...",
-        buttons: ["Tentar PIX"]
+    // Simulate step by step
+    const steps = [
+      { step: 1, label: 'Detectando falha...', delay: 800 },
+      { step: 2, label: 'Analisando contexto...', delay: 1000 },
+      { step: 3, label: 'Selecionando ação...', delay: 800 },
+      { step: 4, label: 'Executando recuperação...', delay: 1200 }
+    ];
+
+    let currentStep = 0;
+    const runStep = () => {
+      if (currentStep < steps.length) {
+        setSimulationStep(currentStep + 1);
+        currentStep++;
+        setTimeout(runStep, steps[currentStep - 1]?.delay || 800);
+      } else {
+        // Simulation complete
+        const success = Math.random() < parseFloat(scenario.recoveryRate) / 100;
+        setRecoveryResult(success ? 'recovered' : 'failed');
+        setIsSimulating(false);
       }
     };
 
-    const action = actions[selectedScenario] || actions.nsf;
+    setTimeout(runStep, 500);
+  };
 
-    return (
-      <div className="space-y-4">
-        <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4">
-          <p className="text-sm font-semibold text-amber-800 mb-2">{action.title}</p>
-          <p className="text-sm text-amber-700">{action.message}</p>
-        </div>
-
-        {action.buttons.length > 0 && (
-          <div className="space-y-2">
-            {action.buttons.map((btn, idx) => (
-              <Button
-                key={idx}
-                className="w-full"
-                variant={idx === 0 ? "default" : "outline"}
-                onClick={() => toast.success(`Ação "${btn}" simulada`)}
-              >
-                {btn}
-              </Button>
-            ))}
-          </div>
-        )}
-      </div>
-    );
+  const getColorClass = (color) => {
+    const colors = {
+      amber: 'bg-amber-100 text-amber-700 border-amber-200',
+      red: 'bg-red-100 text-red-700 border-red-200',
+      blue: 'bg-blue-100 text-blue-700 border-blue-200',
+      slate: 'bg-slate-100 text-slate-700 border-slate-200',
+      purple: 'bg-purple-100 text-purple-700 border-purple-200'
+    };
+    return colors[color] || colors.slate;
   };
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Agente Recuperador de Pagamento"
-        subtitle="Real-Time Payment Recovery - Maximize conversão reduzindo perdas"
-        icon={LifeBuoy}
-        breadcrumbs={[
-          { label: 'AI Agents' },
-          { label: 'Recovery Agent' }
-        ]}
-      />
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg shadow-orange-500/25">
+            <RefreshCw className="w-7 h-7 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Recovery Agent</h1>
+            <p className="text-slate-500 dark:text-slate-400">Agente Recuperador de Pagamentos em Tempo Real</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-orange-500/10 border border-orange-500/20">
+            <div className={`w-2 h-2 rounded-full ${liveMode ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`} />
+            <span className="text-sm font-medium text-orange-600">
+              {liveMode ? 'Monitorando em tempo real' : 'Modo simulação'}
+            </span>
+          </div>
+          <Button variant="outline" size="sm">
+            <Settings className="w-4 h-4 mr-2" />
+            Configurar
+          </Button>
+        </div>
+      </div>
 
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <Card className="p-4 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
+          <div className="flex items-center gap-2 mb-2">
+            <AlertTriangle className="w-4 h-4 text-amber-600" />
+            <span className="text-xs text-amber-600">GMV em Risco</span>
+          </div>
+          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">{kpis.gmvAtRisk}</p>
+        </Card>
+
+        <Card className="p-4 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+          <div className="flex items-center gap-2 mb-2">
+            <CheckCircle2 className="w-4 h-4 text-green-600" />
+            <span className="text-xs text-green-600">GMV Recuperado</span>
+          </div>
+          <p className="text-2xl font-bold text-green-700 dark:text-green-400">{kpis.gmvRecovered}</p>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Target className="w-4 h-4 text-slate-400" />
+            <span className="text-xs text-slate-500">Taxa Recovery</span>
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.recoveryRate}</p>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Zap className="w-4 h-4 text-slate-400" />
+            <span className="text-xs text-slate-500">Tempo Resposta</span>
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.avgResponseTime}</p>
+        </Card>
+
+        <Card className="p-4 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
+          <div className="flex items-center gap-2 mb-2">
+            <XCircle className="w-4 h-4 text-red-600" />
+            <span className="text-xs text-red-600">Perdas Evitáveis</span>
+          </div>
+          <p className="text-2xl font-bold text-red-700 dark:text-red-400">{kpis.avoidableLosses}</p>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Send className="w-4 h-4 text-slate-400" />
+            <span className="text-xs text-slate-500">Comunicações</span>
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.communicationsSent.toLocaleString()}</p>
+        </Card>
+      </div>
+
+      {/* Main Content */}
       <Tabs defaultValue="simulator">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="simulator">Simulador</TabsTrigger>
+          <TabsTrigger value="simulator">Simulador Interativo</TabsTrigger>
+          <TabsTrigger value="scenarios">Cenários de Recuperação</TabsTrigger>
+          <TabsTrigger value="communications">Comunicações</TabsTrigger>
           <TabsTrigger value="metrics">Métricas</TabsTrigger>
-          <TabsTrigger value="scenarios">Cenários</TabsTrigger>
-          <TabsTrigger value="config">Configuração</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="simulator" className="space-y-4">
-          {/* Impact Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <MetricImpactCard
-              metricName="GMV Recuperado"
-              before={0}
-              after={16.5}
-              unit="k R$"
-              description="Este mês"
-              target={20}
-            />
-            <MetricImpactCard
-              metricName="Taxa de Recovery"
-              before={0}
-              after={51}
-              unit="%"
-              description="De transações em risco"
-              target={60}
-            />
-            <MetricImpactCard
-              metricName="Tempo de Resposta"
-              before={24}
-              after={0.5}
-              unit=" horas"
-              description="Para ação de recovery"
-              target={0.25}
-            />
-            <MetricImpactCard
-              metricName="ROI do Agente"
-              before={0}
-              after={850}
-              unit="%"
-              description="Revenue vs custo"
-              target={1000}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Simulador de Checkout */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Simulador de Cenário de Perda</CardTitle>
-                <CardDescription>Veja como o agente reage em tempo real</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Select onValueChange={handleScenarioSimulation}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione um cenário de perda" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {scenarios.map(s => (
-                      <SelectItem key={s.id} value={s.id}>
-                        {s.label} - Impacto: {s.impact}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <div className="text-center text-sm text-slate-500">
-                  Selecione um cenário para ver a ação do agente em tempo real
-                </div>
-
-                {/* Live Feed Toggle */}
-                <div className="pt-4 border-t">
-                  <div className="flex items-center justify-between mb-3">
-                    <Label className="flex items-center gap-2">
-                      <div className={`w-2 h-2 rounded-full ${simulatingLive ? 'bg-green-500 animate-pulse' : 'bg-slate-300'}`} />
-                      Feed em Tempo Real
-                    </Label>
-                    <Switch checked={simulatingLive} onCheckedChange={setSimulatingLive} />
-                  </div>
-
-                  {simulatingLive && liveRecoveryFeed.length > 0 && (
-                    <div className="space-y-2 max-h-48 overflow-auto">
-                      {liveRecoveryFeed.map((event) => (
-                        <div key={event.id} className={`p-2 rounded-lg text-xs flex items-center justify-between ${
-                          event.status === 'recovered' ? 'bg-green-50 border border-green-200' :
-                          event.status === 'processing' ? 'bg-blue-50 border border-blue-200' :
-                          'bg-amber-50 border border-amber-200'
-                        }`}>
-                          <div>
-                            <span className="font-medium">{event.customer}</span>
-                            <span className="text-slate-500 mx-1">•</span>
-                            <span>R$ {event.amount}</span>
-                            <span className="text-slate-500 mx-1">→</span>
-                            <span className={event.status === 'recovered' ? 'text-green-600' : 'text-amber-600'}>
-                              {event.action}
-                            </span>
-                          </div>
-                          <span className="text-slate-400">{event.timestamp}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* KPIs */}
-            <div className="space-y-4">
-              <DynamicKpiCard
-                title="GMV Recuperado (Mês)"
-                value="R$ 16.5k"
-                trend="up"
-                trendValue="+18%"
-                icon={TrendingUp}
-                color="primary"
-              />
-              <DynamicKpiCard
-                title="Taxa de Recuperação"
-                value="51%"
-                description="De todas as tentativas em risco"
-                icon={CheckCircle}
-                color="blue"
-              />
-
-              {/* Channel Performance Mini */}
+        {/* Simulator Tab */}
+        <TabsContent value="simulator" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Scenario Selection */}
+            <div className="lg:col-span-1 space-y-4">
               <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">Performance por Canal</CardTitle>
+                <CardHeader>
+                  <CardTitle className="text-sm">Selecione um Cenário</CardTitle>
+                  <CardDescription>Simule como o agente reage a cada tipo de falha</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {scenarios.map((scenario) => (
+                    <button
+                      key={scenario.id}
+                      onClick={() => runSimulation(scenario)}
+                      disabled={isSimulating}
+                      className={`w-full p-3 rounded-lg border-2 text-left transition-all ${
+                        selectedScenario?.id === scenario.id
+                          ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20'
+                          : 'border-slate-200 hover:border-slate-300 dark:border-slate-700'
+                      } ${isSimulating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getColorClass(scenario.color)}`}>
+                          <scenario.icon className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium text-sm text-slate-900 dark:text-white">{scenario.name}</p>
+                          <p className="text-xs text-slate-500">{scenario.description}</p>
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          {scenario.recoveryRate}
+                        </Badge>
+                      </div>
+                    </button>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Simulation Display */}
+            <div className="lg:col-span-2">
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Play className="w-5 h-5 text-orange-500" />
+                    Simulação de Recuperação
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    {channelPerformance.map((ch) => (
-                      <div key={ch.channel} className="flex items-center gap-2">
-                        <span className="text-xs w-20">{ch.channel}</span>
-                        <Progress value={ch.rate} className="flex-1 h-2" />
-                        <span className="text-xs font-medium w-10">{ch.rate}%</span>
+                  {!selectedScenario ? (
+                    <div className="h-80 flex items-center justify-center text-center">
+                      <div>
+                        <RefreshCw className="w-16 h-16 text-slate-200 mx-auto mb-4" />
+                        <p className="text-lg font-medium text-slate-600 dark:text-slate-400">
+                          Selecione um cenário para simular
+                        </p>
+                        <p className="text-sm text-slate-500">
+                          Veja como o agente reage em tempo real
+                        </p>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {/* Progress Steps */}
+                      <div className="flex items-center justify-between mb-6">
+                        {['Detectar', 'Analisar', 'Selecionar', 'Executar'].map((step, idx) => (
+                          <div key={step} className="flex items-center">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                              simulationStep > idx
+                                ? 'bg-green-500 text-white'
+                                : simulationStep === idx + 1
+                                ? 'bg-orange-500 text-white animate-pulse'
+                                : 'bg-slate-200 text-slate-500'
+                            }`}>
+                              {simulationStep > idx ? '✓' : idx + 1}
+                            </div>
+                            {idx < 3 && (
+                              <div className={`w-16 h-1 mx-2 ${
+                                simulationStep > idx ? 'bg-green-500' : 'bg-slate-200'
+                              }`} />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Checkout Action Preview */}
+                      <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 bg-slate-50 dark:bg-slate-800">
+                        <div className="text-center mb-4">
+                          <span className="text-xs text-slate-500 uppercase tracking-wider">Preview do Checkout</span>
+                        </div>
+                        
+                        <div className={`max-w-sm mx-auto bg-white dark:bg-slate-900 rounded-lg shadow-lg p-6 border ${
+                          isSimulating ? 'animate-pulse' : ''
+                        }`}>
+                          <div className={`w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center ${getColorClass(selectedScenario.color)}`}>
+                            <selectedScenario.icon className="w-6 h-6" />
+                          </div>
+                          <h3 className="text-lg font-semibold text-center text-slate-900 dark:text-white mb-2">
+                            {selectedScenario.checkoutAction.title}
+                          </h3>
+                          <p className="text-sm text-slate-600 dark:text-slate-400 text-center mb-4">
+                            {selectedScenario.checkoutAction.message}
+                          </p>
+                          
+                          <div className="space-y-2">
+                            <Button className="w-full bg-[#2bc196] hover:bg-[#2bc196]/90" disabled={isSimulating}>
+                              {isSimulating ? (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              ) : null}
+                              {selectedScenario.checkoutAction.primaryButton}
+                            </Button>
+                            <Button variant="outline" className="w-full" disabled={isSimulating}>
+                              {selectedScenario.checkoutAction.secondaryButton}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Result */}
+                      {recoveryResult && (
+                        <div className={`p-4 rounded-lg border-2 ${
+                          recoveryResult === 'recovered'
+                            ? 'border-green-300 bg-green-50 dark:bg-green-900/20'
+                            : 'border-red-300 bg-red-50 dark:bg-red-900/20'
+                        }`}>
+                          <div className="flex items-center gap-3">
+                            {recoveryResult === 'recovered' ? (
+                              <CheckCircle2 className="w-8 h-8 text-green-600" />
+                            ) : (
+                              <XCircle className="w-8 h-8 text-red-600" />
+                            )}
+                            <div>
+                              <p className={`font-semibold ${
+                                recoveryResult === 'recovered' ? 'text-green-700' : 'text-red-700'
+                              }`}>
+                                {recoveryResult === 'recovered'
+                                  ? '✅ Pagamento Recuperado!'
+                                  : '❌ Recuperação não concluída'}
+                              </p>
+                              <p className="text-sm text-slate-600">
+                                {recoveryResult === 'recovered'
+                                  ? 'O cliente concluiu o pagamento com o método alternativo.'
+                                  : 'Cliente não respondeu. Comunicação proativa será enviada.'}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Actions List */}
+                      <div>
+                        <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Ações Disponíveis</h4>
+                        <div className="grid grid-cols-3 gap-3">
+                          {selectedScenario.actions.map((action, idx) => (
+                            <div 
+                              key={idx}
+                              className={`p-3 rounded-lg border text-center ${
+                                action.type === 'primary'
+                                  ? 'border-[#2bc196] bg-[#2bc196]/5'
+                                  : action.type === 'secondary'
+                                  ? 'border-blue-200 bg-blue-50'
+                                  : 'border-slate-200 bg-slate-50'
+                              }`}
+                            >
+                              <action.icon className={`w-6 h-6 mx-auto mb-2 ${
+                                action.type === 'primary' ? 'text-[#2bc196]' : 
+                                action.type === 'secondary' ? 'text-blue-600' : 'text-slate-500'
+                              }`} />
+                              <p className="text-xs font-medium">{action.label}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
           </div>
+
+          {/* Live Feed */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${liveMode ? 'bg-green-500 animate-pulse' : 'bg-slate-300'}`} />
+                  <CardTitle className="text-sm">Feed de Recuperações em Tempo Real</CardTitle>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Label className="text-sm">Ativar</Label>
+                  <Switch checked={liveMode} onCheckedChange={setLiveMode} />
+                </div>
+              </div>
+            </CardHeader>
+            {liveMode && liveFeed.length > 0 && (
+              <CardContent>
+                <div className="space-y-2 max-h-48 overflow-auto">
+                  {liveFeed.map((event) => (
+                    <div 
+                      key={event.id}
+                      className={`flex items-center justify-between p-3 rounded-lg text-sm ${
+                        event.status === 'recovered'
+                          ? 'bg-green-50 border border-green-200'
+                          : 'bg-amber-50 border border-amber-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        {event.status === 'recovered' ? (
+                          <CheckCircle2 className="w-5 h-5 text-green-600" />
+                        ) : (
+                          <Clock className="w-5 h-5 text-amber-600" />
+                        )}
+                        <div>
+                          <span className="font-medium">{event.customer}</span>
+                          <span className="text-slate-500 mx-2">•</span>
+                          <span className="text-slate-600">R$ {event.amount}</span>
+                          <span className="text-slate-500 mx-2">→</span>
+                          <span className={event.status === 'recovered' ? 'text-green-600' : 'text-amber-600'}>
+                            {event.action}
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-xs text-slate-400">{event.time}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            )}
+          </Card>
         </TabsContent>
 
-        <TabsContent value="metrics" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <DynamicKpiCard
-              title="GMV em Risco (Mês)"
-              value="R$ 32.1k"
-              description="25% das tentativas de pagamento"
-              icon={AlertTriangle}
-              color="amber"
-            />
-            <DynamicKpiCard
-              title="GMV Recuperado"
-              value="R$ 16.5k"
-              description="51% de taxa de recuperação"
-              icon={CheckCircle}
-              color="primary"
-            />
-            <DynamicKpiCard
-              title="Perdas Evitáveis"
-              value="R$ 8.2k"
-              description="Com otimização adicional"
-              icon={Zap}
-              color="blue"
-            />
-            <DynamicKpiCard
-              title="Comunicações Enviadas"
-              value="6.2k"
-              description="Este mês"
-              icon={Send}
-              color="purple"
-            />
-          </div>
+        {/* Scenarios Tab */}
+        <TabsContent value="scenarios" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Performance por Cenário de Falha</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={scenarios.map(s => ({
+                  name: s.name,
+                  impacto: parseFloat(s.impact),
+                  recuperacao: parseFloat(s.recoveryRate)
+                }))}>
+                  <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                  <YAxis />
+                  <RechartsTooltip />
+                  <Legend />
+                  <Bar dataKey="impacto" fill="#94a3b8" name="% Impacto nas Perdas" />
+                  <Bar dataKey="recuperacao" fill="#2bc196" name="% Taxa de Recuperação" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {scenarios.map((scenario) => (
+              <Card key={scenario.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getColorClass(scenario.color)}`}>
+                      <scenario.icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-sm">{scenario.name}</CardTitle>
+                      <CardDescription className="text-xs">{scenario.description}</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500">Impacto nas perdas:</span>
+                      <span className="font-medium">{scenario.impact}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500">Taxa de recuperação:</span>
+                      <Badge className="bg-green-100 text-green-700">{scenario.recoveryRate}</Badge>
+                    </div>
+                    <Progress value={parseFloat(scenario.recoveryRate)} className="h-2" />
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => runSimulation(scenario)}
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      Simular Cenário
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        {/* Communications Tab */}
+        <TabsContent value="communications" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Evolução de Recovery</CardTitle>
+                <CardTitle>Performance por Canal</CardTitle>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={280}>
-                  <LineChart data={recoveryData}>
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <RechartsTooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="gmv" stroke="#94a3b8" name="GMV em Risco" />
-                    <Line type="monotone" dataKey="recovered" stroke="#2bc196" strokeWidth={2} name="GMV Recuperado" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Performance por Canal de Comunicação</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={channelPerformance}>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={channelData}>
                     <XAxis dataKey="channel" />
                     <YAxis />
                     <RechartsTooltip />
@@ -364,175 +652,66 @@ export default function RecoveryAgent() {
                 </ResponsiveContainer>
               </CardContent>
             </Card>
-          </div>
 
-          {/* Proactive Communication Examples */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-purple-600" />
-                Exemplos de Comunicação Proativa
-              </CardTitle>
-              <CardDescription>Mensagens enviadas automaticamente pelo agente</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="border rounded-lg p-3 bg-green-50">
+            <Card>
+              <CardHeader>
+                <CardTitle>Exemplos de Mensagens</CardTitle>
+                <CardDescription>Comunicações enviadas automaticamente</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="p-3 rounded-lg bg-green-50 border border-green-200">
                   <div className="flex items-center gap-2 mb-2">
                     <MessageSquare className="w-4 h-4 text-green-600" />
-                    <span className="text-xs font-medium text-green-700">WhatsApp - NSF</span>
+                    <span className="text-xs font-medium text-green-700">WhatsApp - Saldo Insuficiente</span>
                   </div>
-                  <p className="text-xs text-slate-700">
+                  <p className="text-sm text-slate-700">
                     "Oi João! 👋 Vi que houve um probleminha no pagamento. Que tal tentar com PIX? Te dou 5% de desconto! 💚"
                   </p>
                 </div>
-                <div className="border rounded-lg p-3 bg-blue-50">
+                <div className="p-3 rounded-lg bg-blue-50 border border-blue-200">
                   <div className="flex items-center gap-2 mb-2">
                     <Mail className="w-4 h-4 text-blue-600" />
-                    <span className="text-xs font-medium text-blue-700">Email - Abandono</span>
+                    <span className="text-xs font-medium text-blue-700">Email - Abandono de Carrinho</span>
                   </div>
-                  <p className="text-xs text-slate-700">
+                  <p className="text-sm text-slate-700">
                     "Seus itens ainda estão no carrinho! Complete seu pedido nos próximos 30min e ganhe frete grátis."
                   </p>
                 </div>
-                <div className="border rounded-lg p-3 bg-amber-50">
+                <div className="p-3 rounded-lg bg-amber-50 border border-amber-200">
                   <div className="flex items-center gap-2 mb-2">
                     <Phone className="w-4 h-4 text-amber-600" />
-                    <span className="text-xs font-medium text-amber-700">SMS - Limite</span>
+                    <span className="text-xs font-medium text-amber-700">SMS - PIX Pendente</span>
                   </div>
-                  <p className="text-xs text-slate-700">
-                    "Limite excedido? Divida em 2 cartões ou pague metade agora e metade em 7 dias. Responda SIM."
+                  <p className="text-sm text-slate-700">
+                    "Seu PIX expira em 10min! Acesse o link para finalizar: [link]. Responda AJUDA para suporte."
                   </p>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="scenarios" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Performance por Cenário de Perda</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={scenarios.map(s => ({
-                  name: s.label.split(' (')[0],
-                  impacto: parseFloat(s.impact),
-                  recuperacao: parseFloat(s.recovery)
-                }))}>
-                  <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-                  <YAxis />
-                  <RechartsTooltip />
-                  <Bar dataKey="impacto" fill="#94a3b8" name="% de Impacto" />
-                  <Bar dataKey="recuperacao" fill="#2bc196" name="% de Recuperação" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {scenarios.map(scenario => (
-              <Card key={scenario.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-sm">{scenario.label}</CardTitle>
-                    <Badge variant="outline">{scenario.recovery} recovery</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p className="text-xs text-slate-500">Impacto: {scenario.impact} das perdas</p>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="w-full"
-                      onClick={() => handleScenarioSimulation(scenario.id)}
-                    >
-                      Simular Cenário
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
-        <TabsContent value="config" className="space-y-4">
+        {/* Metrics Tab */}
+        <TabsContent value="metrics" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Configuração de Estratégias</CardTitle>
+              <CardTitle>Evolução de Recuperação (R$ mil)</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label>Ativar PIX com Desconto em Recusas NSF</Label>
-                  <Switch checked={true} />
-                </div>
-                <p className="text-xs text-slate-500">Oferece PIX com desconto quando cartão é recusado por saldo</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Percentual de Desconto PIX: {pixDiscount}%</Label>
-                <Slider 
-                  value={pixDiscount} 
-                  onValueChange={setPixDiscount}
-                  min={0}
-                  max={15}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label>Retry Automático para Timeouts</Label>
-                  <Switch checked={retryEnabled} onCheckedChange={setRetryEnabled} />
-                </div>
-                <p className="text-xs text-slate-500">Tenta novamente automaticamente em caso de erro técnico</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Ordem de Métodos Alternativos</Label>
-                <div className="space-y-2">
-                  {['PIX', 'Outro Cartão', 'Boleto Parcelado'].map((method, idx) => (
-                    <div key={idx} className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
-                      <span className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold">
-                        {idx + 1}
-                      </span>
-                      <span className="text-sm">{method}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <SimulatedActionButton
-                actionLabel="Configurações salvas"
-                icon={CheckCircle}
-              >
-                Salvar Configurações
-              </SimulatedActionButton>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={recoveryEvolution}>
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <RechartsTooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="atRisk" stroke="#94a3b8" strokeWidth={2} name="GMV em Risco" />
+                  <Line type="monotone" dataKey="recovered" stroke="#2bc196" strokeWidth={3} name="GMV Recuperado" />
+                </LineChart>
+              </ResponsiveContainer>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
-
-      {/* Scenario Simulation Modal */}
-      <Dialog open={scenarioModalOpen} onOpenChange={setScenarioModalOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Simulação de Recuperação</DialogTitle>
-          </DialogHeader>
-          
-          {selectedScenario && renderScenarioAction()}
-
-          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg text-center">
-            <p className="text-sm font-semibold text-green-700">
-              ✅ Taxa estimada de recuperação: {scenarios.find(s => s.id === selectedScenario)?.recovery}
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
