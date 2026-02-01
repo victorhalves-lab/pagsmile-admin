@@ -158,52 +158,52 @@ export default function AdminIntDisputeManager() {
       {/* Global KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Total Disputas</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Total Disputas</span>
+            <AlertTriangle className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{globalKpis.totalDisputes}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{globalKpis.totalDisputes}</p>
           <p className="text-xs text-slate-500">{globalKpis.openDisputes} abertas</p>
         </Card>
 
         <Card className="p-4 bg-red-50 dark:bg-red-900/20 border-red-200">
-          <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="w-4 h-4 text-red-600" />
-            <span className="text-xs text-red-600">Valor em Risco</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-red-600 whitespace-nowrap overflow-hidden text-ellipsis">Valor em Risco</span>
+            <DollarSign className="w-5 h-5 text-red-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-red-700">{globalKpis.totalValueAtRisk}</p>
+          <p className="text-2xl font-bold text-red-700 truncate">{globalKpis.totalValueAtRisk}</p>
         </Card>
 
         <Card className="p-4 bg-green-50 dark:bg-green-900/20 border-green-200">
-          <div className="flex items-center gap-2 mb-2">
-            <Target className="w-4 h-4 text-green-600" />
-            <span className="text-xs text-green-600">Win Rate Global</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-green-600 whitespace-nowrap overflow-hidden text-ellipsis">Win Rate Global</span>
+            <Target className="w-5 h-5 text-green-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-green-700">{globalKpis.globalWinRate}</p>
+          <p className="text-2xl font-bold text-green-700 truncate">{globalKpis.globalWinRate}</p>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Clock className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Tempo Médio</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Tempo Médio</span>
+            <Clock className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{globalKpis.avgResolutionTime}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{globalKpis.avgResolutionTime}</p>
         </Card>
 
         <Card className="p-4 bg-[#2bc196]/10 border-[#2bc196]/20">
-          <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-4 h-4 text-[#2bc196]" />
-            <span className="text-xs text-[#2bc196]">Recuperação Potencial</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-[#2bc196] whitespace-nowrap overflow-hidden text-ellipsis">Recuperação Potencial</span>
+            <Zap className="w-5 h-5 text-[#2bc196] flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-[#2bc196]">{globalKpis.potentialRecovery}</p>
+          <p className="text-2xl font-bold text-[#2bc196] truncate">{globalKpis.potentialRecovery}</p>
         </Card>
 
         <Card className="p-4 bg-amber-50 dark:bg-amber-900/20 border-amber-200">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertCircle className="w-4 h-4 text-amber-600" />
-            <span className="text-xs text-amber-600">Urgentes</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-amber-600 whitespace-nowrap overflow-hidden text-ellipsis">Urgentes</span>
+            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-amber-700">{urgentDisputes.length}</p>
+          <p className="text-2xl font-bold text-amber-700 truncate">{urgentDisputes.length}</p>
           <p className="text-xs text-amber-600">prazo &lt; 3 dias</p>
         </Card>
       </div>
@@ -323,9 +323,7 @@ export default function AdminIntDisputeManager() {
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                        <Store className="w-5 h-5 text-slate-500" />
-                      </div>
+                      <Store className="w-6 h-6 text-slate-500 flex-shrink-0" />
                       <div>
                         <p className="font-semibold text-slate-900 dark:text-white">{merchant.name}</p>
                         <p className="text-sm text-slate-500">
@@ -480,11 +478,9 @@ export default function AdminIntDisputeManager() {
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        rule.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-slate-200 text-slate-500'
-                      }`}>
-                        <Zap className="w-5 h-5" />
-                      </div>
+                      <Zap className={`w-6 h-6 flex-shrink-0 ${
+                        rule.status === 'active' ? 'text-green-600' : 'text-slate-400'
+                      }`} />
                       <div>
                         <p className="font-semibold text-slate-900 dark:text-white">{rule.name}</p>
                         <p className="text-xs text-slate-500 font-mono">{rule.condition}</p>

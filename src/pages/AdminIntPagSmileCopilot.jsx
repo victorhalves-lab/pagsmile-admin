@@ -248,56 +248,56 @@ export default function AdminIntPagSmileCopilot() {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div className="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-500">TPV Total</span>
-                <Badge variant="default" className="text-xs bg-purple-500">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">TPV Total</span>
+                <Badge variant="default" className="text-xs bg-purple-500 flex-shrink-0">
                   <TrendingUp className="w-3 h-3 mr-1" />
                   {executiveSummary.tpvChange}
                 </Badge>
               </div>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white">{executiveSummary.totalTPV}</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{executiveSummary.totalTPV}</p>
             </div>
 
             <div className="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-500">Merchants Ativos</span>
-                <Badge variant="default" className="text-xs bg-green-500">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Merchants Ativos</span>
+                <Badge variant="default" className="text-xs bg-green-500 flex-shrink-0">
                   {executiveSummary.merchantsChange}
                 </Badge>
               </div>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white">{executiveSummary.activeMerchants}</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{executiveSummary.activeMerchants}</p>
             </div>
 
             <div className="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-500">Receita</span>
-                <Badge variant="default" className="text-xs bg-purple-500">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Receita</span>
+                <Badge variant="default" className="text-xs bg-purple-500 flex-shrink-0">
                   <TrendingUp className="w-3 h-3 mr-1" />
                   {executiveSummary.revenueChange}
                 </Badge>
               </div>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white">{executiveSummary.totalRevenue}</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{executiveSummary.totalRevenue}</p>
             </div>
 
             <div className="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-500">Margem Média</span>
-                <Badge variant="outline" className="text-xs border-amber-500 text-amber-600">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Margem Média</span>
+                <Badge variant="outline" className="text-xs border-amber-500 text-amber-600 flex-shrink-0">
                   {executiveSummary.marginChange}
                 </Badge>
               </div>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white">{executiveSummary.avgMargin}</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{executiveSummary.avgMargin}</p>
             </div>
 
             <div className="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-500">Chargeback Ratio</span>
-                <Badge variant="outline" className="text-xs border-red-500 text-red-600">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Chargeback Ratio</span>
+                <Badge variant="outline" className="text-xs border-red-500 text-red-600 flex-shrink-0">
                   <TrendingUp className="w-3 h-3 mr-1" />
                   {executiveSummary.chargebackChange}
                 </Badge>
               </div>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white">{executiveSummary.chargebackRatio}</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{executiveSummary.chargebackRatio}</p>
             </div>
           </div>
         </CardContent>
@@ -328,20 +328,10 @@ export default function AdminIntPagSmileCopilot() {
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                    insight.type === 'warning' 
-                      ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600' 
-                      : insight.type === 'opportunity'
-                      ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600'
-                      : insight.type === 'success'
-                      ? 'bg-green-100 dark:bg-green-900/30 text-green-600'
-                      : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600'
-                  }`}>
-                    {insight.type === 'warning' && <AlertTriangle className="w-5 h-5" />}
-                    {insight.type === 'opportunity' && <Lightbulb className="w-5 h-5" />}
-                    {insight.type === 'success' && <CheckCircle2 className="w-5 h-5" />}
-                    {insight.type === 'info' && <Activity className="w-5 h-5" />}
-                  </div>
+                  {insight.type === 'warning' && <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0" />}
+                  {insight.type === 'opportunity' && <Lightbulb className="w-6 h-6 text-purple-600 flex-shrink-0" />}
+                  {insight.type === 'success' && <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />}
+                  {insight.type === 'info' && <Activity className="w-6 h-6 text-blue-600 flex-shrink-0" />}
                   <div className="flex-1">
                     <h4 className="font-semibold text-slate-900 dark:text-white mb-1">{insight.title}</h4>
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">{insight.description}</p>
@@ -378,8 +368,8 @@ export default function AdminIntPagSmileCopilot() {
               {topMerchantsByMargin.map((merchant, idx) => (
                 <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 font-bold text-sm">
-                      {idx + 1}
+                    <div className="w-8 h-8 flex items-center justify-center text-purple-600 font-bold text-sm flex-shrink-0">
+                      #{idx + 1}
                     </div>
                     <div>
                       <p className="font-medium text-slate-900 dark:text-white">{merchant.name}</p>

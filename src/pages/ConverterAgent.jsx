@@ -717,14 +717,12 @@ export default function ConverterAgent() {
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        rule.active ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-400'
-                      }`}>
-                        <Target className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-slate-900 dark:text-white">{rule.condition}</p>
-                        <p className="text-sm text-slate-500">{rule.action}</p>
+                      <Target className={`w-6 h-6 flex-shrink-0 ${
+                        rule.active ? 'text-green-600' : 'text-slate-400'
+                      }`} />
+                      <div className="min-w-0">
+                        <p className="font-medium text-slate-900 dark:text-white whitespace-nowrap overflow-hidden text-ellipsis">{rule.condition}</p>
+                        <p className="text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">{rule.action}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">

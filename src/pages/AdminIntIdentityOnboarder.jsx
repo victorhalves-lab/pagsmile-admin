@@ -245,56 +245,56 @@ export default function AdminIntIdentityOnboarder() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <FileText className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Submissões</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Submissões</span>
+            <FileText className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.totalSubmissions}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.totalSubmissions}</p>
           <p className="text-xs text-slate-500">este mês</p>
         </Card>
 
         <Card className="p-4 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
-          <div className="flex items-center gap-2 mb-2">
-            <Clock className="w-4 h-4 text-amber-600" />
-            <span className="text-xs text-amber-600">Pendentes</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-amber-600 whitespace-nowrap overflow-hidden text-ellipsis">Pendentes</span>
+            <Clock className="w-5 h-5 text-amber-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">{kpis.pendingAnalysis}</p>
+          <p className="text-2xl font-bold text-amber-700 dark:text-amber-400 truncate">{kpis.pendingAnalysis}</p>
           <p className="text-xs text-amber-600">aguardando</p>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Tempo Médio</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Tempo Médio</span>
+            <Zap className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.avgProcessingTime}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.avgProcessingTime}</p>
           <p className="text-xs text-slate-500">processamento</p>
         </Card>
 
         <Card className="p-4 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-          <div className="flex items-center gap-2 mb-2">
-            <CheckCircle2 className="w-4 h-4 text-green-600" />
-            <span className="text-xs text-green-600">Auto-Aprovação</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-green-600 whitespace-nowrap overflow-hidden text-ellipsis">Auto-Aprovação</span>
+            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-green-700 dark:text-green-400">{kpis.autoApprovalRate}</p>
+          <p className="text-2xl font-bold text-green-700 dark:text-green-400 truncate">{kpis.autoApprovalRate}</p>
           <p className="text-xs text-green-600">taxa Helena</p>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Eye className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-500">Revisão Manual</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis">Revisão Manual</span>
+            <Eye className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{kpis.manualReviewRate}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">{kpis.manualReviewRate}</p>
           <p className="text-xs text-slate-500">encaminhados</p>
         </Card>
 
         <Card className="p-4 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
-          <div className="flex items-center gap-2 mb-2">
-            <XCircle className="w-4 h-4 text-red-600" />
-            <span className="text-xs text-red-600">Recusas</span>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="text-xs text-red-600 whitespace-nowrap overflow-hidden text-ellipsis">Recusas</span>
+            <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
           </div>
-          <p className="text-2xl font-bold text-red-700 dark:text-red-400">{kpis.rejectionRate}</p>
+          <p className="text-2xl font-bold text-red-700 dark:text-red-400 truncate">{kpis.rejectionRate}</p>
           <p className="text-xs text-red-600">taxa geral</p>
         </Card>
       </div>
@@ -569,15 +569,13 @@ export default function AdminIntIdentityOnboarder() {
                   >
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                       <div className="flex items-start gap-4">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        <Building2 className={`w-8 h-8 flex-shrink-0 ${
                           item.helenaStatus === 'approved'
-                            ? 'bg-green-100 text-green-600'
+                            ? 'text-green-600'
                             : item.helenaStatus === 'manual_review'
-                            ? 'bg-amber-100 text-amber-600'
-                            : 'bg-red-100 text-red-600'
-                        }`}>
-                          <Building2 className="w-6 h-6" />
-                        </div>
+                            ? 'text-amber-600'
+                            : 'text-red-600'
+                        }`} />
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <p className="font-semibold text-slate-900 dark:text-white">{item.businessName}</p>

@@ -402,9 +402,13 @@ export default function RecoveryAgent() {
                       } ${isSimulating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getColorClass(scenario.color)}`}>
-                          <scenario.icon className="w-5 h-5" />
-                        </div>
+                        <scenario.icon className={`w-6 h-6 flex-shrink-0 ${
+                          scenario.color === 'amber' ? 'text-amber-600' :
+                          scenario.color === 'red' ? 'text-red-600' :
+                          scenario.color === 'blue' ? 'text-blue-600' :
+                          scenario.color === 'purple' ? 'text-purple-600' :
+                          'text-slate-600'
+                        }`} />
                         <div className="flex-1">
                           <p className="font-medium text-sm text-slate-900 dark:text-white">{scenario.name}</p>
                           <p className="text-xs text-slate-500">{scenario.description}</p>
@@ -474,9 +478,13 @@ export default function RecoveryAgent() {
                         <div className={`max-w-sm mx-auto bg-white dark:bg-slate-900 rounded-lg shadow-lg p-6 border ${
                           isSimulating ? 'animate-pulse' : ''
                         }`}>
-                          <div className={`w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center ${getColorClass(selectedScenario.color)}`}>
-                            <selectedScenario.icon className="w-6 h-6" />
-                          </div>
+                          <selectedScenario.icon className={`w-12 h-12 mx-auto mb-4 ${
+                            selectedScenario.color === 'amber' ? 'text-amber-600' :
+                            selectedScenario.color === 'red' ? 'text-red-600' :
+                            selectedScenario.color === 'blue' ? 'text-blue-600' :
+                            selectedScenario.color === 'purple' ? 'text-purple-600' :
+                            'text-slate-600'
+                          }`} />
                           <h3 className="text-lg font-semibold text-center text-slate-900 dark:text-white mb-2">
                             {selectedScenario.checkoutAction.title}
                           </h3>
@@ -640,9 +648,13 @@ export default function RecoveryAgent() {
               <Card key={scenario.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getColorClass(scenario.color)}`}>
-                      <scenario.icon className="w-5 h-5" />
-                    </div>
+                      <scenario.icon className={`w-6 h-6 flex-shrink-0 ${
+                        scenario.color === 'amber' ? 'text-amber-600' :
+                        scenario.color === 'red' ? 'text-red-600' :
+                        scenario.color === 'blue' ? 'text-blue-600' :
+                        scenario.color === 'purple' ? 'text-purple-600' :
+                        'text-slate-600'
+                      }`} />
                     <div>
                       <CardTitle className="text-sm">{scenario.name}</CardTitle>
                       <CardDescription className="text-xs">{scenario.description}</CardDescription>
