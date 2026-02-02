@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import DecisionFlowVisualizer from '@/components/common/DecisionFlowVisualizer';
 import SimulatedActionButton from '@/components/common/SimulatedActionButton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
