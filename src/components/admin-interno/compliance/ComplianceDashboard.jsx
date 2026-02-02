@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import MetricImpactCard from '@/components/common/MetricImpactCard';
 import {
-  Brain, CheckCircle2, XCircle, Clock, Users, FileText, AlertTriangle,
+  Brain, CheckCircle2, XCircle, Users, FileText, AlertTriangle,
   TrendingUp, TrendingDown, Sparkles, ArrowRight, BarChart3, PieChart,
-  Timer, Shield, Target, Zap, Smile, DollarSign
+  Timer, Shield, Target, Zap, Clock
 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, PieChart as RechartsPie, Pie, Cell,
