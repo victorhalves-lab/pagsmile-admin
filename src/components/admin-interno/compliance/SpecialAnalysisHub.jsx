@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import LimitAnalysisSimulator from './LimitAnalysisSimulator';
 import AgentChatInterface from '@/components/common/AgentChatInterface';
-import { TrendingUp, Building2, Globe, Repeat, BarChart3 } from 'lucide-react';
+import { TrendingUp, Building2, Globe, Repeat, BarChart3, Clock } from 'lucide-react';
 
 export default function SpecialAnalysisHub() {
   const [analysisType, setAnalysisType] = useState(null);
