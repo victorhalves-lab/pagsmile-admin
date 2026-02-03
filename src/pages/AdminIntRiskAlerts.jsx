@@ -62,9 +62,13 @@ export default function AdminIntRiskAlerts() {
                                 <span className="text-xs text-slate-500">{alert.time}</span>
                             </div>
                             <div className="flex gap-2 mt-3">
-                                <Button size="sm" variant="outline">
-                                    <Eye className="w-4 h-4 mr-1" /> Ver merchant
-                                </Button>
+                                {alert.merchant !== '-' && (
+                                    <Button size="sm" variant="outline" asChild>
+                                        <Link to={createPageUrl('AdminIntMerchantProfile')}>
+                                            <Eye className="w-4 h-4 mr-1" /> Ver merchant
+                                        </Link>
+                                    </Button>
+                                )}
                                 <Button size="sm" variant="outline" onClick={() => toast.success('Alerta marcado como resolvido!')}>
                                     <Check className="w-4 h-4 mr-1" /> Marcar como resolvido
                                 </Button>

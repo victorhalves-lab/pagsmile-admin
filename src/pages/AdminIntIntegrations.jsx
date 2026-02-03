@@ -3,9 +3,10 @@ import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Settings, RefreshCw, Plus, Building2, Shield, Landmark, Mail, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -38,6 +39,7 @@ const statusConfig = {
 
 export default function AdminIntIntegrations() {
     const [configModal, setConfigModal] = useState(null);
+    const [newIntegrationModal, setNewIntegrationModal] = useState(false);
 
     const IntegrationCard = ({ integration, icon: Icon, type }) => (
         <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50">
@@ -92,7 +94,7 @@ export default function AdminIntIntegrations() {
                 title="Integrações"
                 breadcrumbs={[{ label: 'Administração' }, { label: 'Integrações' }]}
                 actionElement={
-                    <Button>
+                    <Button onClick={() => setNewIntegrationModal(true)}>
                         <Plus className="w-4 h-4 mr-2" /> Nova Integração
                     </Button>
                 }
@@ -167,6 +169,58 @@ export default function AdminIntIntegrations() {
                         <Button variant="outline" onClick={() => setConfigModal(null)}>Cancelar</Button>
                         <Button onClick={() => { toast.success('Configuração salva!'); setConfigModal(null); }}>
                             💾 Salvar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* New Integration Modal */}
+            <Dialog open={newIntegrationModal} onOpenChange={setNewIntegrationModal}>
+                <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Nova Integração</DialogTitle>
+                        <DialogDescription>Conecte um novo provedor ao sistema</DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div>
+                            <Label>Tipo de Integração *</Label>
+                            <Select>
+                                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="acquirer">Adquirente</SelectItem>
+                                    <SelectItem value="antifraud">Antifraude</SelectItem>
+                                    <SelectItem value="banking">Banking/PSP</SelectItem>
+                                    <SelectItem value="notification">Notificação</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div>
+                            <Label>Nome do Provedor *</Label>
+                            <Input className="mt-1" placeholder="Ex: Cielo, Stone, ClearSale..." />
+                        </div>
+                        <div>
+                            <Label>Ambiente</Label>
+                            <Select defaultValue="sandbox">
+                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="sandbox">Sandbox</SelectItem>
+                                    <SelectItem value="production">Produção</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div>
+                            <Label>API Endpoint</Label>
+                            <Input className="mt-1" placeholder="https://api.provedor.com" />
+                        </div>
+                        <div>
+                            <Label>API Key / Merchant ID</Label>
+                            <Input className="mt-1" type="password" placeholder="sk_live_..." />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setNewIntegrationModal(false)}>Cancelar</Button>
+                        <Button onClick={() => { toast.success('Integração configurada!'); setNewIntegrationModal(false); }}>
+                            <Plus className="w-4 h-4 mr-2" /> Adicionar Integração
                         </Button>
                     </DialogFooter>
                 </DialogContent>
