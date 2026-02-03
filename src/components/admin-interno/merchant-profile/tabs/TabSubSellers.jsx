@@ -55,6 +55,8 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 
 const formatCurrency = (value) => {
     if (value >= 1000000) return `R$ ${(value / 1000000).toFixed(2)}M`;
@@ -318,9 +320,11 @@ export default function TabSubSellers({ merchant }) {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem>
-                                                            <Eye className="w-4 h-4 mr-2" />
-                                                            Ver Detalhes
+                                                        <DropdownMenuItem asChild>
+                                                            <Link to={createPageUrl(`AdminIntSubSellerDetail?id=${seller.id}`)}>
+                                                                <Eye className="w-4 h-4 mr-2" />
+                                                                Ver Detalhes
+                                                            </Link>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem onClick={() => handleOpenDialog(seller)}>
                                                             <Edit className="w-4 h-4 mr-2" />
