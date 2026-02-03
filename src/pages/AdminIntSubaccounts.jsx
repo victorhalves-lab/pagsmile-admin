@@ -10,7 +10,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
 import KPICard from '@/components/dashboard/KPICard';
-import { ShoppingBag, Users, Clock, AlertTriangle, Eye, DollarSign } from 'lucide-react';
+import { ShoppingBag, Users, Clock, AlertTriangle, Eye, DollarSign, Plus, Settings } from 'lucide-react';
 import { mockSubaccounts } from '@/components/mockData/adminInternoMocks';
 
 export default function AdminIntSubaccounts() {
@@ -71,7 +71,11 @@ export default function AdminIntSubaccounts() {
                       <TableCell className="font-medium">R$ {(mp.gmv / 1000000).toFixed(1)}M</TableCell>
                       <TableCell><StatusBadge status={mp.status} /></TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm"><Eye className="w-4 h-4" /></Button>
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link to={createPageUrl(`AdminIntMerchantProfile?id=${mp.id}`)}>
+                            <Eye className="w-4 h-4" />
+                          </Link>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
