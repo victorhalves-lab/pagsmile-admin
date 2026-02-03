@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Plus, Eye, Settings, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import { toast } from 'sonner';
 
 export default function AdminIntFeePlans() {
+    const [newPlanModal, setNewPlanModal] = useState(false);
     const plans = [
         { name: 'Starter', code: 'STARTER', type: 'Padrão', fees: { card_1x: '4.99%', pix: '1.49%' }, rr: '5%', term: 'D+30', merchants: 89 },
         { name: 'Growth', code: 'GROWTH', type: 'Padrão', fees: { card_1x: '3.99%', pix: '0.99%' }, rr: '3%', term: 'D+15', merchants: 156 },
@@ -24,7 +30,7 @@ export default function AdminIntFeePlans() {
                 actions={
                     <div className="flex gap-2">
                         <Button variant="outline" asChild><Link to={createPageUrl('AdminIntPriceSimulator')}>Simulador</Link></Button>
-                        <Button><Plus className="w-4 h-4 mr-2" /> Novo Plano</Button>
+                        <Button onClick={() => setNewPlanModal(true)}><Plus className="w-4 h-4 mr-2" /> Novo Plano</Button>
                     </div>
                 }
             />
@@ -60,6 +66,70 @@ export default function AdminIntFeePlans() {
                     </Card>
                 ))}
             </div>
+
+            {/* New Plan Modal */}
+            <Dialog open={newPlanModal} onOpenChange={setNewPlanModal}>
+                <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Novo Plano de Taxas</DialogTitle>
+                        <DialogDescription>Configure um novo plano de taxas para merchants</DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div>
+                            <Label>Nome do Plano *</Label>
+                            <Input className="mt-1" placeholder="Ex: Premium, Starter..." />
+                        </div>
+                        <div>
+                            <Label>Código *</Label>
+                            <Input className="mt-1" placeholder="Ex: PREMIUM" />
+                        </div>
+                        <div>
+                            <Label>Tipo</Label>
+                            <Select defaultValue="padrao">
+                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="padrao">Padrão</SelectItem>
+                                    <SelectItem value="enterprise">Enterprise</SelectItem>
+                                    <SelectItem value="custom">Customizado</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <Label>Taxa Cartão 1x (%)</Label>
+                                <Input className="mt-1" placeholder="3.99" type="number" step="0.01" />
+                            </div>
+                            <div>
+                                <Label>Taxa PIX (%)</Label>
+                                <Input className="mt-1" placeholder="0.99" type="number" step="0.01" />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <Label>Rolling Reserve (%)</Label>
+                                <Input className="mt-1" placeholder="5" type="number" step="1" />
+                            </div>
+                            <div>
+                                <Label>Prazo Liquidação</Label>
+                                <Select defaultValue="d15">
+                                    <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="d2">D+2</SelectItem>
+                                        <SelectItem value="d15">D+15</SelectItem>
+                                        <SelectItem value="d30">D+30</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setNewPlanModal(false)}>Cancelar</Button>
+                        <Button onClick={() => { toast.success('Plano criado com sucesso!'); setNewPlanModal(false); }}>
+                            <Plus className="w-4 h-4 mr-2" /> Criar Plano
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
