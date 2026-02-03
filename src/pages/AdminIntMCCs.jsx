@@ -8,13 +8,18 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
     Tag, ShoppingCart, Percent, AlertTriangle, TrendingUp, Search, Filter, 
-    MoreHorizontal, Eye, Settings, BarChart2 
+    MoreHorizontal, Eye, Settings, BarChart2, Plus 
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function AdminIntMCCs() {
     const [searchTerm, setSearchTerm] = useState('');
+    const [newMCCModal, setNewMCCModal] = useState(false);
 
     const kpis = [
         { title: 'MCCs Ativos', value: '45', icon: Tag, change: 0 },
@@ -48,7 +53,7 @@ export default function AdminIntMCCs() {
                 title="MCCs (Merchant Category Codes)" 
                 subtitle="Gestão de Categorias e Custos"
                 breadcrumbs={[{ label: 'Administração', page: '#' }, { label: 'MCCs', page: 'AdminIntMCCs' }]}
-                actions={<Button><Tag className="w-4 h-4 mr-2" /> Novo MCC</Button>}
+                actions={<Button onClick={() => setNewMCCModal(true)}><Tag className="w-4 h-4 mr-2" /> Novo MCC</Button>}
             />
 
             {/* Insights */}
@@ -123,6 +128,62 @@ export default function AdminIntMCCs() {
                     </Table>
                 </CardContent>
             </Card>
+
+            {/* New MCC Modal */}
+            <Dialog open={newMCCModal} onOpenChange={setNewMCCModal}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Novo MCC</DialogTitle>
+                        <DialogDescription>Cadastre um novo código MCC no sistema</DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div>
+                            <Label>Código MCC *</Label>
+                            <Input className="mt-1" placeholder="Ex: 5411" maxLength={4} />
+                        </div>
+                        <div>
+                            <Label>Descrição *</Label>
+                            <Input className="mt-1" placeholder="Ex: Supermercados e Mercearias" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <Label>Categoria</Label>
+                                <Select>
+                                    <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="varejo">Varejo</SelectItem>
+                                        <SelectItem value="servicos">Serviços</SelectItem>
+                                        <SelectItem value="alimentacao">Alimentação</SelectItem>
+                                        <SelectItem value="tecnologia">Tecnologia</SelectItem>
+                                        <SelectItem value="entretenimento">Entretenimento</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label>Nível de Risco</Label>
+                                <Select defaultValue="low">
+                                    <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="low">Baixo</SelectItem>
+                                        <SelectItem value="medium">Médio</SelectItem>
+                                        <SelectItem value="high">Alto</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <div>
+                            <Label>Interchange Base (%)</Label>
+                            <Input className="mt-1" placeholder="Ex: 1.65" type="number" step="0.01" />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setNewMCCModal(false)}>Cancelar</Button>
+                        <Button onClick={() => { toast.success('MCC cadastrado com sucesso!'); setNewMCCModal(false); }}>
+                            <Plus className="w-4 h-4 mr-2" /> Cadastrar MCC
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
