@@ -245,6 +245,9 @@ import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
 import AdminIntSubaccountLimits from './pages/AdminIntSubaccountLimits';
 import AdminIntSubaccountRates from './pages/AdminIntSubaccountRates';
+import AdminIntMerchantsOverview from './pages/AdminIntMerchantsOverview';
+import AdminIntSubaccountFullDetail from './pages/AdminIntSubaccountFullDetail';
+import AdminIntSubaccountTransactions from './pages/AdminIntSubaccountTransactions';
 import __Layout from './Layout.jsx';
 
 
@@ -447,6 +450,9 @@ export const PAGES = {
     "Withdrawals": Withdrawals,
     "AdminIntSubaccountLimits": AdminIntSubaccountLimits,
     "AdminIntSubaccountRates": AdminIntSubaccountRates,
+    "AdminIntMerchantsOverview": AdminIntMerchantsOverview,
+    "AdminIntSubaccountFullDetail": AdminIntSubaccountFullDetail,
+    "AdminIntSubaccountTransactions": AdminIntSubaccountTransactions,
 }
 
 export const pagesConfig = {
