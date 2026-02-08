@@ -237,8 +237,9 @@ const getAdminInternoMenuItems = (t) => [
     id: 'merchants',
     label: t('menu_admin.merchants'),
     icon: Store,
-    page: 'AdminIntMerchants',
+    page: 'AdminIntMerchantsOverview',
     submenu: [
+      { label: 'Gestão Comerciantes & Subcontas', page: 'AdminIntMerchantsOverview' },
       { label: t('menu.dashboard'), page: 'AdminIntMerchants' },
       { label: t('menu_admin.merchant_list'), page: 'AdminIntMerchantsList' },
       { label: t('menu_admin.profile_360'), page: 'AdminIntMerchantProfile' },
@@ -423,6 +424,9 @@ const internetBankingPages = [
 // Admin Interno pages
 const adminInternoPages = [
   'AdminIntDashboard',
+  'AdminIntMerchantsOverview',
+  'AdminIntSubaccountFullDetail',
+  'AdminIntSubaccountTransactions',
   'AdminIntCompliance', 'AdminIntComplianceQueue', 'AdminIntComplianceReview', 'AdminIntComplianceSubmissions',
   'AdminIntComplianceForms', 'AdminIntComplianceDocs', 'AdminIntComplianceRules', 'AdminIntComplianceAudit',
   'AdminIntComplianceHelena', 'AdminIntComplianceFormLink',
