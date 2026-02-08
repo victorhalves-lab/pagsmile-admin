@@ -1,3 +1,4 @@
+
 // Mock data for Admin Interno module visualization
 
 export const mockMerchants = [
@@ -212,11 +213,10 @@ export const mockTransactions = [
 ];
 
 export const mockSubaccounts = [
-  { id: 'SA-001', name: 'Vendedor Premium', marketplace: 'Marketplace A', marketplace_id: 'M-001', mcc: '5732', status: 'active', gmv: 150000, cb_ratio: 0.1, created_at: '2025-10-01' },
-  { id: 'SA-002', name: 'Loja Fashion', marketplace: 'Marketplace A', marketplace_id: 'M-001', mcc: '5651', status: 'pending', gmv: 0, cb_ratio: 0, created_at: '2026-01-25' },
-  { id: 'SA-003', name: 'Tech Store', marketplace: 'Marketplace B', marketplace_id: 'M-002', mcc: '5999', status: 'blocked', gmv: 5000, cb_ratio: 2.5, created_at: '2025-12-01' },
-  { id: 'SA-004', name: 'Vendedor Express', marketplace: 'Marketplace A', marketplace_id: 'M-001', mcc: '5411', status: 'active', gmv: 85000, cb_ratio: 0.2, created_at: '2025-09-15' },
-  { id: 'SA-005', name: 'Artesanato Brasil', marketplace: 'Marketplace C', marketplace_id: 'M-003', mcc: '5999', status: 'active', gmv: 25000, cb_ratio: 0.05, created_at: '2025-11-20' },
+  { id: 'sub1', name: 'Loja Fashion Store', marketplace: 'Marketplace A', marketplace_id: 'M-001', mcc: '5651', status: 'active', gmv: 150000, cb_ratio: 0.1, created_at: '2023-01-15' },
+  { id: 'sub2', name: 'Tech Gadgets Pro', marketplace: 'Marketplace B', marketplace_id: 'M-002', mcc: '5732', status: 'pending_compliance', gmv: 0, cb_ratio: 0, created_at: '2024-03-20' },
+  { id: 'sub3', name: 'Artesanato Brasil', marketplace: 'Marketplace C', marketplace_id: 'M-003', mcc: '5999', status: 'active', gmv: 92000, cb_ratio: 0.05, created_at: '2023-06-10' },
+  { id: 'sub4', name: 'Gourmet Foods', marketplace: 'Marketplace A', marketplace_id: 'M-001', mcc: '5812', status: 'under_review', gmv: 45000, cb_ratio: 0.15, created_at: '2024-01-05' },
 ];
 
 export const mockKycQueue = mockMerchants.filter(m => ['pending_compliance', 'under_review'].includes(m.compliance_status) || m.kyc_score < 70);
