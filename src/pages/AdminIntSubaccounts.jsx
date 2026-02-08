@@ -10,7 +10,13 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
 import KPICard from '@/components/dashboard/KPICard';
-import { ShoppingBag, Users, Clock, AlertTriangle, Eye, DollarSign, Plus, Settings } from 'lucide-react';
+import { ShoppingBag, Users, Clock, AlertTriangle, Eye, DollarSign, Plus, Settings, MoreVertical } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { mockSubaccounts } from '@/components/mockData/adminInternoMocks';
 
 export default function AdminIntSubaccounts() {
@@ -112,11 +118,30 @@ export default function AdminIntSubaccounts() {
                     <TableCell className="text-sm">{formatCurrency(sub.gmv)}</TableCell>
                     <TableCell><StatusBadge status={sub.status} /></TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link to={createPageUrl(`AdminIntSubaccountDetail?id=${sub.id}`)}>
-                          <Eye className="w-4 h-4" />
-                        </Link>
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreVertical className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <Link to={createPageUrl(`AdminIntSubaccountDetail?id=${sub.id}`)} className="flex items-center gap-2">
+                              <Eye className="w-4 h-4" /> Ver Detalhes
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link to={createPageUrl(`AdminIntSubaccountLimits?id=${sub.id}`)} className="flex items-center gap-2">
+                              <Settings className="w-4 h-4" /> Alterar Limites
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link to={createPageUrl(`AdminIntSubaccountRates?id=${sub.id}`)} className="flex items-center gap-2">
+                              <DollarSign className="w-4 h-4" /> Alterar Taxas
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}

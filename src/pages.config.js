@@ -243,6 +243,8 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
+import AdminIntSubaccountLimits from './pages/AdminIntSubaccountLimits';
+import AdminIntSubaccountRates from './pages/AdminIntSubaccountRates';
 import __Layout from './Layout.jsx';
 
 
@@ -443,6 +445,8 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
+    "AdminIntSubaccountLimits": AdminIntSubaccountLimits,
+    "AdminIntSubaccountRates": AdminIntSubaccountRates,
 }
 
 export const pagesConfig = {
