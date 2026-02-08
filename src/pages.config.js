@@ -151,6 +151,7 @@ import AdminIntSettings from './pages/AdminIntSettings';
 import AdminIntSettlement from './pages/AdminIntSettlement';
 import AdminIntSettlements from './pages/AdminIntSettlements';
 import AdminIntStatements from './pages/AdminIntStatements';
+import AdminIntSubSellerDetail from './pages/AdminIntSubSellerDetail';
 import AdminIntSubaccountDetail from './pages/AdminIntSubaccountDetail';
 import AdminIntSubaccounts from './pages/AdminIntSubaccounts';
 import AdminIntSupport from './pages/AdminIntSupport';
@@ -242,7 +243,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntSubSellerDetail from './pages/AdminIntSubSellerDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -351,6 +351,7 @@ export const PAGES = {
     "AdminIntSettlement": AdminIntSettlement,
     "AdminIntSettlements": AdminIntSettlements,
     "AdminIntStatements": AdminIntStatements,
+    "AdminIntSubSellerDetail": AdminIntSubSellerDetail,
     "AdminIntSubaccountDetail": AdminIntSubaccountDetail,
     "AdminIntSubaccounts": AdminIntSubaccounts,
     "AdminIntSupport": AdminIntSupport,
@@ -442,7 +443,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntSubSellerDetail": AdminIntSubSellerDetail,
 }
 
 export const pagesConfig = {

@@ -97,6 +97,7 @@ export default function AdminIntSubaccounts() {
                   <TableHead>Vendedor</TableHead>
                   <TableHead>GMV</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -110,6 +111,13 @@ export default function AdminIntSubaccounts() {
                     </TableCell>
                     <TableCell className="text-sm">{formatCurrency(sub.gmv)}</TableCell>
                     <TableCell><StatusBadge status={sub.status} /></TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link to={createPageUrl(`AdminIntSubaccountDetail?id=${sub.id}`)}>
+                          <Eye className="w-4 h-4" />
+                        </Link>
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -71,18 +71,43 @@ const TimelineItem = ({ event }) => (
 // --- Page ---
 
 export default function AdminIntSubaccountDetail() {
-  // In real app, get ID from params: const { id } = useParams();
-  // Mocking ID for now or assuming passed via some state if not in route params yet
-  // For demo, let's fetch the first one or a specific one
-  const subaccountId = "mock-id"; 
+  const { id } = useParams();
+  const urlParams = new URLSearchParams(window.location.search);
+  const subaccountId = id || urlParams.get('id');
+
+  const getCompanyAgeYears = (openingDate) => {
+    if (!openingDate) return 0;
+    const today = new Date();
+    const openDate = new Date(openingDate);
+    let age = today.getFullYear() - openDate.getFullYear();
+    const m = today.getMonth() - openDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < openDate.getDate())) {
+        age--;
+    }
+    return age;
+  };
 
   const { data: subaccount, isLoading } = useQuery({
     queryKey: ['subaccount_detail', subaccountId],
     queryFn: async () => {
-        // Mock fetch details
-        const list = await base44.entities.Subaccount.list(1);
-        return list[0] || {};
-    }
+        if (!subaccountId) {
+            return {};
+        }
+        // Mock data matching the IDs from AdminIntSubaccounts mockSubaccounts
+        const mockSubaccounts = [
+          { id: 'sub1', business_name: 'Loja Fashion Store', document: '11.111.111/1111-11', status: 'active', created_date: '2023-01-15T10:00:00Z', representative_name: 'João da Silva', representative_email: 'joao@fashionstore.com', representative_phone: '11987654321', legal_name: 'Fashion Store Comércio Ltda.', website: 'www.fashionstore.com.br', opening_date: '2020-01-01', address: {street: 'Rua das Flores', number: '123', city: 'São Paulo', state: 'SP'}, plan_chosen: 'Growth', account_type: 'both', kyc_score: 85, kyc_decision: 'approved' },
+          { id: 'sub2', business_name: 'Tech Gadgets Pro', document: '22.222.222/2222-22', status: 'pending_compliance', created_date: '2024-03-20T10:00:00Z', representative_name: 'Maria Souza', representative_email: 'maria@techgadgets.com', representative_phone: '11977777777', legal_name: 'Tech Gadgets Comércio Ltda.', website: 'www.techgadgets.com.br', opening_date: '2021-06-01', address: {street: 'Av. Paulista', number: '1000', city: 'São Paulo', state: 'SP'}, plan_chosen: 'Starter', account_type: 'pix', kyc_score: 40, kyc_decision: 'manual_review' },
+          { id: 'sub3', business_name: 'Artesanato Brasil', document: '33.333.333/3333-33', status: 'active', created_date: '2023-06-10T10:00:00Z', representative_name: 'Ana Costa', representative_email: 'ana@artesanato.com', representative_phone: '11966666666', legal_name: 'Artesanato Brasil ME', website: 'www.artesanatobrasil.com.br', opening_date: '2019-03-15', address: {street: 'Rua do Artesão', number: '50', city: 'Rio de Janeiro', state: 'RJ'}, plan_chosen: 'Pro', account_type: 'both', kyc_score: 92, kyc_decision: 'approved' },
+          { id: 'sub4', business_name: 'Gourmet Foods', document: '44.444.444/4444-44', status: 'under_review', created_date: '2024-01-05T10:00:00Z', representative_name: 'Carlos Lima', representative_email: 'carlos@gourmetfoods.com', representative_phone: '11955555555', legal_name: 'Gourmet Foods Alimentos Ltda.', website: 'www.gourmetfoods.com.br', opening_date: '2022-08-20', address: {street: 'Av. Gastronômica', number: '200', city: 'Curitiba', state: 'PR'}, plan_chosen: 'Growth', account_type: 'both', kyc_score: 65, kyc_decision: 'manual_review' },
+        ];
+        
+        const foundSubaccount = mockSubaccounts.find(sub => sub.id === subaccountId) || {};
+        if (foundSubaccount.opening_date) {
+            foundSubaccount.company_age_years = getCompanyAgeYears(foundSubaccount.opening_date);
+        }
+        return foundSubaccount;
+    },
+    enabled: !!subaccountId,
   });
 
   const { data: documents } = useQuery({
@@ -207,7 +232,7 @@ export default function AdminIntSubaccountDetail() {
                         <InfoRow label="Razão Social" value={subaccount.legal_name || subaccount.business_name} />
                         <InfoRow label="Nome Fantasia" value={subaccount.business_name} />
                         <InfoRow label="CNPJ" value={subaccount.document} />
-                        <InfoRow label="Endereço" value={typeof subaccount.address === 'object' ? `${subaccount.address.street}, ${subaccount.address.number}` : subaccount.address} />
+                        <InfoRow label="Endereço" value={subaccount.address ? `${subaccount.address.street}, ${subaccount.address.number}, ${subaccount.address.city} - ${subaccount.address.state}` : '-'} />
                         <InfoRow label="Website" value={subaccount.website} />
                         <InfoRow label="Idade da Empresa" value={`${subaccount.company_age_years || 0} anos`} />
                     </CardContent>
