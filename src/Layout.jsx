@@ -23,6 +23,7 @@ import {
   Plug,
   Settings,
   HelpCircle,
+  TicketPercent,
   ChevronDown,
   ChevronRight,
   Bell,
@@ -194,6 +195,17 @@ const getAdminSubMenuItems = (t) => [
     ]
   },
   {
+    id: 'coupons',
+    label: 'Cupons e Descontos',
+    icon: TicketPercent,
+    page: 'CouponsOverview',
+    submenu: [
+      { label: 'Dashboard', page: 'CouponsOverview' },
+      { label: 'Lista de Cupons', page: 'CouponList' },
+      { label: 'Criar Cupom', page: 'CouponForm' },
+    ]
+  },
+  {
     id: 'settings',
     label: t('common.settings'),
     icon: Settings,
@@ -205,7 +217,7 @@ const getAdminSubMenuItems = (t) => [
     icon: HelpCircle,
     page: 'Support',
   },
-];
+  ];
 
 // Menu items for Admin Interno module - using translation keys
 const getAdminInternoMenuItems = (t) => [

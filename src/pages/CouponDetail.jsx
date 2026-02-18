@@ -35,7 +35,9 @@ import {
   Check,
   X as XIcon
 } from 'lucide-react';
+import { BarChart as BarChartIcon } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Input } from '@/components/ui/input';
 import { mockCoupons, mockCouponUsageHistory } from '@/components/mockData/couponMocks';
 
 const statusLabels = { active: 'Ativo', inactive: 'Inativo', expired: 'Expirado', depleted: 'Esgotado' };
@@ -195,7 +197,7 @@ export default function CouponDetail() {
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-                <BarChart className="w-5 h-5 text-blue-600" />
+                <BarChartIcon className="w-5 h-5 text-blue-600" />
               </div>
               <div>
                 <p className="text-xs text-slate-500">ROI do Cupom</p>
