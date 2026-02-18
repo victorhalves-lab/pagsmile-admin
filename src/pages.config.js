@@ -118,6 +118,7 @@ import AdminIntMerchantReports from './pages/AdminIntMerchantReports';
 import AdminIntMerchantTags from './pages/AdminIntMerchantTags';
 import AdminIntMerchants from './pages/AdminIntMerchants';
 import AdminIntMerchantsList from './pages/AdminIntMerchantsList';
+import AdminIntMerchantsOverview from './pages/AdminIntMerchantsOverview';
 import AdminIntNewMerchant from './pages/AdminIntNewMerchant';
 import AdminIntOrchestration from './pages/AdminIntOrchestration';
 import AdminIntPLD from './pages/AdminIntPLD';
@@ -153,6 +154,10 @@ import AdminIntSettlements from './pages/AdminIntSettlements';
 import AdminIntStatements from './pages/AdminIntStatements';
 import AdminIntSubSellerDetail from './pages/AdminIntSubSellerDetail';
 import AdminIntSubaccountDetail from './pages/AdminIntSubaccountDetail';
+import AdminIntSubaccountFullDetail from './pages/AdminIntSubaccountFullDetail';
+import AdminIntSubaccountLimits from './pages/AdminIntSubaccountLimits';
+import AdminIntSubaccountRates from './pages/AdminIntSubaccountRates';
+import AdminIntSubaccountTransactions from './pages/AdminIntSubaccountTransactions';
 import AdminIntSubaccounts from './pages/AdminIntSubaccounts';
 import AdminIntSupport from './pages/AdminIntSupport';
 import AdminIntSystemLogs from './pages/AdminIntSystemLogs';
@@ -243,11 +248,10 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import AdminIntSubaccountLimits from './pages/AdminIntSubaccountLimits';
-import AdminIntSubaccountRates from './pages/AdminIntSubaccountRates';
-import AdminIntMerchantsOverview from './pages/AdminIntMerchantsOverview';
-import AdminIntSubaccountFullDetail from './pages/AdminIntSubaccountFullDetail';
-import AdminIntSubaccountTransactions from './pages/AdminIntSubaccountTransactions';
+import CouponsOverview from './pages/CouponsOverview';
+import CouponList from './pages/CouponList';
+import CouponForm from './pages/CouponForm';
+import CouponDetail from './pages/CouponDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -323,6 +327,7 @@ export const PAGES = {
     "AdminIntMerchantTags": AdminIntMerchantTags,
     "AdminIntMerchants": AdminIntMerchants,
     "AdminIntMerchantsList": AdminIntMerchantsList,
+    "AdminIntMerchantsOverview": AdminIntMerchantsOverview,
     "AdminIntNewMerchant": AdminIntNewMerchant,
     "AdminIntOrchestration": AdminIntOrchestration,
     "AdminIntPLD": AdminIntPLD,
@@ -358,6 +363,10 @@ export const PAGES = {
     "AdminIntStatements": AdminIntStatements,
     "AdminIntSubSellerDetail": AdminIntSubSellerDetail,
     "AdminIntSubaccountDetail": AdminIntSubaccountDetail,
+    "AdminIntSubaccountFullDetail": AdminIntSubaccountFullDetail,
+    "AdminIntSubaccountLimits": AdminIntSubaccountLimits,
+    "AdminIntSubaccountRates": AdminIntSubaccountRates,
+    "AdminIntSubaccountTransactions": AdminIntSubaccountTransactions,
     "AdminIntSubaccounts": AdminIntSubaccounts,
     "AdminIntSupport": AdminIntSupport,
     "AdminIntSystemLogs": AdminIntSystemLogs,
@@ -448,11 +457,10 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "AdminIntSubaccountLimits": AdminIntSubaccountLimits,
-    "AdminIntSubaccountRates": AdminIntSubaccountRates,
-    "AdminIntMerchantsOverview": AdminIntMerchantsOverview,
-    "AdminIntSubaccountFullDetail": AdminIntSubaccountFullDetail,
-    "AdminIntSubaccountTransactions": AdminIntSubaccountTransactions,
+    "CouponsOverview": CouponsOverview,
+    "CouponList": CouponList,
+    "CouponForm": CouponForm,
+    "CouponDetail": CouponDetail,
 }
 
 export const pagesConfig = {
