@@ -185,6 +185,10 @@ import ComplianceOnboardingStart from './pages/ComplianceOnboardingStart';
 import CompliancePixOnly from './pages/CompliancePixOnly';
 import ConverterAgent from './pages/ConverterAgent';
 import ConverterAgentSettings from './pages/ConverterAgentSettings';
+import CouponDetail from './pages/CouponDetail';
+import CouponForm from './pages/CouponForm';
+import CouponList from './pages/CouponList';
+import CouponsOverview from './pages/CouponsOverview';
 import CustomDashboards from './pages/CustomDashboards';
 import CustomerDetail from './pages/CustomerDetail';
 import Customers from './pages/Customers';
@@ -248,10 +252,6 @@ import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Webhooks from './pages/Webhooks';
 import Withdrawals from './pages/Withdrawals';
-import CouponsOverview from './pages/CouponsOverview';
-import CouponList from './pages/CouponList';
-import CouponForm from './pages/CouponForm';
-import CouponDetail from './pages/CouponDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -394,6 +394,10 @@ export const PAGES = {
     "CompliancePixOnly": CompliancePixOnly,
     "ConverterAgent": ConverterAgent,
     "ConverterAgentSettings": ConverterAgentSettings,
+    "CouponDetail": CouponDetail,
+    "CouponForm": CouponForm,
+    "CouponList": CouponList,
+    "CouponsOverview": CouponsOverview,
     "CustomDashboards": CustomDashboards,
     "CustomerDetail": CustomerDetail,
     "Customers": Customers,
@@ -457,10 +461,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "Webhooks": Webhooks,
     "Withdrawals": Withdrawals,
-    "CouponsOverview": CouponsOverview,
-    "CouponList": CouponList,
-    "CouponForm": CouponForm,
-    "CouponDetail": CouponDetail,
 }
 
 export const pagesConfig = {

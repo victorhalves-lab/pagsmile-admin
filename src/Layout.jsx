@@ -109,6 +109,17 @@ const getAdminSubMenuItems = (t) => [
     badge: '12',
   },
   {
+    id: 'coupons',
+    label: 'Cupons e Descontos',
+    icon: TicketPercent,
+    page: 'CouponsOverview',
+    submenu: [
+      { label: 'Dashboard', page: 'CouponsOverview' },
+      { label: 'Lista de Cupons', page: 'CouponList' },
+      { label: 'Criar Cupom', page: 'CouponForm' },
+    ]
+  },
+  {
     id: 'subscriptions',
     label: t('menu.subscriptions'),
     icon: Repeat,
@@ -192,17 +203,6 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.api_keys'), page: 'ApiKeys' },
       { label: t('menu.webhooks'), page: 'Webhooks' },
       { label: t('menu.plugins'), page: 'Plugins' },
-    ]
-  },
-  {
-    id: 'coupons',
-    label: 'Cupons e Descontos',
-    icon: TicketPercent,
-    page: 'CouponsOverview',
-    submenu: [
-      { label: 'Dashboard', page: 'CouponsOverview' },
-      { label: 'Lista de Cupons', page: 'CouponList' },
-      { label: 'Criar Cupom', page: 'CouponForm' },
     ]
   },
   {
