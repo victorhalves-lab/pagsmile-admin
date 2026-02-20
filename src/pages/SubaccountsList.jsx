@@ -55,6 +55,9 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { formatCurrency } from '@/components/utils';
+import SubaccountDetailModal from '@/components/subaccounts/SubaccountDetailModal';
+import SubaccountLimitsModal from '@/components/subaccounts/SubaccountLimitsModal';
+import SubaccountRatesModal from '@/components/subaccounts/SubaccountRatesModal';
 
 const statusConfig = {
   draft: { label: 'Rascunho', color: 'bg-gray-100 text-gray-700' },
@@ -74,6 +77,10 @@ export default function SubaccountsList() {
   const [showActionDialog, setShowActionDialog] = useState(false);
   const [actionType, setActionType] = useState(null);
   const [actionReason, setActionReason] = useState('');
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showLimitsModal, setShowLimitsModal] = useState(false);
+  const [showRatesModal, setShowRatesModal] = useState(false);
+  const [modalSubaccount, setModalSubaccount] = useState(null);
 
   const { data: subaccounts = [], isLoading, refetch } = useQuery({
     queryKey: ['subaccounts'],
@@ -236,7 +243,7 @@ export default function SubaccountsList() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => { setModalSubaccount(row); setShowDetailModal(true); }}>
               <Eye className="w-4 h-4 mr-2" />
               Ver Detalhes
             </DropdownMenuItem>
@@ -266,11 +273,11 @@ export default function SubaccountsList() {
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => { setModalSubaccount(row); setShowLimitsModal(true); }}>
               <Settings className="w-4 h-4 mr-2" />
               Alterar Limites
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => { setModalSubaccount(row); setShowRatesModal(true); }}>
               <DollarSign className="w-4 h-4 mr-2" />
               Alterar Taxas
             </DropdownMenuItem>
@@ -422,6 +429,27 @@ export default function SubaccountsList() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Detail Modal */}
+      <SubaccountDetailModal
+        open={showDetailModal}
+        onOpenChange={setShowDetailModal}
+        subaccount={modalSubaccount}
+      />
+
+      {/* Limits Modal */}
+      <SubaccountLimitsModal
+        open={showLimitsModal}
+        onOpenChange={setShowLimitsModal}
+        subaccount={modalSubaccount}
+      />
+
+      {/* Rates Modal */}
+      <SubaccountRatesModal
+        open={showRatesModal}
+        onOpenChange={setShowRatesModal}
+        subaccount={modalSubaccount}
+      />
     </div>
   );
 }
