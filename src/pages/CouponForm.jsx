@@ -32,6 +32,7 @@ import {
   Info
 } from 'lucide-react';
 import { mockCoupons } from '@/components/mockData/couponMocks';
+import CouponLinkBinding from '@/components/coupons/CouponLinkBinding';
 
 const generateRandomCode = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -62,6 +63,9 @@ export default function CouponForm() {
     is_stackable: false,
     is_nominal: false,
     assigned_to_email: '',
+    link_scope: 'all',
+    linked_payment_link_ids: [],
+    linked_checkout_ids: [],
   });
 
   useEffect(() => {
@@ -85,6 +89,9 @@ export default function CouponForm() {
           is_stackable: coupon.is_stackable,
           is_nominal: coupon.is_nominal,
           assigned_to_email: coupon.assigned_to_email || '',
+          link_scope: coupon.link_scope || 'all',
+          linked_payment_link_ids: coupon.linked_payment_link_ids || [],
+          linked_checkout_ids: coupon.linked_checkout_ids || [],
         });
       }
     }
@@ -252,6 +259,9 @@ export default function CouponForm() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Vinculação a Links e Checkouts */}
+          <CouponLinkBinding form={form} update={update} />
 
           {/* Escopo de Aplicação */}
           <Card>
