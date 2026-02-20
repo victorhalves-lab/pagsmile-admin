@@ -30,12 +30,15 @@ import ValidityLimitsSection from '@/components/payment-links/ValidityLimitsSect
 import TrackingSection from '@/components/payment-links/TrackingSection';
 import PersonalizationSection from '@/components/payment-links/PersonalizationSection';
 import PaymentMethodsSection from '@/components/payment-links/PaymentMethodsSection';
+import CouponBindingSection from '@/components/payment-links/CouponBindingSection';
+import { TicketPercent } from 'lucide-react';
 
 const tabs = [
   { id: 'basic', label: 'Informações', icon: Info },
   { id: 'value', label: 'Valor', icon: DollarSign },
   { id: 'quantity', label: 'Quantidade', icon: Package },
   { id: 'validity', label: 'Validade', icon: Clock },
+  { id: 'coupons', label: 'Cupons', icon: TicketPercent },
   { id: 'tracking', label: 'Rastreamento', icon: Target },
   { id: 'personalization', label: 'Personalização', icon: Palette },
   { id: 'payment', label: 'Pagamento', icon: CreditCard },
@@ -90,6 +93,8 @@ export default function PaymentLinkCreate() {
     promotional_installments: false,
     pix_discount_percentage: 0,
     pix_expiration_minutes: 30,
+    linked_coupon_ids: [],
+    auto_apply_coupon_id: '',
     status: 'draft',
   });
 
@@ -234,6 +239,9 @@ export default function PaymentLinkCreate() {
             )}
             {activeTab === 'validity' && (
               <ValidityLimitsSection formData={formData} setFormData={setFormData} />
+            )}
+            {activeTab === 'coupons' && (
+              <CouponBindingSection formData={formData} setFormData={setFormData} />
             )}
             {activeTab === 'tracking' && (
               <TrackingSection formData={formData} setFormData={setFormData} />
