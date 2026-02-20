@@ -1,3 +1,20 @@
+// Mock Payment Links para vincular
+export const mockPaymentLinksForCoupon = [
+  { id: "pl_001", name: "Curso Online Premium", amount: 297, status: "active", url: "https://pay.pagsmile.com/curso-premium" },
+  { id: "pl_002", name: "E-book Pack Completo", amount: 49.90, status: "active", url: "https://pay.pagsmile.com/ebook-pack" },
+  { id: "pl_003", name: "Assinatura Mensal", amount: 29.90, status: "active", url: "https://pay.pagsmile.com/assinatura" },
+  { id: "pl_004", name: "Consultoria 1h", amount: 150, status: "active", url: "https://pay.pagsmile.com/consultoria" },
+  { id: "pl_005", name: "Kit Verão 2026", amount: 189.90, status: "active", url: "https://pay.pagsmile.com/kit-verao" },
+  { id: "pl_006", name: "Mentoria Individual", amount: 500, status: "draft", url: "https://pay.pagsmile.com/mentoria" },
+];
+
+// Mock Checkouts para vincular
+export const mockCheckoutsForCoupon = [
+  { id: "chk_001", name: "Checkout Padrão", status: "active", type: "standard" },
+  { id: "chk_002", name: "Checkout Transparente", status: "active", type: "transparent" },
+  { id: "chk_003", name: "Checkout Loja Premium", status: "active", type: "standard" },
+];
+
 export const mockCoupons = [
   {
     id: "cpn_001",
@@ -21,6 +38,9 @@ export const mockCoupons = [
     is_nominal: false,
     assigned_to_email: null,
     generated_link: null,
+    link_scope: "specific_links",
+    linked_payment_link_ids: ["pl_001", "pl_003"],
+    linked_checkout_ids: [],
     total_discount_given: 8432.50,
     total_revenue_generated: 84325.00,
     created_date: "2025-12-01T10:00:00Z",
