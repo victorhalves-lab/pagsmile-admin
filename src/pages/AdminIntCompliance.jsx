@@ -64,10 +64,6 @@ export default function AdminIntCompliance() {
         </TabsList>
 
         <div className="mt-6">
-          <TabsContent value="dashboard" className="m-0">
-            <ComplianceDashboard />
-          </TabsContent>
-          
           <TabsContent value="queue" className="m-0">
             <ComplianceQueue />
           </TabsContent>
