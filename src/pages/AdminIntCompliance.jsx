@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageHeader from '@/components/common/PageHeader';
 import { 
   LayoutDashboard, Users, FileSearch, FileText, Settings2, 
-  FolderOpen, History, Brain, Link2, RefreshCw, Zap, Cpu
+  FolderOpen, History, Brain, Link2, RefreshCw, Zap
 } from 'lucide-react';
 
 import ComplianceDashboard from '@/components/admin-interno/compliance/ComplianceDashboard';
@@ -18,7 +18,7 @@ import HelenaTraining from '@/components/admin-interno/compliance/HelenaTraining
 import FormLinkGenerator from '@/components/admin-interno/compliance/FormLinkGenerator';
 import RevalidationManager from '@/components/admin-interno/compliance/RevalidationManager';
 import SpecialAnalysisHub from '@/components/admin-interno/compliance/SpecialAnalysisHub';
-import TechnologyStack from '@/components/admin-interno/compliance/TechnologyStack';
+
 
 export default function AdminIntCompliance() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -35,7 +35,7 @@ export default function AdminIntCompliance() {
     { id: 'rules', label: 'Regras', icon: Settings2 },
     { id: 'audit', label: 'Auditoria', icon: History },
     { id: 'helena', label: 'Helena IA', icon: Brain },
-    { id: 'tech', label: 'Stack Tecnológico', icon: Cpu },
+
     { id: 'link', label: 'Link do Formulário', icon: Link2 },
   ];
 
@@ -109,9 +109,7 @@ export default function AdminIntCompliance() {
             <HelenaTraining />
           </TabsContent>
           
-          <TabsContent value="tech" className="m-0">
-            <TechnologyStack />
-          </TabsContent>
+
           
           <TabsContent value="link" className="m-0">
             <FormLinkGenerator />
