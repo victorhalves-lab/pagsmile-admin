@@ -21,10 +21,9 @@ import SpecialAnalysisHub from '@/components/admin-interno/compliance/SpecialAna
 import TechnologyStack from '@/components/admin-interno/compliance/TechnologyStack';
 
 export default function AdminIntCompliance() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('queue');
 
   const tabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'queue', label: 'Fila de Compliance', icon: Users },
     { id: 'review', label: 'Análise Manual', icon: FileSearch },
     { id: 'submissions', label: 'Submissões', icon: FileText },
