@@ -351,20 +351,20 @@ export default function Withdrawals() {
       <Dialog open={showWithdrawDialog} onOpenChange={setShowWithdrawDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('financial.request_withdrawal')}</DialogTitle>
+            <DialogTitle>Solicitar Saque</DialogTitle>
             <DialogDescription>
-              {t('financial.transfer_available')}
+              Transfira o saldo disponível para sua conta bancária
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             <div className="p-4 bg-green-50 rounded-lg">
-              <p className="text-sm text-green-700">{t('financial.available_balance')}</p>
+              <p className="text-sm text-green-700">Saldo disponível</p>
               <p className="text-2xl font-bold text-green-800">{formatCurrency(availableBalance)}</p>
             </div>
 
             <div className="space-y-2">
-              <Label>{t('financial.withdrawal_amount')}</Label>
+              <Label>Valor do saque</Label>
               <Input
                 type="number"
                 value={withdrawAmount}
@@ -384,13 +384,13 @@ export default function Withdrawals() {
                   size="sm"
                   onClick={() => setWithdrawAmount(String(availableBalance))}
                 >
-                  {t('financial.all')}
+                  Tudo
                 </Button>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>{t('financial.transfer_type')}</Label>
+              <Label>Tipo de transferência</Label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setWithdrawType('pix')}
@@ -405,7 +405,7 @@ export default function Withdrawals() {
                   )} />
                   <div className="text-left">
                     <p className="font-medium text-sm">Pix</p>
-                    <p className="text-xs text-gray-500">{t('financial.instant')}</p>
+                    <p className="text-xs text-gray-500">Instantâneo</p>
                   </div>
                 </button>
                 <button
@@ -421,17 +421,17 @@ export default function Withdrawals() {
                   )} />
                   <div className="text-left">
                     <p className="font-medium text-sm">TED</p>
-                    <p className="text-xs text-gray-500">{t('financial.d0_d1')}</p>
+                    <p className="text-xs text-gray-500">D+0 / D+1</p>
                   </div>
                 </button>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>{t('financial.destination_account')}</Label>
+              <Label>Conta de destino</Label>
               <Select value={selectedAccountId} onValueChange={setSelectedAccountId}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t('financial.select_account')} />
+                  <SelectValue placeholder="Selecione uma conta" />
                 </SelectTrigger>
                 <SelectContent>
                   {bankAccounts.map(account => (
@@ -446,7 +446,7 @@ export default function Withdrawals() {
             {config.withdrawal_fee_type !== 'free' && (
               <div className="p-3 bg-yellow-50 rounded-lg text-sm">
                 <p className="text-yellow-700">
-                  {t('financial.withdrawal_fee')}: {config.withdrawal_fee_type === 'fixed' 
+                  Taxa de saque: {config.withdrawal_fee_type === 'fixed' 
                     ? formatCurrency(config.withdrawal_fee_value)
                     : `${config.withdrawal_fee_value}%`
                   }
@@ -457,7 +457,7 @@ export default function Withdrawals() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowWithdrawDialog(false)}>
-              {t('common.cancel')}
+              Cancelar
             </Button>
             <Button 
               onClick={handleWithdraw}
@@ -468,7 +468,7 @@ export default function Withdrawals() {
               ) : (
                 <ArrowUpFromLine className="w-4 h-4 mr-2" />
               )}
-              {t('financial.confirm_withdrawal')}
+              Confirmar saque
             </Button>
           </DialogFooter>
         </DialogContent>
