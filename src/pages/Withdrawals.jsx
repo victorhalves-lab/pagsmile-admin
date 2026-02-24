@@ -52,7 +52,12 @@ import {
   AlertTriangle,
   Download,
   RefreshCcw,
-  CreditCard
+  CreditCard,
+  Zap,
+  Info,
+  Lock,
+  Search,
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
