@@ -166,363 +166,186 @@ export default function Withdrawals() {
     updateConfigMutation.mutate({ ...config, [field]: value });
   };
 
+  // Simulated financial summary values
+  const anticipateBalance = 12500.00;
+  const anticipationProcessing = 3200.00;
+  const blockedInDisputes = 1800.00;
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+
+  const filteredWithdrawals = withdrawals.filter(w => {
+    const matchesSearch = !searchQuery || 
+      w.withdrawal_id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(w.amount).includes(searchQuery);
+    const matchesStatus = statusFilter === 'all' || w.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={t('financial.withdrawals')}
-        subtitle={t('financial.withdrawals')}
-        breadcrumbs={[
-          { label: t('financial.title'), href: 'Financial' },
-          { label: t('financial.withdrawals') }
-        ]}
-        actions={
-          <Button onClick={() => setShowWithdrawDialog(true)}>
-            <ArrowUpFromLine className="w-4 h-4 mr-2" />
-            {t('financial.withdraw')}
-          </Button>
-        }
-      />
+      <h1 className="text-2xl font-bold text-slate-800">Saques</h1>
 
-      {/* Balance Card */}
-      <Card className="bg-green-50 border-green-200">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-green-700">{t('financial.available_for_withdrawal')}</p>
-              <p className="text-3xl font-bold text-green-800">{formatCurrency(availableBalance)}</p>
-              <p className="text-xs text-green-600 mt-1">
-                {t('financial.min_withdrawal')}: {formatCurrency(minWithdrawal)}
-              </p>
+      {/* Summary Cards - 4 columns */}
+      <Card>
+        <CardContent className="p-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+            {/* Card 1 - Disponível para antecipar */}
+            <div className="p-5 flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <Zap className="w-4 h-4 text-yellow-500" />
+                  Disponível para antecipar (D+2)
+                </div>
+                <button className="text-slate-400 hover:text-slate-600">
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-2xl font-bold text-slate-800">{formatCurrency(anticipateBalance)}</p>
+              <Button variant="outline" size="sm" className="w-fit text-sm">
+                Antecipar
+              </Button>
             </div>
-            <div className="p-4 bg-green-100 rounded-full">
-              <Wallet className="w-8 h-8 text-green-600" />
+
+            {/* Card 2 - Antecipação em processamento */}
+            <div className="p-5 flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                  Antecipação em processamento
+                </div>
+                <button className="text-slate-400 hover:text-slate-600">
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-2xl font-bold text-slate-800">{formatCurrency(anticipationProcessing)}</p>
+              <Button variant="outline" size="sm" className="w-fit text-sm">
+                Ver status
+              </Button>
+            </div>
+
+            {/* Card 3 - Valor bloqueado em disputas */}
+            <div className="p-5 flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <Lock className="w-4 h-4 text-red-500" />
+                  Valor bloqueado em disputas
+                </div>
+                <button className="text-slate-400 hover:text-slate-600">
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-2xl font-bold text-slate-800">{formatCurrency(blockedInDisputes)}</p>
+              <Button variant="outline" size="sm" className="w-fit text-sm">
+                Ver disputas
+              </Button>
+            </div>
+
+            {/* Card 4 - Disponível para saque */}
+            <div className="p-5 flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <Wallet className="w-4 h-4 text-emerald-500" />
+                  Disponível para saque
+                </div>
+                <button className="text-slate-400 hover:text-slate-600">
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-2xl font-bold text-slate-800">{formatCurrency(availableBalance)}</p>
+              <Button 
+                size="sm" 
+                className="w-fit text-sm bg-[#2bc196] hover:bg-[#239b7a]"
+                onClick={() => setShowWithdrawDialog(true)}
+              >
+                Sacar <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="history" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="history">{t('financial.withdrawal_history')}</TabsTrigger>
-          <TabsTrigger value="accounts">{t('financial.bank_accounts')}</TabsTrigger>
-          <TabsTrigger value="auto">{t('financial.auto_withdrawal')}</TabsTrigger>
-        </TabsList>
+      {/* Search, Filters and Export */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Input
+            placeholder="Pesquisar por ID, valor"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <div className="flex items-center gap-3 ml-auto">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="pending">Pendente</SelectItem>
+              <SelectItem value="processing">Processando</SelectItem>
+              <SelectItem value="completed">Concluído</SelectItem>
+              <SelectItem value="failed">Falhou</SelectItem>
+              <SelectItem value="cancelled">Cancelado</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline" size="sm">
+            <Download className="w-4 h-4 mr-2" />
+            Exportar
+          </Button>
+        </div>
+      </div>
 
-        {/* History Tab */}
-        <TabsContent value="history">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">{t('financial.withdrawal_history')}</CardTitle>
-                <Button variant="outline" size="sm">
-                  <Download className="w-4 h-4 mr-2" />
-                  {t('financial.export')}
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="border rounded-lg overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-gray-50">
-                      <TableHead>{t('financial.date')}</TableHead>
-                      <TableHead>{t('financial.value')}</TableHead>
-                      <TableHead>{t('financial.fee_label')}</TableHead>
-                      <TableHead>{t('financial.net')}</TableHead>
-                      <TableHead>{t('financial.destination')}</TableHead>
-                      <TableHead>{t('financial.type')}</TableHead>
-                      <TableHead>{t('common.status')}</TableHead>
-                      <TableHead></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {withdrawals.map((withdrawal) => {
-                      const statusConf = statusConfig[withdrawal.status] || statusConfig.pending;
-                      const StatusIcon = statusConf.icon;
+      {/* Withdrawals Table */}
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-slate-50">
+                <TableHead>ID de pagamento</TableHead>
+                <TableHead>Valor</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Criação</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredWithdrawals.map((withdrawal) => {
+                const statusConf = statusConfig[withdrawal.status] || statusConfig.pending;
+                const StatusIcon = statusConf.icon;
 
-                      return (
-                        <TableRow key={withdrawal.id}>
-                          <TableCell>
-                            <div>
-                              <p className="font-medium">
-                                {format(new Date(withdrawal.created_date), 'dd/MM/yyyy')}
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {format(new Date(withdrawal.created_date), 'HH:mm')}
-                              </p>
-                            </div>
-                          </TableCell>
-                          <TableCell className="font-semibold">
-                            {formatCurrency(withdrawal.amount)}
-                          </TableCell>
-                          <TableCell className="text-red-600">
-                            {withdrawal.fee > 0 ? `-${formatCurrency(withdrawal.fee)}` : t('financial.free')}
-                          </TableCell>
-                          <TableCell className="font-semibold text-green-600">
-                            {formatCurrency(withdrawal.net_amount)}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              {withdrawal.pix_key ? (
-                                <QrCode className="w-4 h-4 text-green-500" />
-                              ) : (
-                                <Building2 className="w-4 h-4 text-gray-500" />
-                              )}
-                              <div>
-                                <p className="text-sm">{withdrawal.bank_name}</p>
-                                <p className="text-xs text-gray-500">
-                                  {withdrawal.pix_key || `Ag: ${withdrawal.agency} Cc: ${withdrawal.account_number}`}
-                                </p>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className="capitalize">
-                              {withdrawal.type === 'manual' ? t('financial.manual') : t('financial.automatic')}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={cn("gap-1", statusConf.color)}>
-                              <StatusIcon className={cn(
-                                "w-3 h-3",
-                                withdrawal.status === 'processing' && "animate-spin"
-                              )} />
-                              {statusConf.label}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {withdrawal.receipt_url && (
-                              <Button variant="ghost" size="sm">
-                                <Download className="w-4 h-4" />
-                              </Button>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-              {withdrawals.length === 0 && (
-                <div className="text-center py-12 text-gray-500">
-                  <ArrowUpFromLine className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p>{t('financial.no_withdrawals')}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Accounts Tab */}
-        <TabsContent value="accounts">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-lg">{t('financial.bank_accounts')}</CardTitle>
-                  <CardDescription>{t('financial.manage_accounts')}</CardDescription>
-                </div>
-                <Button onClick={() => setShowAccountDialog(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t('financial.add_account')}
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {bankAccounts.length > 0 ? (
-                <div className="space-y-3">
-                  {bankAccounts.map((account) => (
-                    <div 
-                      key={account.id}
-                      className={cn(
-                        "flex items-center justify-between p-4 border rounded-lg",
-                        account.is_primary && "border-green-500 bg-green-50"
-                      )}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="p-2 bg-gray-100 rounded-lg">
-                          {account.pix_key ? (
-                            <QrCode className="w-5 h-5 text-green-600" />
-                          ) : (
-                            <Building2 className="w-5 h-5 text-gray-600" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">{account.bank_name}</p>
-                            {account.is_primary && (
-                              <Badge className="bg-green-100 text-green-700 text-xs">{t('financial.primary')}</Badge>
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-500">
-                            {account.pix_key ? (
-                              `Pix: ${account.pix_key}`
-                            ) : (
-                              `Ag: ${account.agency} | Conta: ${account.account_number}-${account.account_digit}`
-                            )}
-                          </p>
-                          <p className="text-xs text-gray-400">{account.holder_name}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {account.is_validated ? (
-                          <Badge className="bg-green-100 text-green-700">
-                            <CheckCircle2 className="w-3 h-3 mr-1" />
-                            {t('financial.validated')}
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-yellow-100 text-yellow-700">
-                            <AlertTriangle className="w-3 h-3 mr-1" />
-                            {t('financial.pending')}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12 text-gray-500">
-                  <Building2 className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p>{t('financial.no_bank_accounts')}</p>
-                  <Button className="mt-4" onClick={() => setShowAccountDialog(true)}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    {t('financial.add_account')}
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Auto Withdrawal Tab */}
-        <TabsContent value="auto">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings className="w-5 h-5" />
-                {t('financial.auto_withdrawal_settings')}
-              </CardTitle>
-              <CardDescription>
-                {t('financial.auto_withdrawal_desc')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <div>
-                  <Label className="text-base text-blue-900">{t('financial.enable_auto_withdrawal')}</Label>
-                  <p className="text-sm text-blue-700">
-                    {t('financial.auto_when_conditions')}
-                  </p>
-                </div>
-                <Switch
-                  checked={config.is_auto_enabled}
-                  onCheckedChange={(checked) => handleConfigChange('is_auto_enabled', checked)}
-                />
-              </div>
-
-              {config.is_auto_enabled && (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>{t('financial.frequency')}</Label>
-                      <Select
-                        value={config.auto_frequency}
-                        onValueChange={(value) => handleConfigChange('auto_frequency', value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="daily">{t('financial.daily')}</SelectItem>
-                          <SelectItem value="weekly">{t('financial.weekly')}</SelectItem>
-                          <SelectItem value="biweekly">{t('financial.biweekly')}</SelectItem>
-                          <SelectItem value="monthly">{t('financial.monthly')}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {config.auto_frequency === 'weekly' && (
-                      <div className="space-y-2">
-                        <Label>{t('financial.day_of_week')}</Label>
-                        <Select
-                          value={String(config.auto_day_of_week || 1)}
-                          onValueChange={(value) => handleConfigChange('auto_day_of_week', parseInt(value))}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1">{t('financial.monday')}</SelectItem>
-                            <SelectItem value="2">{t('financial.tuesday')}</SelectItem>
-                            <SelectItem value="3">{t('financial.wednesday')}</SelectItem>
-                            <SelectItem value="4">{t('financial.thursday')}</SelectItem>
-                            <SelectItem value="5">{t('financial.friday')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>{t('financial.min_amount_withdraw')}</Label>
-                      <Input
-                        type="number"
-                        value={config.min_amount_to_withdraw}
-                        onChange={(e) => handleConfigChange('min_amount_to_withdraw', parseFloat(e.target.value))}
-                      />
-                      <p className="text-xs text-gray-500">
-                        {t('financial.min_amount_help')}
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>{t('financial.keep_min_balance')}</Label>
-                      <Input
-                        type="number"
-                        value={config.keep_minimum_balance}
-                        onChange={(e) => handleConfigChange('keep_minimum_balance', parseFloat(e.target.value))}
-                      />
-                      <p className="text-xs text-gray-500">
-                        {t('financial.keep_min_help')}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>{t('financial.default_destination_account')}</Label>
-                    <Select
-                      value={config.default_bank_account_id || ''}
-                      onValueChange={(value) => handleConfigChange('default_bank_account_id', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('financial.select_account')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {bankAccounts.map(account => (
-                          <SelectItem key={account.id} value={account.id}>
-                            {account.bank_name} - {account.pix_key || account.account_number}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <Label>{t('financial.notify_auto_withdrawals')}</Label>
-                      <p className="text-xs text-gray-500">{t('financial.notify_auto_help')}</p>
-                    </div>
-                    <Switch
-                      checked={config.notification_enabled}
-                      onCheckedChange={(checked) => handleConfigChange('notification_enabled', checked)}
-                    />
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                return (
+                  <TableRow key={withdrawal.id}>
+                    <TableCell className="font-medium text-slate-700">
+                      {withdrawal.withdrawal_id}
+                    </TableCell>
+                    <TableCell className="font-semibold">
+                      {formatCurrency(withdrawal.amount)}
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={cn("gap-1", statusConf.color)}>
+                        <StatusIcon className={cn(
+                          "w-3 h-3",
+                          withdrawal.status === 'processing' && "animate-spin"
+                        )} />
+                        {statusConf.label}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-slate-500">
+                      {format(new Date(withdrawal.created_date), 'dd/MM/yyyy HH:mm')}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          {filteredWithdrawals.length === 0 && (
+            <div className="text-center py-16 text-slate-400">
+              <p>Nenhum dado encontrado</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Withdraw Dialog */}
       <Dialog open={showWithdrawDialog} onOpenChange={setShowWithdrawDialog}>
