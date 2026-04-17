@@ -21,14 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -379,66 +372,68 @@ export default function Disputes() {
         </TabsContent>
       </Tabs>
 
-      {/* Dispute Detail Dialog */}
-      <Dialog open={!!selectedDispute} onOpenChange={() => setSelectedDispute(null)}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Detalhes da Disputa</DialogTitle>
-            <DialogDescription>
-              {selectedDispute?.dispute_id}
-            </DialogDescription>
-          </DialogHeader>
-          
-          {selectedDispute && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">Valor</p>
-                  <p className="font-semibold text-lg">{formatCurrency(selectedDispute.amount)}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Status</p>
-                  <StatusBadge status={selectedDispute.status} />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Tipo</p>
-                  <p className="font-medium capitalize">{selectedDispute.type?.replace('_', ' ')}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Bandeira</p>
-                  <p className="font-medium capitalize">{selectedDispute.card_brand || 'N/A'}</p>
-                </div>
-              </div>
-
+      {/* Dispute Detail Side Drawer */}
+      <SideDrawer
+        open={!!selectedDispute}
+        onOpenChange={() => setSelectedDispute(null)}
+        title="Detalhes da Disputa"
+        description={selectedDispute?.dispute_id}
+        icon={ShieldAlert}
+        iconClassName="bg-red-100 text-red-600"
+        size="lg"
+        footer={
+          selectedDispute && (
+            <div className="flex gap-3">
+              <Button className="flex-1 bg-[#00D26A] hover:bg-[#00A854]">
+                <Upload className="w-4 h-4 mr-2" />
+                Enviar Evidências
+              </Button>
+              <Button variant="outline" className="flex-1">
+                Aceitar Disputa
+              </Button>
+            </div>
+          )
+        }
+      >
+        {selectedDispute && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-500 mb-1">Motivo</p>
-                <p className="text-gray-900">{selectedDispute.reason_description || 'Não especificado'}</p>
-                <p className="text-sm text-gray-500">Código: {selectedDispute.reason_code}</p>
+                <p className="text-sm text-gray-500">Valor</p>
+                <p className="font-semibold text-lg">{formatCurrency(selectedDispute.amount)}</p>
               </div>
-
-              {selectedDispute.ai_recommendation && (
-                <div className="bg-gradient-to-br from-[#00D26A]/10 to-[#00D26A]/5 rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-[#00D26A]" />
-                    <span className="font-medium text-gray-900">Recomendação do AI</span>
-                  </div>
-                  <p className="text-sm text-gray-700">{selectedDispute.ai_recommendation}</p>
-                </div>
-              )}
-
-              <div className="flex gap-3">
-                <Button className="flex-1 bg-[#00D26A] hover:bg-[#00A854]">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Enviar Evidências
-                </Button>
-                <Button variant="outline" className="flex-1">
-                  Aceitar Disputa
-                </Button>
+              <div>
+                <p className="text-sm text-gray-500">Status</p>
+                <StatusBadge status={selectedDispute.status} />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Tipo</p>
+                <p className="font-medium capitalize">{selectedDispute.type?.replace('_', ' ')}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Bandeira</p>
+                <p className="font-medium capitalize">{selectedDispute.card_brand || 'N/A'}</p>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+
+            <div>
+              <p className="text-sm text-gray-500 mb-1">Motivo</p>
+              <p className="text-gray-900">{selectedDispute.reason_description || 'Não especificado'}</p>
+              <p className="text-sm text-gray-500">Código: {selectedDispute.reason_code}</p>
+            </div>
+
+            {selectedDispute.ai_recommendation && (
+              <div className="bg-gradient-to-br from-[#00D26A]/10 to-[#00D26A]/5 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-[#00D26A]" />
+                  <span className="font-medium text-gray-900">Recomendação do AI</span>
+                </div>
+                <p className="text-sm text-gray-700">{selectedDispute.ai_recommendation}</p>
+              </div>
+            )}
+          </div>
+        )}
+      </SideDrawer>
     </div>
   );
 }

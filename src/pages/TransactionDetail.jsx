@@ -7,14 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -451,76 +444,76 @@ export default function TransactionDetail() {
         </div>
       </div>
 
-      {/* Refund Dialog */}
-      <Dialog open={showRefundDialog} onOpenChange={setShowRefundDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{isPix ? 'Devolver Pix' : 'Estornar Transação'}</DialogTitle>
-            <DialogDescription>
-              {isPix ? 'Solicitar devolução do valor ao pagador' : 'Estornar o valor ao cliente'}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div>
-              <Label>Valor a {isPix ? 'devolver' : 'estornar'}</Label>
-              <Input
-                type="number"
-                value={refundAmount}
-                onChange={(e) => setRefundAmount(e.target.value)}
-                className="mt-1"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Máximo: {formatCurrency(transaction.amount)}
-              </p>
-            </div>
-            <div>
-              <Label>Motivo {isPix && <span className="text-red-500">*</span>}</Label>
-              <Textarea
-                placeholder="Descreva o motivo..."
-                value={refundReason}
-                onChange={(e) => setRefundReason(e.target.value)}
-                className="mt-1"
-              />
-            </div>
-          </div>
-          <DialogFooter>
+      {/* Refund Side Drawer */}
+      <SideDrawer
+        open={showRefundDialog}
+        onOpenChange={setShowRefundDialog}
+        title={isPix ? 'Devolver Pix' : 'Estornar Transação'}
+        description={isPix ? 'Solicitar devolução do valor ao pagador' : 'Estornar o valor ao cliente'}
+        icon={RotateCcw}
+        iconClassName="bg-red-100 text-red-600"
+        footer={
+          <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setShowRefundDialog(false)}>
               Cancelar
             </Button>
             <Button onClick={handleRefund} className="bg-[#00D26A] hover:bg-[#00A854]">
               Confirmar {isPix ? 'Devolução' : 'Estorno'}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Note Dialog */}
-      <Dialog open={showNoteDialog} onOpenChange={setShowNoteDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Adicionar Nota</DialogTitle>
-            <DialogDescription>
-              Inserir uma nota interna sobre esta transação
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <Label>Valor a {isPix ? 'devolver' : 'estornar'}</Label>
+            <Input
+              type="number"
+              value={refundAmount}
+              onChange={(e) => setRefundAmount(e.target.value)}
+              className="mt-1"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Máximo: {formatCurrency(transaction.amount)}
+            </p>
+          </div>
+          <div>
+            <Label>Motivo {isPix && <span className="text-red-500">*</span>}</Label>
             <Textarea
-              placeholder="Digite sua nota..."
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={4}
+              placeholder="Descreva o motivo..."
+              value={refundReason}
+              onChange={(e) => setRefundReason(e.target.value)}
+              className="mt-1"
             />
           </div>
-          <DialogFooter>
+        </div>
+      </SideDrawer>
+
+      {/* Note Side Drawer */}
+      <SideDrawer
+        open={showNoteDialog}
+        onOpenChange={setShowNoteDialog}
+        title="Adicionar Nota"
+        description="Inserir uma nota interna sobre esta transação"
+        icon={MessageSquare}
+        size="sm"
+        footer={
+          <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setShowNoteDialog(false)}>
               Cancelar
             </Button>
             <Button onClick={handleAddNote} className="bg-[#00D26A] hover:bg-[#00A854]">
               Salvar Nota
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        }
+      >
+        <Textarea
+          placeholder="Digite sua nota..."
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={6}
+        />
+      </SideDrawer>
     </div>
   );
 }

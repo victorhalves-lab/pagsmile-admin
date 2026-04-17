@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import { ArrowLeft, Copy, Download, RefreshCw, RotateCcw, X, CheckCircle, XCircle, Eye, Clock, Zap, AlertTriangle, CreditCard, QrCode } from 'lucide-react';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
@@ -288,90 +288,93 @@ export default function AdminIntTransactionDetail() {
                 </TabsContent>
             </Tabs>
 
-            {/* Refund Modal */}
-            <Dialog open={refundModal} onOpenChange={setRefundModal}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Estornar Transação</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <p className="text-sm text-slate-600">Transação: <span className="font-mono">{tx.id}</span></p>
-                        <p className="text-sm text-slate-600">Valor disponível: <span className="font-bold">{formatCurrency(tx.amount)}</span></p>
-                        
-                        <div>
-                            <Label>Tipo de Estorno</Label>
-                            <div className="space-y-2 mt-2">
-                                <div className="flex items-center gap-2">
-                                    <input type="radio" name="refund" value="full" checked={refundType === 'full'} onChange={(e) => setRefundType(e.target.value)} />
-                                    Estorno Total ({formatCurrency(tx.amount)})
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <input type="radio" name="refund" value="partial" checked={refundType === 'partial'} onChange={(e) => setRefundType(e.target.value)} />
-                                    Estorno Parcial: {refundType === 'partial' && <Input type="number" className="w-32 ml-2" placeholder="R$ 0,00" value={refundAmount} onChange={(e) => setRefundAmount(e.target.value)} />}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <Label>Motivo do Estorno</Label>
-                            <Select><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="customer_request">Solicitação do cliente</SelectItem>
-                                    <SelectItem value="not_delivered">Produto não entregue</SelectItem>
-                                    <SelectItem value="defect">Produto com defeito</SelectItem>
-                                    <SelectItem value="fraud">Fraude confirmada</SelectItem>
-                                    <SelectItem value="operational">Erro operacional</SelectItem>
-                                    <SelectItem value="other">Outro</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className="bg-red-50 border border-red-200 rounded p-3 text-sm text-red-700">
-                            ⚠️ Esta ação não pode ser desfeita.
-                        </div>
-                    </div>
-                    <DialogFooter>
+            {/* Refund Side Drawer */}
+            <SideDrawer
+                open={refundModal}
+                onOpenChange={setRefundModal}
+                title="Estornar Transação"
+                icon={RotateCcw}
+                iconClassName="bg-red-100 text-red-600"
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setRefundModal(false)}>Cancelar</Button>
                         <Button className="bg-red-600 hover:bg-red-700" onClick={() => { toast.success('Estorno processado!'); setRefundModal(false); }}>
                             Confirmar Estorno
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* Reveal Modal */}
-            <Dialog open={revealModal} onOpenChange={setRevealModal}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            <AlertTriangle className="w-5 h-5 text-amber-600" />
-                            Revelar Dados do Pagador
-                        </DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <div className="bg-amber-50 border border-amber-200 rounded p-3 text-sm text-amber-700">
-                            ⚠️ Esta ação será registrada em auditoria.
-                        </div>
-                        <div>
-                            <Label>Motivo para revelar dados</Label>
-                            <Select><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="support">Atendimento ao cliente</SelectItem>
-                                    <SelectItem value="fraud">Investigação de fraude</SelectItem>
-                                    <SelectItem value="legal">Solicitação judicial</SelectItem>
-                                    <SelectItem value="other">Outro</SelectItem>
-                                </SelectContent>
-                            </Select>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    <p className="text-sm text-slate-600">Transação: <span className="font-mono">{tx.id}</span></p>
+                    <p className="text-sm text-slate-600">Valor disponível: <span className="font-bold">{formatCurrency(tx.amount)}</span></p>
+                    
+                    <div>
+                        <Label>Tipo de Estorno</Label>
+                        <div className="space-y-2 mt-2">
+                            <div className="flex items-center gap-2">
+                                <input type="radio" name="refund" value="full" checked={refundType === 'full'} onChange={(e) => setRefundType(e.target.value)} />
+                                Estorno Total ({formatCurrency(tx.amount)})
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input type="radio" name="refund" value="partial" checked={refundType === 'partial'} onChange={(e) => setRefundType(e.target.value)} />
+                                Estorno Parcial: {refundType === 'partial' && <Input type="number" className="w-32 ml-2" placeholder="R$ 0,00" value={refundAmount} onChange={(e) => setRefundAmount(e.target.value)} />}
+                            </div>
                         </div>
                     </div>
-                    <DialogFooter>
+
+                    <div>
+                        <Label>Motivo do Estorno</Label>
+                        <Select><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="customer_request">Solicitação do cliente</SelectItem>
+                                <SelectItem value="not_delivered">Produto não entregue</SelectItem>
+                                <SelectItem value="defect">Produto com defeito</SelectItem>
+                                <SelectItem value="fraud">Fraude confirmada</SelectItem>
+                                <SelectItem value="operational">Erro operacional</SelectItem>
+                                <SelectItem value="other">Outro</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="bg-red-50 border border-red-200 rounded p-3 text-sm text-red-700">
+                        ⚠️ Esta ação não pode ser desfeita.
+                    </div>
+                </div>
+            </SideDrawer>
+
+            {/* Reveal Side Drawer */}
+            <SideDrawer
+                open={revealModal}
+                onOpenChange={setRevealModal}
+                title="Revelar Dados do Pagador"
+                icon={AlertTriangle}
+                iconClassName="bg-amber-100 text-amber-600"
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setRevealModal(false)}>Cancelar</Button>
                         <Button onClick={() => { toast.success('Dados revelados e ação registrada'); setRevealModal(false); }}>
                             Revelar e Registrar
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    <div className="bg-amber-50 border border-amber-200 rounded p-3 text-sm text-amber-700">
+                        ⚠️ Esta ação será registrada em auditoria.
+                    </div>
+                    <div>
+                        <Label>Motivo para revelar dados</Label>
+                        <Select><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="support">Atendimento ao cliente</SelectItem>
+                                <SelectItem value="fraud">Investigação de fraude</SelectItem>
+                                <SelectItem value="legal">Solicitação judicial</SelectItem>
+                                <SelectItem value="other">Outro</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+            </SideDrawer>
         </div>
     );
 }

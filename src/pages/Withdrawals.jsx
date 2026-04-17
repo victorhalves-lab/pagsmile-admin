@@ -16,14 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import SideDrawer from '@/components/common/SideDrawer';
 // Tabs removed - simplified layout
 import {
   Table,
@@ -347,115 +340,15 @@ export default function Withdrawals() {
         </CardContent>
       </Card>
 
-      {/* Withdraw Dialog */}
-      <Dialog open={showWithdrawDialog} onOpenChange={setShowWithdrawDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Solicitar Saque</DialogTitle>
-            <DialogDescription>
-              Transfira o saldo disponível para sua conta bancária
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-4">
-            <div className="p-4 bg-green-50 rounded-lg">
-              <p className="text-sm text-green-700">Saldo disponível</p>
-              <p className="text-2xl font-bold text-green-800">{formatCurrency(availableBalance)}</p>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Valor do saque</Label>
-              <Input
-                type="number"
-                value={withdrawAmount}
-                onChange={(e) => setWithdrawAmount(e.target.value)}
-                placeholder="0,00"
-              />
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setWithdrawAmount(String(availableBalance / 2))}
-                >
-                  50%
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setWithdrawAmount(String(availableBalance))}
-                >
-                  Tudo
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Tipo de transferência</Label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => setWithdrawType('pix')}
-                  className={cn(
-                    "p-3 border rounded-lg flex items-center gap-2 transition-all",
-                    withdrawType === 'pix' ? "border-green-500 bg-green-50" : "hover:bg-gray-50"
-                  )}
-                >
-                  <QrCode className={cn(
-                    "w-5 h-5",
-                    withdrawType === 'pix' ? "text-green-600" : "text-gray-400"
-                  )} />
-                  <div className="text-left">
-                    <p className="font-medium text-sm">Pix</p>
-                    <p className="text-xs text-gray-500">Instantâneo</p>
-                  </div>
-                </button>
-                <button
-                  onClick={() => setWithdrawType('ted')}
-                  className={cn(
-                    "p-3 border rounded-lg flex items-center gap-2 transition-all",
-                    withdrawType === 'ted' ? "border-blue-500 bg-blue-50" : "hover:bg-gray-50"
-                  )}
-                >
-                  <Building2 className={cn(
-                    "w-5 h-5",
-                    withdrawType === 'ted' ? "text-blue-600" : "text-gray-400"
-                  )} />
-                  <div className="text-left">
-                    <p className="font-medium text-sm">TED</p>
-                    <p className="text-xs text-gray-500">D+0 / D+1</p>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Conta de destino</Label>
-              <Select value={selectedAccountId} onValueChange={setSelectedAccountId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione uma conta" />
-                </SelectTrigger>
-                <SelectContent>
-                  {bankAccounts.map(account => (
-                    <SelectItem key={account.id} value={account.id}>
-                      {account.bank_name} - {account.pix_key || account.account_number}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {config.withdrawal_fee_type !== 'free' && (
-              <div className="p-3 bg-yellow-50 rounded-lg text-sm">
-                <p className="text-yellow-700">
-                  Taxa de saque: {config.withdrawal_fee_type === 'fixed' 
-                    ? formatCurrency(config.withdrawal_fee_value)
-                    : `${config.withdrawal_fee_value}%`
-                  }
-                </p>
-              </div>
-            )}
-          </div>
-
-          <DialogFooter>
+      {/* Withdraw Side Drawer */}
+      <SideDrawer
+        open={showWithdrawDialog}
+        onOpenChange={setShowWithdrawDialog}
+        title="Solicitar Saque"
+        description="Transfira o saldo disponível para sua conta bancária"
+        icon={ArrowUpFromLine}
+        footer={
+          <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setShowWithdrawDialog(false)}>
               Cancelar
             </Button>
@@ -470,9 +363,101 @@ export default function Withdrawals() {
               )}
               Confirmar saque
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <div className="p-4 bg-green-50 rounded-lg">
+            <p className="text-sm text-green-700">Saldo disponível</p>
+            <p className="text-2xl font-bold text-green-800">{formatCurrency(availableBalance)}</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Valor do saque</Label>
+            <Input
+              type="number"
+              value={withdrawAmount}
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+              placeholder="0,00"
+            />
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setWithdrawAmount(String(availableBalance / 2))}
+              >
+                50%
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setWithdrawAmount(String(availableBalance))}
+              >
+                Tudo
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Tipo de transferência</Label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setWithdrawType('pix')}
+                className={cn(
+                  "p-3 border rounded-lg flex items-center gap-2 transition-all",
+                  withdrawType === 'pix' ? "border-green-500 bg-green-50" : "hover:bg-gray-50"
+                )}
+              >
+                <QrCode className={cn("w-5 h-5", withdrawType === 'pix' ? "text-green-600" : "text-gray-400")} />
+                <div className="text-left">
+                  <p className="font-medium text-sm">Pix</p>
+                  <p className="text-xs text-gray-500">Instantâneo</p>
+                </div>
+              </button>
+              <button
+                onClick={() => setWithdrawType('ted')}
+                className={cn(
+                  "p-3 border rounded-lg flex items-center gap-2 transition-all",
+                  withdrawType === 'ted' ? "border-blue-500 bg-blue-50" : "hover:bg-gray-50"
+                )}
+              >
+                <Building2 className={cn("w-5 h-5", withdrawType === 'ted' ? "text-blue-600" : "text-gray-400")} />
+                <div className="text-left">
+                  <p className="font-medium text-sm">TED</p>
+                  <p className="text-xs text-gray-500">D+0 / D+1</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Conta de destino</Label>
+            <Select value={selectedAccountId} onValueChange={setSelectedAccountId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione uma conta" />
+              </SelectTrigger>
+              <SelectContent>
+                {bankAccounts.map(account => (
+                  <SelectItem key={account.id} value={account.id}>
+                    {account.bank_name} - {account.pix_key || account.account_number}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {config.withdrawal_fee_type !== 'free' && (
+            <div className="p-3 bg-yellow-50 rounded-lg text-sm">
+              <p className="text-yellow-700">
+                Taxa de saque: {config.withdrawal_fee_type === 'fixed' 
+                  ? formatCurrency(config.withdrawal_fee_value)
+                  : `${config.withdrawal_fee_value}%`
+                }
+              </p>
+            </div>
+          )}
+        </div>
+      </SideDrawer>
     </div>
   );
 }

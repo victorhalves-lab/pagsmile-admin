@@ -20,14 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -278,58 +271,15 @@ export default function Webhooks() {
         emptyMessage="Nenhum webhook configurado"
       />
 
-      {/* Create Dialog */}
-      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Novo Webhook</DialogTitle>
-            <DialogDescription>
-              Configure uma URL para receber notificações de eventos
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div>
-              <Label>Nome *</Label>
-              <Input
-                placeholder="Ex: Meu Sistema"
-                value={newWebhook.name}
-                onChange={(e) => setNewWebhook({ ...newWebhook, name: e.target.value })}
-              />
-            </div>
-
-            <div>
-              <Label>URL de Destino *</Label>
-              <Input
-                placeholder="https://seu-sistema.com/webhook"
-                value={newWebhook.url}
-                onChange={(e) => setNewWebhook({ ...newWebhook, url: e.target.value })}
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Deve ser uma URL HTTPS acessível publicamente
-              </p>
-            </div>
-
-            <div>
-              <Label className="mb-3 block">Eventos para Notificar *</Label>
-              <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
-                {availableEvents.map((event) => (
-                  <div key={event.id} className="flex items-center gap-2">
-                    <Checkbox
-                      id={event.id}
-                      checked={newWebhook.events.includes(event.id)}
-                      onCheckedChange={() => toggleEvent(event.id)}
-                    />
-                    <label htmlFor={event.id} className="text-sm cursor-pointer">
-                      {event.label}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter>
+      {/* Create Side Drawer */}
+      <SideDrawer
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        title="Novo Webhook"
+        description="Configure uma URL para receber notificações de eventos"
+        icon={Webhook}
+        footer={
+          <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
               Cancelar
             </Button>
@@ -340,9 +290,50 @@ export default function Webhooks() {
             >
               {createMutation.isPending ? 'Criando...' : 'Criar Webhook'}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <Label>Nome *</Label>
+            <Input
+              placeholder="Ex: Meu Sistema"
+              value={newWebhook.name}
+              onChange={(e) => setNewWebhook({ ...newWebhook, name: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <Label>URL de Destino *</Label>
+            <Input
+              placeholder="https://seu-sistema.com/webhook"
+              value={newWebhook.url}
+              onChange={(e) => setNewWebhook({ ...newWebhook, url: e.target.value })}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Deve ser uma URL HTTPS acessível publicamente
+            </p>
+          </div>
+
+          <div>
+            <Label className="mb-3 block">Eventos para Notificar *</Label>
+            <div className="grid grid-cols-1 gap-2">
+              {availableEvents.map((event) => (
+                <div key={event.id} className="flex items-center gap-2">
+                  <Checkbox
+                    id={event.id}
+                    checked={newWebhook.events.includes(event.id)}
+                    onCheckedChange={() => toggleEvent(event.id)}
+                  />
+                  <label htmlFor={event.id} className="text-sm cursor-pointer">
+                    {event.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </SideDrawer>
     </div>
   );
 }

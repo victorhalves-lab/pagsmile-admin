@@ -17,14 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -250,137 +243,133 @@ export default function ApiKeys() {
         emptyMessage="Nenhuma chave de API criada"
       />
 
-      {/* Create Dialog */}
-      <Dialog open={isCreateOpen} onOpenChange={(open) => {
-        setIsCreateOpen(open);
-        if (!open) setCreatedKey(null);
-      }}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>
-              {createdKey ? 'Chave Criada!' : 'Nova Chave de API'}
-            </DialogTitle>
-            <DialogDescription>
-              {createdKey 
-                ? 'Copie sua chave agora. Ela não será exibida novamente.'
-                : 'Crie uma nova chave para integrar seus sistemas'
-              }
-            </DialogDescription>
-          </DialogHeader>
-
-          {createdKey ? (
-            <div className="space-y-4">
-              <Alert className="bg-yellow-50 border-yellow-200">
-                <AlertTriangle className="w-4 h-4 text-yellow-600" />
-                <AlertDescription className="text-yellow-800">
-                  <strong>Atenção:</strong> Esta é a única vez que você verá esta chave completa. 
-                  Copie e guarde em local seguro.
-                </AlertDescription>
-              </Alert>
-
-              <div>
-                <Label>Sua Chave</Label>
-                <div className="flex items-center gap-2 mt-1">
-                  <code className="flex-1 text-sm bg-gray-100 px-3 py-2 rounded font-mono break-all">
-                    {createdKey.key_id}
-                  </code>
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => copyToClipboard(createdKey.key_id)}
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-
+      {/* Create Side Drawer */}
+      <SideDrawer
+        open={isCreateOpen}
+        onOpenChange={(open) => {
+          setIsCreateOpen(open);
+          if (!open) setCreatedKey(null);
+        }}
+        title={createdKey ? 'Chave Criada!' : 'Nova Chave de API'}
+        description={createdKey 
+          ? 'Copie sua chave agora. Ela não será exibida novamente.'
+          : 'Crie uma nova chave para integrar seus sistemas'
+        }
+        icon={Key}
+        footer={
+          !createdKey ? (
+            <div className="flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
+                Cancelar
+              </Button>
               <Button 
-                className="w-full bg-[#00D26A] hover:bg-[#00A854]"
-                onClick={() => {
-                  setIsCreateOpen(false);
-                  setCreatedKey(null);
-                }}
+                className="bg-[#00D26A] hover:bg-[#00A854]"
+                onClick={handleCreate}
+                disabled={createMutation.isPending}
               >
-                Concluído
+                {createMutation.isPending ? 'Criando...' : 'Criar Chave'}
               </Button>
             </div>
-          ) : (
-            <>
-              <div className="space-y-4">
-                <div>
-                  <Label>Nome da Chave *</Label>
-                  <Input
-                    placeholder="Ex: Sistema Principal"
-                    value={newKey.name}
-                    onChange={(e) => setNewKey({ ...newKey, name: e.target.value })}
-                  />
-                </div>
+          ) : null
+        }
+      >
+        {createdKey ? (
+          <div className="space-y-4">
+            <Alert className="bg-yellow-50 border-yellow-200">
+              <AlertTriangle className="w-4 h-4 text-yellow-600" />
+              <AlertDescription className="text-yellow-800">
+                <strong>Atenção:</strong> Esta é a única vez que você verá esta chave completa. 
+                Copie e guarde em local seguro.
+              </AlertDescription>
+            </Alert>
 
-                <div>
-                  <Label>Ambiente</Label>
-                  <Select 
-                    value={newKey.type} 
-                    onValueChange={(v) => setNewKey({ ...newKey, type: v })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="production">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                          Produção
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="sandbox">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                          Sandbox (Teste)
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label>Tipo de Chave</Label>
-                  <Select 
-                    value={newKey.key_type} 
-                    onValueChange={(v) => setNewKey({ ...newKey, key_type: v })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="secret">Secret Key (Backend)</SelectItem>
-                      <SelectItem value="public">Public Key (Frontend)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {newKey.key_type === 'secret' 
-                      ? 'Use apenas no backend. Nunca exponha no frontend.'
-                      : 'Pode ser usada no frontend para operações limitadas.'
-                    }
-                  </p>
-                </div>
-              </div>
-
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
-                  Cancelar
-                </Button>
+            <div>
+              <Label>Sua Chave</Label>
+              <div className="flex items-center gap-2 mt-1">
+                <code className="flex-1 text-sm bg-gray-100 px-3 py-2 rounded font-mono break-all">
+                  {createdKey.key_id}
+                </code>
                 <Button 
-                  className="bg-[#00D26A] hover:bg-[#00A854]"
-                  onClick={handleCreate}
-                  disabled={createMutation.isPending}
+                  variant="outline" 
+                  size="icon"
+                  onClick={() => copyToClipboard(createdKey.key_id)}
                 >
-                  {createMutation.isPending ? 'Criando...' : 'Criar Chave'}
+                  <Copy className="w-4 h-4" />
                 </Button>
-              </DialogFooter>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+              </div>
+            </div>
+
+            <Button 
+              className="w-full bg-[#00D26A] hover:bg-[#00A854]"
+              onClick={() => {
+                setIsCreateOpen(false);
+                setCreatedKey(null);
+              }}
+            >
+              Concluído
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div>
+              <Label>Nome da Chave *</Label>
+              <Input
+                placeholder="Ex: Sistema Principal"
+                value={newKey.name}
+                onChange={(e) => setNewKey({ ...newKey, name: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <Label>Ambiente</Label>
+              <Select 
+                value={newKey.type} 
+                onValueChange={(v) => setNewKey({ ...newKey, type: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="production">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                      Produção
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="sandbox">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                      Sandbox (Teste)
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label>Tipo de Chave</Label>
+              <Select 
+                value={newKey.key_type} 
+                onValueChange={(v) => setNewKey({ ...newKey, key_type: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="secret">Secret Key (Backend)</SelectItem>
+                  <SelectItem value="public">Public Key (Frontend)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-gray-500 mt-1">
+                {newKey.key_type === 'secret' 
+                  ? 'Use apenas no backend. Nunca exponha no frontend.'
+                  : 'Pode ser usada no frontend para operações limitadas.'
+                }
+              </p>
+            </div>
+          </div>
+        )}
+      </SideDrawer>
     </div>
   );
 }

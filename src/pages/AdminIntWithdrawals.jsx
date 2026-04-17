@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Download, Eye, Check, X, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
@@ -190,102 +190,104 @@ export default function AdminIntWithdrawals() {
                 </CardContent>
             </Card>
 
-            {/* Detail Modal */}
-            <Dialog open={!!detailModal} onOpenChange={() => setDetailModal(null)}>
-                <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle>Detalhes do Saque #{detailModal?.id}</DialogTitle>
-                    </DialogHeader>
-                    {detailModal && (
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <span>Status:</span>
-                                <Badge className={`${statusConfig[detailModal.status].color} border-0`}>
-                                    {statusConfig[detailModal.status].label}
-                                </Badge>
-                            </div>
-                            
-                            <div className="grid grid-cols-2 gap-4">
-                                <Card>
-                                    <CardHeader className="pb-2"><CardTitle className="text-sm">Dados do Saque</CardTitle></CardHeader>
-                                    <CardContent className="text-sm space-y-1">
-                                        <div><span className="text-slate-500">ID:</span> {detailModal.id}</div>
-                                        <div><span className="text-slate-500">Valor:</span> <strong>{formatCurrency(detailModal.amount)}</strong></div>
-                                        <div><span className="text-slate-500">Taxa:</span> {formatCurrency(detailModal.fee)}</div>
-                                        <div><span className="text-slate-500">Líquido:</span> <strong>{formatCurrency(detailModal.amount - detailModal.fee)}</strong></div>
-                                    </CardContent>
-                                </Card>
-                                <Card>
-                                    <CardHeader className="pb-2"><CardTitle className="text-sm">Saldo do Merchant</CardTitle></CardHeader>
-                                    <CardContent className="text-sm space-y-1">
-                                        <div><span className="text-slate-500">Disponível:</span> {formatCurrency(detailModal.balance)}</div>
-                                        <div><span className="text-slate-500">Após saque:</span> {formatCurrency(detailModal.balance - detailModal.amount)}</div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-
+            {/* Detail Side Drawer */}
+            <SideDrawer
+                open={!!detailModal}
+                onOpenChange={() => setDetailModal(null)}
+                title={`Detalhes do Saque #${detailModal?.id || ''}`}
+                icon={Eye}
+                size="lg"
+                footer={
+                    detailModal?.status === 'pending' ? (
+                        <div className="flex justify-end gap-3">
+                            <Button variant="outline" className="text-red-600" onClick={() => { setDetailModal(null); setRejectModal(detailModal); }}>
+                                <X className="w-4 h-4 mr-2" /> Rejeitar
+                            </Button>
+                            <Button onClick={() => { toast.success('Saque aprovado!'); setDetailModal(null); }}>
+                                <Check className="w-4 h-4 mr-2" /> Aprovar Saque
+                            </Button>
+                        </div>
+                    ) : null
+                }
+            >
+                {detailModal && (
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <span>Status:</span>
+                            <Badge className={`${statusConfig[detailModal.status].color} border-0`}>
+                                {statusConfig[detailModal.status].label}
+                            </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
                             <Card>
-                                <CardHeader className="pb-2"><CardTitle className="text-sm">Validações</CardTitle></CardHeader>
-                                <CardContent className="space-y-2">
-                                    <div className="flex items-center gap-2 text-green-600 text-sm"><CheckCircle className="w-4 h-4" /> Saldo disponível suficiente</div>
-                                    <div className="flex items-center gap-2 text-green-600 text-sm"><CheckCircle className="w-4 h-4" /> Dentro do limite diário</div>
-                                    <div className="flex items-center gap-2 text-green-600 text-sm"><CheckCircle className="w-4 h-4" /> Conta bancária verificada</div>
-                                    <div className="flex items-center gap-2 text-green-600 text-sm"><CheckCircle className="w-4 h-4" /> Sem bloqueios ativos</div>
+                                <CardHeader className="pb-2"><CardTitle className="text-sm">Dados do Saque</CardTitle></CardHeader>
+                                <CardContent className="text-sm space-y-1">
+                                    <div><span className="text-slate-500">ID:</span> {detailModal.id}</div>
+                                    <div><span className="text-slate-500">Valor:</span> <strong>{formatCurrency(detailModal.amount)}</strong></div>
+                                    <div><span className="text-slate-500">Taxa:</span> {formatCurrency(detailModal.fee)}</div>
+                                    <div><span className="text-slate-500">Líquido:</span> <strong>{formatCurrency(detailModal.amount - detailModal.fee)}</strong></div>
+                                </CardContent>
+                            </Card>
+                            <Card>
+                                <CardHeader className="pb-2"><CardTitle className="text-sm">Saldo do Merchant</CardTitle></CardHeader>
+                                <CardContent className="text-sm space-y-1">
+                                    <div><span className="text-slate-500">Disponível:</span> {formatCurrency(detailModal.balance)}</div>
+                                    <div><span className="text-slate-500">Após saque:</span> {formatCurrency(detailModal.balance - detailModal.amount)}</div>
                                 </CardContent>
                             </Card>
                         </div>
-                    )}
-                    <DialogFooter>
-                        {detailModal?.status === 'pending' && (
-                            <>
-                                <Button variant="outline" className="text-red-600" onClick={() => { setDetailModal(null); setRejectModal(detailModal); }}>
-                                    <X className="w-4 h-4 mr-2" /> Rejeitar
-                                </Button>
-                                <Button onClick={() => { toast.success('Saque aprovado!'); setDetailModal(null); }}>
-                                    <Check className="w-4 h-4 mr-2" /> Aprovar Saque
-                                </Button>
-                            </>
-                        )}
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
 
-            {/* Reject Modal */}
-            <Dialog open={!!rejectModal} onOpenChange={() => setRejectModal(null)}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            <AlertTriangle className="w-5 h-5 text-red-500" /> Rejeitar Saque
-                        </DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <p className="text-sm">Saque: <strong>{rejectModal?.id}</strong> - {formatCurrency(rejectModal?.amount)}</p>
-                        <div>
-                            <Label>Motivo da rejeição (obrigatório)</Label>
-                            <Select>
-                                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="balance">Saldo insuficiente</SelectItem>
-                                    <SelectItem value="limit">Limite excedido</SelectItem>
-                                    <SelectItem value="account">Conta bancária inválida</SelectItem>
-                                    <SelectItem value="blocked">Merchant bloqueado</SelectItem>
-                                    <SelectItem value="other">Outro</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label>Observações</Label>
-                            <Textarea className="mt-1" placeholder="Detalhes adicionais..." />
-                        </div>
+                        <Card>
+                            <CardHeader className="pb-2"><CardTitle className="text-sm">Validações</CardTitle></CardHeader>
+                            <CardContent className="space-y-2">
+                                <div className="flex items-center gap-2 text-green-600 text-sm"><CheckCircle className="w-4 h-4" /> Saldo disponível suficiente</div>
+                                <div className="flex items-center gap-2 text-green-600 text-sm"><CheckCircle className="w-4 h-4" /> Dentro do limite diário</div>
+                                <div className="flex items-center gap-2 text-green-600 text-sm"><CheckCircle className="w-4 h-4" /> Conta bancária verificada</div>
+                                <div className="flex items-center gap-2 text-green-600 text-sm"><CheckCircle className="w-4 h-4" /> Sem bloqueios ativos</div>
+                            </CardContent>
+                        </Card>
                     </div>
-                    <DialogFooter>
+                )}
+            </SideDrawer>
+
+            {/* Reject Side Drawer */}
+            <SideDrawer
+                open={!!rejectModal}
+                onOpenChange={() => setRejectModal(null)}
+                title="Rejeitar Saque"
+                icon={AlertTriangle}
+                iconClassName="bg-red-100 text-red-600"
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setRejectModal(null)}>Cancelar</Button>
                         <Button className="bg-red-600 hover:bg-red-700" onClick={() => { toast.success('Saque rejeitado'); setRejectModal(null); }}>
                             Confirmar Rejeição
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    <p className="text-sm">Saque: <strong>{rejectModal?.id}</strong> - {formatCurrency(rejectModal?.amount)}</p>
+                    <div>
+                        <Label>Motivo da rejeição (obrigatório)</Label>
+                        <Select>
+                            <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="balance">Saldo insuficiente</SelectItem>
+                                <SelectItem value="limit">Limite excedido</SelectItem>
+                                <SelectItem value="account">Conta bancária inválida</SelectItem>
+                                <SelectItem value="blocked">Merchant bloqueado</SelectItem>
+                                <SelectItem value="other">Outro</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label>Observações</Label>
+                        <Textarea className="mt-1" placeholder="Detalhes adicionais..." />
+                    </div>
+                </div>
+            </SideDrawer>
         </div>
     );
 }

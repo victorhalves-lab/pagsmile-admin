@@ -42,14 +42,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 import PageHeader from '@/components/common/PageHeader';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import { Badge } from '@/components/ui/badge';
 import {
   Alert,
@@ -649,61 +642,63 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Invite User Dialog */}
-      <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Convidar Usuário</DialogTitle>
-            <DialogDescription>Envie um convite para adicionar um novo usuário</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label>Nome Completo</Label>
-              <Input
-                placeholder="Nome do usuário"
-                value={inviteData.name}
-                onChange={(e) => setInviteData({ ...inviteData, name: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label>E-mail</Label>
-              <Input
-                type="email"
-                placeholder="email@empresa.com"
-                value={inviteData.email}
-                onChange={(e) => setInviteData({ ...inviteData, email: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label>Papel (Role)</Label>
-              <Select 
-                value={inviteData.role} 
-                onValueChange={(v) => setInviteData({ ...inviteData, role: v })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {roles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      <div>
-                        <p className="font-medium">{role.label}</p>
-                        <p className="text-xs text-gray-500">{role.description}</p>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
+      {/* Invite User Side Drawer */}
+      <SideDrawer
+        open={isInviteOpen}
+        onOpenChange={setIsInviteOpen}
+        title="Convidar Usuário"
+        description="Envie um convite para adicionar um novo usuário"
+        icon={Plus}
+        footer={
+          <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setIsInviteOpen(false)}>Cancelar</Button>
             <Button className="bg-[#00D26A] hover:bg-[#00A854]" onClick={handleInvite}>
               Enviar Convite
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <Label>Nome Completo</Label>
+            <Input
+              placeholder="Nome do usuário"
+              value={inviteData.name}
+              onChange={(e) => setInviteData({ ...inviteData, name: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>E-mail</Label>
+            <Input
+              type="email"
+              placeholder="email@empresa.com"
+              value={inviteData.email}
+              onChange={(e) => setInviteData({ ...inviteData, email: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Papel (Role)</Label>
+            <Select 
+              value={inviteData.role} 
+              onValueChange={(v) => setInviteData({ ...inviteData, role: v })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {roles.map((role) => (
+                  <SelectItem key={role.id} value={role.id}>
+                    <div>
+                      <p className="font-medium">{role.label}</p>
+                      <p className="text-xs text-gray-500">{role.description}</p>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </SideDrawer>
     </div>
   );
 }
