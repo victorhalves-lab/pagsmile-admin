@@ -31,6 +31,7 @@ import TrackingSection from '@/components/payment-links/TrackingSection';
 import PersonalizationSection from '@/components/payment-links/PersonalizationSection';
 import PaymentMethodsSection from '@/components/payment-links/PaymentMethodsSection';
 import CouponBindingSection from '@/components/payment-links/CouponBindingSection';
+import PaymentLinkPreview from '@/components/payment-links/PaymentLinkPreview';
 import { TicketPercent } from 'lucide-react';
 
 const tabs = [
@@ -201,9 +202,9 @@ export default function PaymentLinkCreate() {
         }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Sidebar Navigation */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-2">
           <div className="bg-white rounded-xl border border-gray-200 p-2 sticky top-24">
             <nav className="space-y-1">
               {tabs.map((tab) => (
@@ -226,7 +227,7 @@ export default function PaymentLinkCreate() {
         </div>
 
         {/* Main Content */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-7">
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             {activeTab === 'basic' && (
               <BasicInfoSection formData={formData} setFormData={setFormData} />
@@ -281,6 +282,11 @@ export default function PaymentLinkCreate() {
               Próximo
             </Button>
           </div>
+        </div>
+
+        {/* Live Preview */}
+        <div className="lg:col-span-3 hidden lg:block">
+          <PaymentLinkPreview formData={formData} />
         </div>
       </div>
     </div>
