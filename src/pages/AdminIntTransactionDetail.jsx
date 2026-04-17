@@ -11,7 +11,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ArrowLeft, Copy, Download, RefreshCw, RotateCcw, X, CheckCircle, XCircle, Eye, Clock, Zap, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Copy, Download, RefreshCw, RotateCcw, X, CheckCircle, XCircle, Eye, Clock, Zap, AlertTriangle, CreditCard, QrCode } from 'lucide-react';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import StatusBadge from '@/components/common/StatusBadge';
 import { mockTransactions } from '@/components/mockData/adminInternoMocks';
 import { toast } from 'sonner';
@@ -77,7 +80,7 @@ export default function AdminIntTransactionDetail() {
                         </div>
                         <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-center">
                             <p className="text-xs text-slate-500 mb-1">MÉTODO</p>
-                            <p className="text-base font-medium">{paymentMethodIcons[tx.method]} {tx.method === 'pix' ? 'PIX' : tx.brand}</p>
+                            <p className="text-base font-medium">{tx.method === 'pix' ? '◉ PIX' : tx.method === 'credit_card' ? '💳 ' + tx.brand : tx.method === 'debit_card' ? '💳 ' + tx.brand : tx.method}</p>
                             <p className="text-xs text-slate-500">{tx.method === 'credit_card' ? 'Crédito' : tx.method === 'debit_card' ? 'Débito' : ''}</p>
                         </div>
                         <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-center">

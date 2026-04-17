@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import {
   ChevronDown, Tag, FolderPlus, FolderMinus, CheckCircle,
-  Lock, Ban, Mail, Download, Settings, X, AlertTriangle
+  Lock, Ban, Mail, Download, Settings, X, AlertTriangle, Eye
 } from 'lucide-react';
 
 const BLOCK_REASONS = [

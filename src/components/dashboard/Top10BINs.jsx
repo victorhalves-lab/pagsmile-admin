@@ -196,18 +196,7 @@ export default function Top10BINs({ transactions = [] }) {
         </TabsContent>
       </Tabs>
 
-      {/* Recovery Opportunity */}
-      {totalRecoverable > 0 && (
-        <div className="mt-4 p-3 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <RefreshCw className="w-4 h-4 text-emerald-600" />
-              <span className="text-sm font-medium text-emerald-900">Valor recuperável estimado</span>
-            </div>
-            <span className="text-lg font-bold text-emerald-600">{formatCurrency(totalRecoverable)}</span>
-          </div>
-        </div>
-      )}
+      {/* Recovery Opportunity - placeholder */}
     </div>
   );
 }
