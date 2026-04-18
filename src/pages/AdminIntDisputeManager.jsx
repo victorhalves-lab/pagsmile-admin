@@ -38,6 +38,8 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, Legend, PieChart, Pie, Cell } from 'recharts';
+import SideDrawer from '@/components/common/SideDrawer';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AgentChatInterface from '@/components/agents/AgentChatInterface';
 import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
 import { processDisputeManagerAdminMessage, disputeManagerAdminQuickPrompts } from '@/components/agents/DisputeManagerChatLogic';
@@ -45,6 +47,7 @@ import { processDisputeManagerAdminMessage, disputeManagerAdminQuickPrompts } fr
 export default function AdminIntDisputeManager() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showNewRule, setShowNewRule] = useState(false);
   
   // Settings state for Rules & Automation tab
   const [settings, setSettings] = useState({
@@ -460,7 +463,7 @@ export default function AdminIntDisputeManager() {
                   </CardTitle>
                   <CardDescription>Regras ativas que automatizam a gestão de disputas</CardDescription>
                 </div>
-                <Button size="sm" className="bg-red-600 hover:bg-red-700">
+                <Button size="sm" className="bg-red-600 hover:bg-red-700" onClick={() => setShowNewRule(true)}>
                   <Settings className="w-4 h-4 mr-2" />
                   Nova Regra
                 </Button>
@@ -623,6 +626,52 @@ export default function AdminIntDisputeManager() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* New Dispute Rule Side Drawer */}
+      <SideDrawer
+            open={showNewRule}
+            onOpenChange={setShowNewRule}
+            title="Nova Regra de Automação"
+            description="Configure uma regra para gestão automática de disputas"
+            icon={Zap}
+            size="lg"
+            footer={
+              <div className="flex justify-end gap-3">
+                <Button variant="outline" onClick={() => setShowNewRule(false)}>Cancelar</Button>
+                <Button className="bg-red-600 hover:bg-red-700" onClick={() => { setShowNewRule(false); }}>
+                  <Save className="w-4 h-4 mr-2" /> Salvar Regra
+                </Button>
+              </div>
+            }
+          >
+            <div className="space-y-4">
+              <div>
+                <Label>Nome da Regra *</Label>
+                <Input className="mt-1" placeholder="Ex: Auto-aceitar disputas < R$100" />
+              </div>
+              <div>
+                <Label>Condição (expressão)</Label>
+                <Input className="mt-1 font-mono text-sm" placeholder='valor < 100 AND motivo = "desistência"' />
+              </div>
+              <div>
+                <Label>Ação</Label>
+                <Select>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto_accept">Aceitar automaticamente</SelectItem>
+                    <SelectItem value="auto_contest">Iniciar contestação automática</SelectItem>
+                    <SelectItem value="escalate">Escalar para supervisor</SelectItem>
+                    <SelectItem value="block">Bloquear processamento</SelectItem>
+                    <SelectItem value="notify">Apenas notificar</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-lg text-sm text-amber-700">
+                <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                <p>Regras são executadas automaticamente. Teste antes de ativar.</p>
+              </div>
+            </div>
+      </SideDrawer>
 
       {/* Agent Chat Interface */}
       <AgentChatInterface

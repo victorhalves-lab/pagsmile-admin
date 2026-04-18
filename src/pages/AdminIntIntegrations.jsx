@@ -3,7 +3,7 @@ import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -156,75 +156,77 @@ export default function AdminIntIntegrations() {
                 </CardContent>
             </Card>
 
-            {/* Config Modal */}
-            <Dialog open={!!configModal} onOpenChange={() => setConfigModal(null)}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Configurar {configModal}</DialogTitle>
-                    </DialogHeader>
-                    <div className="py-4">
-                        <p className="text-sm text-slate-500">Formulário de configuração seria exibido aqui.</p>
-                    </div>
-                    <DialogFooter>
+            {/* Config Side Drawer */}
+            <SideDrawer
+                open={!!configModal}
+                onOpenChange={() => setConfigModal(null)}
+                title={`Configurar ${configModal}`}
+                icon={Settings}
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setConfigModal(null)}>Cancelar</Button>
                         <Button onClick={() => { toast.success('Configuração salva!'); setConfigModal(null); }}>
                             💾 Salvar
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* New Integration Modal */}
-            <Dialog open={newIntegrationModal} onOpenChange={setNewIntegrationModal}>
-                <DialogContent className="max-w-lg">
-                    <DialogHeader>
-                        <DialogTitle>Nova Integração</DialogTitle>
-                        <DialogDescription>Conecte um novo provedor ao sistema</DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <div>
-                            <Label>Tipo de Integração *</Label>
-                            <Select>
-                                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="acquirer">Adquirente</SelectItem>
-                                    <SelectItem value="antifraud">Antifraude</SelectItem>
-                                    <SelectItem value="banking">Banking/PSP</SelectItem>
-                                    <SelectItem value="notification">Notificação</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label>Nome do Provedor *</Label>
-                            <Input className="mt-1" placeholder="Ex: Cielo, Stone, ClearSale..." />
-                        </div>
-                        <div>
-                            <Label>Ambiente</Label>
-                            <Select defaultValue="sandbox">
-                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="sandbox">Sandbox</SelectItem>
-                                    <SelectItem value="production">Produção</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label>API Endpoint</Label>
-                            <Input className="mt-1" placeholder="https://api.provedor.com" />
-                        </div>
-                        <div>
-                            <Label>API Key / Merchant ID</Label>
-                            <Input className="mt-1" type="password" placeholder="sk_live_..." />
-                        </div>
                     </div>
-                    <DialogFooter>
+                }
+            >
+                <p className="text-sm text-slate-500">Formulário de configuração seria exibido aqui.</p>
+            </SideDrawer>
+
+            {/* New Integration Side Drawer */}
+            <SideDrawer
+                open={newIntegrationModal}
+                onOpenChange={setNewIntegrationModal}
+                title="Nova Integração"
+                description="Conecte um novo provedor ao sistema"
+                icon={Plus}
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setNewIntegrationModal(false)}>Cancelar</Button>
                         <Button onClick={() => { toast.success('Integração configurada!'); setNewIntegrationModal(false); }}>
                             <Plus className="w-4 h-4 mr-2" /> Adicionar Integração
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    <div>
+                        <Label>Tipo de Integração *</Label>
+                        <Select>
+                            <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="acquirer">Adquirente</SelectItem>
+                                <SelectItem value="antifraud">Antifraude</SelectItem>
+                                <SelectItem value="banking">Banking/PSP</SelectItem>
+                                <SelectItem value="notification">Notificação</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label>Nome do Provedor *</Label>
+                        <Input className="mt-1" placeholder="Ex: Cielo, Stone, ClearSale..." />
+                    </div>
+                    <div>
+                        <Label>Ambiente</Label>
+                        <Select defaultValue="sandbox">
+                            <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="sandbox">Sandbox</SelectItem>
+                                <SelectItem value="production">Produção</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label>API Endpoint</Label>
+                        <Input className="mt-1" placeholder="https://api.provedor.com" />
+                    </div>
+                    <div>
+                        <Label>API Key / Merchant ID</Label>
+                        <Input className="mt-1" type="password" placeholder="sk_live_..." />
+                    </div>
+                </div>
+            </SideDrawer>
         </div>
     );
 }
