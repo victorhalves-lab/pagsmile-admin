@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, Edit, BarChart3, Pause, Play, Trash2, TestTube, Shield } from 'lucide-react';
 import { toast } from 'sonner';
@@ -163,92 +163,93 @@ export default function AdminIntRiskRules() {
                 ))}
             </div>
 
-            {/* New Rule Modal */}
-            <Dialog open={newRuleModal} onOpenChange={setNewRuleModal}>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            <Shield className="w-5 h-5" /> Nova Regra de Risco
-                        </DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <div>
-                            <Label>Nome da regra *</Label>
-                            <Input className="mt-1" placeholder="Ex: Bloqueio de valor alto para cliente novo" />
-                        </div>
-                        <div>
-                            <Label>Descrição</Label>
-                            <Textarea className="mt-1" placeholder="Descreva o que a regra faz..." />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label>Categoria</Label>
-                                <Select>
-                                    <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="value">Valor</SelectItem>
-                                        <SelectItem value="velocity">Velocidade</SelectItem>
-                                        <SelectItem value="card">Cartão</SelectItem>
-                                        <SelectItem value="customer">Cliente</SelectItem>
-                                        <SelectItem value="device">Dispositivo</SelectItem>
-                                        <SelectItem value="geo">Geolocalização</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div>
-                                <Label>Prioridade</Label>
-                                <Select>
-                                    <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="high">Alta</SelectItem>
-                                        <SelectItem value="medium">Média</SelectItem>
-                                        <SelectItem value="low">Baixa</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <Label>Ação Principal</Label>
-                            <Select>
-                                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="block">Bloquear transação</SelectItem>
-                                    <SelectItem value="manual_review">Enviar para análise manual</SelectItem>
-                                    <SelectItem value="score">Adicionar ao score</SelectItem>
-                                    <SelectItem value="alert">Apenas alertar</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label>Escopo de Aplicação</Label>
-                            <div className="space-y-2">
-                                <label className="flex items-center gap-2">
-                                    <input type="radio" name="scope" value="all" defaultChecked />
-                                    Todos os merchants
-                                </label>
-                                <label className="flex items-center gap-2">
-                                    <input type="radio" name="scope" value="specific" />
-                                    Merchants específicos
-                                </label>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <Checkbox id="activate" />
-                            <label htmlFor="activate" className="text-sm">Ativar regra imediatamente</label>
-                        </div>
-                    </div>
-                    <DialogFooter>
+            {/* New Rule Side Drawer */}
+            <SideDrawer
+                open={newRuleModal}
+                onOpenChange={setNewRuleModal}
+                title="Nova Regra de Risco"
+                icon={Shield}
+                size="lg"
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setNewRuleModal(false)}>Cancelar</Button>
                         <Button variant="outline"><TestTube className="w-4 h-4 mr-2" /> Testar Regra</Button>
                         <Button onClick={() => { toast.success('Regra criada!'); setNewRuleModal(false); }}>
                             💾 Salvar Regra
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    <div>
+                        <Label>Nome da regra *</Label>
+                        <Input className="mt-1" placeholder="Ex: Bloqueio de valor alto para cliente novo" />
+                    </div>
+                    <div>
+                        <Label>Descrição</Label>
+                        <Textarea className="mt-1" placeholder="Descreva o que a regra faz..." />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label>Categoria</Label>
+                            <Select>
+                                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="value">Valor</SelectItem>
+                                    <SelectItem value="velocity">Velocidade</SelectItem>
+                                    <SelectItem value="card">Cartão</SelectItem>
+                                    <SelectItem value="customer">Cliente</SelectItem>
+                                    <SelectItem value="device">Dispositivo</SelectItem>
+                                    <SelectItem value="geo">Geolocalização</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div>
+                            <Label>Prioridade</Label>
+                            <Select>
+                                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="high">Alta</SelectItem>
+                                    <SelectItem value="medium">Média</SelectItem>
+                                    <SelectItem value="low">Baixa</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <Label>Ação Principal</Label>
+                        <Select>
+                            <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="block">Bloquear transação</SelectItem>
+                                <SelectItem value="manual_review">Enviar para análise manual</SelectItem>
+                                <SelectItem value="score">Adicionar ao score</SelectItem>
+                                <SelectItem value="alert">Apenas alertar</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Escopo de Aplicação</Label>
+                        <div className="space-y-2">
+                            <label className="flex items-center gap-2">
+                                <input type="radio" name="scope" value="all" defaultChecked />
+                                Todos os merchants
+                            </label>
+                            <label className="flex items-center gap-2">
+                                <input type="radio" name="scope" value="specific" />
+                                Merchants específicos
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <Checkbox id="activate" />
+                        <label htmlFor="activate" className="text-sm">Ativar regra imediatamente</label>
+                    </div>
+                </div>
+            </SideDrawer>
         </div>
     );
 }

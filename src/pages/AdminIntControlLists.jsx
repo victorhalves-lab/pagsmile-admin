@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import { Plus, Trash2, Upload, Download, CreditCard, User, Mail, Globe, Smartphone } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -189,70 +189,73 @@ export default function AdminIntControlLists() {
                 </TabsContent>
             </Tabs>
 
-            {/* Add to Blacklist Modal */}
-            <Dialog open={addModal} onOpenChange={setAddModal}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Adicionar à Blacklist</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <div>
-                            <Label>Tipo</Label>
-                            <Select defaultValue="card">
-                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="card">Cartão</SelectItem>
-                                    <SelectItem value="cpf">CPF</SelectItem>
-                                    <SelectItem value="email">E-mail</SelectItem>
-                                    <SelectItem value="ip">IP</SelectItem>
-                                    <SelectItem value="device">Device</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label>Valor *</Label>
-                            <Input className="mt-1" placeholder="Ex: 411111 (BIN) ou número completo" />
-                        </div>
-                        <div>
-                            <Label>Motivo *</Label>
-                            <Select>
-                                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="fraud">Fraude confirmada</SelectItem>
-                                    <SelectItem value="chargeback">Chargeback</SelectItem>
-                                    <SelectItem value="test">Teste de cartão</SelectItem>
-                                    <SelectItem value="suspicious">Atividade suspeita</SelectItem>
-                                    <SelectItem value="other">Outro</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label>Observações</Label>
-                            <Textarea className="mt-1" placeholder="Detalhes adicionais..." />
-                        </div>
-                        <div>
-                            <Label>Validade</Label>
-                            <div className="flex gap-4 mt-2">
-                                <label className="flex items-center gap-2">
-                                    <input type="radio" name="validity" value="permanent" defaultChecked />
-                                    Permanente
-                                </label>
-                                <label className="flex items-center gap-2">
-                                    <input type="radio" name="validity" value="temp" />
-                                    Temporária:
-                                    <Input type="number" className="w-16" defaultValue="30" /> dias
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <DialogFooter>
+            {/* Add to Blacklist Side Drawer */}
+            <SideDrawer
+                open={addModal}
+                onOpenChange={setAddModal}
+                title="Adicionar à Blacklist"
+                icon={Plus}
+                iconClassName="bg-red-100 text-red-600"
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setAddModal(false)}>Cancelar</Button>
                         <Button onClick={() => { toast.success('Item adicionado à blacklist!'); setAddModal(false); }}>
                             ➕ Adicionar
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    <div>
+                        <Label>Tipo</Label>
+                        <Select defaultValue="card">
+                            <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="card">Cartão</SelectItem>
+                                <SelectItem value="cpf">CPF</SelectItem>
+                                <SelectItem value="email">E-mail</SelectItem>
+                                <SelectItem value="ip">IP</SelectItem>
+                                <SelectItem value="device">Device</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label>Valor *</Label>
+                        <Input className="mt-1" placeholder="Ex: 411111 (BIN) ou número completo" />
+                    </div>
+                    <div>
+                        <Label>Motivo *</Label>
+                        <Select>
+                            <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="fraud">Fraude confirmada</SelectItem>
+                                <SelectItem value="chargeback">Chargeback</SelectItem>
+                                <SelectItem value="test">Teste de cartão</SelectItem>
+                                <SelectItem value="suspicious">Atividade suspeita</SelectItem>
+                                <SelectItem value="other">Outro</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label>Observações</Label>
+                        <Textarea className="mt-1" placeholder="Detalhes adicionais..." />
+                    </div>
+                    <div>
+                        <Label>Validade</Label>
+                        <div className="flex gap-4 mt-2">
+                            <label className="flex items-center gap-2">
+                                <input type="radio" name="validity" value="permanent" defaultChecked />
+                                Permanente
+                            </label>
+                            <label className="flex items-center gap-2">
+                                <input type="radio" name="validity" value="temp" />
+                                Temporária:
+                                <Input type="number" className="w-16" defaultValue="30" /> dias
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </SideDrawer>
         </div>
     );
 }

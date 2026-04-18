@@ -17,14 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import {
     Table,
     TableBody,
@@ -327,138 +320,16 @@ export default function AdminIntLimitRequests() {
                 </CardContent>
             </Card>
 
-            {/* Review Dialog */}
-            <Dialog open={!!selectedRequest} onOpenChange={(open) => !open && setSelectedRequest(null)}>
-                <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle>Revisar Solicitação de Limite</DialogTitle>
-                        <DialogDescription>
-                            Analise a solicitação e aprove ou rejeite com base nas métricas do cliente
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    {selectedRequest && (
-                        <div className="space-y-6">
-                            {/* Client Info */}
-                            <div className="p-4 bg-slate-50 rounded-lg">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p className="text-xs text-slate-500">Cliente</p>
-                                        <p className="font-medium">{selectedRequest.business_name}</p>
-                                        <p className="text-sm text-slate-600">{selectedRequest.document}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500">Tipo de Limite</p>
-                                        <p className="font-medium">{limitTypeLabels[selectedRequest.limit_type]}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Limit Comparison */}
-                            <div className="grid grid-cols-3 gap-4">
-                                <div className="p-4 bg-slate-50 rounded-lg">
-                                    <p className="text-xs text-slate-500 mb-1">Limite Atual</p>
-                                    <p className="text-xl font-bold">{formatCurrency(selectedRequest.current_limit)}</p>
-                                </div>
-                                <div className="p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
-                                    <p className="text-xs text-blue-600 mb-1">Solicitado</p>
-                                    <p className="text-xl font-bold text-blue-700">{formatCurrency(selectedRequest.requested_limit)}</p>
-                                    <p className="text-xs text-blue-600 mt-1">
-                                        +{formatCurrency(selectedRequest.requested_limit - selectedRequest.current_limit)} 
-                                        ({(((selectedRequest.requested_limit - selectedRequest.current_limit) / selectedRequest.current_limit) * 100).toFixed(0)}%)
-                                    </p>
-                                </div>
-                                <div className="p-4 bg-green-50 rounded-lg">
-                                    <p className="text-xs text-green-600 mb-1">Limite Aprovado</p>
-                                    <Input
-                                        type="number"
-                                        value={reviewData.approved_limit}
-                                        onChange={(e) => setReviewData({ ...reviewData, approved_limit: e.target.value })}
-                                        placeholder={String(selectedRequest.requested_limit)}
-                                        className="mt-1"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Justification */}
-                            {selectedRequest.justification && (
-                                <div>
-                                    <Label>Justificativa do Cliente</Label>
-                                    <div className="mt-1.5 p-3 bg-slate-50 rounded-lg text-sm">
-                                        {selectedRequest.justification}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Client Metrics */}
-                            {selectedRequest.client_metrics && (
-                                <div>
-                                    <Label>Métricas do Cliente</Label>
-                                    <div className="mt-1.5 grid grid-cols-2 md:grid-cols-5 gap-3">
-                                        <div className="p-3 bg-blue-50 rounded-lg">
-                                            <p className="text-xs text-blue-600">TPV Total</p>
-                                            <p className="font-bold text-blue-700">{formatCurrency(selectedRequest.client_metrics.total_tpv)}</p>
-                                        </div>
-                                        <div className="p-3 bg-purple-50 rounded-lg">
-                                            <p className="text-xs text-purple-600">Ticket Médio</p>
-                                            <p className="font-bold text-purple-700">{formatCurrency(selectedRequest.client_metrics.avg_ticket)}</p>
-                                        </div>
-                                        <div className="p-3 bg-green-50 rounded-lg">
-                                            <p className="text-xs text-green-600">Taxa de Aprovação</p>
-                                            <p className="font-bold text-green-700">{selectedRequest.client_metrics.approval_rate}%</p>
-                                        </div>
-                                        <div className="p-3 bg-orange-50 rounded-lg">
-                                            <p className="text-xs text-orange-600">CB Ratio</p>
-                                            <p className="font-bold text-orange-700">{selectedRequest.client_metrics.chargeback_ratio}%</p>
-                                        </div>
-                                        <div className="p-3 bg-slate-50 rounded-lg">
-                                            <p className="text-xs text-slate-600">Tempo como Cliente</p>
-                                            <p className="font-bold">{selectedRequest.client_metrics.time_as_client_days} dias</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Decision */}
-                            <div className="space-y-4">
-                                <div>
-                                    <Label>Decisão *</Label>
-                                    <Select value={reviewData.decision} onValueChange={(v) => setReviewData({ ...reviewData, decision: v })}>
-                                        <SelectTrigger className="mt-1.5">
-                                            <SelectValue placeholder="Selecione uma decisão..." />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="approved">
-                                                <div className="flex items-center gap-2">
-                                                    <CheckCircle className="w-4 h-4 text-green-600" />
-                                                    Aprovar
-                                                </div>
-                                            </SelectItem>
-                                            <SelectItem value="rejected">
-                                                <div className="flex items-center gap-2">
-                                                    <XCircle className="w-4 h-4 text-red-600" />
-                                                    Rejeitar
-                                                </div>
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                <div>
-                                    <Label>Comentários</Label>
-                                    <Textarea
-                                        value={reviewData.comments}
-                                        onChange={(e) => setReviewData({ ...reviewData, comments: e.target.value })}
-                                        placeholder="Adicione comentários sobre a decisão..."
-                                        rows={3}
-                                        className="mt-1.5"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    <DialogFooter>
+            {/* Review Side Drawer */}
+            <SideDrawer
+                open={!!selectedRequest}
+                onOpenChange={(open) => !open && setSelectedRequest(null)}
+                title="Revisar Solicitação de Limite"
+                description="Analise a solicitação e aprove ou rejeite com base nas métricas do cliente"
+                icon={TrendingUp}
+                size="lg"
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setSelectedRequest(null)}>
                             Cancelar
                         </Button>
@@ -469,9 +340,130 @@ export default function AdminIntLimitRequests() {
                         >
                             {reviewMutation.isPending ? 'Processando...' : 'Confirmar Decisão'}
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                }
+            >
+                {selectedRequest && (
+                    <div className="space-y-6">
+                        {/* Client Info */}
+                        <div className="p-4 bg-slate-50 rounded-lg">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-xs text-slate-500">Cliente</p>
+                                    <p className="font-medium">{selectedRequest.business_name}</p>
+                                    <p className="text-sm text-slate-600">{selectedRequest.document}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-slate-500">Tipo de Limite</p>
+                                    <p className="font-medium">{limitTypeLabels[selectedRequest.limit_type]}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Limit Comparison */}
+                        <div className="grid grid-cols-3 gap-4">
+                            <div className="p-4 bg-slate-50 rounded-lg">
+                                <p className="text-xs text-slate-500 mb-1">Limite Atual</p>
+                                <p className="text-xl font-bold">{formatCurrency(selectedRequest.current_limit)}</p>
+                            </div>
+                            <div className="p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+                                <p className="text-xs text-blue-600 mb-1">Solicitado</p>
+                                <p className="text-xl font-bold text-blue-700">{formatCurrency(selectedRequest.requested_limit)}</p>
+                                <p className="text-xs text-blue-600 mt-1">
+                                    +{formatCurrency(selectedRequest.requested_limit - selectedRequest.current_limit)} 
+                                    ({(((selectedRequest.requested_limit - selectedRequest.current_limit) / selectedRequest.current_limit) * 100).toFixed(0)}%)
+                                </p>
+                            </div>
+                            <div className="p-4 bg-green-50 rounded-lg">
+                                <p className="text-xs text-green-600 mb-1">Limite Aprovado</p>
+                                <Input
+                                    type="number"
+                                    value={reviewData.approved_limit}
+                                    onChange={(e) => setReviewData({ ...reviewData, approved_limit: e.target.value })}
+                                    placeholder={String(selectedRequest.requested_limit)}
+                                    className="mt-1"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Justification */}
+                        {selectedRequest.justification && (
+                            <div>
+                                <Label>Justificativa do Cliente</Label>
+                                <div className="mt-1.5 p-3 bg-slate-50 rounded-lg text-sm">
+                                    {selectedRequest.justification}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Client Metrics */}
+                        {selectedRequest.client_metrics && (
+                            <div>
+                                <Label>Métricas do Cliente</Label>
+                                <div className="mt-1.5 grid grid-cols-2 md:grid-cols-5 gap-3">
+                                    <div className="p-3 bg-blue-50 rounded-lg">
+                                        <p className="text-xs text-blue-600">TPV Total</p>
+                                        <p className="font-bold text-blue-700">{formatCurrency(selectedRequest.client_metrics.total_tpv)}</p>
+                                    </div>
+                                    <div className="p-3 bg-purple-50 rounded-lg">
+                                        <p className="text-xs text-purple-600">Ticket Médio</p>
+                                        <p className="font-bold text-purple-700">{formatCurrency(selectedRequest.client_metrics.avg_ticket)}</p>
+                                    </div>
+                                    <div className="p-3 bg-green-50 rounded-lg">
+                                        <p className="text-xs text-green-600">Taxa de Aprovação</p>
+                                        <p className="font-bold text-green-700">{selectedRequest.client_metrics.approval_rate}%</p>
+                                    </div>
+                                    <div className="p-3 bg-orange-50 rounded-lg">
+                                        <p className="text-xs text-orange-600">CB Ratio</p>
+                                        <p className="font-bold text-orange-700">{selectedRequest.client_metrics.chargeback_ratio}%</p>
+                                    </div>
+                                    <div className="p-3 bg-slate-50 rounded-lg">
+                                        <p className="text-xs text-slate-600">Tempo como Cliente</p>
+                                        <p className="font-bold">{selectedRequest.client_metrics.time_as_client_days} dias</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Decision */}
+                        <div className="space-y-4">
+                            <div>
+                                <Label>Decisão *</Label>
+                                <Select value={reviewData.decision} onValueChange={(v) => setReviewData({ ...reviewData, decision: v })}>
+                                    <SelectTrigger className="mt-1.5">
+                                        <SelectValue placeholder="Selecione uma decisão..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="approved">
+                                            <div className="flex items-center gap-2">
+                                                <CheckCircle className="w-4 h-4 text-green-600" />
+                                                Aprovar
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem value="rejected">
+                                            <div className="flex items-center gap-2">
+                                                <XCircle className="w-4 h-4 text-red-600" />
+                                                Rejeitar
+                                            </div>
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div>
+                                <Label>Comentários</Label>
+                                <Textarea
+                                    value={reviewData.comments}
+                                    onChange={(e) => setReviewData({ ...reviewData, comments: e.target.value })}
+                                    placeholder="Adicione comentários sobre a decisão..."
+                                    rows={3}
+                                    className="mt-1.5"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </SideDrawer>
         </div>
     );
 }

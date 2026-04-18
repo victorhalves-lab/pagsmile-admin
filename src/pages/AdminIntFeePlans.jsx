@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import { Plus, Eye, Settings, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
@@ -67,69 +67,71 @@ export default function AdminIntFeePlans() {
                 ))}
             </div>
 
-            {/* New Plan Modal */}
-            <Dialog open={newPlanModal} onOpenChange={setNewPlanModal}>
-                <DialogContent className="max-w-lg">
-                    <DialogHeader>
-                        <DialogTitle>Novo Plano de Taxas</DialogTitle>
-                        <DialogDescription>Configure um novo plano de taxas para merchants</DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <div>
-                            <Label>Nome do Plano *</Label>
-                            <Input className="mt-1" placeholder="Ex: Premium, Starter..." />
-                        </div>
-                        <div>
-                            <Label>Código *</Label>
-                            <Input className="mt-1" placeholder="Ex: PREMIUM" />
-                        </div>
-                        <div>
-                            <Label>Tipo</Label>
-                            <Select defaultValue="padrao">
-                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="padrao">Padrão</SelectItem>
-                                    <SelectItem value="enterprise">Enterprise</SelectItem>
-                                    <SelectItem value="custom">Customizado</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label>Taxa Cartão 1x (%)</Label>
-                                <Input className="mt-1" placeholder="3.99" type="number" step="0.01" />
-                            </div>
-                            <div>
-                                <Label>Taxa PIX (%)</Label>
-                                <Input className="mt-1" placeholder="0.99" type="number" step="0.01" />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label>Rolling Reserve (%)</Label>
-                                <Input className="mt-1" placeholder="5" type="number" step="1" />
-                            </div>
-                            <div>
-                                <Label>Prazo Liquidação</Label>
-                                <Select defaultValue="d15">
-                                    <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="d2">D+2</SelectItem>
-                                        <SelectItem value="d15">D+15</SelectItem>
-                                        <SelectItem value="d30">D+30</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-                    </div>
-                    <DialogFooter>
+            {/* New Plan Side Drawer */}
+            <SideDrawer
+                open={newPlanModal}
+                onOpenChange={setNewPlanModal}
+                title="Novo Plano de Taxas"
+                description="Configure um novo plano de taxas para merchants"
+                icon={Plus}
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setNewPlanModal(false)}>Cancelar</Button>
                         <Button onClick={() => { toast.success('Plano criado com sucesso!'); setNewPlanModal(false); }}>
                             <Plus className="w-4 h-4 mr-2" /> Criar Plano
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    <div>
+                        <Label>Nome do Plano *</Label>
+                        <Input className="mt-1" placeholder="Ex: Premium, Starter..." />
+                    </div>
+                    <div>
+                        <Label>Código *</Label>
+                        <Input className="mt-1" placeholder="Ex: PREMIUM" />
+                    </div>
+                    <div>
+                        <Label>Tipo</Label>
+                        <Select defaultValue="padrao">
+                            <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="padrao">Padrão</SelectItem>
+                                <SelectItem value="enterprise">Enterprise</SelectItem>
+                                <SelectItem value="custom">Customizado</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label>Taxa Cartão 1x (%)</Label>
+                            <Input className="mt-1" placeholder="3.99" type="number" step="0.01" />
+                        </div>
+                        <div>
+                            <Label>Taxa PIX (%)</Label>
+                            <Input className="mt-1" placeholder="0.99" type="number" step="0.01" />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label>Rolling Reserve (%)</Label>
+                            <Input className="mt-1" placeholder="5" type="number" step="1" />
+                        </div>
+                        <div>
+                            <Label>Prazo Liquidação</Label>
+                            <Select defaultValue="d15">
+                                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="d2">D+2</SelectItem>
+                                    <SelectItem value="d15">D+15</SelectItem>
+                                    <SelectItem value="d30">D+30</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                </div>
+            </SideDrawer>
         </div>
     );
 }

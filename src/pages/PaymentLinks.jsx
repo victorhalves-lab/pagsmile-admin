@@ -29,12 +29,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -471,15 +466,15 @@ export default function PaymentLinks() {
         />
       )}
 
-      {/* Share Dialog */}
-      <Dialog open={!!shareLink} onOpenChange={(open) => !open && setShareLink(null)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Compartilhar Link</DialogTitle>
-          </DialogHeader>
-          <ShareOptions link={shareLink} onClose={() => setShareLink(null)} />
-        </DialogContent>
-      </Dialog>
+      {/* Share Side Drawer */}
+      <SideDrawer
+        open={!!shareLink}
+        onOpenChange={(open) => !open && setShareLink(null)}
+        title="Compartilhar Link"
+        icon={Share2}
+      >
+        <ShareOptions link={shareLink} onClose={() => setShareLink(null)} />
+      </SideDrawer>
     </div>
   );
 }

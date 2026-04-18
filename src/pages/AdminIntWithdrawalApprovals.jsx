@@ -9,14 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import {
     Table,
     TableBody,
@@ -277,125 +270,16 @@ export default function AdminIntWithdrawalApprovals() {
                 </CardContent>
             </Card>
 
-            {/* Review Dialog */}
-            <Dialog open={!!selectedWithdrawal} onOpenChange={(open) => !open && setSelectedWithdrawal(null)}>
-                <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle>Revisar Solicitação de Saque</DialogTitle>
-                        <DialogDescription>
-                            Analise a solicitação e aprove ou rejeite
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    {selectedWithdrawal && (
-                        <div className="space-y-6">
-                            {/* Client Info */}
-                            <div className="p-4 bg-slate-50 rounded-lg">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p className="text-xs text-slate-500">Cliente</p>
-                                        <p className="font-medium">{selectedWithdrawal.business_name}</p>
-                                        <p className="text-sm text-slate-600">{selectedWithdrawal.document}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500">Motivo da Aprovação Manual</p>
-                                        <p className="font-medium">
-                                            {approvalReasonLabels[selectedWithdrawal.approval_reason] || selectedWithdrawal.approval_reason}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Withdrawal Details */}
-                            <div className="grid grid-cols-3 gap-4">
-                                <div className="p-4 bg-slate-50 rounded-lg">
-                                    <p className="text-xs text-slate-500 mb-1">Valor Bruto</p>
-                                    <p className="text-xl font-bold">{formatCurrency(selectedWithdrawal.amount)}</p>
-                                </div>
-                                <div className="p-4 bg-red-50 rounded-lg">
-                                    <p className="text-xs text-red-600 mb-1">Taxa</p>
-                                    <p className="text-xl font-bold text-red-700">{formatCurrency(selectedWithdrawal.fee)}</p>
-                                </div>
-                                <div className="p-4 bg-green-50 rounded-lg border-2 border-green-200">
-                                    <p className="text-xs text-green-600 mb-1">Valor Líquido</p>
-                                    <p className="text-xl font-bold text-green-700">{formatCurrency(selectedWithdrawal.net_amount)}</p>
-                                </div>
-                            </div>
-
-                            {/* Bank Account */}
-                            <div>
-                                <Label>Conta de Destino</Label>
-                                <div className="mt-1.5 p-4 bg-slate-50 rounded-lg">
-                                    <div className="flex items-center gap-3">
-                                        {selectedWithdrawal.bank_account?.pix_key ? (
-                                            <QrCode className="w-5 h-5 text-green-500" />
-                                        ) : (
-                                            <Landmark className="w-5 h-5 text-slate-500" />
-                                        )}
-                                        <div>
-                                            <p className="font-medium">{selectedWithdrawal.bank_account?.bank_name}</p>
-                                            <p className="text-sm text-slate-600">
-                                                {selectedWithdrawal.bank_account?.pix_key ? (
-                                                    `Pix: ${selectedWithdrawal.bank_account.pix_key} (${selectedWithdrawal.bank_account.pix_key_type})`
-                                                ) : (
-                                                    `Ag: ${selectedWithdrawal.bank_account?.agency} | Conta: ${selectedWithdrawal.bank_account?.account_number} (${selectedWithdrawal.bank_account?.account_type})`
-                                                )}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Risk Flags */}
-                            {selectedWithdrawal.risk_flags && selectedWithdrawal.risk_flags.length > 0 && (
-                                <div>
-                                    <Label>Sinalizações de Risco</Label>
-                                    <div className="mt-1.5 space-y-2">
-                                        {selectedWithdrawal.risk_flags.map((flag, idx) => (
-                                            <div key={idx} className="flex items-center gap-2 p-2 bg-red-50 rounded-lg text-sm text-red-700">
-                                                <AlertTriangle className="w-4 h-4" />
-                                                {flag}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Decision Buttons */}
-                            <div className="grid grid-cols-2 gap-3">
-                                <Button
-                                    variant={reviewData.decision === 'approved' ? 'default' : 'outline'}
-                                    className={reviewData.decision === 'approved' ? 'bg-green-600 hover:bg-green-700' : ''}
-                                    onClick={() => setReviewData({ ...reviewData, decision: 'approved' })}
-                                >
-                                    <CheckCircle className="w-4 h-4 mr-2" />
-                                    Aprovar
-                                </Button>
-                                <Button
-                                    variant={reviewData.decision === 'rejected' ? 'default' : 'outline'}
-                                    className={reviewData.decision === 'rejected' ? 'bg-red-600 hover:bg-red-700' : ''}
-                                    onClick={() => setReviewData({ ...reviewData, decision: 'rejected' })}
-                                >
-                                    <XCircle className="w-4 h-4 mr-2" />
-                                    Rejeitar
-                                </Button>
-                            </div>
-
-                            {/* Comments */}
-                            <div>
-                                <Label>Comentários {reviewData.decision === 'rejected' && '*'}</Label>
-                                <Textarea
-                                    value={reviewData.comments}
-                                    onChange={(e) => setReviewData({ ...reviewData, comments: e.target.value })}
-                                    placeholder={reviewData.decision === 'rejected' ? 'Explique o motivo da rejeição...' : 'Adicione observações (opcional)...'}
-                                    rows={3}
-                                    className="mt-1.5"
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    <DialogFooter>
+            {/* Review Side Drawer */}
+            <SideDrawer
+                open={!!selectedWithdrawal}
+                onOpenChange={(open) => !open && setSelectedWithdrawal(null)}
+                title="Revisar Solicitação de Saque"
+                description="Analise a solicitação e aprove ou rejeite"
+                icon={ArrowUpFromLine}
+                size="lg"
+                footer={
+                    <div className="flex justify-end gap-3">
                         <Button variant="outline" onClick={() => setSelectedWithdrawal(null)}>
                             Cancelar
                         </Button>
@@ -406,9 +290,117 @@ export default function AdminIntWithdrawalApprovals() {
                         >
                             {reviewMutation.isPending ? 'Processando...' : 'Confirmar Decisão'}
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                    </div>
+                }
+            >
+                {selectedWithdrawal && (
+                    <div className="space-y-6">
+                        {/* Client Info */}
+                        <div className="p-4 bg-slate-50 rounded-lg">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-xs text-slate-500">Cliente</p>
+                                    <p className="font-medium">{selectedWithdrawal.business_name}</p>
+                                    <p className="text-sm text-slate-600">{selectedWithdrawal.document}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-slate-500">Motivo da Aprovação Manual</p>
+                                    <p className="font-medium">
+                                        {approvalReasonLabels[selectedWithdrawal.approval_reason] || selectedWithdrawal.approval_reason}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Withdrawal Details */}
+                        <div className="grid grid-cols-3 gap-4">
+                            <div className="p-4 bg-slate-50 rounded-lg">
+                                <p className="text-xs text-slate-500 mb-1">Valor Bruto</p>
+                                <p className="text-xl font-bold">{formatCurrency(selectedWithdrawal.amount)}</p>
+                            </div>
+                            <div className="p-4 bg-red-50 rounded-lg">
+                                <p className="text-xs text-red-600 mb-1">Taxa</p>
+                                <p className="text-xl font-bold text-red-700">{formatCurrency(selectedWithdrawal.fee)}</p>
+                            </div>
+                            <div className="p-4 bg-green-50 rounded-lg border-2 border-green-200">
+                                <p className="text-xs text-green-600 mb-1">Valor Líquido</p>
+                                <p className="text-xl font-bold text-green-700">{formatCurrency(selectedWithdrawal.net_amount)}</p>
+                            </div>
+                        </div>
+
+                        {/* Bank Account */}
+                        <div>
+                            <Label>Conta de Destino</Label>
+                            <div className="mt-1.5 p-4 bg-slate-50 rounded-lg">
+                                <div className="flex items-center gap-3">
+                                    {selectedWithdrawal.bank_account?.pix_key ? (
+                                        <QrCode className="w-5 h-5 text-green-500" />
+                                    ) : (
+                                        <Landmark className="w-5 h-5 text-slate-500" />
+                                    )}
+                                    <div>
+                                        <p className="font-medium">{selectedWithdrawal.bank_account?.bank_name}</p>
+                                        <p className="text-sm text-slate-600">
+                                            {selectedWithdrawal.bank_account?.pix_key ? (
+                                                `Pix: ${selectedWithdrawal.bank_account.pix_key} (${selectedWithdrawal.bank_account.pix_key_type})`
+                                            ) : (
+                                                `Ag: ${selectedWithdrawal.bank_account?.agency} | Conta: ${selectedWithdrawal.bank_account?.account_number} (${selectedWithdrawal.bank_account?.account_type})`
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Risk Flags */}
+                        {selectedWithdrawal.risk_flags && selectedWithdrawal.risk_flags.length > 0 && (
+                            <div>
+                                <Label>Sinalizações de Risco</Label>
+                                <div className="mt-1.5 space-y-2">
+                                    {selectedWithdrawal.risk_flags.map((flag, idx) => (
+                                        <div key={idx} className="flex items-center gap-2 p-2 bg-red-50 rounded-lg text-sm text-red-700">
+                                            <AlertTriangle className="w-4 h-4" />
+                                            {flag}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Decision Buttons */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <Button
+                                variant={reviewData.decision === 'approved' ? 'default' : 'outline'}
+                                className={reviewData.decision === 'approved' ? 'bg-green-600 hover:bg-green-700' : ''}
+                                onClick={() => setReviewData({ ...reviewData, decision: 'approved' })}
+                            >
+                                <CheckCircle className="w-4 h-4 mr-2" />
+                                Aprovar
+                            </Button>
+                            <Button
+                                variant={reviewData.decision === 'rejected' ? 'default' : 'outline'}
+                                className={reviewData.decision === 'rejected' ? 'bg-red-600 hover:bg-red-700' : ''}
+                                onClick={() => setReviewData({ ...reviewData, decision: 'rejected' })}
+                            >
+                                <XCircle className="w-4 h-4 mr-2" />
+                                Rejeitar
+                            </Button>
+                        </div>
+
+                        {/* Comments */}
+                        <div>
+                            <Label>Comentários {reviewData.decision === 'rejected' && '*'}</Label>
+                            <Textarea
+                                value={reviewData.comments}
+                                onChange={(e) => setReviewData({ ...reviewData, comments: e.target.value })}
+                                placeholder={reviewData.decision === 'rejected' ? 'Explique o motivo da rejeição...' : 'Adicione observações (opcional)...'}
+                                rows={3}
+                                className="mt-1.5"
+                            />
+                        </div>
+                    </div>
+                )}
+            </SideDrawer>
         </div>
     );
 }

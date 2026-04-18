@@ -20,14 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -279,16 +272,25 @@ export default function IBPixKeys() {
         </div>
       </div>
 
-      {/* Register Key Modal */}
-      <Dialog open={showRegisterModal} onOpenChange={setShowRegisterModal}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Cadastrar Nova Chave Pix</DialogTitle>
-            <DialogDescription>
-              Selecione o tipo de chave que deseja cadastrar
-            </DialogDescription>
-          </DialogHeader>
-
+      {/* Register Key Side Drawer */}
+      <SideDrawer
+        open={showRegisterModal}
+        onOpenChange={setShowRegisterModal}
+        title="Cadastrar Nova Chave Pix"
+        description="Selecione o tipo de chave que deseja cadastrar"
+        icon={Key}
+        footer={
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setShowRegisterModal(false)}>
+              Cancelar
+            </Button>
+            <Button className="bg-[#00D26A] hover:bg-[#00B85C]">
+              Cadastrar
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
           <RadioGroup value={selectedKeyType} onValueChange={setSelectedKeyType} className="space-y-3">
             {keyTypeOptions.map((option) => (
               <div
@@ -328,7 +330,7 @@ export default function IBPixKeys() {
           </RadioGroup>
 
           {(selectedKeyType === 'email' || selectedKeyType === 'phone') && (
-            <div className="space-y-2 pt-4">
+            <div className="space-y-2">
               <Label>
                 {selectedKeyType === 'email' ? 'E-mail' : 'Telefone'}
               </Label>
@@ -344,17 +346,8 @@ export default function IBPixKeys() {
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <p>Ao cadastrar, você precisará confirmar a posse do e-mail/telefone.</p>
           </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowRegisterModal(false)}>
-              Cancelar
-            </Button>
-            <Button className="bg-[#00D26A] hover:bg-[#00B85C]">
-              Cadastrar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </div>
+      </SideDrawer>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

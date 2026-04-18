@@ -17,13 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import SideDrawer from '@/components/common/SideDrawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -344,22 +338,21 @@ export default function SubscriptionPlans() {
         />
       )}
 
-      {/* Create/Edit Dialog */}
-      <Dialog open={isCreateOpen || !!editingPlan} onOpenChange={(open) => {
-        if (!open) {
-          setIsCreateOpen(false);
-          setEditingPlan(null);
-          resetForm();
-        }
-      }}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingPlan ? 'Editar Plano' : 'Novo Plano de Assinatura'}</DialogTitle>
-          </DialogHeader>
-
-          <SubscriptionPlanForm formData={formData} setFormData={setFormData} />
-
-          <DialogFooter>
+      {/* Create/Edit Side Drawer */}
+      <SideDrawer
+        open={isCreateOpen || !!editingPlan}
+        onOpenChange={(open) => {
+          if (!open) {
+            setIsCreateOpen(false);
+            setEditingPlan(null);
+            resetForm();
+          }
+        }}
+        title={editingPlan ? 'Editar Plano' : 'Novo Plano de Assinatura'}
+        icon={Repeat}
+        size="lg"
+        footer={
+          <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => {
               setIsCreateOpen(false);
               setEditingPlan(null);
@@ -379,9 +372,11 @@ export default function SubscriptionPlans() {
                 </>
               )}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        }
+      >
+        <SubscriptionPlanForm formData={formData} setFormData={setFormData} />
+      </SideDrawer>
     </div>
   );
 }
