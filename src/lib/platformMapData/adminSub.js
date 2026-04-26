@@ -63,6 +63,8 @@ import { CustomDashboardsDoc } from './docs/adminSub/CustomDashboards';
 import { DIACopilotDoc } from './docs/adminSub/DIACopilot';
 import { RecoveryAgentDoc } from './docs/adminSub/RecoveryAgent';
 import { DisputeAgentSettingsDoc } from './docs/adminSub/DisputeAgentSettings';
+import { SettingsPageDoc } from './docs/adminSub/SettingsPage';
+import { SupportDoc } from './docs/adminSub/Support';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -205,8 +207,8 @@ export const adminSubModule = {
       id: 'settings-support',
       label: 'Configurações & Suporte',
       pages: [
-        { id: 'SettingsPage', label: 'Configurações', route: '/SettingsPage', content: null },
-        { id: 'Support', label: 'Suporte', route: '/Support', content: null },
+        { id: 'SettingsPage', label: 'Configurações', route: '/SettingsPage', content: SettingsPageDoc },
+        { id: 'Support', label: 'Suporte', route: '/Support', content: SupportDoc },
       ],
     },
   ],
