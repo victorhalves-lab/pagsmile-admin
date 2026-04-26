@@ -42,6 +42,9 @@ import { MEDDashboardDoc } from './docs/adminSub/MEDDashboard';
 import { DisputeContestationDoc } from './docs/adminSub/DisputeContestation';
 import { DisputeManagerDoc } from './docs/adminSub/DisputeManager';
 import { DisputeManagerSettingsDoc } from './docs/adminSub/DisputeManagerSettings';
+import { FinancialOverviewDoc } from './docs/adminSub/FinancialOverview';
+import { FinancialStatementDoc } from './docs/adminSub/FinancialStatement';
+import { ReceivablesAgendaDoc } from './docs/adminSub/ReceivablesAgenda';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -126,9 +129,9 @@ export const adminSubModule = {
       id: 'financial',
       label: 'Financeiro',
       pages: [
-        { id: 'FinancialOverview', label: 'Visão Geral', route: '/FinancialOverview', content: null },
-        { id: 'FinancialStatement', label: 'Extrato', route: '/FinancialStatement', content: null },
-        { id: 'ReceivablesAgenda', label: 'Agenda de Recebíveis', route: '/ReceivablesAgenda', content: null },
+        { id: 'FinancialOverview', label: 'Visão Geral', route: '/FinancialOverview', content: FinancialOverviewDoc },
+        { id: 'FinancialStatement', label: 'Extrato', route: '/FinancialStatement', content: FinancialStatementDoc },
+        { id: 'ReceivablesAgenda', label: 'Agenda de Recebíveis', route: '/ReceivablesAgenda', content: ReceivablesAgendaDoc },
         { id: 'Fees', label: 'Taxas', route: '/Fees', content: null },
         { id: 'FeesAnalysis', label: 'Análise de Taxas', route: '/FeesAnalysis', content: null },
         { id: 'Anticipation', label: 'Antecipação', route: '/Anticipation', content: null },
