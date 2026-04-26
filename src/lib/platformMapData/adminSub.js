@@ -38,6 +38,10 @@ import { SubscriptionAnalyticsDoc } from './docs/adminSub/SubscriptionAnalytics'
 import { DisputeDashboardDoc } from './docs/adminSub/DisputeDashboard';
 import { PreChargebacksDoc } from './docs/adminSub/PreChargebacks';
 import { ChargebacksDoc } from './docs/adminSub/Chargebacks';
+import { MEDDashboardDoc } from './docs/adminSub/MEDDashboard';
+import { DisputeContestationDoc } from './docs/adminSub/DisputeContestation';
+import { DisputeManagerDoc } from './docs/adminSub/DisputeManager';
+import { DisputeManagerSettingsDoc } from './docs/adminSub/DisputeManagerSettings';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -112,10 +116,10 @@ export const adminSubModule = {
         { id: 'DisputeDashboard', label: 'Dashboard de Disputas', route: '/DisputeDashboard', content: DisputeDashboardDoc },
         { id: 'PreChargebacks', label: 'Pré-Chargebacks', route: '/PreChargebacks', content: PreChargebacksDoc },
         { id: 'Chargebacks', label: 'Chargebacks', route: '/Chargebacks', content: ChargebacksDoc },
-        { id: 'MEDDashboard', label: 'MEDs', route: '/MEDDashboard', content: null },
-        { id: 'DisputeContestation', label: 'Contestação de Disputa', route: '/DisputeContestation', content: null },
-        { id: 'DisputeManager', label: 'Dispute Manager (Agente IA)', route: '/DisputeManager', content: null },
-        { id: 'DisputeManagerSettings', label: 'Configurações Dispute Manager', route: '/DisputeManagerSettings', content: null },
+        { id: 'MEDDashboard', label: 'MEDs', route: '/MEDDashboard', content: MEDDashboardDoc },
+        { id: 'DisputeContestation', label: 'Contestação de Disputa', route: '/DisputeContestation', content: DisputeContestationDoc },
+        { id: 'DisputeManager', label: 'Dispute Manager (Agente IA)', route: '/DisputeManager', content: DisputeManagerDoc },
+        { id: 'DisputeManagerSettings', label: 'Configurações Dispute Manager', route: '/DisputeManagerSettings', content: DisputeManagerSettingsDoc },
       ],
     },
     {
