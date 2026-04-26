@@ -232,6 +232,7 @@ import PaymentLinkCreate from './pages/PaymentLinkCreate';
 import PaymentLinks from './pages/PaymentLinks';
 import PixTransactions from './pages/PixTransactions';
 import PlanSelection from './pages/PlanSelection';
+import PlatformMap from './pages/PlatformMap';
 import Plugins from './pages/Plugins';
 import PreChargebacks from './pages/PreChargebacks';
 import ReceivablesAgenda from './pages/ReceivablesAgenda';
@@ -441,6 +442,7 @@ export const PAGES = {
     "PaymentLinks": PaymentLinks,
     "PixTransactions": PixTransactions,
     "PlanSelection": PlanSelection,
+    "PlatformMap": PlatformMap,
     "Plugins": Plugins,
     "PreChargebacks": PreChargebacks,
     "ReceivablesAgenda": ReceivablesAgenda,

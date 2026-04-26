@@ -424,7 +424,8 @@ const aiAgentsAdminInterno = [
 const noLayoutPages = [
   'LandingPage', 'AccountCreationStep1', 'PlanSelection', 'AccountCreationStep3',
   'ComplianceOnboardingStart', 'CompliancePixOnly', 'ComplianceFullKYC', 
-  'LivenessFacematchStep', 'LivenessSimulation', 'DocumentUploadPix', 'DocumentUploadFull'
+  'LivenessFacematchStep', 'LivenessSimulation', 'DocumentUploadPix', 'DocumentUploadFull',
+  'PlatformMap'
 ];
 
 // Internet Banking pages (to auto-detect module)

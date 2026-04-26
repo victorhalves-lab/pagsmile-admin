@@ -64,6 +64,13 @@ export default function LandingPage() {
           >
             {t('landing.custom_proposal')}
           </a>
+
+          <Link
+            to={createPageUrl('PlatformMap')}
+            className="w-full py-4 text-base font-medium rounded-full border-2 border-slate-700/40 text-slate-300 hover:bg-slate-800/50 hover:border-slate-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2"
+          >
+            🗺️ Mapa da Plataforma
+          </Link>
         </div>
 
         <div className="pt-4 text-xs text-slate-600 font-medium">
