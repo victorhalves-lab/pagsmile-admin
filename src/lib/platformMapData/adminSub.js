@@ -20,6 +20,16 @@ import {
   ConverterAgentDoc,
   ConverterAgentSettingsDoc,
 } from './docs/adminSub/CheckoutAnalyticsAndAgent';
+import {
+  PaymentLinksDoc,
+  PaymentLinkCreateDoc,
+} from './docs/adminSub/PaymentLinks';
+import {
+  CouponsOverviewDoc,
+  CouponListDoc,
+  CouponFormDoc,
+  CouponDetailDoc,
+} from './docs/adminSub/Coupons';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -62,18 +72,18 @@ export const adminSubModule = {
       id: 'payment-links',
       label: 'Links de Pagamento',
       pages: [
-        { id: 'PaymentLinks', label: 'Lista de Links', route: '/PaymentLinks', content: null },
-        { id: 'PaymentLinkCreate', label: 'Criar Link', route: '/PaymentLinkCreate', content: null },
+        { id: 'PaymentLinks', label: 'Lista de Links', route: '/PaymentLinks', content: PaymentLinksDoc },
+        { id: 'PaymentLinkCreate', label: 'Criar Link', route: '/PaymentLinkCreate', content: PaymentLinkCreateDoc },
       ],
     },
     {
       id: 'coupons',
       label: 'Cupons e Descontos',
       pages: [
-        { id: 'CouponsOverview', label: 'Dashboard de Cupons', route: '/CouponsOverview', content: null },
-        { id: 'CouponList', label: 'Lista de Cupons', route: '/CouponList', content: null },
-        { id: 'CouponForm', label: 'Criar/Editar Cupom', route: '/CouponForm', content: null },
-        { id: 'CouponDetail', label: 'Detalhe do Cupom', route: '/CouponDetail', content: null },
+        { id: 'CouponsOverview', label: 'Dashboard de Cupons', route: '/CouponsOverview', content: CouponsOverviewDoc },
+        { id: 'CouponList', label: 'Lista de Cupons', route: '/CouponList', content: CouponListDoc },
+        { id: 'CouponForm', label: 'Criar/Editar Cupom', route: '/CouponForm', content: CouponFormDoc },
+        { id: 'CouponDetail', label: 'Detalhe do Cupom', route: '/CouponDetail', content: CouponDetailDoc },
       ],
     },
     {
