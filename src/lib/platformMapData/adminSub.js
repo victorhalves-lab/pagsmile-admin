@@ -2,6 +2,9 @@
 // Cada página recebe documentação completa em entregas progressivas.
 // Páginas ainda sem documentação ficam com `content: null` (mostram placeholder).
 
+import { DashboardDoc } from './docs/adminSub/Dashboard';
+import { TransactionDetailDoc } from './docs/adminSub/TransactionDetail';
+
 export const adminSubModule = {
   id: 'admin-sub',
   label: 'Admin Sub',
@@ -14,7 +17,7 @@ export const adminSubModule = {
       id: 'dashboard',
       label: 'Dashboard',
       pages: [
-        { id: 'Dashboard', label: 'Dashboard', route: '/Dashboard', content: null },
+        { id: 'Dashboard', label: 'Dashboard', route: '/Dashboard', content: DashboardDoc },
       ],
     },
     {
@@ -25,7 +28,7 @@ export const adminSubModule = {
         { id: 'CardTransactions', label: 'Transações Cartão', route: '/CardTransactions', content: null },
         { id: 'PixTransactions', label: 'Transações PIX', route: '/PixTransactions', content: null },
         { id: 'DeclineAnalysis', label: 'Análise de Recusas', route: '/DeclineAnalysis', content: null },
-        { id: 'TransactionDetail', label: 'Detalhe da Transação', route: '/TransactionDetail', content: null },
+        { id: 'TransactionDetail', label: 'Detalhe da Transação', route: '/TransactionDetail', content: TransactionDetailDoc },
       ],
     },
     {
