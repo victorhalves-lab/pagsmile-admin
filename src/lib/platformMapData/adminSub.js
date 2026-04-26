@@ -30,10 +30,8 @@ import {
   CouponFormDoc,
   CouponDetailDoc,
 } from './docs/adminSub/Coupons';
-import {
-  SubscriptionsDoc,
-  SubscriptionPlansDoc,
-} from './docs/adminSub/Subscriptions';
+import { SubscriptionsDoc } from './docs/adminSub/Subscriptions';
+import { SubscriptionPlansDoc } from './docs/adminSub/SubscriptionPlans';
 import { RecurrenceDoc } from './docs/adminSub/Recurrence';
 import {
   DunningSettingsDoc,
