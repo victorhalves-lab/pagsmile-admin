@@ -35,9 +35,9 @@ import { SubscriptionPlansDoc } from './docs/adminSub/SubscriptionPlans';
 import { RecurrenceDoc } from './docs/adminSub/Recurrence';
 import { DunningSettingsDoc } from './docs/adminSub/DunningSettings';
 import { SubscriptionAnalyticsDoc } from './docs/adminSub/SubscriptionAnalytics';
-import { DisputeDashboardDoc } from './docs/adminSub/DisputeDashboard.js';
-import { PreChargebacksDoc } from './docs/adminSub/PreChargebacks.js';
-import { ChargebacksDoc } from './docs/adminSub/Chargebacks.js';
+import { DisputeDashboardDoc } from './docs/adminSub/DisputeDashboard';
+import { PreChargebacksDoc } from './docs/adminSub/PreChargebacks';
+import { ChargebacksDoc } from './docs/adminSub/Chargebacks';
 
 export const adminSubModule = {
   id: 'admin-sub',
