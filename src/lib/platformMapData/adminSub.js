@@ -4,6 +4,12 @@
 
 import { DashboardDoc } from './docs/adminSub/Dashboard';
 import { TransactionDetailDoc } from './docs/adminSub/TransactionDetail';
+import {
+  TransactionsDoc,
+  CardTransactionsDoc,
+  PixTransactionsDoc,
+  DeclineAnalysisDoc,
+} from './docs/adminSub/Transactions';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -24,10 +30,10 @@ export const adminSubModule = {
       id: 'transactions',
       label: 'Transações',
       pages: [
-        { id: 'Transactions', label: 'Todas as Transações', route: '/Transactions', content: null },
-        { id: 'CardTransactions', label: 'Transações Cartão', route: '/CardTransactions', content: null },
-        { id: 'PixTransactions', label: 'Transações PIX', route: '/PixTransactions', content: null },
-        { id: 'DeclineAnalysis', label: 'Análise de Recusas', route: '/DeclineAnalysis', content: null },
+        { id: 'Transactions', label: 'Todas as Transações', route: '/Transactions', content: TransactionsDoc },
+        { id: 'CardTransactions', label: 'Transações Cartão', route: '/CardTransactions', content: CardTransactionsDoc },
+        { id: 'PixTransactions', label: 'Transações PIX', route: '/PixTransactions', content: PixTransactionsDoc },
+        { id: 'DeclineAnalysis', label: 'Análise de Recusas', route: '/DeclineAnalysis', content: DeclineAnalysisDoc },
         { id: 'TransactionDetail', label: 'Detalhe da Transação', route: '/TransactionDetail', content: TransactionDetailDoc },
       ],
     },
