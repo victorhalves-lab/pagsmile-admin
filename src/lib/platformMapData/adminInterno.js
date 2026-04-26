@@ -5,6 +5,7 @@
 import { AdminIntDashboardDoc } from './docs/adminInterno/AdminIntDashboard';
 import { AdminIntDashboardViewsComplementaresDoc } from './docs/adminInterno/AdminIntDashboardViewsComplementares';
 import { AdminIntComplianceDoc } from './docs/adminInterno/AdminIntCompliance';
+import { AdminIntComplianceComponentsDoc } from './docs/adminInterno/AdminIntComplianceComponents';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -30,12 +31,12 @@ export const adminInternoModule = {
         { id: 'AdminIntComplianceQueue', label: 'Fila de Compliance', route: '/AdminIntComplianceQueue', content: AdminIntComplianceDoc },
         { id: 'AdminIntComplianceReview', label: 'Análise Manual', route: '/AdminIntComplianceReview', content: AdminIntComplianceDoc },
         { id: 'AdminIntComplianceSubmissions', label: 'Submissões', route: '/AdminIntComplianceSubmissions', content: AdminIntComplianceDoc },
-        { id: 'AdminIntComplianceForms', label: 'Gestão de Formulários', route: '/AdminIntComplianceForms', content: null },
-        { id: 'AdminIntComplianceDocs', label: 'Repositório de Documentos', route: '/AdminIntComplianceDocs', content: null },
-        { id: 'AdminIntComplianceRules', label: 'Regras e Workflows', route: '/AdminIntComplianceRules', content: null },
-        { id: 'AdminIntComplianceAudit', label: 'Auditoria de Compliance', route: '/AdminIntComplianceAudit', content: null },
-        { id: 'AdminIntComplianceHelena', label: 'Helena IA (Treinamento)', route: '/AdminIntComplianceHelena', content: null },
-        { id: 'AdminIntComplianceFormLink', label: 'Gerador de Link de Formulário', route: '/AdminIntComplianceFormLink', content: null },
+        { id: 'AdminIntComplianceForms', label: 'Gestão de Formulários (QuestionnaireManager)', route: '/AdminIntComplianceForms', content: AdminIntComplianceComponentsDoc },
+        { id: 'AdminIntComplianceDocs', label: 'Repositório de Documentos', route: '/AdminIntComplianceDocs', content: AdminIntComplianceComponentsDoc },
+        { id: 'AdminIntComplianceRules', label: 'Regras e Workflows (CRUD + 5 tipos)', route: '/AdminIntComplianceRules', content: AdminIntComplianceComponentsDoc },
+        { id: 'AdminIntComplianceAudit', label: 'Auditoria de Compliance', route: '/AdminIntComplianceAudit', content: AdminIntComplianceComponentsDoc },
+        { id: 'AdminIntComplianceHelena', label: 'Helena IA (Treinamento ML 96/94/95)', route: '/AdminIntComplianceHelena', content: AdminIntComplianceComponentsDoc },
+        { id: 'AdminIntComplianceFormLink', label: 'Gerador de Link de Formulário', route: '/AdminIntComplianceFormLink', content: AdminIntComplianceComponentsDoc },
       ],
     },
     {
