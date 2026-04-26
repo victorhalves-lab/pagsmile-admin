@@ -1,502 +1,692 @@
-// =============================================================================
+// ============================================================================
 // DOCUMENTAÇÃO MICROSCÓPICA — /Recurrence (Motor de Recorrência)
-// =============================================================================
+// ============================================================================
+// Arquivo dedicado, fidelidade absoluta ao código real de pages/Recurrence.jsx.
+// Cada KPI, cada aba, cada linha da tabela, cada switch, cada cor, cada cálculo,
+// cada item de dropdown, cada campo de dialog, documentado individualmente.
+// ============================================================================
 
-export const RecurrenceDoc = [
-  {
-    type: 'description',
-    emoji: '🎯',
-    title: 'O que é a página Motor de Recorrência',
-    body:
-      'Painel COMPLETO do motor de cobranças recorrentes — separado das telas de "Assinaturas" porque cobrança recorrente NÃO É APENAS assinatura SaaS. Pode ser: serviço mensal (advogado), parcelamento de produto, mensalidade escolar, doação recorrente de ONG. A entidade aqui é Recurrence (não Subscription). Layout: 5 abas internas (Dashboard, Recorrências, Cobranças, Retentativas, Notificações).',
-  },
-  {
-    type: 'description',
-    emoji: '🎯',
-    title: 'Para que serve',
-    body:
-      '(1) GESTÃO HOLÍSTICA em um lugar — dashboard analítico, lista operacional, histórico, configuração de retentativas, notificações. (2) MOTOR INTELIGENTE DE RETRY: configura quantas vezes tentar e em quais intervalos quando uma cobrança falha. (3) MULTI-MÉTODO: cartão, Pix Recorrente E boleto. (4) NOTIFICAÇÕES + AUTOMAÇÕES: comunicação automatizada. (5) DIFERENÇA vs Assinaturas: Recurrence é GENÉRICO; Subscriptions é específico de SaaS.',
-  },
-  {
-    type: 'callout',
-    variant: 'warning',
-    title: 'Implementação atual',
-    body:
-      'Página USA DADOS MOCKADOS (5 recorrências hardcoded no array recurrences). Cálculos de MRR, distribuições e gráficos são todos in-memory. Quando entidade Recurrence for criada, substituir pelos dados reais via base44.entities.Recurrence.list().',
-  },
+export const RecurrenceDoc = {
+  pageId: 'Recurrence',
+  pagePath: '/Recurrence',
+  module: 'Assinaturas',
+  parentPage: 'Subscriptions',
 
-  {
-    type: 'section',
-    title: '1. PageHeader (2 botões)',
-    children: [
-      {
-        type: 'paragraph',
-        text:
-          '📐 Title="Motor de Recorrência" + subtitle="Gerencie cobranças recorrentes de forma inteligente". Breadcrumb 2 níveis "Dashboard › Assinaturas › Recorrência".',
-      },
-      {
-        type: 'subsection',
-        title: 'Botão "Configurar Retentativas" (outline)',
-        children: [
-          {
-            type: 'paragraph',
-            text:
-              '🎯 onClick: setShowRetryConfigDialog(true). Atalho redundante — também há aba interna "Retentativas". POR QUE redundância: gestor que VAI configurar quer atalho direto sem ler dashboard.',
-          },
-        ],
-      },
-      {
-        type: 'subsection',
-        title: 'Botão "Nova Recorrência" (verde primário)',
-        children: [
-          {
-            type: 'paragraph',
-            text:
-              '🎯 onClick: setShowNewRecurrenceDialog(true). Abre Dialog max-w-lg com formulário simplificado.',
-          },
-        ],
-      },
+  // ==========================================================================
+  // CAMADA EXPLAINER — Por que esta página existe e qual o valor de negócio
+  // ==========================================================================
+  explainer: {
+    oneLiner:
+      'Motor operacional que executa cada cobrança recorrente individual, gerencia retentativas inteligentes em caso de falha e dispara notificações automáticas — é o "coração que bate" das assinaturas.',
+
+    distinctionFromSubscriptions: {
+      subscriptions:
+        '/Subscriptions é o CONTRATO entre cliente e merchant: define que João assinou o Plano Premium em 15/06/2025, paga R$ 299,90/mês, está ativo. Olha o relacionamento como um todo (lifetime, churn, MRR agregado).',
+      recurrence:
+        '/Recurrence é a EXECUÇÃO de cada cobrança individual: dia 15/02/2026, 08h00, tentar cobrar R$ 299,90 no cartão •••• 4532, se falhar agendar retentativa em 1 dia, se falhar de novo em 3 dias, etc. Olha o "motor" de processamento.',
+      analogy:
+        'Subscriptions é o RH (gestão do contrato de trabalho); Recurrence é o sistema de Folha (que efetivamente paga todo dia 5).',
+    },
+
+    coreCapabilities: [
+      'Visão consolidada de todas as cobranças recorrentes individuais (independente do plano de origem)',
+      'Configuração granular do motor de retentativas (número de tentativas, intervalos, política)',
+      'Métricas operacionais de execução: taxa de sucesso de cobrança, taxa de recuperação, MRR efetivo',
+      'Controle ciclo-a-ciclo: pausar uma recorrência específica sem cancelar a assinatura inteira',
+      'Histórico granular de cada tentativa de cobrança com motivo de falha técnico',
+      'Configuração de notificações por evento (lembrete, sucesso, falha, expiração de cartão)',
+      'Automações condicionais (ex: após 4 falhas → pausar; cartão expirado → enviar link de atualização)',
     ],
+
+    whoUsesIt: [
+      'Time de Operações Financeiras: monitora execução diária de cobranças, age sobre falhas críticas',
+      'Time de Customer Success: identifica clientes em risco (failed_attempts > 0) antes do churn',
+      'Time de Produto/Growth: ajusta política de retentativa para maximizar recuperação sem irritar clientes',
+      'Suporte: investiga falhas específicas reportadas pelo cliente ("não foi cobrado este mês")',
+    ],
+
+    keyDifferenceFromSubscription: {
+      pause:
+        'Pausar em /Subscriptions pausa o CONTRATO inteiro (acesso suspenso). Pausar em /Recurrence pode pausar apenas a execução automática de uma cobrança específica (cliente continua tendo acesso, mas merchant gerencia manualmente o pagamento).',
+      cancel:
+        'Cancelar em /Subscriptions encerra o relacionamento. Cancelar em /Recurrence remove a entrada do motor de cobrança (a assinatura pode continuar, mas precisa de configuração nova de pagamento).',
+    },
   },
 
-  {
-    type: 'section',
-    title: '2. TabsList Principal (5 abas)',
-    children: [
-      {
-        type: 'paragraph',
-        text:
-          '📐 TabsList bg-white border shadow-sm h-12 (mais alto que padrão). Aba ativa: bg-[#00D26A] + text-white (verde sólido). 5 abas com ícones.',
+  // ==========================================================================
+  // CAMADA TÉCNICA — Estrutura, componentes e comportamento granular
+  // ==========================================================================
+  technical: {
+    fileLocation: 'pages/Recurrence.jsx',
+    totalLines: 1030,
+
+    imports: {
+      reactQuery: ['useQuery', 'useMutation', 'useQueryClient (importados, não usados ativamente — preparado para integração com base44.entities)'],
+      lucideIcons: [
+        'Repeat — ícone-âncora da página e da aba "Recorrências"',
+        'CreditCard — método cartão',
+        'QrCode — método Pix Recorrente (cor emerald-500)',
+        'DollarSign — KPI MRR e aba "Cobranças"',
+        'RefreshCw — motor de retentativas, aba "Retentativas", taxa de recuperação',
+        'CheckCircle2 — taxa de sucesso',
+        'AlertTriangle — alerta de pendências (cor amber)',
+        'Pause / Play — ações de pausar/retomar no dropdown',
+        'XCircle — cancelar (vermelho destrutivo)',
+        'Edit3 — editar recorrência',
+        'Eye — ver detalhes',
+        'Settings — botão "Configurar Retentativas"',
+        'Mail — notificações por e-mail',
+        'Bell — aba notificações',
+        'Zap — automações (cor amber-500)',
+        'Target / TrendingUp / TrendingDown / Calendar / Clock — auxiliares',
+        'BarChart3 — aba Dashboard',
+        'ArrowRight — separador visual nas automações',
+      ],
+      uiComponents: ['Button', 'Badge', 'Card+CardHeader+CardContent+CardTitle+CardDescription', 'Tabs+TabsList+TabsTrigger+TabsContent', 'Input', 'Label', 'Progress', 'Select+SelectTrigger+SelectContent+SelectItem+SelectValue', 'DropdownMenu+DropdownMenuTrigger+DropdownMenuContent+DropdownMenuItem+DropdownMenuSeparator', 'Dialog+DialogContent+DialogHeader+DialogTitle+DialogDescription+DialogFooter', 'Table+TableHeader+TableBody+TableRow+TableHead+TableCell', 'Switch'],
+      utilities: ['cn (classnames)', 'format/addDays/differenceInDays do date-fns', 'ptBR locale'],
+      charts: ['AreaChart+Area+XAxis+YAxis+CartesianGrid+Tooltip+ResponsiveContainer (recharts)', 'BarChart+Bar', 'PieChart+Pie+Cell'],
+      sharedComponents: ['PageHeader (header consistente da plataforma)', 'KPICard (card métrica padrão com sparkline)'],
+    },
+
+    // ------------------------------------------------------------------------
+    // CONSTANTES DE CONFIGURAÇÃO (definidas fora do componente)
+    // ------------------------------------------------------------------------
+    configurationConstants: {
+      statusConfig: {
+        purpose: 'Mapeia cada status de recorrência para label em português + className do Badge.',
+        scope: 'Definido em escopo de módulo (não estado React) — é estático e reutilizável.',
+        entries: {
+          active: { label: 'Ativa', className: 'bg-green-100 text-green-700', meaning: 'Recorrência saudável, próxima cobrança agendada normalmente.' },
+          paused: { label: 'Pausada', className: 'bg-gray-100 text-gray-600', meaning: 'Cobrança suspensa intencionalmente; merchant decide quando retomar.' },
+          pending_retry: { label: 'Aguardando Retentativa', className: 'bg-amber-100 text-amber-700', meaning: 'Última cobrança falhou, motor de retentativas vai tentar novamente conforme política.' },
+          failed: { label: 'Falhou', className: 'bg-red-100 text-red-700', meaning: 'Esgotou todas as retentativas configuradas, requer ação manual.' },
+          cancelled: { label: 'Cancelada', className: 'bg-slate-100 text-slate-600', meaning: 'Encerrada permanentemente; não há próxima cobrança (campo "Próxima Cobrança" mostra "-").' },
+          completed: { label: 'Concluída', className: 'bg-blue-100 text-blue-700', meaning: 'Recorrência atingiu o número total de ciclos definidos com sucesso.' },
+        },
       },
-      {
-        type: 'list',
+      frequencyLabels: {
+        purpose: 'Tradução dos enums de frequência para português visível.',
+        entries: {
+          daily: 'Diário',
+          weekly: 'Semanal',
+          biweekly: 'Quinzenal',
+          monthly: 'Mensal',
+          bimonthly: 'Bimestral',
+          quarterly: 'Trimestral',
+          custom: 'Personalizado',
+        },
+        notes: '"daily", "bimonthly" e "custom" não aparecem nos filtros de UI — só "weekly", "biweekly", "monthly", "quarterly" são selecionáveis no dialog de criação. Mas o mapa cobre eventuais dados legados.',
+      },
+      paymentMethodLabels: {
+        credit_card: 'Cartão de Crédito',
+        pix_recorrente: 'Pix Recorrente',
+        boleto: 'Boleto',
+      },
+    },
+
+    // ------------------------------------------------------------------------
+    // ESTADO LOCAL (useState)
+    // ------------------------------------------------------------------------
+    componentState: {
+      activeTab: { initial: "'dashboard'", purpose: 'Controla qual das 5 abas está visível. Aceita: dashboard | recurrences | charges | retry | notifications.' },
+      searchTerm: { initial: "''", purpose: 'Termo de busca aplicado na aba "Recorrências". Busca em customer_name, customer_email e id (case-insensitive).' },
+      statusFilter: { initial: "'all'", purpose: 'Filtro de status na aba "Recorrências". "all" desativa o filtro.' },
+      paymentMethodFilter: { initial: "'all'", purpose: 'Filtro por método de pagamento na aba "Recorrências".' },
+      showNewRecurrenceDialog: { initial: 'false', purpose: 'Controla visibilidade do dialog "Nova Recorrência" disparado pelo botão verde no header.' },
+      showRetryConfigDialog: { initial: 'false', purpose: 'Estado declarado mas atualmente apenas o botão "Configurar Retentativas" o seta — o dialog em si não está renderizado no JSX (preparado para implementação futura). Atalho real: ir para a aba "Retentativas" que já tem a UI completa.' },
+    },
+
+    // ------------------------------------------------------------------------
+    // FUNÇÕES UTILITÁRIAS LOCAIS
+    // ------------------------------------------------------------------------
+    localFunctions: {
+      formatCurrency: {
+        signature: '(value) => string',
+        implementation: "Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0)",
+        nuance: 'O `|| 0` protege contra valores undefined/null (renderiza R$ 0,00 em vez de NaN).',
+        usedIn: ['KPI MRR', 'coluna Valor da tabela', 'coluna Total Cobrado', 'tooltip do gráfico de receita', 'cards de Recuperadas/Não-recuperadas', 'aba Cobranças'],
+      },
+    },
+
+    // ------------------------------------------------------------------------
+    // DADOS MOCK
+    // ------------------------------------------------------------------------
+    mockData: {
+      recurrences: {
+        count: 5,
+        purpose: 'Demonstra os principais cenários: ativa-saudável, ativa-Pix, em retentativa, semanal-com-falha-recuperada, trimestral-boleto.',
         items: [
-          'ABA "Dashboard" (BarChart3) — analítica, KPIs e charts',
-          'ABA "Recorrências" (Repeat) — lista operacional',
-          'ABA "Cobranças" (DollarSign) — histórico de execuções',
-          'ABA "Retentativas" (RefreshCw) — config + performance',
-          'ABA "Notificações" (Bell) — e-mails automáticos + automações',
+          { id: 'REC-001', customer: 'João Silva', amount: 299.90, frequency: 'monthly', method: 'credit_card (Visa •••• 4532)', status: 'active', failed_attempts: 0, charges_count: 7, total_charged: 'R$ 2.099,30', notes: 'Caso típico saudável: 7 ciclos pagos sem falhas.' },
+          { id: 'REC-002', customer: 'Maria Santos', amount: 89.90, frequency: 'monthly', method: 'pix_recorrente', status: 'active', failed_attempts: 0, charges_count: 5, total_charged: 'R$ 449,50', notes: 'Demonstra ticket baixo com Pix Recorrente.' },
+          { id: 'REC-003', customer: 'Pedro Costa', amount: 1500.00, frequency: 'monthly', method: 'credit_card (Mastercard •••• 8821)', status: 'pending_retry', failed_attempts: 2, charges_count: 10, total_charged: 'R$ 15.000,00', last_failure_reason: 'Cartão recusado - Saldo insuficiente', notes: 'Caso B2B em risco: 2 falhas consecutivas, motor já agendou nova tentativa.' },
+          { id: 'REC-004', customer: 'Ana Oliveira', amount: 199.00, frequency: 'weekly', method: 'credit_card (Elo •••• 1234)', status: 'active', failed_attempts: 1, charges_count: 12, total_charged: 'R$ 2.388,00', notes: 'Status "active" mas com 1 falha histórica recuperada (badge laranja "1 falha(s)" aparece junto do status).' },
+          { id: 'REC-005', customer: 'Carlos Mendes', amount: 4999.00, frequency: 'quarterly', method: 'boleto', status: 'active', failed_attempts: 0, charges_count: 4, total_charged: 'R$ 19.996,00', notes: 'Enterprise trimestral: ticket alto, baixa frequência, baixo risco.' },
         ],
       },
-      {
-        type: 'paragraph',
-        text:
-          '🎯 POR QUE 5 abas e não páginas separadas: cada uma é PERSPECTIVA da mesma entidade. Trocar de aba é mais rápido. Mantém contexto do filtro de período.',
-      },
-      {
-        type: 'paragraph',
-        text:
-          '🎯 ORDEM proposital: Dashboard (overview) → Recorrências (operacional) → Cobranças (histórico atômico) → Retentativas (config motor) → Notificações (config comunicação). Geral ao específico.',
-      },
-    ],
-  },
+      revenueChartData: 'Array de 5 meses (Set→Jan): R$45k → R$52k → R$58k → R$61k → R$68k. Crescimento monotônico de ~51% em 5 meses.',
+      paymentMethodDistribution: '[Cartão 65%, Pix 25%, Boleto 10%] — cores: #3B82F6 (azul), #00D26A (verde PagSmile), #F59E0B (amber).',
+      frequencyDistribution: '[Mensal 156, Semanal 42, Quinzenal 28, Trimestral 15] — total 241 recorrências (não bate com os 5 do mock, é exemplificativo do gráfico).',
+    },
 
-  {
-    type: 'section',
-    title: '3. Aba "Dashboard"',
-    children: [
-      {
-        type: 'subsection',
-        title: '3.A — Grid de 4 KPIs',
-        children: [
-          {
-            type: 'list',
-            items: [
-              'KPI 1 "MRR" (DollarSign emerald) change=12.5. CÁLCULO NORMALIZADO: amount × multiplicador da frequência (weekly×4, biweekly×2, quarterly÷3)',
-              'KPI 2 "Recorrências Ativas" (Repeat blue) change=8',
-              'KPI 3 "Taxa de Sucesso" (CheckCircle2 green) — chargeSuccessRate=94.5 mock',
-              'KPI 4 "Taxa de Recuperação" (RefreshCw purple) — recoveryRate=78 mock',
-            ],
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 POR QUE MRR aqui é DIFERENTE de /Subscriptions: ali soma BRUTA, aqui NORMALIZADA. Versão correta. Em /Subscriptions é simplificada por assumir mensal predominante.',
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 POR QUE distinguir Sucesso vs Recuperação: Sucesso = aprovou de primeira (saúde da carteira). Recuperação = tentativas extras precisaram salvar. Sucesso 99% + Recuperação 0% = base perfeita. Sucesso 80% + Recuperação 90% = motor de retry resgata muito.',
-          },
-        ],
+    // ------------------------------------------------------------------------
+    // CÁLCULOS DERIVADOS (executados a cada render)
+    // ------------------------------------------------------------------------
+    derivedCalculations: {
+      activeRecurrences: {
+        formula: "recurrences.filter(r => r.status === 'active')",
+        result: '4 das 5 (todos exceto REC-003 que está pending_retry)',
       },
-      {
-        type: 'subsection',
-        title: '3.B — Banner Pending Retry (condicional)',
-        children: [
-          {
-            type: 'paragraph',
-            text:
-              '📐 Card border-amber-200 + bg-amber-50. SÓ aparece se pendingRetry.length > 0. Estrutura: ícone AlertTriangle âmbar + título+descrição + Button outline "Ver Detalhes".',
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 Diferença de COR vs banner laranja em /Subscriptions: aqui AMARELO (warning leve, "aguardando próxima tentativa"). Lá LARANJA (já inadimplente).',
-          },
-        ],
+      mrr: {
+        formula: 'Soma de valor mensalizado de cada ativa',
+        normalization: {
+          weekly: '× 4 (aproxima 4 semanas/mês)',
+          biweekly: '× 2',
+          monthly: '× 1',
+          quarterly: '÷ 3',
+        },
+        criticalNuance: 'Ignora "biweekly /= 2" e "daily" (não tratado). Para `weekly: 199 * 4 = 796`. MRR final do mock ≈ 299.90 + 89.90 + (199*4) + (4999/3) ≈ R$ 2.852,13.',
+        excludesFrom: 'Não inclui REC-003 (pending_retry) — MRR aqui é apenas de recorrências ATIVAS, não receita prevista.',
       },
-      {
-        type: 'subsection',
-        title: '3.C — Grid de Charts (3 cols)',
-        children: [
-          {
-            type: 'subsection',
-            title: 'Chart 1 — "Evolução da Receita" (lg:col-span-2, AreaChart 300px)',
-            children: [
-              {
-                type: 'paragraph',
-                text:
-                  '🎯 AreaChart com gradiente vertical (#00D26A 0.3 → 0.0). 5 pontos. Tooltip formatCurrency. YAxis "R$Xk".',
-              },
-              {
-                type: 'paragraph',
-                text:
-                  '🎯 PARA QUE SERVE: tendência mensal. Gradiente reforça volume. Ascendente = saudável.',
-              },
-            ],
-          },
-          {
-            type: 'subsection',
-            title: 'Chart 2 — "Métodos de Pagamento" (PieChart donut 200px)',
-            children: [
-              {
-                type: 'paragraph',
-                text:
-                  '🎯 PieChart innerRadius=60 outerRadius=80. 3 fatias: Cartão 65% azul, Pix 25% verde, Boleto 10% âmbar. Legenda extra com 3 mini-blocos coloridos abaixo.',
-              },
-              {
-                type: 'paragraph',
-                text:
-                  '🎯 PARA QUE SERVE: % alto de boleto = nicho B2B/idosos. % alto de Pix = público novo. Decisão estratégica.',
-              },
-            ],
-          },
-          {
-            type: 'subsection',
-            title: 'Chart 3 — "Distribuição por Frequência" (BarChart 250px)',
-            children: [
-              {
-                type: 'paragraph',
-                text:
-                  '🎯 BarChart vertical com 4 barras: Mensal 156, Semanal 42, Quinzenal 28, Trimestral 15. Cor única #00D26A. radius=[4,4,0,0].',
-              },
-              {
-                type: 'paragraph',
-                text:
-                  '🎯 PARA QUE SERVE: ver qual frequência domina. Mensal sempre lidera. Curiosidades em nichos (semanal = clube assinatura).',
-              },
-            ],
-          },
-        ],
+      pendingRetry: {
+        formula: "recurrences.filter(r => r.status === 'pending_retry')",
+        result: '1 (REC-003)',
+        usedFor: 'Renderização condicional do alerta amber no Dashboard.',
       },
-    ],
-  },
+      totalCustomers: {
+        formula: 'new Set(recurrences.map(r => r.customer_email)).size',
+        nuance: 'Usa Set para deduplicar — mesmo cliente com múltiplas recorrências conta apenas 1 vez.',
+        result: '5 emails únicos no mock',
+      },
+      avgTicket: {
+        formula: 'sum(amount) / length, com guard contra divisão por zero',
+        result: '(299.90 + 89.90 + 1500 + 199 + 4999) / 5 = R$ 1.417,56',
+        notUsedInUI: 'Calculado mas não exibido em nenhum KPI atualmente — preparado para evolução.',
+      },
+      recoveryRate: { value: 78, hardcoded: true, displayedIn: 'KPI "Taxa de Recuperação" + barra de progresso na aba Retentativas (78.3% lá).' },
+      chargeSuccessRate: { value: 94.5, hardcoded: true, displayedIn: 'KPI "Taxa de Sucesso".' },
+    },
 
-  {
-    type: 'section',
-    title: '4. Aba "Recorrências" (lista operacional)',
-    children: [
-      {
-        type: 'subsection',
-        title: '4.A — Card de Filtros',
-        children: [
-          {
-            type: 'list',
-            items: [
-              'Input com ícone Search — busca por cliente, e-mail ou ID',
-              'Select "Status" (6 opções: all, active, paused, pending_retry, failed, cancelled)',
-              'Select "Método" (4 opções: all, credit_card, pix_recorrente, boleto)',
-            ],
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 3 dimensões: Status (operacional). Método (técnico). Texto (pessoal). Combinados resolvem 99% das buscas.',
-          },
-        ],
+    // ------------------------------------------------------------------------
+    // FILTRAGEM (aba Recorrências)
+    // ------------------------------------------------------------------------
+    filteringLogic: {
+      filteredRecurrences: {
+        composition: 'AND de 3 critérios independentes',
+        searchMatch: '!searchTerm OR customer_name||customer_email||id contém searchTerm (toLowerCase em ambos)',
+        statusMatch: "statusFilter === 'all' OR r.status === statusFilter",
+        paymentMatch: "paymentMethodFilter === 'all' OR r.payment_method === paymentMethodFilter",
+        emptyState: 'NÃO IMPLEMENTADO — se filteredRecurrences.length === 0 a tabela renderiza apenas o cabeçalho sem mensagem (gap de UX a evoluir).',
       },
-      {
-        type: 'subsection',
-        title: '4.B — Tabela (Card + Table direto, 8 colunas)',
-        children: [
-          {
-            type: 'paragraph',
-            text:
-              '📐 NÃO usa DataTable comum. Implementa Table direto. Header row bg-slate-50.',
-          },
-          {
-            type: 'list',
-            items: [
-              'Col 1 "Recorrência" — description font-medium + ID xs',
-              'Col 2 "Cliente" — name + email',
-              'Col 3 "Valor" — formatCurrency + frequencyLabels',
-              'Col 4 "Método" — render por tipo: credit_card → CreditCard + "•••• 4532" / pix → QrCode emerald + "Pix" / boleto → texto plano',
-              'Col 5 "Próxima Cobrança" — DD/MM/YYYY + "em N dias" via differenceInDays. Esconde se cancelled',
-              'Col 6 "Status" — Badge do statusConfig + (se failed_attempts > 0) Badge outline âmbar "X falha(s)"',
-              'Col 7 "Total Cobrado" — formatCurrency emerald + "X cobranças" xs',
-              'Col 8 "Ações" — DropdownMenu',
-            ],
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 POR QUE Col 6 dupla badge: status atual + sinal histórico. Cliente "ativa" mas com 2 falhas tem ALERTA contextual.',
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 POR QUE "em N dias": mais útil que data isolada. "em 2 dias" → atenção. "em 30 dias" → tranquilo.',
-          },
-          {
-            type: 'subsection',
-            title: 'Dropdown de ações (4-5 itens condicionais)',
-            children: [
-              {
-                type: 'list',
-                items: [
-                  'Eye + "Ver detalhes" (sempre)',
-                  'Edit3 + "Editar" (sempre)',
-                  '[separador]',
-                  'Pause "Pausar" — APENAS se active',
-                  'Play "Retomar" — APENAS se paused',
-                  'RefreshCw "Forçar retentativa" — APENAS se pending_retry',
-                  '[separador]',
-                  'XCircle "Cancelar" (text-red-600) — sempre',
-                ],
-              },
-              {
-                type: 'paragraph',
-                text:
-                  '🎯 NUANCE "Forçar retentativa": pula intervalo configurado e força tentativa AGORA. Útil quando atendente sabe que cliente acabou de atualizar cartão.',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
+    },
 
-  {
-    type: 'section',
-    title: '5. Aba "Cobranças" (histórico atômico)',
-    children: [
-      {
-        type: 'paragraph',
-        text:
-          '🎯 Tabela de logs de TODA cobrança individual processada. Cada linha = 1 evento de tentativa. Diferente de "Recorrências" (entidades); aqui mostra EXECUÇÕES.',
+    // ------------------------------------------------------------------------
+    // ESTRUTURA HIERÁRQUICA: <PageHeader> + <Tabs>
+    // ------------------------------------------------------------------------
+    layout: {
+      rootContainer: '<div className="space-y-6">',
+
+      pageHeader: {
+        component: 'PageHeader (componente compartilhado)',
+        title: '"Motor de Recorrência"',
+        subtitle: '"Gerencie cobranças recorrentes de forma inteligente"',
+        breadcrumbs: [
+          { label: 'Assinaturas', page: 'Subscriptions' },
+          { label: 'Recorrência', page: 'Recurrence' },
+        ],
+        actions: {
+          buttonConfigureRetries: {
+            label: 'Configurar Retentativas',
+            icon: 'Settings (esquerda, 16px)',
+            variant: 'outline (borda neutra)',
+            onClick: 'setShowRetryConfigDialog(true)',
+            note: 'Como o dialog em si não existe no JSX, o resultado prático é nenhum efeito visível. Recomendação: redirecionar para tab "retry".',
+          },
+          buttonNewRecurrence: {
+            label: 'Nova Recorrência',
+            icon: 'Plus',
+            className: 'bg-[#00D26A] hover:bg-[#00A854] (verde-marca PagSmile)',
+            onClick: 'setShowNewRecurrenceDialog(true) → abre Dialog (documentado adiante)',
+          },
+        },
       },
-      {
-        type: 'list',
+
+      tabs: {
+        rootProps: 'value={activeTab} onValueChange={setActiveTab} className="space-y-6"',
+        listStyle: 'TabsList: bg-white border shadow-sm h-12',
+        triggerActiveStyle: 'data-[state=active]:bg-[#00D26A] data-[state=active]:text-white gap-2',
+        triggers: [
+          { value: 'dashboard', icon: 'BarChart3', label: 'Dashboard' },
+          { value: 'recurrences', icon: 'Repeat', label: 'Recorrências' },
+          { value: 'charges', icon: 'DollarSign', label: 'Cobranças' },
+          { value: 'retry', icon: 'RefreshCw', label: 'Retentativas' },
+          { value: 'notifications', icon: 'Bell', label: 'Notificações' },
+        ],
+      },
+    },
+
+    // ------------------------------------------------------------------------
+    // ABA 1 — DASHBOARD (granular)
+    // ------------------------------------------------------------------------
+    tabDashboard: {
+      gridKpis: {
+        wrapper: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4',
+        cards: [
+          {
+            title: 'MRR (Receita Mensal)',
+            valueSource: 'mrr (calculado em runtime)',
+            format: 'currency',
+            change: '+12.5% (hardcoded)',
+            icon: 'DollarSign',
+            iconBg: 'bg-emerald-100',
+            iconColor: 'text-emerald-600',
+            meaning: 'Monthly Recurring Revenue — soma normalizada de todas as recorrências ATIVAS em base mensal. Métrica-âncora SaaS.',
+          },
+          {
+            title: 'Recorrências Ativas',
+            valueSource: 'activeRecurrences.length',
+            format: 'number',
+            change: '+8 (hardcoded — provavelmente +8 unidades, não %)',
+            icon: 'Repeat',
+            iconBg: 'bg-blue-100',
+            iconColor: 'text-blue-600',
+            meaning: 'Contagem absoluta de recorrências em estado active.',
+          },
+          {
+            title: 'Taxa de Sucesso',
+            valueSource: 'chargeSuccessRate (94.5)',
+            format: 'percentage',
+            change: '+2.3%',
+            icon: 'CheckCircle2',
+            iconBg: 'bg-green-100',
+            iconColor: 'text-green-600',
+            meaning: '% de cobranças aprovadas na PRIMEIRA tentativa, sem precisar do motor de retentativa. Mede saúde do book de pagantes.',
+          },
+          {
+            title: 'Taxa de Recuperação',
+            valueSource: 'recoveryRate (78)',
+            format: 'percentage',
+            change: '+5.1%',
+            icon: 'RefreshCw',
+            iconBg: 'bg-purple-100',
+            iconColor: 'text-purple-600',
+            meaning: '% de cobranças que falharam na 1ª tentativa MAS foram recuperadas em alguma retentativa. Mede eficácia do motor de dunning. 78% é considerado bom.',
+          },
+        ],
+      },
+
+      pendingRetryAlert: {
+        renderCondition: 'pendingRetry.length > 0',
+        wrapper: 'Card border-amber-200 bg-amber-50',
+        layout: 'flex items-center gap-4 + ícone 48x48 amber-100 com AlertTriangle 24px amber-600',
+        title: '`{pendingRetry.length} recorrência(s) aguardando retentativa`',
+        body: 'O motor de retentativas está configurado para tentar novamente automaticamente.',
+        cta: 'Botão "Ver Detalhes" (variant outline, border-amber-300, text-amber-700) — sem onClick implementado (deveria filtrar a tabela para status=pending_retry).',
+      },
+
+      chartsRow: {
+        layout: 'grid lg:grid-cols-3 gap-6',
+        revenueChart: {
+          span: 'lg:col-span-2 (ocupa 2/3)',
+          title: 'Evolução da Receita Recorrente',
+          description: 'Últimos 5 meses',
+          height: 300,
+          chart: 'AreaChart com gradient #00D26A (3% opacity → 0%)',
+          axisX: 'month (Set→Jan)',
+          axisY: 'tickFormatter "R$ {valor/1000}k"',
+          tooltipFormat: 'formatCurrency completo',
+          stroke: '#00D26A strokeWidth 2',
+        },
+        paymentMethodPie: {
+          span: '1/3',
+          title: 'Métodos de Pagamento',
+          description: 'Distribuição por método',
+          chart: 'PieChart donut (innerRadius 60, outerRadius 80)',
+          labels: '`${name} ${value}%` no perímetro',
+          legend: 'Custom flex justify-center gap-4 com bolinhas coloridas + nome',
+        },
+      },
+
+      frequencyChart: {
+        title: 'Distribuição por Frequência',
+        description: 'Quantidade de recorrências por periodicidade',
+        height: 250,
+        chart: 'BarChart com Bar fill #00D26A radius [4,4,0,0] (cantos superiores arredondados)',
+        purpose: 'Permite ao merchant entender concentração de seu book — ex: se 95% é mensal, qualquer otimização em ciclo mensal tem alto leverage.',
+      },
+    },
+
+    // ------------------------------------------------------------------------
+    // ABA 2 — RECORRÊNCIAS (granular)
+    // ------------------------------------------------------------------------
+    tabRecurrences: {
+      filtersBar: {
+        wrapper: 'Card → CardContent p-4 → flex flex-wrap items-center gap-4',
+        searchInput: {
+          icon: 'Search 16px slate-400 (absoluto, left-3, vertical center)',
+          placeholder: 'Buscar por cliente, e-mail ou ID...',
+          flexBehavior: 'flex-1 min-w-[200px] (cresce, mas não menor que 200px)',
+          binding: 'value/onChange → searchTerm',
+        },
+        statusSelect: {
+          width: 'w-40',
+          placeholder: 'Status',
+          options: ['Todos os Status (all)', 'Ativas (active)', 'Pausadas (paused)', 'Retentativa (pending_retry)', 'Falharam (failed)', 'Canceladas (cancelled)'],
+          missing: 'Não inclui "completed" — gap menor.',
+        },
+        paymentMethodSelect: {
+          width: 'w-44',
+          options: ['Todos os Métodos (all)', 'Cartão de Crédito', 'Pix Recorrente', 'Boleto'],
+        },
+      },
+
+      table: {
+        wrapper: 'Card → CardContent p-0 (zero padding, tabela ocupa toda largura)',
+        headerRowStyle: 'bg-slate-50',
+        columns: [
+          {
+            label: 'Recorrência',
+            content: 'description (em font-medium) + id (text-xs slate-500)',
+            example: '"Plano Premium Mensal" / "REC-001"',
+          },
+          {
+            label: 'Cliente',
+            content: 'customer_name + customer_email (text-xs)',
+          },
+          {
+            label: 'Valor',
+            content: 'formatCurrency(amount) (font-semibold) + frequencyLabels[frequency] (text-xs)',
+            example: '"R$ 299,90" / "Mensal"',
+          },
+          {
+            label: 'Método',
+            renderLogic: {
+              credit_card: '<CreditCard slate-400/> + "•••• {card_last_four}"',
+              pix_recorrente: '<QrCode emerald-500/> + "Pix"',
+              boleto: 'apenas texto "Boleto"',
+            },
+            criticalDetail: 'card_brand existe nos dados mas NÃO é exibido visualmente — apenas last_four. Oportunidade: mostrar logo da bandeira.',
+          },
+          {
+            label: 'Próxima Cobrança',
+            renderLogic: {
+              ifNotCancelled: 'format(next_charge_date, dd/MM/yyyy) + "em N dias" via differenceInDays',
+              ifCancelled: 'Texto "-" cinza',
+            },
+            edgeCase: 'differenceInDays pode retornar NEGATIVO se data for no passado — neste caso renderiza "em -X dias", o que é tecnicamente correto mas confuso de UX.',
+          },
+          {
+            label: 'Status',
+            content: 'Badge principal de statusConfig[r.status]',
+            extraBadge: 'Se failed_attempts > 0 → Badge variant outline amber: `{failed_attempts} falha(s)` ao lado do status principal',
+            insight: 'Permite ver, p.ex., recorrência ATIVA mas com histórico de falhas (REC-004 = active + 1 falha).',
+          },
+          {
+            label: 'Total Cobrado',
+            content: 'formatCurrency(total_charged) emerald-600 + charges_count text-xs',
+            example: '"R$ 2.099,30" / "7 cobranças"',
+          },
+          {
+            label: '[ações]',
+            header: 'Vazio (apenas TableHead/>)',
+            content: 'DropdownMenu disparado por Button ghost icon h-8 w-8 com MoreHorizontal',
+          },
+        ],
+
+        actionsDropdown: {
+          alignment: 'end (alinhado à direita do trigger)',
+          alwaysVisibleItems: [
+            { icon: 'Eye', label: 'Ver detalhes', onClick: 'não implementado (alvo: drawer ou /RecurrenceDetail)' },
+            { icon: 'Edit3', label: 'Editar', onClick: 'não implementado' },
+          ],
+          separator: 'DropdownMenuSeparator',
+          conditionalItems: {
+            ifActive: { icon: 'Pause', label: 'Pausar', condition: "r.status === 'active'" },
+            ifPaused: { icon: 'Play', label: 'Retomar', condition: "r.status === 'paused'" },
+            ifPendingRetry: { icon: 'RefreshCw', label: 'Forçar retentativa', condition: "r.status === 'pending_retry'" },
+          },
+          finalSeparator: 'DropdownMenuSeparator',
+          destructiveItem: { icon: 'XCircle', label: 'Cancelar', className: 'text-red-600' },
+          nuance: 'Apenas UM dos 3 itens condicionais é renderizado por vez (dependendo do status atual). Status "failed", "cancelled" e "completed" não mostram ação intermediária — só "Ver/Editar/Cancelar".',
+        },
+      },
+    },
+
+    // ------------------------------------------------------------------------
+    // ABA 3 — COBRANÇAS (Histórico)
+    // ------------------------------------------------------------------------
+    tabCharges: {
+      title: 'Histórico de Cobranças',
+      description: 'Todas as cobranças processadas pelo motor de recorrência',
+      data: 'HARDCODED no JSX (não é loop sobre dados — são 3 linhas estáticas para demo)',
+      columns: ['Data', 'Recorrência', 'Cliente', 'Valor', 'Método', 'Status', 'Tentativas'],
+      rows: [
+        { date: '27/01/2026 08:00', recurrence: 'Plano Premium Mensal', customer: 'João Silva', amount: 'R$ 299,90', method: 'CreditCard •••• 4532', status: 'Aprovada (green-100)', attempts: '1' },
+        { date: '26/01/2026 10:30', recurrence: 'Licença Empresarial', customer: 'Pedro Costa', amount: 'R$ 1.500,00', method: 'CreditCard •••• 8821', status: 'Aguardando (amber-100)', attempts: '2/4' },
+        { date: '25/01/2026 09:15', recurrence: 'Assinatura Básica', customer: 'Maria Santos', amount: 'R$ 89,90', method: 'QrCode Pix', status: 'Aprovada (green-100)', attempts: '1' },
+      ],
+      meaning: 'Diferença vs. /Transactions: aqui só aparecem cobranças DO MOTOR (capture_method=recurring); em /Transactions aparecem TODAS as transações da conta (e-commerce, POS, recurring).',
+      gap: 'Sem filtros, sem paginação, sem busca — é uma view "primeira impressão", não operacional para volume real.',
+    },
+
+    // ------------------------------------------------------------------------
+    // ABA 4 — RETENTATIVAS (granular crítica)
+    // ------------------------------------------------------------------------
+    tabRetry: {
+      layout: 'grid lg:grid-cols-2 gap-6 (2 cards lado a lado em desktop)',
+
+      configCard: {
+        title: 'Motor de Retentativas (com ícone RefreshCw verde-marca)',
+        description: 'Configure as regras de retentativa para cobranças falhas',
+
+        toggleAutomaticRetries: {
+          label: 'Retentativas Automáticas',
+          subLabel: 'Tentar novamente cobranças que falharem',
+          control: 'Switch defaultChecked (ligado por padrão)',
+          impact: 'Se desligar, todas as recorrências passam direto para "failed" no primeiro fracasso.',
+        },
+
+        maxRetriesSelect: {
+          label: 'Número máximo de tentativas',
+          defaultValue: '4',
+          options: ['2 tentativas', '3 tentativas', '4 tentativas', '5 tentativas'],
+          tradeoff: 'Mais tentativas = maior recuperação MAS maior custo de processamento (cada tentativa cartão tem MDR/iof) e maior fricção/irritação do cliente.',
+        },
+
+        retryIntervalsGrid: {
+          label: 'Intervalo entre tentativas',
+          layout: 'grid grid-cols-4 gap-2',
+          cells: [
+            { ordinal: '1ª', interval: '1 dia', logic: 'Recuperação rápida — tipicamente recupera saldo insuficiente que entrou na conta' },
+            { ordinal: '2ª', interval: '3 dias', logic: 'Período médio — fim de semana ou novo ciclo de salário' },
+            { ordinal: '3ª', interval: '7 dias', logic: 'Espera próximo ciclo de pagamento' },
+            { ordinal: '4ª', interval: '15 dias', logic: 'Última tentativa — confiança baixa, mas evita churn definitivo' },
+          ],
+          isInteractive: false,
+          implementationNote: 'Atualmente são DIVS estáticas. Em produção devem virar inputs editáveis com validação (intervalos crescentes, total ≤ 30 dias).',
+        },
+
+        saveButton: 'w-full bg-[#00D26A] — "Salvar Configurações" (sem onClick implementado)',
+      },
+
+      statsCard: {
+        title: 'Performance de Recuperação',
+        description: 'Últimos 30 dias',
+
+        recoveryGrid: {
+          layout: 'grid grid-cols-2 gap-4',
+          recovered: { wrapper: 'p-4 bg-emerald-50 rounded-xl', label: 'Recuperadas (emerald-600)', value: '47 (text-3xl bold emerald-700)', subValue: 'R$ 12.350,00 (emerald-600 text-xs)' },
+          notRecovered: { wrapper: 'p-4 bg-red-50 rounded-xl', label: 'Não recuperadas (red-600)', value: '13', subValue: 'R$ 3.420,00' },
+          ratio: '47 / (47+13) = 78.3% — bate exatamente com o KPI Taxa de Recuperação',
+        },
+
+        recoveryRateProgress: {
+          label: 'Taxa de Recuperação (slate-600) com valor "78.3%" verde-marca à direita',
+          progress: '<Progress value={78.3} className="h-3"/> (barra alta com 12px)',
+        },
+
+        recoveryByAttemptBreakdown: {
+          title: 'Recuperação por tentativa:',
+          rows: [
+            { attempt: '1ª tentativa', percentage: 45, insight: 'Quase metade das recuperações vêm da PRIMEIRA retentativa — significa que muitos casos são saldo temporário.' },
+            { attempt: '2ª tentativa', percentage: 25 },
+            { attempt: '3ª tentativa', percentage: 6, insight: 'Drop drástico — 3ª tentativa tem ROI baixo.' },
+            { attempt: '4ª tentativa', percentage: 2, insight: 'Praticamente nula — questão estratégica: vale o custo? Sim apenas se ticket alto.' },
+          ],
+          totalCheck: '45+25+6+2=78 ≈ 78.3% — coerente',
+          rowLayout: 'flex justify-between: label esquerda, [Progress w-24 h-2] + label "%" direita',
+        },
+      },
+    },
+
+    // ------------------------------------------------------------------------
+    // ABA 5 — NOTIFICAÇÕES
+    // ------------------------------------------------------------------------
+    tabNotifications: {
+      layout: 'grid lg:grid-cols-2 gap-6',
+
+      emailNotificationsCard: {
+        title: 'Notificações por E-mail (ícone Mail blue-600)',
+        description: 'Configure os e-mails enviados aos clientes',
         items: [
-          'Col "Data" — DD/MM/YYYY HH:MM',
-          'Col "Recorrência" — description + ID curto',
-          'Col "Cliente" — name',
-          'Col "Valor" — formatCurrency font-semibold',
-          'Col "Método" — ícone + identificador',
-          'Col "Status" — Badge: Aprovada (green), Aguardando (amber)',
-          'Col "Tentativas" — número simples ou "X/Y"',
+          { name: 'Lembrete de cobrança', subLabel: '3 dias antes da cobrança', defaultChecked: true, purpose: 'Reduz fricção: cliente sabe que vai sair débito.' },
+          { name: 'Cobrança realizada', subLabel: 'Após cobrança bem-sucedida', defaultChecked: true, purpose: 'Confirmação positiva — recibo automático.' },
+          { name: 'Cobrança falhou', subLabel: 'Quando a cobrança falhar', defaultChecked: true, purpose: 'CRÍTICO: cliente toma ação antes do churn (atualizar cartão, depositar saldo).' },
+          { name: 'Cartão expirando', subLabel: '30 dias antes do vencimento', defaultChecked: true, purpose: 'Prevenção pró-ativa de involuntary churn.' },
         ],
+        itemLayout: 'flex justify-between p-3 bg-slate-50 rounded-lg + Switch defaultChecked à direita',
       },
-      {
-        type: 'paragraph',
-        text:
-          '🎯 PARA QUE SERVE: AUDITORIA. Cliente reclama "fui cobrado 2x" → atendente vê histórico atômico. Diferente de só ver "current_charges_count".',
-      },
-      {
-        type: 'paragraph',
-        text:
-          '📐 LIMITAÇÃO: dados hardcoded (3 linhas). Versão real: paginação, filtros (data, status, método), exportação.',
-      },
-    ],
-  },
 
-  {
-    type: 'section',
-    title: '6. Aba "Retentativas" (config + performance)',
-    children: [
-      {
-        type: 'paragraph',
-        text:
-          '📐 Grid lg:grid-cols-2 gap-6. ESQUERDA: card de configuração. DIREITA: card de performance dos últimos 30 dias.',
-      },
-      {
-        type: 'subsection',
-        title: '6.A — Card "Motor de Retentativas" (config)',
-        children: [
-          {
-            type: 'list',
-            items: [
-              'Switch "Retentativas Automáticas" (default checked)',
-              'Select "Número máximo de tentativas" — 2/3/4/5',
-              'BLOCO VISUAL "Intervalo entre tentativas" — Grid 4 cols com cards bg-slate-50: 1ª (1 dia), 2ª (3 dias), 3ª (7 dias), 4ª (15 dias)',
-              'Button "Salvar Configurações" verde 100% width',
-            ],
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 POR QUE intervalos PROGRESSIVAMENTE MAIORES (1-3-7-15): comportamento humano. 1º falhou? Pode ter sido temporário. 3º? Espera maior. 15º? Provável abandono. Curva exponencial vs perda de confiança.',
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 NUANCE: configuração mais granular em /DunningSettings. Esta é versão SIMPLIFICADA visual.',
-          },
-        ],
-      },
-      {
-        type: 'subsection',
-        title: '6.B — Card "Performance de Recuperação"',
-        children: [
-          {
-            type: 'subsection',
-            title: 'Grid 2 cols com KPIs de resultado',
-            children: [
-              {
-                type: 'list',
-                items: [
-                  'BLOCO emerald "Recuperadas": 47 cobranças, R$12.350',
-                  'BLOCO red "Não recuperadas": 13 cobranças, R$3.420',
-                ],
-              },
-              {
-                type: 'paragraph',
-                text:
-                  '🎯 Cores opostas. Verde = sucesso. Vermelho = falha consolidada (após todas tentativas).',
-              },
-            ],
-          },
-          {
-            type: 'paragraph',
-            text:
-              '📐 Progress bar geral: label "Taxa de Recuperação" + valor "78.3%" (verde grande) + Progress h-3. Benchmark BR: 70%+ é excelente.',
-          },
-          {
-            type: 'subsection',
-            title: 'Recuperação por tentativa (lista de Progress mini)',
-            children: [
-              {
-                type: 'list',
-                items: [
-                  '1ª tentativa → 45%',
-                  '2ª tentativa → 25%',
-                  '3ª tentativa → 6%',
-                  '4ª tentativa → 2%',
-                ],
-              },
-              {
-                type: 'paragraph',
-                text:
-                  '🎯 PARA QUE SERVE: prova matemática do retorno decrescente. 1ª salva quase metade. 4ª salva 2%. Justifica configurar limite — 5ª seria custo > benefício.',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-
-  {
-    type: 'section',
-    title: '7. Aba "Notificações" (e-mails + automações)',
-    children: [
-      {
-        type: 'paragraph',
-        text:
-          '📐 Grid lg:grid-cols-2 gap-6. ESQUERDA: card "E-mails" com Switches. DIREITA: card "Automações" com regras condicionais.',
-      },
-      {
-        type: 'subsection',
-        title: '7.A — Card "Notificações por E-mail" (4 Switches)',
-        children: [
-          {
-            type: 'list',
-            items: [
-              'Lembrete de cobrança — 3 dias antes',
-              'Cobrança realizada — Após bem-sucedida',
-              'Cobrança falhou — Quando falhar',
-              'Cartão expirando — 30 dias antes do vencimento',
-            ],
-          },
-          {
-            type: 'paragraph',
-            text:
-              '📐 Cada item: bg-slate-50 rounded-lg p-3 + título + descrição + Switch (defaultChecked).',
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 POR QUE 4: cobertura mínima estratégica. Pré-cobrança (transparência), sucesso (segurança), falha (atendimento), expiração (anti-churn involuntário). /DunningSettings tem ~9 expandido.',
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 NUANCE "Cartão expirando": prevenção de churn involuntário. Antes do plástico vencer, cliente atualiza. Sem isso, perde receita por vencimento físico.',
-          },
-        ],
-      },
-      {
-        type: 'subsection',
-        title: '7.B — Card "Automações" (3 regras)',
-        children: [
-          {
-            type: 'list',
-            items: [
-              '"Após 4 falhas consecutivas" → Pausar recorrência e notificar equipe',
-              '"Cartão expirado" → Enviar link para atualização',
-              '"Cobrança recuperada" → Reativar acesso do cliente',
-            ],
-          },
-          {
-            type: 'paragraph',
-            text:
-              '📐 Cada automação em card border rounded-xl: regra + Badge "Ativo" + ação com ArrowRight.',
-          },
-          {
-            type: 'paragraph',
-            text:
-              '🎯 NUANCE da 3ª regra: "Reativar acesso" — quando cobrança recupera, sistema reabilita produto SEM ação humana. Crítico em SaaS — UX-saver.',
-          },
-          {
-            type: 'paragraph',
-            text:
-              '📐 Button outline "Nova Automação" w-full → abriria builder de regras (não implementado).',
-          },
-        ],
-      },
-    ],
-  },
-
-  {
-    type: 'section',
-    title: '8. Dialog "Nova Recorrência" (criação simplificada)',
-    children: [
-      {
-        type: 'paragraph',
-        text:
-          '📐 Dialog max-w-lg ativado pelo botão do header. Form de 6 campos para criação RÁPIDA.',
-      },
-      {
-        type: 'list',
+      automationsCard: {
+        title: 'Automações (ícone Zap amber-500)',
+        description: 'Ações automáticas baseadas em eventos',
         items: [
-          'Select "Cliente" — placeholder "Selecione" + 3 mocks',
-          'Grid 2 cols: Input "Valor" + Select "Frequência" (default monthly)',
-          'Select "Método de Pagamento" — Cartão / Pix Recorrente / Boleto (default credit_card)',
-          'Input "Descrição"',
-          'Input "Data da primeira cobrança" — type=date',
+          {
+            trigger: 'Após 4 falhas consecutivas',
+            action: 'Pausar recorrência e notificar equipe',
+            statusBadge: 'Ativo (variant outline)',
+            arrowIcon: 'ArrowRight (slate-600)',
+          },
+          {
+            trigger: 'Cartão expirado',
+            action: 'Enviar link para atualização do cartão',
+            statusBadge: 'Ativo',
+          },
+          {
+            trigger: 'Cobrança recuperada',
+            action: 'Reativar acesso do cliente',
+            statusBadge: 'Ativo',
+            insight: 'Crítico para SaaS com gating de feature: bloqueio temporário durante falha + reativação automática quando recupera.',
+          },
         ],
+        newAutomationButton: 'variant outline w-full + Plus icon — "Nova Automação" (sem onClick)',
+        gap: 'Itens não são editáveis via UI, são apenas "leitura" das automações pré-configuradas.',
       },
-      {
-        type: 'paragraph',
-        text:
-          '🎯 POR QUE NÃO usar SubscriptionPlan: Recurrence é GENÉRICA. Pode ser cobrança avulsa recorrente customizada. Diferença filosófica importante.',
+    },
+
+    // ------------------------------------------------------------------------
+    // DIALOG: Nova Recorrência
+    // ------------------------------------------------------------------------
+    dialogNewRecurrence: {
+      controlState: 'showNewRecurrenceDialog (boolean)',
+      maxWidth: 'max-w-lg (~512px)',
+      header: {
+        title: 'Nova Recorrência',
+        description: 'Configure uma nova cobrança recorrente',
       },
-      {
-        type: 'paragraph',
-        text:
-          '📐 Footer: Cancelar (outline) + Criar Recorrência (verde). LIMITAÇÃO: sem onClick (UI demonstrativa).',
+      fields: [
+        {
+          label: 'Cliente',
+          control: 'Select',
+          placeholder: 'Selecione o cliente',
+          options: ['João Silva', 'Maria Santos', 'Pedro Costa'],
+          gap: 'Hardcoded — em produção deve buscar de base44.entities.Customer.list()',
+        },
+        {
+          label: 'Valor',
+          control: 'Input type=number',
+          placeholder: '0,00',
+          colSpan: '1 (em grid de 2 cols)',
+          gap: 'Sem máscara monetária — usuário digita "29990" mas precisa entender que é em reais.',
+        },
+        {
+          label: 'Frequência',
+          control: 'Select',
+          defaultValue: 'monthly',
+          options: ['Semanal (weekly)', 'Quinzenal (biweekly)', 'Mensal (monthly)', 'Trimestral (quarterly)'],
+          colSpan: '1',
+          notes: 'Não inclui "biweekly" no mock list de filtro mas inclui aqui — leve inconsistência. Não inclui "annual"/"semiannual" disponíveis em SubscriptionPlan.',
+        },
+        {
+          label: 'Método de Pagamento',
+          control: 'Select',
+          defaultValue: 'credit_card',
+          options: ['Cartão de Crédito', 'Pix Recorrente', 'Boleto'],
+        },
+        {
+          label: 'Descrição',
+          control: 'Input',
+          placeholder: 'Ex: Assinatura Premium Mensal',
+          purpose: 'Texto livre que aparecerá na coluna "Recorrência" da tabela e em soft descriptors.',
+        },
+        {
+          label: 'Data da primeira cobrança',
+          control: 'Input type=date',
+          purpose: 'Define start_date — todas as cobranças subsequentes serão calculadas a partir desta data + frequency.',
+        },
+      ],
+      footer: {
+        cancelButton: 'variant outline → setShowNewRecurrenceDialog(false)',
+        submitButton: 'bg-[#00D26A] hover:bg-[#00A854] — "Criar Recorrência" (sem onClick implementado)',
       },
+      missingValidation: 'Sem validação react-hook-form/zod — produção exigiria: amount>0, customer obrigatório, data ≥ hoje, etc.',
+    },
+
+    // ------------------------------------------------------------------------
+    // INTEGRAÇÕES & GAPS DE BACKEND
+    // ------------------------------------------------------------------------
+    integrationStatus: {
+      currentlyMocked: [
+        'Lista de recorrências (array hardcoded)',
+        'Histórico de cobranças (3 linhas hardcoded)',
+        'Distribuição por método/frequência (chart data hardcoded)',
+        'KPIs (recoveryRate=78, chargeSuccessRate=94.5)',
+      ],
+      shouldUse: [
+        'base44.entities.Subscription para origem das recorrências (cada Subscription é um "contrato"; o motor de recorrência aqui poderia usar campos como next_billing_date, status, payment_method)',
+        'base44.entities.Transaction.filter({capture_method: "recurring"}) para a aba Cobranças',
+        'base44.entities.DunningConfig para a aba Retentativas (já existe a entidade com retry_count, retry_intervals, etc.)',
+      ],
+      observation: 'Os imports de useQuery/useMutation/useQueryClient e base44 estão presentes mas não utilizados — sinaliza intenção de migrar para integração real.',
+    },
+
+    // ------------------------------------------------------------------------
+    // RELACIONAMENTOS COM OUTRAS PÁGINAS
+    // ------------------------------------------------------------------------
+    pageRelationships: {
+      parent: '/Subscriptions (breadcrumb sobe para lá)',
+      siblings: ['/SubscriptionPlans (catálogo)', '/SubscriptionAnalytics (métricas executivas)', '/DunningSettings (configuração separada e mais profunda do dunning)'],
+      conceptualOverlap: {
+        withDunningSettings: 'A aba "Retentativas" aqui é uma versão simplificada do que /DunningSettings oferece de forma completa (com horários, dias da semana, IA otimizada, Pix discount, SMS, WhatsApp). Esta aba é o "quick edit" — para granularidade total, ir para /DunningSettings.',
+        withTransactions: 'A aba "Cobranças" é uma view filtrada de /Transactions onde capture_method = "recurring".',
+      },
+    },
+
+    // ------------------------------------------------------------------------
+    // GAPS & OPORTUNIDADES IDENTIFICADAS
+    // ------------------------------------------------------------------------
+    knownGaps: [
+      'Empty state ausente quando filteredRecurrences.length === 0',
+      'Botão "Configurar Retentativas" do header tem state mas dialog não está renderizado — leva a inação',
+      'Dropdown "Cancelar" não tem confirmation modal (ação destrutiva sem proteção)',
+      'Aba Cobranças sem paginação/filtros/busca',
+      'Intervalos de retentativa são DIVS estáticas, não inputs editáveis',
+      'Notificações têm switches sem persistência (defaultChecked, não controlled)',
+      'Sem integração real com base44.entities — é tudo mock',
+      'differenceInDays pode renderizar valores negativos sem tratamento',
+      'Sem export CSV/Excel da tabela de recorrências',
+      'Sem audit trail das ações (quem pausou? quando? por que?)',
     ],
   },
-];
+};
+
+export default RecurrenceDoc;
