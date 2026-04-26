@@ -55,6 +55,9 @@ import { SubaccountsListDoc } from './docs/adminSub/SubaccountsList';
 import { SubaccountOnboardingDoc } from './docs/adminSub/SubaccountOnboarding';
 import { CustomersDoc } from './docs/adminSub/Customers';
 import { CustomerDetailDoc } from './docs/adminSub/CustomerDetail';
+import { ApiKeysDoc } from './docs/adminSub/ApiKeys';
+import { WebhooksDoc } from './docs/adminSub/Webhooks';
+import { PluginsDoc } from './docs/adminSub/Plugins';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -178,9 +181,9 @@ export const adminSubModule = {
       id: 'integrations',
       label: 'Integrações',
       pages: [
-        { id: 'ApiKeys', label: 'API Keys', route: '/ApiKeys', content: null },
-        { id: 'Webhooks', label: 'Webhooks', route: '/Webhooks', content: null },
-        { id: 'Plugins', label: 'Plugins', route: '/Plugins', content: null },
+        { id: 'ApiKeys', label: 'API Keys', route: '/ApiKeys', content: ApiKeysDoc },
+        { id: 'Webhooks', label: 'Webhooks', route: '/Webhooks', content: WebhooksDoc },
+        { id: 'Plugins', label: 'Plugins', route: '/Plugins', content: PluginsDoc },
       ],
     },
     {
