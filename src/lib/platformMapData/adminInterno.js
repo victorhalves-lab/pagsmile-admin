@@ -3,6 +3,7 @@
 // risco, financeiro, comunicação e configurações globais.
 
 import { AdminIntDashboardDoc } from './docs/adminInterno/AdminIntDashboard';
+import { AdminIntDashboardViewsComplementaresDoc } from './docs/adminInterno/AdminIntDashboardViewsComplementares';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -17,6 +18,7 @@ export const adminInternoModule = {
       label: 'Dashboard',
       pages: [
         { id: 'AdminIntDashboard', label: 'Dashboard Interno (10 views)', route: '/AdminIntDashboard', content: AdminIntDashboardDoc },
+        { id: 'AdminIntDashboardViewsComplementares', label: 'Dashboard — Views Complementares (Card/Pix/Boleto/Tech/Alerts)', route: '/AdminIntDashboard?view=complementar', content: AdminIntDashboardViewsComplementaresDoc },
       ],
     },
     {
