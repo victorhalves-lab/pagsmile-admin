@@ -10,6 +10,11 @@ import {
   PixTransactionsDoc,
   DeclineAnalysisDoc,
 } from './docs/adminSub/Transactions';
+import {
+  CheckoutBuilderDoc,
+  CheckoutsDoc,
+  CheckoutTemplatesDoc,
+} from './docs/adminSub/Checkout';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -41,9 +46,9 @@ export const adminSubModule = {
       id: 'checkout',
       label: 'Checkout',
       pages: [
-        { id: 'CheckoutBuilder', label: 'Checkout Builder', route: '/CheckoutBuilder', content: null },
-        { id: 'Checkouts', label: 'Meus Checkouts', route: '/Checkouts', content: null },
-        { id: 'CheckoutTemplates', label: 'Templates', route: '/CheckoutTemplates', content: null },
+        { id: 'CheckoutBuilder', label: 'Checkout Builder', route: '/CheckoutBuilder', content: CheckoutBuilderDoc },
+        { id: 'Checkouts', label: 'Meus Checkouts', route: '/Checkouts', content: CheckoutsDoc },
+        { id: 'CheckoutTemplates', label: 'Templates', route: '/CheckoutTemplates', content: CheckoutTemplatesDoc },
         { id: 'CheckoutAnalytics', label: 'Analytics do Checkout', route: '/CheckoutAnalytics', content: null },
         { id: 'ConverterAgent', label: 'Converter Agent', route: '/ConverterAgent', content: null },
       ],
