@@ -35,6 +35,9 @@ import { SubscriptionPlansDoc } from './docs/adminSub/SubscriptionPlans';
 import { RecurrenceDoc } from './docs/adminSub/Recurrence';
 import { DunningSettingsDoc } from './docs/adminSub/DunningSettings';
 import { SubscriptionAnalyticsDoc } from './docs/adminSub/SubscriptionAnalytics';
+import { DisputeDashboardDoc } from './docs/adminSub/DisputeDashboard.js';
+import { PreChargebacksDoc } from './docs/adminSub/PreChargebacks.js';
+import { ChargebacksDoc } from './docs/adminSub/Chargebacks.js';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -106,9 +109,9 @@ export const adminSubModule = {
       id: 'disputes',
       label: 'Disputas',
       pages: [
-        { id: 'DisputeDashboard', label: 'Dashboard de Disputas', route: '/DisputeDashboard', content: null },
-        { id: 'PreChargebacks', label: 'Pré-Chargebacks', route: '/PreChargebacks', content: null },
-        { id: 'Chargebacks', label: 'Chargebacks', route: '/Chargebacks', content: null },
+        { id: 'DisputeDashboard', label: 'Dashboard de Disputas', route: '/DisputeDashboard', content: DisputeDashboardDoc },
+        { id: 'PreChargebacks', label: 'Pré-Chargebacks', route: '/PreChargebacks', content: PreChargebacksDoc },
+        { id: 'Chargebacks', label: 'Chargebacks', route: '/Chargebacks', content: ChargebacksDoc },
         { id: 'MEDDashboard', label: 'MEDs', route: '/MEDDashboard', content: null },
         { id: 'DisputeContestation', label: 'Contestação de Disputa', route: '/DisputeContestation', content: null },
         { id: 'DisputeManager', label: 'Dispute Manager (Agente IA)', route: '/DisputeManager', content: null },
