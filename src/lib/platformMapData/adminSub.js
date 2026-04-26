@@ -58,6 +58,11 @@ import { CustomerDetailDoc } from './docs/adminSub/CustomerDetail';
 import { ApiKeysDoc } from './docs/adminSub/ApiKeys';
 import { WebhooksDoc } from './docs/adminSub/Webhooks';
 import { PluginsDoc } from './docs/adminSub/Plugins';
+import { ReportsDoc } from './docs/adminSub/Reports';
+import { CustomDashboardsDoc } from './docs/adminSub/CustomDashboards';
+import { DIACopilotDoc } from './docs/adminSub/DIACopilot';
+import { RecoveryAgentDoc } from './docs/adminSub/RecoveryAgent';
+import { DisputeAgentSettingsDoc } from './docs/adminSub/DisputeAgentSettings';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -173,8 +178,8 @@ export const adminSubModule = {
       id: 'analytics',
       label: 'Analytics',
       pages: [
-        { id: 'Reports', label: 'Relatórios', route: '/Reports', content: null },
-        { id: 'CustomDashboards', label: 'Dashboards Customizados', route: '/CustomDashboards', content: null },
+        { id: 'Reports', label: 'Relatórios', route: '/Reports', content: ReportsDoc },
+        { id: 'CustomDashboards', label: 'Dashboards Customizados', route: '/CustomDashboards', content: CustomDashboardsDoc },
       ],
     },
     {
@@ -190,10 +195,10 @@ export const adminSubModule = {
       id: 'ai-agents',
       label: 'Agentes IA',
       pages: [
-        { id: 'DIACopilot', label: 'DIA Copilot', route: '/DIACopilot', content: null },
-        { id: 'RecoveryAgent', label: 'Recovery Agent', route: '/RecoveryAgent', content: null },
+        { id: 'DIACopilot', label: 'DIA Copilot', route: '/DIACopilot', content: DIACopilotDoc },
+        { id: 'RecoveryAgent', label: 'Recovery Agent', route: '/RecoveryAgent', content: RecoveryAgentDoc },
         { id: 'ConverterAgentDuplicate', label: 'Converter Agent (Settings)', route: '/ConverterAgentSettings', content: ConverterAgentSettingsDoc },
-        { id: 'DisputeAgentSettings', label: 'Dispute Agent Settings', route: '/DisputeAgentSettings', content: null },
+        { id: 'DisputeAgentSettings', label: 'Dispute Agent Settings', route: '/DisputeAgentSettings', content: DisputeAgentSettingsDoc },
       ],
     },
     {
