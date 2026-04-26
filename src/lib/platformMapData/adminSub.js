@@ -33,10 +33,8 @@ import {
 import { SubscriptionsDoc } from './docs/adminSub/Subscriptions';
 import { SubscriptionPlansDoc } from './docs/adminSub/SubscriptionPlans';
 import { RecurrenceDoc } from './docs/adminSub/Recurrence';
-import {
-  DunningSettingsDoc,
-  SubscriptionAnalyticsDoc,
-} from './docs/adminSub/DunningAndAnalytics';
+import { DunningSettingsDoc } from './docs/adminSub/DunningSettings';
+import { SubscriptionAnalyticsDoc } from './docs/adminSub/SubscriptionAnalytics';
 
 export const adminSubModule = {
   id: 'admin-sub',
