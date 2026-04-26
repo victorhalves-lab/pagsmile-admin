@@ -2,6 +2,8 @@
 // Painel interno usado pela equipe da PagSmile para gerir merchants, compliance,
 // risco, financeiro, comunicação e configurações globais.
 
+import { AdminIntDashboardDoc } from './docs/adminInterno/AdminIntDashboard';
+
 export const adminInternoModule = {
   id: 'admin-interno',
   label: 'Admin Interno',
@@ -14,7 +16,7 @@ export const adminInternoModule = {
       id: 'dashboard',
       label: 'Dashboard',
       pages: [
-        { id: 'AdminIntDashboard', label: 'Dashboard Interno (9 views)', route: '/AdminIntDashboard', content: null },
+        { id: 'AdminIntDashboard', label: 'Dashboard Interno (10 views)', route: '/AdminIntDashboard', content: AdminIntDashboardDoc },
       ],
     },
     {
