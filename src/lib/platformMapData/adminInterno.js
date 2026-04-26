@@ -4,6 +4,7 @@
 
 import { AdminIntDashboardDoc } from './docs/adminInterno/AdminIntDashboard';
 import { AdminIntDashboardViewsComplementaresDoc } from './docs/adminInterno/AdminIntDashboardViewsComplementares';
+import { AdminIntComplianceDoc } from './docs/adminInterno/AdminIntCompliance';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -25,10 +26,10 @@ export const adminInternoModule = {
       id: 'compliance',
       label: 'Compliance',
       pages: [
-        { id: 'AdminIntCompliance', label: 'Dashboard de Compliance', route: '/AdminIntCompliance', content: null },
-        { id: 'AdminIntComplianceQueue', label: 'Fila de Compliance', route: '/AdminIntComplianceQueue', content: null },
-        { id: 'AdminIntComplianceReview', label: 'Análise Manual', route: '/AdminIntComplianceReview', content: null },
-        { id: 'AdminIntComplianceSubmissions', label: 'Submissões', route: '/AdminIntComplianceSubmissions', content: null },
+        { id: 'AdminIntCompliance', label: 'Hub de Compliance (12 abas)', route: '/AdminIntCompliance', content: AdminIntComplianceDoc },
+        { id: 'AdminIntComplianceQueue', label: 'Fila de Compliance', route: '/AdminIntComplianceQueue', content: AdminIntComplianceDoc },
+        { id: 'AdminIntComplianceReview', label: 'Análise Manual', route: '/AdminIntComplianceReview', content: AdminIntComplianceDoc },
+        { id: 'AdminIntComplianceSubmissions', label: 'Submissões', route: '/AdminIntComplianceSubmissions', content: AdminIntComplianceDoc },
         { id: 'AdminIntComplianceForms', label: 'Gestão de Formulários', route: '/AdminIntComplianceForms', content: null },
         { id: 'AdminIntComplianceDocs', label: 'Repositório de Documentos', route: '/AdminIntComplianceDocs', content: null },
         { id: 'AdminIntComplianceRules', label: 'Regras e Workflows', route: '/AdminIntComplianceRules', content: null },
