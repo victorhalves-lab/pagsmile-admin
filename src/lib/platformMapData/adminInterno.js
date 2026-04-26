@@ -6,6 +6,7 @@ import { AdminIntDashboardDoc } from './docs/adminInterno/AdminIntDashboard';
 import { AdminIntDashboardViewsComplementaresDoc } from './docs/adminInterno/AdminIntDashboardViewsComplementares';
 import { AdminIntComplianceDoc } from './docs/adminInterno/AdminIntCompliance';
 import { AdminIntComplianceComponentsDoc } from './docs/adminInterno/AdminIntComplianceComponents';
+import { AdminIntMerchantsDoc } from './docs/adminInterno/AdminIntMerchants';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -43,9 +44,9 @@ export const adminInternoModule = {
       id: 'merchants',
       label: 'Merchants',
       pages: [
-        { id: 'AdminIntMerchantsOverview', label: 'Gestão Comerciantes & Subcontas', route: '/AdminIntMerchantsOverview', content: null },
-        { id: 'AdminIntMerchants', label: 'Dashboard de Merchants', route: '/AdminIntMerchants', content: null },
-        { id: 'AdminIntMerchantsList', label: 'Lista de Merchants', route: '/AdminIntMerchantsList', content: null },
+        { id: 'AdminIntMerchantsOverview', label: 'Gestão Comerciantes & Subcontas (hierárquico)', route: '/AdminIntMerchantsOverview', content: AdminIntMerchantsDoc },
+        { id: 'AdminIntMerchants', label: 'Dashboard de Merchants (6 KPIs + 4 charts)', route: '/AdminIntMerchants', content: AdminIntMerchantsDoc },
+        { id: 'AdminIntMerchantsList', label: 'Lista de Merchants (11 col + 12 ações + 4 SideDrawers)', route: '/AdminIntMerchantsList', content: AdminIntMerchantsDoc },
         { id: 'AdminIntMerchantProfile', label: 'Perfil 360° (25 abas)', route: '/AdminIntMerchantProfile', content: null },
         { id: 'AdminIntSubaccounts', label: 'Subcontas', route: '/AdminIntSubaccounts', content: null },
         { id: 'AdminIntLimitRequests', label: 'Solicitações de Limite', route: '/AdminIntLimitRequests', content: null },
