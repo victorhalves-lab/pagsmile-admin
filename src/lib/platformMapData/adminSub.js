@@ -50,6 +50,11 @@ import { FeesAnalysisDoc } from './docs/adminSub/FeesAnalysis';
 import { AnticipationDoc } from './docs/adminSub/Anticipation';
 import { SplitManagementDoc } from './docs/adminSub/SplitManagement';
 import { WithdrawalsDoc } from './docs/adminSub/Withdrawals';
+import { SubaccountsDashboardDoc } from './docs/adminSub/SubaccountsDashboard';
+import { SubaccountsListDoc } from './docs/adminSub/SubaccountsList';
+import { SubaccountOnboardingDoc } from './docs/adminSub/SubaccountOnboarding';
+import { CustomersDoc } from './docs/adminSub/Customers';
+import { CustomerDetailDoc } from './docs/adminSub/CustomerDetail';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -148,17 +153,17 @@ export const adminSubModule = {
       id: 'subaccounts',
       label: 'Subcontas',
       pages: [
-        { id: 'SubaccountsDashboard', label: 'Dashboard de Subcontas', route: '/SubaccountsDashboard', content: null },
-        { id: 'SubaccountsList', label: 'Lista de Subcontas', route: '/SubaccountsList', content: null },
-        { id: 'SubaccountOnboarding', label: 'Onboarding de Subconta', route: '/SubaccountOnboarding', content: null },
+        { id: 'SubaccountsDashboard', label: 'Dashboard de Subcontas', route: '/SubaccountsDashboard', content: SubaccountsDashboardDoc },
+        { id: 'SubaccountsList', label: 'Lista de Subcontas', route: '/SubaccountsList', content: SubaccountsListDoc },
+        { id: 'SubaccountOnboarding', label: 'Onboarding de Subconta', route: '/SubaccountOnboarding', content: SubaccountOnboardingDoc },
       ],
     },
     {
       id: 'customers',
       label: 'Clientes',
       pages: [
-        { id: 'Customers', label: 'Lista de Clientes', route: '/Customers', content: null },
-        { id: 'CustomerDetail', label: 'Detalhe do Cliente', route: '/CustomerDetail', content: null },
+        { id: 'Customers', label: 'Lista de Clientes', route: '/Customers', content: CustomersDoc },
+        { id: 'CustomerDetail', label: 'Detalhe do Cliente', route: '/CustomerDetail', content: CustomerDetailDoc },
       ],
     },
     {
