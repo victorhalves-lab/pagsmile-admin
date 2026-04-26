@@ -30,6 +30,15 @@ import {
   CouponFormDoc,
   CouponDetailDoc,
 } from './docs/adminSub/Coupons';
+import {
+  SubscriptionsDoc,
+  SubscriptionPlansDoc,
+} from './docs/adminSub/Subscriptions';
+import { RecurrenceDoc } from './docs/adminSub/Recurrence';
+import {
+  DunningSettingsDoc,
+  SubscriptionAnalyticsDoc,
+} from './docs/adminSub/DunningAndAnalytics';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -90,11 +99,11 @@ export const adminSubModule = {
       id: 'subscriptions',
       label: 'Assinaturas',
       pages: [
-        { id: 'Subscriptions', label: 'Lista de Assinaturas', route: '/Subscriptions', content: null },
-        { id: 'SubscriptionPlans', label: 'Planos', route: '/SubscriptionPlans', content: null },
-        { id: 'Recurrence', label: 'Recorrência', route: '/Recurrence', content: null },
-        { id: 'DunningSettings', label: 'Configuração de Dunning', route: '/DunningSettings', content: null },
-        { id: 'SubscriptionAnalytics', label: 'Analytics de Assinaturas', route: '/SubscriptionAnalytics', content: null },
+        { id: 'Subscriptions', label: 'Lista de Assinaturas', route: '/Subscriptions', content: SubscriptionsDoc },
+        { id: 'SubscriptionPlans', label: 'Planos', route: '/SubscriptionPlans', content: SubscriptionPlansDoc },
+        { id: 'Recurrence', label: 'Recorrência', route: '/Recurrence', content: RecurrenceDoc },
+        { id: 'DunningSettings', label: 'Configuração de Dunning', route: '/DunningSettings', content: DunningSettingsDoc },
+        { id: 'SubscriptionAnalytics', label: 'Analytics de Assinaturas', route: '/SubscriptionAnalytics', content: SubscriptionAnalyticsDoc },
       ],
     },
     {
