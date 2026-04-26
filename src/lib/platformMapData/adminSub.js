@@ -15,6 +15,11 @@ import {
   CheckoutsDoc,
   CheckoutTemplatesDoc,
 } from './docs/adminSub/Checkout';
+import {
+  CheckoutAnalyticsDoc,
+  ConverterAgentDoc,
+  ConverterAgentSettingsDoc,
+} from './docs/adminSub/CheckoutAnalyticsAndAgent';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -49,8 +54,8 @@ export const adminSubModule = {
         { id: 'CheckoutBuilder', label: 'Checkout Builder', route: '/CheckoutBuilder', content: CheckoutBuilderDoc },
         { id: 'Checkouts', label: 'Meus Checkouts', route: '/Checkouts', content: CheckoutsDoc },
         { id: 'CheckoutTemplates', label: 'Templates', route: '/CheckoutTemplates', content: CheckoutTemplatesDoc },
-        { id: 'CheckoutAnalytics', label: 'Analytics do Checkout', route: '/CheckoutAnalytics', content: null },
-        { id: 'ConverterAgent', label: 'Converter Agent', route: '/ConverterAgent', content: null },
+        { id: 'CheckoutAnalytics', label: 'Analytics do Checkout', route: '/CheckoutAnalytics', content: CheckoutAnalyticsDoc },
+        { id: 'ConverterAgent', label: 'Converter Agent', route: '/ConverterAgent', content: ConverterAgentDoc },
       ],
     },
     {
@@ -149,7 +154,7 @@ export const adminSubModule = {
       pages: [
         { id: 'DIACopilot', label: 'DIA Copilot', route: '/DIACopilot', content: null },
         { id: 'RecoveryAgent', label: 'Recovery Agent', route: '/RecoveryAgent', content: null },
-        { id: 'ConverterAgentDuplicate', label: 'Converter Agent (Settings)', route: '/ConverterAgentSettings', content: null },
+        { id: 'ConverterAgentDuplicate', label: 'Converter Agent (Settings)', route: '/ConverterAgentSettings', content: ConverterAgentSettingsDoc },
         { id: 'DisputeAgentSettings', label: 'Dispute Agent Settings', route: '/DisputeAgentSettings', content: null },
       ],
     },
