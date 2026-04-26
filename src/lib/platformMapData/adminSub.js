@@ -45,6 +45,11 @@ import { DisputeManagerSettingsDoc } from './docs/adminSub/DisputeManagerSetting
 import { FinancialOverviewDoc } from './docs/adminSub/FinancialOverview';
 import { FinancialStatementDoc } from './docs/adminSub/FinancialStatement';
 import { ReceivablesAgendaDoc } from './docs/adminSub/ReceivablesAgenda';
+import { FeesDoc } from './docs/adminSub/Fees';
+import { FeesAnalysisDoc } from './docs/adminSub/FeesAnalysis';
+import { AnticipationDoc } from './docs/adminSub/Anticipation';
+import { SplitManagementDoc } from './docs/adminSub/SplitManagement';
+import { WithdrawalsDoc } from './docs/adminSub/Withdrawals';
 
 export const adminSubModule = {
   id: 'admin-sub',
@@ -132,11 +137,11 @@ export const adminSubModule = {
         { id: 'FinancialOverview', label: 'Visão Geral', route: '/FinancialOverview', content: FinancialOverviewDoc },
         { id: 'FinancialStatement', label: 'Extrato', route: '/FinancialStatement', content: FinancialStatementDoc },
         { id: 'ReceivablesAgenda', label: 'Agenda de Recebíveis', route: '/ReceivablesAgenda', content: ReceivablesAgendaDoc },
-        { id: 'Fees', label: 'Taxas', route: '/Fees', content: null },
-        { id: 'FeesAnalysis', label: 'Análise de Taxas', route: '/FeesAnalysis', content: null },
-        { id: 'Anticipation', label: 'Antecipação', route: '/Anticipation', content: null },
-        { id: 'SplitManagement', label: 'Gestão de Split', route: '/SplitManagement', content: null },
-        { id: 'Withdrawals', label: 'Saques', route: '/Withdrawals', content: null },
+        { id: 'Fees', label: 'Taxas', route: '/Fees', content: FeesDoc },
+        { id: 'FeesAnalysis', label: 'Análise de Taxas', route: '/FeesAnalysis', content: FeesAnalysisDoc },
+        { id: 'Anticipation', label: 'Antecipação', route: '/Anticipation', content: AnticipationDoc },
+        { id: 'SplitManagement', label: 'Gestão de Split', route: '/SplitManagement', content: SplitManagementDoc },
+        { id: 'Withdrawals', label: 'Saques', route: '/Withdrawals', content: WithdrawalsDoc },
       ],
     },
     {
