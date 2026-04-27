@@ -18,6 +18,7 @@ import { AdminIntFinancialOpsDoc } from './docs/adminInterno/AdminIntFinancialOp
 import { AdminIntSubaccountsDetailDoc } from './docs/adminInterno/AdminIntSubaccountsDetail';
 import { AdminIntReportsDoc } from './docs/adminInterno/AdminIntReports';
 import { AdminIntCommunicationDoc } from './docs/adminInterno/AdminIntCommunication';
+import { AdminIntAdministrationCoreDoc } from './docs/adminInterno/AdminIntAdministrationCore';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -172,21 +173,21 @@ export const adminInternoModule = {
     },
     {
       id: 'administration',
-      label: 'Administração',
+      label: 'Administração — 13 páginas (ordem do menu layout.jsx linhas 349-361)',
       pages: [
-        { id: 'AdminIntSettings', label: 'Configurações Gerais', route: '/AdminIntSettings', content: null },
-        { id: 'AdminIntUsers', label: 'Usuários', route: '/AdminIntUsers', content: null },
-        { id: 'AdminIntProfiles', label: 'Perfis & Permissões', route: '/AdminIntProfiles', content: null },
-        { id: 'AdminIntGlobalRates', label: 'Taxas Globais', route: '/AdminIntGlobalRates', content: null },
-        { id: 'AdminIntRiskParams', label: 'Parâmetros de Risco', route: '/AdminIntRiskParams', content: null },
-        { id: 'AdminIntIntegrations', label: 'Integrações', route: '/AdminIntIntegrations', content: null },
-        { id: 'AdminIntTemplates', label: 'Templates', route: '/AdminIntTemplates', content: null },
-        { id: 'AdminIntSystemLogs', label: 'Logs do Sistema', route: '/AdminIntSystemLogs', content: null },
-        { id: 'AdminIntMCCs', label: 'MCCs', route: '/AdminIntMCCs', content: null },
-        { id: 'AdminIntMCCsAnalysis', label: 'Análise de MCCs', route: '/AdminIntMCCsAnalysis', content: null },
-        { id: 'AdminIntPartners', label: 'Parceiros & Custos', route: '/AdminIntPartners', content: null },
-        { id: 'AdminIntFeePlans', label: 'Planos de Taxa', route: '/AdminIntFeePlans', content: null },
-        { id: 'AdminIntAiAgents', label: 'Configuração de Agentes IA', route: '/AdminIntAiAgents', content: null },
+        { id: 'AdminIntSettings', label: 'Configurações Gerais (5 Sections inline c/ onEdit + Dialog único reutilizado c/ ternário aninhado no title)', route: '/AdminIntSettings', content: AdminIntAdministrationCoreDoc },
+        { id: 'AdminIntUsers', label: 'Usuários (5 hardcoded + 5 stats calculados + filtros + Modal 3-grupos c/ radio nativo + ações condicionais por status)', route: '/AdminIntUsers', content: AdminIntAdministrationCoreDoc },
+        { id: 'AdminIntProfiles', label: 'Perfis & Permissões (5 SystemProfiles + permissionsData 6 módulos / 51 perms — viewModal SEMPRE mostra analyst BUG)', route: '/AdminIntProfiles', content: AdminIntAdministrationCoreDoc },
+        { id: 'AdminIntGlobalRates', label: 'Taxas Globais (7 cards: Crédito Table 5-bandeiras + Débito + PIX + Boleto + Antec + Saque + Liquid — 6/7 hardcoded no JSX)', route: '/AdminIntGlobalRates', content: AdminIntAdministrationCoreDoc },
+        { id: 'AdminIntRiskParams', label: 'Parâmetros de Risco (4 cards: CB Thresholds 4 colored / Antifraude / Limites / Monitoramento c/ Switches sem state)', route: '/AdminIntRiskParams', content: AdminIntAdministrationCoreDoc },
+        { id: 'AdminIntIntegrations', label: 'Integrações (4 categorias: Acquirers/Antifraude/Banking/Notif + IntegrationCard inline + 2 SideDrawers — única usando SideDrawer)', route: '/AdminIntIntegrations', content: AdminIntAdministrationCoreDoc },
+        { id: 'AdminIntTemplates', label: 'Templates (4 Tabs c/ 15 templates — DUPLICA AdminIntCommTemplates 12 templates / Edit + Preview Dialog)', route: '/AdminIntTemplates', content: AdminIntAdministrationCoreDoc },
+        { id: 'AdminIntSystemLogs', label: 'Logs do Sistema (4 Tabs Audit/System terminal/API table/Errors PLACEHOLDER + filtros decorativos + Pagination fake)', route: '/AdminIntSystemLogs', content: AdminIntAdministrationCoreDoc },
+        { id: 'AdminIntMCCs', label: 'MCCs (Entrega 10)', route: '/AdminIntMCCs', content: null },
+        { id: 'AdminIntMCCsAnalysis', label: 'Análise de MCCs (Entrega 10)', route: '/AdminIntMCCsAnalysis', content: null },
+        { id: 'AdminIntPartners', label: 'Parceiros & Custos (Entrega 10)', route: '/AdminIntPartners', content: null },
+        { id: 'AdminIntFeePlans', label: 'Planos de Taxa (Entrega 10)', route: '/AdminIntFeePlans', content: null },
+        { id: 'AdminIntAiAgents', label: 'Configuração de Agentes IA (Entrega 10)', route: '/AdminIntAiAgents', content: null },
       ],
     },
     {
