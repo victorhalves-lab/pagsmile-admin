@@ -2,11 +2,13 @@
 // Painel interno usado pela equipe da PagSmile para gerir merchants, compliance,
 // risco, financeiro, comunicação e configurações globais.
 
-import { AdminIntDashboardDoc } from './docs/adminInterno/AdminIntDashboard';
+import { AdminIntDashboardDoc } from './docs/adminInterno/v2/AdminIntDashboard';
 import { AdminIntDashboardViewsComplementaresDoc } from './docs/adminInterno/AdminIntDashboardViewsComplementares';
 import { AdminIntComplianceDoc } from './docs/adminInterno/AdminIntCompliance';
 import { AdminIntComplianceComponentsDoc } from './docs/adminInterno/AdminIntComplianceComponents';
 import { AdminIntMerchantsDoc } from './docs/adminInterno/AdminIntMerchants';
+import { AdminIntMerchantsOverviewDoc } from './docs/adminInterno/v2/AdminIntMerchantsOverview';
+import { AdminIntComplianceQueueDoc } from './docs/adminInterno/v2/AdminIntComplianceQueue';
 import { AdminIntMerchantProfileDoc } from './docs/adminInterno/AdminIntMerchantProfile';
 import { AdminIntMerchantsExtrasDoc } from './docs/adminInterno/AdminIntMerchantsExtras';
 import { AdminIntRiskCoreDoc } from './docs/adminInterno/AdminIntRiskCore';

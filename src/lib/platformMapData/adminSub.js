@@ -2,10 +2,10 @@
 // Cada página recebe documentação completa em entregas progressivas.
 // Páginas ainda sem documentação ficam com `content: null` (mostram placeholder).
 
-import { DashboardDoc } from './docs/adminSub/Dashboard';
-import { TransactionDetailDoc } from './docs/adminSub/TransactionDetail';
+import { DashboardDoc } from './docs/adminSub/v2/Dashboard';
+import { TransactionDetailDoc } from './docs/adminSub/v2/TransactionDetail';
+import { TransactionsDoc } from './docs/adminSub/v2/Transactions';
 import {
-  TransactionsDoc,
   CardTransactionsDoc,
   PixTransactionsDoc,
   DeclineAnalysisDoc,
@@ -20,10 +20,8 @@ import {
   ConverterAgentDoc,
   ConverterAgentSettingsDoc,
 } from './docs/adminSub/CheckoutAnalyticsAndAgent';
-import {
-  PaymentLinksDoc,
-  PaymentLinkCreateDoc,
-} from './docs/adminSub/PaymentLinks';
+import { PaymentLinksDoc } from './docs/adminSub/v2/PaymentLinks';
+import { PaymentLinkCreateDoc } from './docs/adminSub/PaymentLinks';
 import {
   CouponsOverviewDoc,
   CouponListDoc,
@@ -35,14 +33,14 @@ import { SubscriptionPlansDoc } from './docs/adminSub/SubscriptionPlans';
 import { RecurrenceDoc } from './docs/adminSub/Recurrence';
 import { DunningSettingsDoc } from './docs/adminSub/DunningSettings';
 import { SubscriptionAnalyticsDoc } from './docs/adminSub/SubscriptionAnalytics';
-import { DisputeDashboardDoc } from './docs/adminSub/DisputeDashboard';
+import { DisputeDashboardDoc } from './docs/adminSub/v2/DisputeDashboard';
 import { PreChargebacksDoc } from './docs/adminSub/PreChargebacks';
 import { ChargebacksDoc } from './docs/adminSub/Chargebacks';
 import { MEDDashboardDoc } from './docs/adminSub/MEDDashboard';
 import { DisputeContestationDoc } from './docs/adminSub/DisputeContestation';
 import { DisputeManagerDoc } from './docs/adminSub/DisputeManager';
 import { DisputeManagerSettingsDoc } from './docs/adminSub/DisputeManagerSettings';
-import { FinancialOverviewDoc } from './docs/adminSub/FinancialOverview';
+import { FinancialOverviewDoc } from './docs/adminSub/v2/FinancialOverview';
 import { FinancialStatementDoc } from './docs/adminSub/FinancialStatement';
 import { ReceivablesAgendaDoc } from './docs/adminSub/ReceivablesAgenda';
 import { FeesDoc } from './docs/adminSub/Fees';
@@ -53,7 +51,7 @@ import { WithdrawalsDoc } from './docs/adminSub/Withdrawals';
 import { SubaccountsDashboardDoc } from './docs/adminSub/SubaccountsDashboard';
 import { SubaccountsListDoc } from './docs/adminSub/SubaccountsList';
 import { SubaccountOnboardingDoc } from './docs/adminSub/SubaccountOnboarding';
-import { CustomersDoc } from './docs/adminSub/Customers';
+import { CustomersDoc } from './docs/adminSub/v2/Customers';
 import { CustomerDetailDoc } from './docs/adminSub/CustomerDetail';
 import { ApiKeysDoc } from './docs/adminSub/ApiKeys';
 import { WebhooksDoc } from './docs/adminSub/Webhooks';

@@ -2,9 +2,9 @@
 // Conta digital usada pelo merchant para movimentar saldos via PIX, comprovantes
 // e configurações pessoais da conta.
 
-import { IBHomeDoc } from './docs/internetBanking/IBHome';
-import { IBExtractDoc } from './docs/internetBanking/IBExtract';
-import { IBPixSendDoc } from './docs/internetBanking/IBPixSend';
+import { IBHomeDoc } from './docs/internetBanking/v2/IBHome';
+import { IBExtractDoc } from './docs/internetBanking/v2/IBExtract';
+import { IBPixSendDoc } from './docs/internetBanking/v2/IBPixSend';
 import { IBPixReceiveDoc } from './docs/internetBanking/IBPixReceive';
 import { IBPixKeysDoc } from './docs/internetBanking/IBPixKeys';
 import { IBPixLimitsDoc } from './docs/internetBanking/IBPixLimits';
