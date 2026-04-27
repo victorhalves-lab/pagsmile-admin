@@ -10,6 +10,7 @@ import { AdminIntMerchantsDoc } from './docs/adminInterno/AdminIntMerchants';
 import { AdminIntMerchantProfileDoc } from './docs/adminInterno/AdminIntMerchantProfile';
 import { AdminIntMerchantsExtrasDoc } from './docs/adminInterno/AdminIntMerchantsExtras';
 import { AdminIntRiskCoreDoc } from './docs/adminInterno/AdminIntRiskCore';
+import { AdminIntDisputesAndBlockagesDoc } from './docs/adminInterno/AdminIntDisputesAndBlockages';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -128,13 +129,13 @@ export const adminInternoModule = {
       pages: [
         { id: 'AdminIntRiskDashboard', label: 'Dashboard de Risco (5 KPIs + LineChart c/ ReferenceLine 1% + 4 cards + Top5)', route: '/AdminIntRiskDashboard', content: AdminIntRiskCoreDoc },
         { id: 'AdminIntFraudMonitoring', label: 'Monitoramento de Fraude (Score+5 fatores+Dialog 3-radio decision)', route: '/AdminIntFraudMonitoring', content: AdminIntRiskCoreDoc },
-        { id: 'AdminIntChargebacksList', label: 'Chargebacks', route: '/AdminIntChargebacksList', content: null },
-        { id: 'AdminIntPreChargebacks', label: 'Pré-Chargebacks', route: '/AdminIntPreChargebacks', content: null },
-        { id: 'AdminIntMEDsList', label: 'MEDs', route: '/AdminIntMEDsList', content: null },
+        { id: 'AdminIntChargebacksList', label: 'Chargebacks (6 stats + 7 filters + native table c/ CSS vars)', route: '/AdminIntChargebacksList', content: AdminIntDisputesAndBlockagesDoc },
+        { id: 'AdminIntPreChargebacks', label: 'Pré-Chargebacks (Ethoca/Verifi 4-10h c/ pulse + SideDrawer 5 ações)', route: '/AdminIntPreChargebacks', content: AdminIntDisputesAndBlockagesDoc },
+        { id: 'AdminIntMEDsList', label: 'MEDs (PIX BACEN 7d c/ 5 stats + 4 status sem awaiting)', route: '/AdminIntMEDsList', content: AdminIntDisputesAndBlockagesDoc },
         { id: 'AdminIntRiskRules', label: 'Regras de Risco (4 mocks c/ category-priority-action + SideDrawer)', route: '/AdminIntRiskRules', content: AdminIntRiskCoreDoc },
         { id: 'AdminIntControlLists', label: 'Listas de Controle (Tabs Black/White + 6 stats + 5 tipos)', route: '/AdminIntControlLists', content: AdminIntRiskCoreDoc },
         { id: 'AdminIntRiskAlerts', label: 'Alertas de Risco (5 ativos+severity+histórico c/ resolvedBy)', route: '/AdminIntRiskAlerts', content: AdminIntRiskCoreDoc },
-        { id: 'AdminIntBlockages', label: 'Bloqueios', route: '/AdminIntBlockages', content: null },
+        { id: 'AdminIntBlockages', label: 'Bloqueios (DataTable + SideDrawer 5 fields + 5 tipos + Warning)', route: '/AdminIntBlockages', content: AdminIntDisputesAndBlockagesDoc },
         { id: 'AdminIntAntifraud', label: 'Antifraude (Tabs minúsculo c/ DataTable+Switch)', route: '/AdminIntAntifraud', content: AdminIntRiskCoreDoc },
       ],
     },
