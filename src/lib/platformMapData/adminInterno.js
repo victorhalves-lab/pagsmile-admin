@@ -8,6 +8,7 @@ import { AdminIntComplianceDoc } from './docs/adminInterno/AdminIntCompliance';
 import { AdminIntComplianceComponentsDoc } from './docs/adminInterno/AdminIntComplianceComponents';
 import { AdminIntMerchantsDoc } from './docs/adminInterno/AdminIntMerchants';
 import { AdminIntMerchantProfileDoc } from './docs/adminInterno/AdminIntMerchantProfile';
+import { AdminIntMerchantsExtrasDoc } from './docs/adminInterno/AdminIntMerchantsExtras';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -49,12 +50,12 @@ export const adminInternoModule = {
         { id: 'AdminIntMerchants', label: 'Dashboard de Merchants (6 KPIs + 4 charts)', route: '/AdminIntMerchants', content: AdminIntMerchantsDoc },
         { id: 'AdminIntMerchantsList', label: 'Lista de Merchants (11 col + 12 ações + 4 SideDrawers)', route: '/AdminIntMerchantsList', content: AdminIntMerchantsDoc },
         { id: 'AdminIntMerchantProfile', label: 'Perfil 360° (25 abas + Header c/ 5 Dialogs)', route: '/AdminIntMerchantProfile', content: AdminIntMerchantProfileDoc },
-        { id: 'AdminIntSubaccounts', label: 'Subcontas', route: '/AdminIntSubaccounts', content: null },
-        { id: 'AdminIntLimitRequests', label: 'Solicitações de Limite', route: '/AdminIntLimitRequests', content: null },
-        { id: 'AdminIntMerchantGroups', label: 'Grupos', route: '/AdminIntMerchantGroups', content: null },
-        { id: 'AdminIntMerchantTags', label: 'Tags', route: '/AdminIntMerchantTags', content: null },
-        { id: 'AdminIntMerchantReports', label: 'Relatórios de Merchants', route: '/AdminIntMerchantReports', content: null },
-        { id: 'AdminIntNewMerchant', label: 'Novo Merchant', route: '/AdminIntNewMerchant', content: null },
+        { id: 'AdminIntSubaccounts', label: 'Subcontas & Marketplaces (4 KPIs + 2 tabelas)', route: '/AdminIntSubaccounts', content: AdminIntMerchantsExtrasDoc },
+        { id: 'AdminIntLimitRequests', label: 'Solicitações de Limite (SDK base44 REAL)', route: '/AdminIntLimitRequests', content: AdminIntMerchantsExtrasDoc },
+        { id: 'AdminIntMerchantGroups', label: 'Grupos (CRUD c/ 8 cores + special rates)', route: '/AdminIntMerchantGroups', content: AdminIntMerchantsExtrasDoc },
+        { id: 'AdminIntMerchantTags', label: 'Tags (CRUD c/ isSystem lock)', route: '/AdminIntMerchantTags', content: AdminIntMerchantsExtrasDoc },
+        { id: 'AdminIntMerchantReports', label: 'Relatórios de Merchants (6 templates + histórico)', route: '/AdminIntMerchantReports', content: AdminIntMerchantsExtrasDoc },
+        { id: 'AdminIntNewMerchant', label: 'Novo Merchant (Wizard 4-step c/ 24 fields)', route: '/AdminIntNewMerchant', content: AdminIntMerchantsExtrasDoc },
       ],
     },
     {
