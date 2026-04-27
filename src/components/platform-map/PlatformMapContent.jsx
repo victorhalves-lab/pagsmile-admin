@@ -1,13 +1,34 @@
 import React from 'react';
-import { FileText, AlertCircle, Construction } from 'lucide-react';
+import { FileText, Construction, AlertCircle, Map as MapIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
+import PageOverview from './blocks/PageOverview';
+import StructureBlock from './blocks/StructureBlock';
+import ActionsList from './blocks/ActionsList';
+import StatesList from './blocks/StatesList';
+import NavigationMap from './blocks/NavigationMap';
+import DataSourcesList from './blocks/DataSourcesList';
+import LegacyContent from './blocks/LegacyContent';
+
 /**
- * Renderiza o conteúdo de uma página específica documentada.
- * Quando `page.content` é null, mostra placeholder informando que
- * a documentação ainda não foi escrita (entrega futura).
+ * Detecta o formato do conteúdo:
+ * - 'v2-descriptive': novo formato estruturado (purpose + structure + actions...)
+ * - 'legacy': formatos antigos (array de blocos OU explainer/technical)
+ * - 'placeholder': null
  */
+function detectFormat(content) {
+  if (content === null || content === undefined) return 'placeholder';
+  if (
+    typeof content === 'object' &&
+    !Array.isArray(content) &&
+    (content.schemaVersion === 'v2-descriptive' || content.purpose || content.structure)
+  ) {
+    return 'v2-descriptive';
+  }
+  return 'legacy';
+}
+
 export default function PlatformMapContent({ module, page }) {
   if (!page) {
     return (
@@ -18,49 +39,119 @@ export default function PlatformMapContent({ module, page }) {
             Selecione uma página
           </h3>
           <p className="text-sm text-slate-500">
-            Escolha uma página na navegação ao lado para ver sua documentação
-            microscópica completa.
+            Escolha uma página na navegação ao lado para ver sua estrutura
+            visual completa: abas, seções, blocos, campos e fluxos.
           </p>
         </div>
       </div>
     );
   }
 
+  const format = detectFormat(page.content);
+
   return (
     <ScrollArea className="flex-1 bg-slate-50">
       <div className="max-w-5xl mx-auto p-8">
         {/* Header da página */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-2 font-medium">
             <span>{module.label}</span>
             <span>›</span>
             <span className="font-mono">{page.route}</span>
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-3">{page.label}</h1>
-          <div className="flex items-center gap-2">
+          <h1 className="text-3xl font-bold text-slate-900 mb-3">
+            {page.label}
+          </h1>
+          <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline" className="text-xs font-mono">
               {page.id}
             </Badge>
-            {page.content === null ? (
+            {format === 'placeholder' && (
               <Badge className="bg-amber-100 text-amber-800 border-amber-200">
                 Aguardando documentação
               </Badge>
-            ) : (
+            )}
+            {format === 'legacy' && (
+              <Badge className="bg-slate-100 text-slate-700 border-slate-200">
+                Formato antigo
+              </Badge>
+            )}
+            {format === 'v2-descriptive' && (
               <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">
-                Documentação completa
+                Documentação visual completa
               </Badge>
             )}
           </div>
         </div>
 
         {/* Conteúdo */}
-        {page.content === null ? (
+        {format === 'placeholder' && (
           <PlaceholderContent module={module} page={page} />
-        ) : (
-          <DocumentedContent content={page.content} />
+        )}
+        {format === 'legacy' && <LegacyContent content={page.content} />}
+        {format === 'v2-descriptive' && (
+          <DescriptiveContent doc={page.content} />
         )}
       </div>
     </ScrollArea>
+  );
+}
+
+/**
+ * Renderiza um doc no formato v2-descriptive.
+ * Estrutura visual: Overview → Estrutura da Tela → Ações → Estados → Navegação → Dados
+ */
+function DescriptiveContent({ doc }) {
+  return (
+    <div className="space-y-5">
+      {/* 1. Overview da página (gradient escuro) */}
+      <PageOverview doc={doc} />
+
+      {/* 2. Estrutura visual da tela (CORE) */}
+      {Array.isArray(doc.structure) && doc.structure.length > 0 && (
+        <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-slate-900 mb-1 flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+              <MapIcon className="w-4 h-4 text-purple-600" />
+            </div>
+            Estrutura visual da tela
+          </h2>
+          <p className="text-xs text-slate-500 mb-5 ml-10">
+            Mapa hierárquico de todos os blocos visíveis na página — clique nos
+            blocos para expandir/recolher.
+          </p>
+          <div className="space-y-3">
+            {doc.structure.map((block, idx) => (
+              <StructureBlock key={idx} block={block} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 3. Ações disponíveis */}
+      <ActionsList actions={doc.actions} />
+
+      {/* 4. Estados visuais */}
+      <StatesList states={doc.states} />
+
+      {/* 5. Navegação cross-page */}
+      <NavigationMap navigation={doc.navigation} />
+
+      {/* 6. Origem dos dados */}
+      <DataSourcesList dataSources={doc.dataSources} />
+
+      {/* 7. Notas finais (se houver) */}
+      {doc.notes && (
+        <section className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
+          <h2 className="text-lg font-bold text-blue-900 mb-3 flex items-center gap-2">
+            💡 Observações
+          </h2>
+          <p className="text-sm text-blue-900 leading-relaxed whitespace-pre-line">
+            {doc.notes}
+          </p>
+        </section>
+      )}
+    </div>
   );
 }
 
@@ -77,249 +168,28 @@ function PlaceholderContent({ module, page }) {
         Documentação em construção
       </h3>
       <p className="text-slate-600 max-w-lg mx-auto mb-6 leading-relaxed">
-        Esta página ainda não foi documentada. A documentação microscópica
-        desta tela será adicionada em uma das próximas entregas do plano de
-        documentação progressiva.
+        Esta página ainda não foi documentada. Em breve você verá aqui o mapa
+        visual completo da tela: abas, sub-abas, blocos, campos, ações e
+        fluxos.
       </p>
       <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 max-w-md mx-auto text-left">
         <div className="flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-slate-400 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-slate-600">
-            <p className="font-semibold text-slate-700 mb-1">O que será documentado:</p>
+            <p className="font-semibold text-slate-700 mb-1">
+              O que você vai encontrar aqui:
+            </p>
             <ul className="space-y-1 text-xs list-disc list-inside text-slate-500">
-              <li>O que é a página e para que serve</li>
-              <li>Cada seção, card, botão, modal e drawer</li>
-              <li>Cada coluna de tabela, campo de formulário</li>
-              <li>Cada ação, fluxo UX e microinteração</li>
+              <li>Resumo do propósito da tela</li>
+              <li>Estrutura hierárquica de todos os blocos</li>
+              <li>Cada campo, botão e elemento visual</li>
+              <li>Ações que o usuário pode executar</li>
               <li>Estados (loading, vazio, erro, sucesso)</li>
+              <li>Navegação para outras telas</li>
             </ul>
           </div>
         </div>
       </div>
     </div>
   );
-}
-
-/**
- * Renderiza o conteúdo já documentado.
- * O `content` é um array de blocos com tipos diferentes:
- *  - { type: 'description', emoji, title, body }
- *  - { type: 'section', title, children }
- *  - { type: 'subsection', title, children }
- *  - { type: 'paragraph', text }
- *  - { type: 'list', items }
- *  - { type: 'modal', title, children } -> bloco roxo (drawer/modal)
- *  - { type: 'callout', variant, title, body }
- */
-function DocumentedContent({ content }) {
-  // Formato clássico: array de blocos { type, ... }
-  if (Array.isArray(content)) {
-    return (
-      <div className="space-y-6">
-        {content.map((block, idx) => (
-          <ContentBlock key={idx} block={block} />
-        ))}
-      </div>
-    );
-  }
-
-  // Formato microscópico: objeto { pageId, explainer, technical, ... }
-  if (content && typeof content === 'object') {
-    return <MicroscopicContent doc={content} />;
-  }
-
-  return null;
-}
-
-/**
- * Renderiza documentos no formato microscópico:
- * { pageId, pagePaths, module, section, explainer: {...}, technical: {...} }
- */
-function MicroscopicContent({ doc }) {
-  const renderValue = (value, depth = 0) => {
-    if (value === null || value === undefined) return null;
-
-    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-      return <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{String(value)}</p>;
-    }
-
-    if (Array.isArray(value)) {
-      return (
-        <ul className="space-y-1.5 text-sm text-slate-700">
-          {value.map((item, i) => (
-            <li key={i} className="flex items-start gap-2">
-              <span className="text-slate-400 mt-1">•</span>
-              <span className="flex-1">
-                {typeof item === 'object' && item !== null
-                  ? renderValue(item, depth + 1)
-                  : String(item)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      );
-    }
-
-    if (typeof value === 'object') {
-      return (
-        <div className={depth === 0 ? 'space-y-4' : 'space-y-2 pl-3 border-l-2 border-slate-200'}>
-          {Object.entries(value).map(([k, v]) => (
-            <div key={k}>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
-                {k.replace(/([A-Z])/g, ' $1').trim()}
-              </h5>
-              {renderValue(v, depth + 1)}
-            </div>
-          ))}
-        </div>
-      );
-    }
-
-    return null;
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Metadata header */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-        <div className="grid grid-cols-2 gap-3 text-xs">
-          {doc.pageId && (
-            <div>
-              <span className="font-semibold text-slate-500 uppercase tracking-wider">Page ID:</span>{' '}
-              <span className="font-mono text-slate-700">{doc.pageId}</span>
-            </div>
-          )}
-          {doc.module && (
-            <div>
-              <span className="font-semibold text-slate-500 uppercase tracking-wider">Módulo:</span>{' '}
-              <span className="text-slate-700">{doc.module}</span>
-            </div>
-          )}
-          {doc.section && (
-            <div className="col-span-2">
-              <span className="font-semibold text-slate-500 uppercase tracking-wider">Seção:</span>{' '}
-              <span className="text-slate-700">{doc.section}</span>
-            </div>
-          )}
-          {Array.isArray(doc.pagePaths) && doc.pagePaths.length > 0 && (
-            <div className="col-span-2">
-              <span className="font-semibold text-slate-500 uppercase tracking-wider">Rotas:</span>{' '}
-              <span className="font-mono text-slate-700">{doc.pagePaths.join(', ')}</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Explainer block */}
-      {doc.explainer && (
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            🔸 Explainer
-          </h2>
-          {renderValue(doc.explainer)}
-        </section>
-      )}
-
-      {/* Technical block */}
-      {doc.technical && (
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            🔧 Technical
-          </h2>
-          {renderValue(doc.technical)}
-        </section>
-      )}
-
-      {/* Fallback for any other top-level keys not yet rendered */}
-      {Object.entries(doc)
-        .filter(([k]) => !['pageId', 'pagePaths', 'module', 'section', 'explainer', 'technical'].includes(k))
-        .map(([k, v]) => (
-          <section key={k} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-            <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              🔸 {k.replace(/([A-Z])/g, ' $1').trim()}
-            </h2>
-            {renderValue(v)}
-          </section>
-        ))}
-    </div>
-  );
-}
-
-function ContentBlock({ block }) {
-  switch (block.type) {
-    case 'description':
-      return (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-          <div className="flex items-start gap-3">
-            <span className="text-2xl">{block.emoji || '🎯'}</span>
-            <div className="flex-1">
-              <h4 className="font-bold text-slate-900 mb-2">{block.title}</h4>
-              <p className="text-slate-700 leading-relaxed text-sm">{block.body}</p>
-            </div>
-          </div>
-        </div>
-      );
-    case 'section':
-      return (
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            🔸 {block.title}
-          </h2>
-          <div className="space-y-4">
-            {block.children?.map((child, i) => (
-              <ContentBlock key={i} block={child} />
-            ))}
-          </div>
-        </section>
-      );
-    case 'subsection':
-      return (
-        <div className="border-l-4 border-slate-200 pl-4 space-y-3">
-          <h3 className="font-bold text-slate-800">{block.title}</h3>
-          {block.children?.map((child, i) => (
-            <ContentBlock key={i} block={child} />
-          ))}
-        </div>
-      );
-    case 'modal':
-      return (
-        <div className="bg-purple-50 border border-purple-200 rounded-xl p-5">
-          <h4 className="font-bold text-purple-900 mb-3 flex items-center gap-2">
-            🟪 {block.title}
-          </h4>
-          <div className="space-y-3">
-            {block.children?.map((child, i) => (
-              <ContentBlock key={i} block={child} />
-            ))}
-          </div>
-        </div>
-      );
-    case 'paragraph':
-      return <p className="text-sm text-slate-700 leading-relaxed">{block.text}</p>;
-    case 'list':
-      return (
-        <ul className="space-y-1.5 text-sm text-slate-700">
-          {block.items.map((item, i) => (
-            <li key={i} className="flex items-start gap-2">
-              <span className="text-slate-400 mt-1">•</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      );
-    case 'callout':
-      const variants = {
-        info: 'bg-blue-50 border-blue-200 text-blue-900',
-        warning: 'bg-amber-50 border-amber-200 text-amber-900',
-        success: 'bg-emerald-50 border-emerald-200 text-emerald-900',
-      };
-      return (
-        <div className={`border rounded-lg p-4 ${variants[block.variant] || variants.info}`}>
-          {block.title && <p className="font-semibold mb-1">{block.title}</p>}
-          <p className="text-sm">{block.body}</p>
-        </div>
-      );
-    default:
-      return null;
-  }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Map, Store, ShieldCheck, Landmark, BookOpen, Sparkles } from 'lucide-react';
+import { ArrowLeft, Map, Store, ShieldCheck, Landmark, BookOpen, Sparkles, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,7 @@ const ICONS = {
   Store,
   ShieldCheck,
   Landmark,
+  UserPlus,
 };
 
 export default function PlatformMap() {

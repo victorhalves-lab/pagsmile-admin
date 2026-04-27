@@ -3,11 +3,12 @@
 // e evitar arquivos gigantes. Ao adicionar uma nova entrega, basta editar
 // o arquivo do módulo correspondente.
 
+import { onboardingModule } from './onboarding';
 import { adminSubModule } from './adminSub';
 import { adminInternoModule } from './adminInterno';
 import { internetBankingModule } from './internetBanking';
 
-export const platformMapModules = [adminSubModule, adminInternoModule, internetBankingModule];
+export const platformMapModules = [onboardingModule, adminSubModule, adminInternoModule, internetBankingModule];
 
 // Helper: percorre todas as páginas de todos os módulos para busca global
 export function getAllPages() {
