@@ -3,6 +3,7 @@
 // e configurações pessoais da conta.
 
 import { IBHomeDoc } from './docs/internetBanking/IBHome';
+import { IBExtractDoc } from './docs/internetBanking/IBExtract';
 
 export const internetBankingModule = {
   id: 'internet-banking',
@@ -23,7 +24,7 @@ export const internetBankingModule = {
       id: 'extrato',
       label: 'Extrato',
       pages: [
-        { id: 'IBExtract', label: 'Extrato', route: '/IBExtract', content: null },
+        { id: 'IBExtract', label: 'Extrato 511L 72% maior que IBHome (5 filtros wrap c/ Tipo+Direção REDUNDANTES + Período c/ "Personalizado" sem date picker + 3 Selects + Search + Export Dropdown PDF/Excel/OFX TODOS dead onClick / 4 KPIs Saldo Inicial-Final-Entradas-Saídas matematicamente CONSISTENTES / Lista AGRUPADA POR DATA via reduce c/ formatDateHeader Hoje/Ontem/pt-BR ÚNICA feature do IB / 5 mocks RICOS 14-fields cada vs IBHome 5-fields / Saldo running balanceAfter linha-a-linha / Pagination "1-5 de 156" e "Página 1 de 32" HARDCODED / Modal Dialog max-w-lg c/ 5 sub-blocos: Header circle 16w16 / Info ID-EndToEnd-Status SEMPRE "Concluída" / Pagador-OU-Destinatário condicional c/ 6 ternários repetidos / Memo condicional / 2 Buttons Baixar+Compartilhar SEM onClick / 6 useState mas 5 captured-but-ignored — filtros não filtram / ZERO i18n vs IBHome 22 keys gap arquitetural / Copy dead import EXATAMENTE feature que falta no Modal / Chave PIX presente no mock NÃO renderizada gap BACEN / Sem cross-page Links — ilha de navegação)', route: '/IBExtract', content: IBExtractDoc },
       ],
     },
     {
