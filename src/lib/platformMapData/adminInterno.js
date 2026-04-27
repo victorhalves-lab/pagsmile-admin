@@ -22,6 +22,7 @@ import { AdminIntAdministrationCoreDoc } from './docs/adminInterno/AdminIntAdmin
 import { AdminIntAdministrationAdvancedDoc } from './docs/adminInterno/AdminIntAdministrationAdvanced';
 import { AdminIntAgentsPart1Doc } from './docs/adminInterno/AdminIntAgentsPart1';
 import { AdminIntDisputeManagerDoc } from './docs/adminInterno/AdminIntDisputeManager';
+import { AdminIntIdentityOnboarderDoc } from './docs/adminInterno/AdminIntIdentityOnboarder';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -205,8 +206,8 @@ export const adminInternoModule = {
         { id: 'AdminIntConverterAgentSettings', label: 'Converter Agent — Settings 409L (MAIOR settings — 4 Tabs Global/Experimentos/Monitoramento/Notif + Slider confidence 90-99 + 17 keys state + alert)', route: '/AdminIntConverterAgentSettings', content: AdminIntAgentsPart1Doc },
         { id: 'AdminIntDisputeManager', label: 'Dispute Manager — HUB 700L (6 KPIs c/ contador dinâmico Urgentes + Bloco condicional 3 disputas urgentes c/ deadline + 5 Tabs únicos: overview LineChart+PieChart / merchants c/ ratio>1.2 colorido red / types grid-3 / AI Insights tab dedicada 4 sub-cards / rules c/ SideDrawer Nova Regra DSL pseudo-código + Slider HACK *10÷10 + DUPLICA Settings — AgentChat red #ef4444)', route: '/AdminIntDisputeManager', content: AdminIntDisputeManagerDoc },
         { id: 'AdminIntDisputeManagerSettings', label: 'Dispute Manager — Settings 430L (5 Tabs ÚNICA: Automação Slider 70-95 / SLA tab EXCLUSIVA 48h+24h+autoAssign / Ratio Input step="0.1" diverge do Hub / Escalation EXCLUSIVA 3 níveis R$ 10k/50k / Notifications c/ Digest 08:00) — 19 keys MAIOR state — Save = alert)', route: '/AdminIntDisputeManagerSettings', content: AdminIntDisputeManagerDoc },
-        { id: 'AdminIntIdentityOnboarder', label: 'Identity Onboarder — Entrega 12', route: '/AdminIntIdentityOnboarder', content: null },
-        { id: 'AdminIntIdentityOnboarderSettings', label: 'Identity Onboarder — Settings — Entrega 12', route: '/AdminIntIdentityOnboarderSettings', content: null },
+        { id: 'AdminIntIdentityOnboarder', label: 'Identity Onboarder — HUB 925L (A MAIOR hub IA — Fingerprint indigo-purple ÚNICO + Helena AI badge ÚNICO + 6 KPIs / 4 Tabs simulator/queue/analytics/helena-config — SIMULADOR INTERATIVO state machine 6 etapas setTimeout 1500ms ÚNICO no Admin Interno + Cross-page Link Analisar?id=X ÚNICO + Soma matemática real-time c/ warning ÚNICO + Zona Revisão dinâmica + 3 renders condicionais + animate-in fade-in + Helena AI nomeada — AgentChat indigo #6366f1)', route: '/AdminIntIdentityOnboarder', content: AdminIntIdentityOnboarderDoc },
+        { id: 'AdminIntIdentityOnboarderSettings', label: 'Identity Onboarder — Settings 401L (A MENOR settings em linhas — UserCheck violet DIFERENTE do Hub Fingerprint indigo gap cromático — 4 Tabs Helena/Pesos/Validações/Notificações + 18 keys 4 EXCLUSIVAS + documentExpiryDays ÚNICO entre agentes + manualReviewRange aninhado não usado — Save = alert)', route: '/AdminIntIdentityOnboarderSettings', content: AdminIntIdentityOnboarderDoc },
       ],
     },
   ],
