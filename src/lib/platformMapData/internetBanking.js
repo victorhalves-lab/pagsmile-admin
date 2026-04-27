@@ -4,6 +4,7 @@
 
 import { IBHomeDoc } from './docs/internetBanking/IBHome';
 import { IBExtractDoc } from './docs/internetBanking/IBExtract';
+import { IBPixSendDoc } from './docs/internetBanking/IBPixSend';
 
 export const internetBankingModule = {
   id: 'internet-banking',
@@ -31,7 +32,7 @@ export const internetBankingModule = {
       id: 'pix',
       label: 'PIX',
       pages: [
-        { id: 'IBPixSend', label: 'Enviar PIX', route: '/IBPixSend', content: null },
+        { id: 'IBPixSend', label: 'Enviar PIX 689L MAIS COMPLEXA do IB (35% > IBExtract / 132% > IBHome) — Wizard 5-steps render-by-step c/ early returns / 9 useState (1 dead saveAsFavorite) / Step 0 hub c/ 3 Send Methods auto-advance + Favoritos shortcut 4-set-states pula Step 1 + Recents Repeat BUG não popula state / Step 1 QR é DEAD END sem Continuar + sendMethod="copy" tratado como key sem variante própria + grid 5-cols 4-itens + CPF/CNPJ unificados + keyTypeIcons.cpf dead key + handleKeySearch fake length>5 + recipient SEMPRE "Fornecedor ABC" hardcoded / Step 2 Amount XL h-16 text-2xl + description maxLength=140 BACEN correto + Schedule radio sem date picker + saveAsFavorite morto / Step 3 summary "Data/Hora Agora" HARDCODED ignora schedule + password length>=4 trivial / Step 4 Success usa emerald-500-600 GENÉRICO ao invés de #00D26A oficial INCONSISTÊNCIA cromática + Comprovante 100% HARDCODED IDs/Pagador/Timestamp / 3 verdes na página #00D26A wizard / emerald-500-600 success / brand #2bc196 ecosystem / ZERO i18n / Label "Etapa X de 3" não bate c/ 5 steps reais / Step integer ao invés de enum / 0 useEffect / state PERDE ao sair / Sem progress bar visual)', route: '/IBPixSend', content: IBPixSendDoc },
         { id: 'IBPixReceive', label: 'Receber PIX', route: '/IBPixReceive', content: null },
         { id: 'IBPixKeys', label: 'Minhas Chaves PIX', route: '/IBPixKeys', content: null },
         { id: 'IBPixLimits', label: 'Limites PIX', route: '/IBPixLimits', content: null },
