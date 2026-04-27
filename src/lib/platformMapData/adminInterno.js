@@ -13,6 +13,8 @@ import { AdminIntRiskCoreDoc } from './docs/adminInterno/AdminIntRiskCore';
 import { AdminIntDisputesAndBlockagesDoc } from './docs/adminInterno/AdminIntDisputesAndBlockages';
 import { AdminIntTransactionsCoreDoc } from './docs/adminInterno/AdminIntTransactionsCore';
 import { AdminIntTransactionsOpsDoc } from './docs/adminInterno/AdminIntTransactionsOps';
+import { AdminIntFinancialCoreDoc } from './docs/adminInterno/AdminIntFinancialCore';
+import { AdminIntFinancialOpsDoc } from './docs/adminInterno/AdminIntFinancialOps';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -112,17 +114,17 @@ export const adminInternoModule = {
       id: 'financial',
       label: 'Financeiro',
       pages: [
-        { id: 'AdminIntFinancialDashboard', label: 'Dashboard Financeiro', route: '/AdminIntFinancialDashboard', content: null },
-        { id: 'AdminIntFinancialResults', label: 'Resultados Financeiros', route: '/AdminIntFinancialResults', content: null },
-        { id: 'AdminIntClientProfitability', label: 'Rentabilidade por Cliente', route: '/AdminIntClientProfitability', content: null },
-        { id: 'AdminIntConciliation', label: 'Conciliação', route: '/AdminIntConciliation', content: null },
-        { id: 'AdminIntPaymentAgenda', label: 'Agenda de Pagamentos', route: '/AdminIntPaymentAgenda', content: null },
-        { id: 'AdminIntSettlements', label: 'Settlements', route: '/AdminIntSettlements', content: null },
-        { id: 'AdminIntWithdrawals', label: 'Saques', route: '/AdminIntWithdrawals', content: null },
-        { id: 'AdminIntWithdrawalApprovals', label: 'Aprovações de Saque', route: '/AdminIntWithdrawalApprovals', content: null },
-        { id: 'AdminIntAnticipations', label: 'Antecipações', route: '/AdminIntAnticipations', content: null },
-        { id: 'AdminIntStatements', label: 'Extratos', route: '/AdminIntStatements', content: null },
-        { id: 'AdminIntBalanceManagement', label: 'Gestão de Saldos', route: '/AdminIntBalanceManagement', content: null },
+        { id: 'AdminIntFinancialDashboard', label: 'Dashboard Financeiro (5 KPIs gradient + AreaChart TPV 6m + Receita por Produto + Agenda 5 dias + 4 alertas)', route: '/AdminIntFinancialDashboard', content: AdminIntFinancialCoreDoc },
+        { id: 'AdminIntFinancialResults', label: 'Resultados Financeiros (P&L COM SDK REAL: 5 KPIs + Composição 10 receitas + 10 custos + ROI Pré-CB +1107% + Tendência 6m + DataTable)', route: '/AdminIntFinancialResults', content: AdminIntFinancialCoreDoc },
+        { id: 'AdminIntClientProfitability', label: 'Splits e Ganhos por Cliente (4 SDK queries + spread/margem por cliente + BarChart Top10 + DataTable 8-col com 2 navegações)', route: '/AdminIntClientProfitability', content: AdminIntFinancialCoreDoc },
+        { id: 'AdminIntConciliation', label: 'Conciliação (4 KPIs + 4 Tabs Overview/Methods/Cycles D+0-D+30/Divergent 5 tipos + Atualizar fake setTimeout)', route: '/AdminIntConciliation', content: AdminIntFinancialCoreDoc },
+        { id: 'AdminIntPaymentAgenda', label: 'Agenda de Pagamentos (6 KPIs + 3 Tabs Overview BarChart/Calendar shadcn ptBR/List + suporte valores negativos)', route: '/AdminIntPaymentAgenda', content: AdminIntFinancialCoreDoc },
+        { id: 'AdminIntSettlements', label: 'Liquidações (3 Tabs Agenda/Execute/History + Checkbox seletivo só pending + DropdownMenu condicional + Batch bar)', route: '/AdminIntSettlements', content: AdminIntFinancialOpsDoc },
+        { id: 'AdminIntWithdrawals', label: 'Saques (5 stats + tabela 8-col + 2 SideDrawers Detail size=lg c/ 4 validações green hardcoded + Reject c/ 5 motivos)', route: '/AdminIntWithdrawals', content: AdminIntFinancialOpsDoc },
+        { id: 'AdminIntWithdrawalApprovals', label: 'Aprovação de Saques (ÚNICO COM PERSISTÊNCIA REAL: SDK + Mutation + 9-col Table + SideDrawer Review c/ Risk Flags)', route: '/AdminIntWithdrawalApprovals', content: AdminIntFinancialOpsDoc },
+        { id: 'AdminIntAnticipations', label: 'Antecipações (5 stats + 3 Tabs Requests/Agenda placeholder/History + Check/X toast fake)', route: '/AdminIntAnticipations', content: AdminIntFinancialOpsDoc },
+        { id: 'AdminIntStatements', label: 'Extratos (Selector merchant decorativo + Card hardcoded "Loja do João" + 4 summary + tabela 4-col com saldo running)', route: '/AdminIntStatements', content: AdminIntFinancialOpsDoc },
+        { id: 'AdminIntBalanceManagement', label: 'Gestão de Saldos (5 stats c/ Negativo + tabela 6-col + 2 Dialogs Adjust c/ radio Crédito/Débito + Block c/ 5 motivos)', route: '/AdminIntBalanceManagement', content: AdminIntFinancialOpsDoc },
       ],
     },
     {
