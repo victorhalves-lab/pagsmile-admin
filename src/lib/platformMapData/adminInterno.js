@@ -21,6 +21,7 @@ import { AdminIntCommunicationDoc } from './docs/adminInterno/AdminIntCommunicat
 import { AdminIntAdministrationCoreDoc } from './docs/adminInterno/AdminIntAdministrationCore';
 import { AdminIntAdministrationAdvancedDoc } from './docs/adminInterno/AdminIntAdministrationAdvanced';
 import { AdminIntAgentsPart1Doc } from './docs/adminInterno/AdminIntAgentsPart1';
+import { AdminIntDisputeManagerDoc } from './docs/adminInterno/AdminIntDisputeManager';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -202,8 +203,8 @@ export const adminInternoModule = {
         { id: 'AdminIntRecoveryAgentSettings', label: 'Recovery Agent — Settings (4 Tabs Geral/Canais/Thresholds/Notif + Slider + Open rates HARDCODED + cor amber-orange divergente do hub orange-red + alert)', route: '/AdminIntRecoveryAgentSettings', content: AdminIntAgentsPart1Doc },
         { id: 'AdminIntConverterAgent', label: 'Converter Agent — HUB 385L (4 KPIs + 3 Tabs Overview/Merchants/Experiments + LineChart + Devices Mobile/Desktop/Tablet + 4 Experiments c/ winner/positive + AgentChatInterface blue #3b82f6)', route: '/AdminIntConverterAgent', content: AdminIntAgentsPart1Doc },
         { id: 'AdminIntConverterAgentSettings', label: 'Converter Agent — Settings 409L (MAIOR settings — 4 Tabs Global/Experimentos/Monitoramento/Notif + Slider confidence 90-99 + 17 keys state + alert)', route: '/AdminIntConverterAgentSettings', content: AdminIntAgentsPart1Doc },
-        { id: 'AdminIntDisputeManager', label: 'Dispute Manager (Interno) — Entrega 12', route: '/AdminIntDisputeManager', content: null },
-        { id: 'AdminIntDisputeManagerSettings', label: 'Dispute Manager — Settings — Entrega 12', route: '/AdminIntDisputeManagerSettings', content: null },
+        { id: 'AdminIntDisputeManager', label: 'Dispute Manager — HUB 700L (6 KPIs c/ contador dinâmico Urgentes + Bloco condicional 3 disputas urgentes c/ deadline + 5 Tabs únicos: overview LineChart+PieChart / merchants c/ ratio>1.2 colorido red / types grid-3 / AI Insights tab dedicada 4 sub-cards / rules c/ SideDrawer Nova Regra DSL pseudo-código + Slider HACK *10÷10 + DUPLICA Settings — AgentChat red #ef4444)', route: '/AdminIntDisputeManager', content: AdminIntDisputeManagerDoc },
+        { id: 'AdminIntDisputeManagerSettings', label: 'Dispute Manager — Settings 430L (5 Tabs ÚNICA: Automação Slider 70-95 / SLA tab EXCLUSIVA 48h+24h+autoAssign / Ratio Input step="0.1" diverge do Hub / Escalation EXCLUSIVA 3 níveis R$ 10k/50k / Notifications c/ Digest 08:00) — 19 keys MAIOR state — Save = alert)', route: '/AdminIntDisputeManagerSettings', content: AdminIntDisputeManagerDoc },
         { id: 'AdminIntIdentityOnboarder', label: 'Identity Onboarder — Entrega 12', route: '/AdminIntIdentityOnboarder', content: null },
         { id: 'AdminIntIdentityOnboarderSettings', label: 'Identity Onboarder — Settings — Entrega 12', route: '/AdminIntIdentityOnboarderSettings', content: null },
       ],
