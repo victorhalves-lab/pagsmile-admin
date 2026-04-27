@@ -9,6 +9,7 @@ import { AdminIntComplianceComponentsDoc } from './docs/adminInterno/AdminIntCom
 import { AdminIntMerchantsDoc } from './docs/adminInterno/AdminIntMerchants';
 import { AdminIntMerchantProfileDoc } from './docs/adminInterno/AdminIntMerchantProfile';
 import { AdminIntMerchantsExtrasDoc } from './docs/adminInterno/AdminIntMerchantsExtras';
+import { AdminIntRiskCoreDoc } from './docs/adminInterno/AdminIntRiskCore';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -125,16 +126,16 @@ export const adminInternoModule = {
       id: 'risk',
       label: 'Risco',
       pages: [
-        { id: 'AdminIntRiskDashboard', label: 'Dashboard de Risco', route: '/AdminIntRiskDashboard', content: null },
-        { id: 'AdminIntFraudMonitoring', label: 'Monitoramento de Fraude', route: '/AdminIntFraudMonitoring', content: null },
+        { id: 'AdminIntRiskDashboard', label: 'Dashboard de Risco (5 KPIs + LineChart c/ ReferenceLine 1% + 4 cards + Top5)', route: '/AdminIntRiskDashboard', content: AdminIntRiskCoreDoc },
+        { id: 'AdminIntFraudMonitoring', label: 'Monitoramento de Fraude (Score+5 fatores+Dialog 3-radio decision)', route: '/AdminIntFraudMonitoring', content: AdminIntRiskCoreDoc },
         { id: 'AdminIntChargebacksList', label: 'Chargebacks', route: '/AdminIntChargebacksList', content: null },
         { id: 'AdminIntPreChargebacks', label: 'Pré-Chargebacks', route: '/AdminIntPreChargebacks', content: null },
         { id: 'AdminIntMEDsList', label: 'MEDs', route: '/AdminIntMEDsList', content: null },
-        { id: 'AdminIntRiskRules', label: 'Regras de Risco', route: '/AdminIntRiskRules', content: null },
-        { id: 'AdminIntControlLists', label: 'Listas de Controle', route: '/AdminIntControlLists', content: null },
-        { id: 'AdminIntRiskAlerts', label: 'Alertas de Risco', route: '/AdminIntRiskAlerts', content: null },
+        { id: 'AdminIntRiskRules', label: 'Regras de Risco (4 mocks c/ category-priority-action + SideDrawer)', route: '/AdminIntRiskRules', content: AdminIntRiskCoreDoc },
+        { id: 'AdminIntControlLists', label: 'Listas de Controle (Tabs Black/White + 6 stats + 5 tipos)', route: '/AdminIntControlLists', content: AdminIntRiskCoreDoc },
+        { id: 'AdminIntRiskAlerts', label: 'Alertas de Risco (5 ativos+severity+histórico c/ resolvedBy)', route: '/AdminIntRiskAlerts', content: AdminIntRiskCoreDoc },
         { id: 'AdminIntBlockages', label: 'Bloqueios', route: '/AdminIntBlockages', content: null },
-        { id: 'AdminIntAntifraud', label: 'Antifraude', route: '/AdminIntAntifraud', content: null },
+        { id: 'AdminIntAntifraud', label: 'Antifraude (Tabs minúsculo c/ DataTable+Switch)', route: '/AdminIntAntifraud', content: AdminIntRiskCoreDoc },
       ],
     },
     {
