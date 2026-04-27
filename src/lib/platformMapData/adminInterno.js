@@ -11,6 +11,8 @@ import { AdminIntMerchantProfileDoc } from './docs/adminInterno/AdminIntMerchant
 import { AdminIntMerchantsExtrasDoc } from './docs/adminInterno/AdminIntMerchantsExtras';
 import { AdminIntRiskCoreDoc } from './docs/adminInterno/AdminIntRiskCore';
 import { AdminIntDisputesAndBlockagesDoc } from './docs/adminInterno/AdminIntDisputesAndBlockages';
+import { AdminIntTransactionsCoreDoc } from './docs/adminInterno/AdminIntTransactionsCore';
+import { AdminIntTransactionsOpsDoc } from './docs/adminInterno/AdminIntTransactionsOps';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -95,15 +97,15 @@ export const adminInternoModule = {
       id: 'transactions',
       label: 'Transações',
       pages: [
-        { id: 'AdminIntTransactionsDashboard', label: 'Dashboard de Transações', route: '/AdminIntTransactionsDashboard', content: null },
-        { id: 'AdminIntTransactionsList', label: 'Lista de Transações', route: '/AdminIntTransactionsList', content: null },
-        { id: 'AdminIntTransactionDetail', label: 'Detalhe da Transação', route: '/AdminIntTransactionDetail', content: null },
-        { id: 'AdminIntOrchestration', label: 'Orquestração', route: '/AdminIntOrchestration', content: null },
-        { id: 'AdminIntBINAnalysis', label: 'Análise de BIN', route: '/AdminIntBINAnalysis', content: null },
-        { id: 'AdminIntRetryIntelligence', label: 'Retry Intelligence', route: '/AdminIntRetryIntelligence', content: null },
-        { id: 'AdminIntBatchProcessing', label: 'Processamento em Lote', route: '/AdminIntBatchProcessing', content: null },
-        { id: 'AdminIntReconciliation', label: 'Reconciliação', route: '/AdminIntReconciliation', content: null },
-        { id: 'AdminIntTransactionReports', label: 'Relatórios de Transações', route: '/AdminIntTransactionReports', content: null },
+        { id: 'AdminIntTransactionsDashboard', label: 'Dashboard (6 KPIs + Insights AI Banner navy + 4 Tabs Overview/Card/PIX/Declines c/ Recharts)', route: '/AdminIntTransactionsDashboard', content: AdminIntTransactionsCoreDoc },
+        { id: 'AdminIntTransactionsList', label: 'Lista (3 Tabs c/ KPIs dinâmicos + tabela 8-col + paginação numérica)', route: '/AdminIntTransactionsList', content: AdminIntTransactionsCoreDoc },
+        { id: 'AdminIntTransactionDetail', label: 'Detalhe (Header 4-grid + 7 Tabs + Timeline 8 eventos hardcoded + 2 SideDrawers Refund/Reveal)', route: '/AdminIntTransactionDetail', content: AdminIntTransactionsCoreDoc },
+        { id: 'AdminIntOrchestration', label: 'Orquestração (3 Tabs Global/Rules/Merchants + 5 Acquirers c/ GripVertical + 4 Rules + Switches)', route: '/AdminIntOrchestration', content: AdminIntTransactionsOpsDoc },
+        { id: 'AdminIntBINAnalysis', label: 'Análise BIN (3 Tabs BINs/Issuers/Trends + 8 BINs + 6 Issuers + LineChart 4 lines)', route: '/AdminIntBINAnalysis', content: AdminIntTransactionsOpsDoc },
+        { id: 'AdminIntRetryIntelligence', label: 'Retry Intelligence (4 Tabs + 4 RetryRules + Visual Flow Cartão→PIX + AI Insight Banner)', route: '/AdminIntRetryIntelligence', content: AdminIntTransactionsOpsDoc },
+        { id: 'AdminIntBatchProcessing', label: 'Batch Processing (4 OperationCards + Drag&Drop CSV + 4 Templates + Histórico Progress)', route: '/AdminIntBatchProcessing', content: AdminIntTransactionsOpsDoc },
+        { id: 'AdminIntReconciliation', label: 'Reconciliação (5 stats + 3 Tabs c/ apenas Divergent populado + 3 cenários DIV)', route: '/AdminIntReconciliation', content: AdminIntTransactionsOpsDoc },
+        { id: 'AdminIntTransactionReports', label: 'Relatórios (Form 3-fields + 7 tipos + 4 mocks ready/generating)', route: '/AdminIntTransactionReports', content: AdminIntTransactionsOpsDoc },
       ],
     },
     {
