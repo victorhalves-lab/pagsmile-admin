@@ -20,6 +20,7 @@ import { AdminIntReportsDoc } from './docs/adminInterno/AdminIntReports';
 import { AdminIntCommunicationDoc } from './docs/adminInterno/AdminIntCommunication';
 import { AdminIntAdministrationCoreDoc } from './docs/adminInterno/AdminIntAdministrationCore';
 import { AdminIntAdministrationAdvancedDoc } from './docs/adminInterno/AdminIntAdministrationAdvanced';
+import { AdminIntAgentsPart1Doc } from './docs/adminInterno/AdminIntAgentsPart1';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -193,18 +194,18 @@ export const adminInternoModule = {
     },
     {
       id: 'ai-agents',
-      label: 'Agentes IA Internos',
+      label: 'Agentes IA Internos — 10 páginas (sidebar separada `aiAgentsAdminInterno` linhas 415-421)',
       pages: [
-        { id: 'AdminIntPagSmileCopilot', label: 'PagSmile Copilot', route: '/AdminIntPagSmileCopilot', content: null },
-        { id: 'AdminIntPagSmileCopilotSettings', label: 'PagSmile Copilot — Settings', route: '/AdminIntPagSmileCopilotSettings', content: null },
-        { id: 'AdminIntRecoveryAgent', label: 'Recovery Agent (Interno)', route: '/AdminIntRecoveryAgent', content: null },
-        { id: 'AdminIntRecoveryAgentSettings', label: 'Recovery Agent — Settings', route: '/AdminIntRecoveryAgentSettings', content: null },
-        { id: 'AdminIntConverterAgent', label: 'Converter Agent (Interno)', route: '/AdminIntConverterAgent', content: null },
-        { id: 'AdminIntConverterAgentSettings', label: 'Converter Agent — Settings', route: '/AdminIntConverterAgentSettings', content: null },
-        { id: 'AdminIntDisputeManager', label: 'Dispute Manager (Interno)', route: '/AdminIntDisputeManager', content: null },
-        { id: 'AdminIntDisputeManagerSettings', label: 'Dispute Manager — Settings', route: '/AdminIntDisputeManagerSettings', content: null },
-        { id: 'AdminIntIdentityOnboarder', label: 'Identity Onboarder', route: '/AdminIntIdentityOnboarder', content: null },
-        { id: 'AdminIntIdentityOnboarderSettings', label: 'Identity Onboarder — Settings', route: '/AdminIntIdentityOnboarderSettings', content: null },
+        { id: 'AdminIntPagSmileCopilot', label: 'PagSmile Copilot — HUB principal 878L (5 KPIs + 4 insights c/ cross-links + Top Margem + Portfolio Math.max(10) BUG + Rate Optim Table 8-col + 3 alerts + Tabs c/ settings DUPLICADO + AgentChatInterface purple)', route: '/AdminIntPagSmileCopilot', content: AdminIntAgentsPart1Doc },
+        { id: 'AdminIntPagSmileCopilotSettings', label: 'PagSmile Copilot — Settings (4 Tabs Geral/Alertas/Relatórios/Notificações + state DUPLICADO sem sync + Save = browser alert)', route: '/AdminIntPagSmileCopilotSettings', content: AdminIntAgentsPart1Doc },
+        { id: 'AdminIntRecoveryAgent', label: 'Recovery Agent — HUB 350L (6 KPIs + 3 Tabs Overview/Merchants/Scenarios + LineChart+BarChart Recharts + AI Insight + AgentChatInterface orange #f97316)', route: '/AdminIntRecoveryAgent', content: AdminIntAgentsPart1Doc },
+        { id: 'AdminIntRecoveryAgentSettings', label: 'Recovery Agent — Settings (4 Tabs Geral/Canais/Thresholds/Notif + Slider + Open rates HARDCODED + cor amber-orange divergente do hub orange-red + alert)', route: '/AdminIntRecoveryAgentSettings', content: AdminIntAgentsPart1Doc },
+        { id: 'AdminIntConverterAgent', label: 'Converter Agent — HUB 385L (4 KPIs + 3 Tabs Overview/Merchants/Experiments + LineChart + Devices Mobile/Desktop/Tablet + 4 Experiments c/ winner/positive + AgentChatInterface blue #3b82f6)', route: '/AdminIntConverterAgent', content: AdminIntAgentsPart1Doc },
+        { id: 'AdminIntConverterAgentSettings', label: 'Converter Agent — Settings 409L (MAIOR settings — 4 Tabs Global/Experimentos/Monitoramento/Notif + Slider confidence 90-99 + 17 keys state + alert)', route: '/AdminIntConverterAgentSettings', content: AdminIntAgentsPart1Doc },
+        { id: 'AdminIntDisputeManager', label: 'Dispute Manager (Interno) — Entrega 12', route: '/AdminIntDisputeManager', content: null },
+        { id: 'AdminIntDisputeManagerSettings', label: 'Dispute Manager — Settings — Entrega 12', route: '/AdminIntDisputeManagerSettings', content: null },
+        { id: 'AdminIntIdentityOnboarder', label: 'Identity Onboarder — Entrega 12', route: '/AdminIntIdentityOnboarder', content: null },
+        { id: 'AdminIntIdentityOnboarderSettings', label: 'Identity Onboarder — Settings — Entrega 12', route: '/AdminIntIdentityOnboarderSettings', content: null },
       ],
     },
   ],
