@@ -9,6 +9,7 @@ import { platformMapModules } from '@/lib/platformMapData';
 import PlatformMapNav from '@/components/platform-map/PlatformMapNav';
 import PlatformMapContent from '@/components/platform-map/PlatformMapContent';
 import PlatformMapPdfExport from '@/components/platform-map/PlatformMapPdfExport';
+import PlatformMapJsonExport from '@/components/platform-map/PlatformMapJsonExport';
 
 const ICONS = {
   Store,
@@ -97,6 +98,7 @@ export default function PlatformMap() {
               <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
               <span className="text-xs font-semibold text-slate-700">{stats.percent}% documentado</span>
             </div>
+            <PlatformMapJsonExport />
             <PlatformMapPdfExport />
           </div>
         </div>

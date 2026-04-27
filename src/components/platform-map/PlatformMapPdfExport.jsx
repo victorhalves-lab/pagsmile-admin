@@ -1,28 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { Download, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { platformMapModules } from '@/lib/platformMapData';
+import PlatformMapContent from '@/components/platform-map/PlatformMapContent';
 
 // =============================================================================
-// PDF Export — Mapa da Plataforma
+// PDF Export — Captura o layout REAL renderizado (igual ao que aparece na tela)
 // -----------------------------------------------------------------------------
-// Gera um PDF único com TODA a documentação da pasta lib/platformMapData/.
-// Trata DOIS formatos de `page.content`:
-//  (A) Array de blocos { type: 'description'|'section'|'subsection'|'paragraph'
-//                       |'list'|'modal'|'callout', ... }  — usado nas docs antigas
-//  (B) Objeto { explainer, technical }                    — usado nas docs novas
-// Estratégia: serializa qualquer estrutura em texto plano com indentação e
-// quebras de página automáticas via jsPDF.splitTextToSize + tracking de Y.
+// Estratégia: para cada página documentada, renderiza o componente real
+// PlatformMapContent num container off-screen, captura com html2canvas e
+// adiciona ao PDF mantendo cabeçalho do módulo e meta-dados.
 // =============================================================================
 
-const MARGIN_LEFT = 40;
-const MARGIN_RIGHT = 40;
-const MARGIN_TOP = 50;
-const MARGIN_BOTTOM = 50;
-const PAGE_WIDTH = 595; // A4 em pontos
-const PAGE_HEIGHT = 842;
-const CONTENT_WIDTH = PAGE_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
+const PAGE_WIDTH_MM = 210; // A4 portrait
+const PAGE_HEIGHT_MM = 297;
+const MARGIN_MM = 10;
+const CONTENT_WIDTH_MM = PAGE_WIDTH_MM - MARGIN_MM * 2;
+
+// Container off-screen onde renderizamos cada página real para captura
+const RENDER_WIDTH_PX = 1100; // largura usada na captura (igual ao layout desktop)
 
 export default function PlatformMapPdfExport() {
   const [isExporting, setIsExporting] = useState(false);
@@ -30,56 +29,76 @@ export default function PlatformMapPdfExport() {
 
   const handleExport = async () => {
     setIsExporting(true);
+
+    // Cria container off-screen
+    const host = document.createElement('div');
+    host.style.position = 'fixed';
+    host.style.left = '-99999px';
+    host.style.top = '0';
+    host.style.width = `${RENDER_WIDTH_PX}px`;
+    host.style.background = '#ffffff';
+    host.style.zIndex = '-1';
+    document.body.appendChild(host);
+    const root = createRoot(host);
+
     try {
-      // Conta total de páginas para barra de progresso
+      // Total de páginas documentadas
       let totalPages = 0;
       platformMapModules.forEach((m) =>
         m.sections.forEach((s) => {
-          totalPages += s.pages.length;
+          totalPages += s.pages.filter((p) => p.content).length;
         })
       );
       setProgress({ current: 0, total: totalPages, label: 'Iniciando...' });
 
-      // Gera o PDF de forma assíncrona para a UI atualizar
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-      let y = MARGIN_TOP;
+      const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      let isFirstPdfPage = true;
 
       // ---- Capa ----
-      y = renderCover(doc, totalPages);
+      renderCover(doc, totalPages);
+      isFirstPdfPage = false;
 
       // ---- Sumário ----
       doc.addPage();
-      y = MARGIN_TOP;
-      y = renderTableOfContents(doc, y);
+      renderTableOfContents(doc);
 
       // ---- Conteúdo ----
       let pageCounter = 0;
       for (const mod of platformMapModules) {
+        // Capa do módulo
         doc.addPage();
-        y = MARGIN_TOP;
-        y = renderModuleHeader(doc, mod, y);
+        renderModuleCover(doc, mod);
 
         for (const section of mod.sections) {
-          y = ensureSpace(doc, y, 60);
-          y = renderSectionHeader(doc, section, y);
-
           for (const page of section.pages) {
+            if (!page.content) continue;
             pageCounter += 1;
             setProgress({
               current: pageCounter,
               total: totalPages,
-              label: `${mod.label} › ${page.label.slice(0, 40)}`,
+              label: `${mod.label} › ${page.label.slice(0, 50)}`,
             });
-            await new Promise((resolve) => setTimeout(resolve, 0));
 
-            y = ensureSpace(doc, y, 80);
-            y = renderPage(doc, mod, section, page, y);
+            // Renderiza no container off-screen
+            await renderPageToHost(root, mod, section, page);
+            // Pequeno delay para garantir layout
+            await new Promise((r) => setTimeout(r, 100));
+
+            // Captura
+            const canvas = await html2canvas(host, {
+              scale: 2,
+              backgroundColor: '#ffffff',
+              useCORS: true,
+              logging: false,
+              windowWidth: RENDER_WIDTH_PX,
+            });
+
+            // Adiciona ao PDF (paginando verticalmente se for muito alto)
+            await addCanvasToPdf(doc, canvas);
           }
         }
       }
 
-      // ---- Footer com numeração ----
       addPageNumbers(doc);
 
       const fileName = `mapa-plataforma-pagsmile-${new Date().toISOString().split('T')[0]}.pdf`;
@@ -88,6 +107,8 @@ export default function PlatformMapPdfExport() {
       console.error('Erro ao gerar PDF:', err);
       alert('Erro ao gerar PDF: ' + err.message);
     } finally {
+      root.unmount();
+      document.body.removeChild(host);
       setIsExporting(false);
       setProgress({ current: 0, total: 0, label: '' });
     }
@@ -100,7 +121,7 @@ export default function PlatformMapPdfExport() {
           <span className="font-mono">
             {progress.current}/{progress.total}
           </span>
-          <span className="text-slate-400 max-w-[200px] truncate">{progress.label}</span>
+          <span className="text-slate-400 max-w-[260px] truncate">{progress.label}</span>
         </div>
       )}
       <Button
@@ -127,438 +148,232 @@ export default function PlatformMapPdfExport() {
 }
 
 // =============================================================================
-// Helpers de renderização
+// Renderiza uma página real (header do módulo + breadcrumb + conteúdo) no host
 // =============================================================================
-
-function ensureSpace(doc, y, needed) {
-  if (y + needed > PAGE_HEIGHT - MARGIN_BOTTOM) {
-    doc.addPage();
-    return MARGIN_TOP;
-  }
-  return y;
+function renderPageToHost(root, mod, section, page) {
+  return new Promise((resolve) => {
+    root.render(
+      <CapturedPage mod={mod} section={section} page={page} onReady={resolve} />
+    );
+  });
 }
 
-function writeWrapped(doc, text, x, y, opts = {}) {
-  const {
-    fontSize = 10,
-    fontStyle = 'normal',
-    color = [40, 40, 40],
-    maxWidth = CONTENT_WIDTH,
-    lineHeight = 1.4,
-  } = opts;
+function CapturedPage({ mod, section, page, onReady }) {
+  useEffect(() => {
+    // Espera o paint
+    const t = setTimeout(onReady, 50);
+    return () => clearTimeout(t);
+  }, [onReady]);
 
-  doc.setFontSize(fontSize);
-  doc.setFont('helvetica', fontStyle);
-  doc.setTextColor(...color);
+  return (
+    <div style={{ width: RENDER_WIDTH_PX, background: '#fff', padding: 0 }}>
+      {/* Cabeçalho do módulo (faixa colorida) */}
+      <div
+        style={{
+          background: mod.color || '#0f172a',
+          color: '#fff',
+          padding: '20px 32px',
+        }}
+      >
+        <div style={{ fontSize: 11, opacity: 0.85, letterSpacing: 1, textTransform: 'uppercase' }}>
+          {mod.label}
+        </div>
+        <div style={{ fontSize: 13, opacity: 0.7, marginTop: 4 }}>
+          {section.label}
+        </div>
+      </div>
 
-  const lines = doc.splitTextToSize(String(text || ''), maxWidth);
-  const lineSize = fontSize * lineHeight;
+      {/* Breadcrumb / meta */}
+      <div
+        style={{
+          padding: '8px 32px',
+          fontSize: 11,
+          color: '#64748b',
+          borderBottom: '1px solid #e2e8f0',
+          fontFamily: 'monospace',
+        }}
+      >
+        {page.id} · {page.route}
+      </div>
 
-  for (const line of lines) {
-    y = ensureSpace(doc, y, lineSize);
-    doc.text(line, x, y);
-    y += lineSize;
-  }
-  return y;
+      {/* Conteúdo real */}
+      <div style={{ padding: 0 }}>
+        <PlatformMapContent module={mod} page={page} />
+      </div>
+    </div>
+  );
 }
 
+// =============================================================================
+// Adiciona um canvas ao PDF, paginando se necessário
+// =============================================================================
+async function addCanvasToPdf(doc, canvas) {
+  // adiciona página nova para o conteúdo capturado
+  doc.addPage();
+
+  const imgWidthMm = CONTENT_WIDTH_MM;
+  const pxPerMm = canvas.width / imgWidthMm;
+  const fullHeightMm = canvas.height / pxPerMm;
+  const usableHeightMm = PAGE_HEIGHT_MM - MARGIN_MM * 2;
+
+  if (fullHeightMm <= usableHeightMm) {
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    doc.addImage(dataUrl, 'JPEG', MARGIN_MM, MARGIN_MM, imgWidthMm, fullHeightMm);
+    return;
+  }
+
+  // Conteúdo maior que a página: fatia em pedaços do tamanho da página
+  const sliceHeightPx = Math.floor(usableHeightMm * pxPerMm);
+  let remaining = canvas.height;
+  let offset = 0;
+  let firstSlice = true;
+
+  while (remaining > 0) {
+    const currentSlicePx = Math.min(sliceHeightPx, remaining);
+    const sliceCanvas = document.createElement('canvas');
+    sliceCanvas.width = canvas.width;
+    sliceCanvas.height = currentSlicePx;
+    const ctx = sliceCanvas.getContext('2d');
+    ctx.drawImage(
+      canvas,
+      0,
+      offset,
+      canvas.width,
+      currentSlicePx,
+      0,
+      0,
+      canvas.width,
+      currentSlicePx
+    );
+
+    if (!firstSlice) doc.addPage();
+    const dataUrl = sliceCanvas.toDataURL('image/jpeg', 0.92);
+    const sliceHeightMm = currentSlicePx / pxPerMm;
+    doc.addImage(dataUrl, 'JPEG', MARGIN_MM, MARGIN_MM, imgWidthMm, sliceHeightMm);
+
+    offset += currentSlicePx;
+    remaining -= currentSlicePx;
+    firstSlice = false;
+  }
+}
+
+// =============================================================================
+// Capa, sumário, capa de módulo, numeração
+// =============================================================================
 function renderCover(doc, totalPages) {
-  doc.setFillColor(15, 23, 42); // slate-900
-  doc.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, 'F');
+  doc.setFillColor(15, 23, 42);
+  doc.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F');
 
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(32);
-  doc.text('Mapa da Plataforma', PAGE_WIDTH / 2, 280, { align: 'center' });
+  doc.setFontSize(28);
+  doc.text('Mapa da Plataforma', PAGE_WIDTH_MM / 2, 110, { align: 'center' });
 
-  doc.setFontSize(18);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(43, 193, 150); // brand
-  doc.text('PagSmile', PAGE_WIDTH / 2, 320, { align: 'center' });
+  doc.setTextColor(43, 193, 150);
+  doc.text('PagSmile', PAGE_WIDTH_MM / 2, 122, { align: 'center' });
 
   doc.setTextColor(200, 200, 200);
-  doc.setFontSize(13);
-  doc.text(
-    'Documentação microscópica de toda a plataforma',
-    PAGE_WIDTH / 2,
-    360,
-    { align: 'center' }
-  );
-
-  // Stats
-  let documented = 0;
-  platformMapModules.forEach((m) =>
-    m.sections.forEach((s) =>
-      s.pages.forEach((p) => {
-        if (p.content) documented += 1;
-      })
-    )
-  );
-
   doc.setFontSize(11);
-  doc.setTextColor(180, 180, 180);
   doc.text(
-    `${platformMapModules.length} módulos · ${totalPages} páginas · ${documented} documentadas`,
-    PAGE_WIDTH / 2,
-    440,
+    'Documentação visual completa de toda a plataforma',
+    PAGE_WIDTH_MM / 2,
+    136,
     { align: 'center' }
   );
 
   doc.setFontSize(10);
+  doc.setTextColor(180, 180, 180);
+  doc.text(
+    `${platformMapModules.length} módulos · ${totalPages} páginas documentadas`,
+    PAGE_WIDTH_MM / 2,
+    160,
+    { align: 'center' }
+  );
+
+  doc.setFontSize(9);
   doc.setTextColor(120, 120, 120);
   doc.text(
     `Gerado em ${new Date().toLocaleString('pt-BR')}`,
-    PAGE_WIDTH / 2,
-    PAGE_HEIGHT - 60,
+    PAGE_WIDTH_MM / 2,
+    PAGE_HEIGHT_MM - 20,
     { align: 'center' }
   );
-
-  return MARGIN_TOP;
 }
 
-function renderTableOfContents(doc, y) {
+function renderTableOfContents(doc) {
+  let y = 25;
   doc.setTextColor(15, 23, 42);
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(22);
-  doc.text('Sumário', MARGIN_LEFT, y);
-  y += 32;
+  doc.setFontSize(20);
+  doc.text('Sumário', MARGIN_MM, y);
+  y += 12;
 
   for (const mod of platformMapModules) {
-    y = ensureSpace(doc, y, 30);
+    if (y > PAGE_HEIGHT_MM - 30) {
+      doc.addPage();
+      y = 25;
+    }
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(13);
+    doc.setFontSize(12);
     doc.setTextColor(15, 23, 42);
-    doc.text(mod.label, MARGIN_LEFT, y);
-    y += 18;
+    doc.text(mod.label, MARGIN_MM, y);
+    y += 6;
 
     for (const section of mod.sections) {
-      y = ensureSpace(doc, y, 16);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      doc.setTextColor(80, 80, 80);
-      const sectionTitle = `  • ${section.label}  (${section.pages.length} páginas)`;
-      const lines = doc.splitTextToSize(sectionTitle, CONTENT_WIDTH - 20);
-      for (const line of lines) {
-        y = ensureSpace(doc, y, 14);
-        doc.text(line, MARGIN_LEFT + 12, y);
-        y += 14;
+      if (y > PAGE_HEIGHT_MM - 20) {
+        doc.addPage();
+        y = 25;
       }
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(80, 80, 80);
+      const docCount = section.pages.filter((p) => p.content).length;
+      doc.text(
+        `  • ${section.label}  (${docCount}/${section.pages.length})`,
+        MARGIN_MM + 4,
+        y
+      );
+      y += 5;
     }
-    y += 8;
+    y += 4;
   }
-  return y;
 }
 
-function renderModuleHeader(doc, mod, y) {
-  // Faixa colorida do módulo
+function renderModuleCover(doc, mod) {
   const color = hexToRgb(mod.color || '#0f172a');
   doc.setFillColor(...color);
-  doc.rect(0, y - 30, PAGE_WIDTH, 60, 'F');
+  doc.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F');
 
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(22);
-  doc.text(mod.label, MARGIN_LEFT, y);
-  y += 24;
+  doc.setFontSize(26);
+  doc.text(mod.label, PAGE_WIDTH_MM / 2, 130, { align: 'center' });
 
   doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.setTextColor(240, 240, 240);
+  const desc = doc.splitTextToSize(mod.description || '', CONTENT_WIDTH_MM - 20);
+  let dy = 145;
+  for (const line of desc) {
+    doc.text(line, PAGE_WIDTH_MM / 2, dy, { align: 'center' });
+    dy += 6;
+  }
+
+  const total = mod.sections.reduce((acc, s) => acc + s.pages.length, 0);
+  const documented = mod.sections.reduce(
+    (acc, s) => acc + s.pages.filter((p) => p.content).length,
+    0
+  );
   doc.setFontSize(10);
-  y = writeWrapped(doc, mod.description || '', MARGIN_LEFT, y, {
-    fontSize: 10,
-    color: [240, 240, 240],
-    maxWidth: CONTENT_WIDTH,
-  });
-  y += 16;
-
-  return y;
-}
-
-function renderSectionHeader(doc, section, y) {
-  y = ensureSpace(doc, y, 40);
-  doc.setDrawColor(43, 193, 150);
-  doc.setLineWidth(2);
-  doc.line(MARGIN_LEFT, y - 4, MARGIN_LEFT + 30, y - 4);
-  doc.setLineWidth(0.5);
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(15);
-  doc.setTextColor(15, 23, 42);
-  y = writeWrapped(doc, section.label, MARGIN_LEFT, y + 8, {
-    fontSize: 14,
-    fontStyle: 'bold',
-    color: [15, 23, 42],
-  });
-  y += 6;
-  return y;
-}
-
-function renderPage(doc, mod, section, page, y) {
-  // Cabeçalho da página
-  y = ensureSpace(doc, y, 50);
-  doc.setFillColor(248, 250, 252);
-  doc.rect(MARGIN_LEFT - 8, y - 12, CONTENT_WIDTH + 16, 4, 'F');
-
-  y = writeWrapped(doc, page.label, MARGIN_LEFT, y, {
-    fontSize: 12,
-    fontStyle: 'bold',
-    color: [15, 23, 42],
-  });
-
-  // Metadata
-  const metadata = `ID: ${page.id}    Rota: ${page.route}    ${
-    page.content ? '✓ Documentada' : '○ Aguardando documentação'
-  }`;
-  y = writeWrapped(doc, metadata, MARGIN_LEFT, y, {
-    fontSize: 8,
-    color: [100, 116, 139],
-  });
-  y += 8;
-
-  // Conteúdo
-  if (!page.content) {
-    y = writeWrapped(
-      doc,
-      'Documentação ainda não escrita — esta página será documentada em uma das próximas entregas.',
-      MARGIN_LEFT,
-      y,
-      { fontSize: 9, fontStyle: 'italic', color: [148, 163, 184] }
-    );
-  } else if (Array.isArray(page.content)) {
-    // Formato A: array de blocos
-    for (const block of page.content) {
-      y = renderBlock(doc, block, y, 0);
-    }
-  } else if (typeof page.content === 'object') {
-    // Formato B: objeto { explainer, technical, ... }
-    y = renderObject(doc, page.content, y, 0);
-  }
-
-  y += 16;
-  // Linha separadora entre páginas
-  y = ensureSpace(doc, y, 10);
-  doc.setDrawColor(226, 232, 240);
-  doc.line(MARGIN_LEFT, y, PAGE_WIDTH - MARGIN_RIGHT, y);
-  y += 12;
-  return y;
-}
-
-// Formato A — blocos tipados
-function renderBlock(doc, block, y, depth = 0) {
-  const indent = depth * 10;
-  const x = MARGIN_LEFT + indent;
-  const maxWidth = CONTENT_WIDTH - indent;
-
-  switch (block.type) {
-    case 'description':
-      y = writeWrapped(doc, `${block.emoji || '🎯'} ${block.title || ''}`, x, y, {
-        fontSize: 11,
-        fontStyle: 'bold',
-        color: [15, 23, 42],
-        maxWidth,
-      });
-      y = writeWrapped(doc, block.body || '', x, y, {
-        fontSize: 9,
-        color: [55, 65, 81],
-        maxWidth,
-      });
-      y += 6;
-      return y;
-
-    case 'section':
-      y = ensureSpace(doc, y, 20);
-      y = writeWrapped(doc, `▸ ${block.title || ''}`, x, y, {
-        fontSize: 12,
-        fontStyle: 'bold',
-        color: [15, 23, 42],
-        maxWidth,
-      });
-      y += 4;
-      for (const child of block.children || []) {
-        y = renderBlock(doc, child, y, depth + 1);
-      }
-      y += 4;
-      return y;
-
-    case 'subsection':
-      y = writeWrapped(doc, block.title || '', x, y, {
-        fontSize: 10,
-        fontStyle: 'bold',
-        color: [30, 41, 59],
-        maxWidth,
-      });
-      for (const child of block.children || []) {
-        y = renderBlock(doc, child, y, depth + 1);
-      }
-      return y;
-
-    case 'modal':
-      y = writeWrapped(doc, `🟪 ${block.title || ''}`, x, y, {
-        fontSize: 10,
-        fontStyle: 'bold',
-        color: [88, 28, 135],
-        maxWidth,
-      });
-      for (const child of block.children || []) {
-        y = renderBlock(doc, child, y, depth + 1);
-      }
-      y += 4;
-      return y;
-
-    case 'paragraph':
-      y = writeWrapped(doc, block.text || '', x, y, {
-        fontSize: 9,
-        color: [55, 65, 81],
-        maxWidth,
-      });
-      y += 2;
-      return y;
-
-    case 'list':
-      for (const item of block.items || []) {
-        y = writeWrapped(doc, `• ${item}`, x + 6, y, {
-          fontSize: 9,
-          color: [55, 65, 81],
-          maxWidth: maxWidth - 6,
-        });
-      }
-      y += 2;
-      return y;
-
-    case 'callout':
-      const variantColors = {
-        info: [30, 64, 175],
-        warning: [146, 64, 14],
-        success: [6, 95, 70],
-      };
-      const calloutColor = variantColors[block.variant] || variantColors.info;
-      if (block.title) {
-        y = writeWrapped(doc, `⚠ ${block.title}`, x, y, {
-          fontSize: 9,
-          fontStyle: 'bold',
-          color: calloutColor,
-          maxWidth,
-        });
-      }
-      y = writeWrapped(doc, block.body || '', x, y, {
-        fontSize: 9,
-        color: calloutColor,
-        maxWidth,
-      });
-      y += 4;
-      return y;
-
-    default:
-      return y;
-  }
-}
-
-// Formato B — objeto { explainer: {...}, technical: {...}, ... }
-function renderObject(doc, obj, y, depth = 0) {
-  const indent = depth * 10;
-  const x = MARGIN_LEFT + indent;
-  const maxWidth = CONTENT_WIDTH - indent;
-
-  if (obj === null || obj === undefined) return y;
-
-  if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean') {
-    y = writeWrapped(doc, String(obj), x, y, {
-      fontSize: 9,
-      color: [55, 65, 81],
-      maxWidth,
-    });
-    return y;
-  }
-
-  if (Array.isArray(obj)) {
-    for (const item of obj) {
-      if (typeof item === 'string') {
-        y = writeWrapped(doc, `• ${item}`, x + 6, y, {
-          fontSize: 9,
-          color: [55, 65, 81],
-          maxWidth: maxWidth - 6,
-        });
-      } else {
-        y = renderObject(doc, item, y, depth + 1);
-      }
-    }
-    return y;
-  }
-
-  if (typeof obj === 'object') {
-    for (const [key, val] of Object.entries(obj)) {
-      // Pula chaves estruturais redundantes no nível raiz
-      if (depth === 0 && ['pageId', 'pagePaths', 'module', 'section'].includes(key)) {
-        y = writeWrapped(doc, `${formatKey(key)}: ${formatPrimitive(val)}`, x, y, {
-          fontSize: 8,
-          color: [100, 116, 139],
-          maxWidth,
-        });
-        continue;
-      }
-
-      y = ensureSpace(doc, y, 20);
-
-      // Cabeçalho da chave
-      const keyLabel = formatKey(key);
-      const keyFontSize = depth === 0 ? 12 : depth === 1 ? 10 : 9;
-      const keyColor = depth === 0 ? [15, 23, 42] : depth === 1 ? [30, 41, 59] : [55, 65, 81];
-
-      if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
-        // Inline: chave + valor
-        y = writeWrapped(doc, `${keyLabel}: ${val}`, x, y, {
-          fontSize: keyFontSize - 1,
-          color: keyColor,
-          maxWidth,
-        });
-      } else if (val === null) {
-        // skip
-      } else if (Array.isArray(val) && val.every((i) => typeof i === 'string')) {
-        // Lista simples de strings — chave + bullets
-        y = writeWrapped(doc, keyLabel, x, y, {
-          fontSize: keyFontSize,
-          fontStyle: 'bold',
-          color: keyColor,
-          maxWidth,
-        });
-        for (const item of val) {
-          y = writeWrapped(doc, `• ${item}`, x + 8, y, {
-            fontSize: 9,
-            color: [55, 65, 81],
-            maxWidth: maxWidth - 8,
-          });
-        }
-        y += 2;
-      } else {
-        // Objeto/array complexo — abre seção
-        y = writeWrapped(doc, keyLabel, x, y, {
-          fontSize: keyFontSize,
-          fontStyle: 'bold',
-          color: keyColor,
-          maxWidth,
-        });
-        y = renderObject(doc, val, y, depth + 1);
-        y += 2;
-      }
-    }
-    return y;
-  }
-
-  return y;
-}
-
-function formatKey(key) {
-  // converte camelCase em palavras com primeira letra maiúscula
-  return key
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/_/g, ' ')
-    .replace(/^./, (s) => s.toUpperCase())
-    .trim();
-}
-
-function formatPrimitive(val) {
-  if (Array.isArray(val)) return val.join(', ');
-  if (typeof val === 'object' && val !== null) return JSON.stringify(val);
-  return String(val);
+  doc.setTextColor(220, 220, 220);
+  doc.text(
+    `${mod.sections.length} seções · ${documented}/${total} páginas documentadas`,
+    PAGE_WIDTH_MM / 2,
+    dy + 10,
+    { align: 'center' }
+  );
 }
 
 function hexToRgb(hex) {
@@ -579,10 +394,10 @@ function addPageNumbers(doc) {
     doc.setFont('helvetica', 'normal');
     doc.text(
       `Página ${i} de ${total}`,
-      PAGE_WIDTH / 2,
-      PAGE_HEIGHT - 20,
+      PAGE_WIDTH_MM / 2,
+      PAGE_HEIGHT_MM - 5,
       { align: 'center' }
     );
-    doc.text('Mapa da Plataforma — PagSmile', MARGIN_LEFT, PAGE_HEIGHT - 20);
+    doc.text('Mapa da Plataforma — PagSmile', MARGIN_MM, PAGE_HEIGHT_MM - 5);
   }
 }
