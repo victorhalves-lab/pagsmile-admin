@@ -15,6 +15,7 @@ import { AdminIntTransactionsCoreDoc } from './docs/adminInterno/AdminIntTransac
 import { AdminIntTransactionsOpsDoc } from './docs/adminInterno/AdminIntTransactionsOps';
 import { AdminIntFinancialCoreDoc } from './docs/adminInterno/AdminIntFinancialCore';
 import { AdminIntFinancialOpsDoc } from './docs/adminInterno/AdminIntFinancialOps';
+import { AdminIntSubaccountsDetailDoc } from './docs/adminInterno/AdminIntSubaccountsDetail';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -62,6 +63,17 @@ export const adminInternoModule = {
         { id: 'AdminIntMerchantTags', label: 'Tags (CRUD c/ isSystem lock)', route: '/AdminIntMerchantTags', content: AdminIntMerchantsExtrasDoc },
         { id: 'AdminIntMerchantReports', label: 'Relatórios de Merchants (6 templates + histórico)', route: '/AdminIntMerchantReports', content: AdminIntMerchantsExtrasDoc },
         { id: 'AdminIntNewMerchant', label: 'Novo Merchant (Wizard 4-step c/ 24 fields)', route: '/AdminIntNewMerchant', content: AdminIntMerchantsExtrasDoc },
+      ],
+    },
+    {
+      id: 'subaccounts-drilldown',
+      label: 'Subcontas — Drill-Down (5 páginas paralelas ao MerchantProfile)',
+      pages: [
+        { id: 'AdminIntSubaccountDetail', label: 'Detail Resumido (5 Tabs + Progress 4 steps + KYC Score circle + DropdownMenu 3 ações sem onClick)', route: '/AdminIntSubaccountDetail', content: AdminIntSubaccountsDetailDoc },
+        { id: 'AdminIntSubaccountFullDetail', label: 'Detail 360° Completo (8 Tabs + 5 KPIs + Action Buttons condicionais por status + Dialog único 4 ações com console.log)', route: '/AdminIntSubaccountFullDetail', content: AdminIntSubaccountsDetailDoc },
+        { id: 'AdminIntSubaccountTransactions', label: 'Transações da Subconta (4 KPIs calculados + 3 filtros + Table 9-col + Link → TransactionDetail)', route: '/AdminIntSubaccountTransactions', content: AdminIntSubaccountsDetailDoc },
+        { id: 'AdminIntSubaccountLimits', label: 'Form Limites (2 cards Cartão+PIX + 5 inputs + alert() nativo "(simulação)")', route: '/AdminIntSubaccountLimits', content: AdminIntSubaccountsDetailDoc },
+        { id: 'AdminIntSubaccountRates', label: 'Form Taxas (2 cards MDR+PIX/Antecipação + Resumo Table c/ bug copy-paste linha Débito + alert() nativo)', route: '/AdminIntSubaccountRates', content: AdminIntSubaccountsDetailDoc },
       ],
     },
     {
