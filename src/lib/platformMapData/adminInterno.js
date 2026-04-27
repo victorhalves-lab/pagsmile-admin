@@ -16,6 +16,7 @@ import { AdminIntTransactionsOpsDoc } from './docs/adminInterno/AdminIntTransact
 import { AdminIntFinancialCoreDoc } from './docs/adminInterno/AdminIntFinancialCore';
 import { AdminIntFinancialOpsDoc } from './docs/adminInterno/AdminIntFinancialOps';
 import { AdminIntSubaccountsDetailDoc } from './docs/adminInterno/AdminIntSubaccountsDetail';
+import { AdminIntReportsDoc } from './docs/adminInterno/AdminIntReports';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -63,17 +64,6 @@ export const adminInternoModule = {
         { id: 'AdminIntMerchantTags', label: 'Tags (CRUD c/ isSystem lock)', route: '/AdminIntMerchantTags', content: AdminIntMerchantsExtrasDoc },
         { id: 'AdminIntMerchantReports', label: 'Relatórios de Merchants (6 templates + histórico)', route: '/AdminIntMerchantReports', content: AdminIntMerchantsExtrasDoc },
         { id: 'AdminIntNewMerchant', label: 'Novo Merchant (Wizard 4-step c/ 24 fields)', route: '/AdminIntNewMerchant', content: AdminIntMerchantsExtrasDoc },
-      ],
-    },
-    {
-      id: 'subaccounts-drilldown',
-      label: 'Subcontas — Drill-Down (5 páginas paralelas ao MerchantProfile)',
-      pages: [
-        { id: 'AdminIntSubaccountDetail', label: 'Detail Resumido (5 Tabs + Progress 4 steps + KYC Score circle + DropdownMenu 3 ações sem onClick)', route: '/AdminIntSubaccountDetail', content: AdminIntSubaccountsDetailDoc },
-        { id: 'AdminIntSubaccountFullDetail', label: 'Detail 360° Completo (8 Tabs + 5 KPIs + Action Buttons condicionais por status + Dialog único 4 ações com console.log)', route: '/AdminIntSubaccountFullDetail', content: AdminIntSubaccountsDetailDoc },
-        { id: 'AdminIntSubaccountTransactions', label: 'Transações da Subconta (4 KPIs calculados + 3 filtros + Table 9-col + Link → TransactionDetail)', route: '/AdminIntSubaccountTransactions', content: AdminIntSubaccountsDetailDoc },
-        { id: 'AdminIntSubaccountLimits', label: 'Form Limites (2 cards Cartão+PIX + 5 inputs + alert() nativo "(simulação)")', route: '/AdminIntSubaccountLimits', content: AdminIntSubaccountsDetailDoc },
-        { id: 'AdminIntSubaccountRates', label: 'Form Taxas (2 cards MDR+PIX/Antecipação + Resumo Table c/ bug copy-paste linha Débito + alert() nativo)', route: '/AdminIntSubaccountRates', content: AdminIntSubaccountsDetailDoc },
       ],
     },
     {
@@ -157,14 +147,14 @@ export const adminInternoModule = {
     },
     {
       id: 'reports',
-      label: 'Relatórios',
+      label: 'Relatórios — 6 páginas (ordem do menu layout.jsx)',
       pages: [
-        { id: 'AdminIntReportsHub', label: 'Hub de Relatórios', route: '/AdminIntReportsHub', content: null },
-        { id: 'AdminIntReportsOperational', label: 'Operacionais', route: '/AdminIntReportsOperational', content: null },
-        { id: 'AdminIntReportsFinancial', label: 'Financeiros', route: '/AdminIntReportsFinancial', content: null },
-        { id: 'AdminIntReportsRisk', label: 'Risco', route: '/AdminIntReportsRisk', content: null },
-        { id: 'AdminIntReportsCustom', label: 'Customizados', route: '/AdminIntReportsCustom', content: null },
-        { id: 'AdminIntAnalytics', label: 'Analytics & BI', route: '/AdminIntAnalytics', content: null },
+        { id: 'AdminIntReportsHub', label: 'Hub de Relatórios (Search + Favoritos 3 + Recentes 3 + Catálogo 13 c/ 4 Tabs + Agendados 3 + 2 Dialogs)', route: '/AdminIntReportsHub', content: AdminIntReportsDoc },
+        { id: 'AdminIntReportsOperational', label: 'Operacionais (4 Tabs: Summary 7-col / TPV BarChart stack 4 séries / Conversion funil divs / Methods PieChart)', route: '/AdminIntReportsOperational', content: AdminIntReportsDoc },
+        { id: 'AdminIntReportsFinancial', label: 'Financeiros (3 Tabs: Settlement 9-col / Receivables 6-col / DRE P&L desenhado c/ cálculo runtime totalRev-totalCost)', route: '/AdminIntReportsFinancial', content: AdminIntReportsDoc },
+        { id: 'AdminIntReportsRisk', label: 'Risco (3 Tabs: Chargebacks 2-cards / CB Ratio c/ row red crítica / Fraud BarChart 2 séries)', route: '/AdminIntReportsRisk', content: AdminIntReportsDoc },
+        { id: 'AdminIntReportsCustom', label: 'Customizados (Construtor visual: Source 6/Fields/Filters 7-ops/Group+Order — drag&drop FAKE + PageHeader prop errado)', route: '/AdminIntReportsCustom', content: AdminIntReportsDoc },
+        { id: 'AdminIntAnalytics', label: 'Analytics & BI (5 Tabs MAS apenas overview populada — AreaChart 12m + PieChart + Top10 + BarChart approval + Risk indicators + Predictions Sparkles purple)', route: '/AdminIntAnalytics', content: AdminIntReportsDoc },
       ],
     },
     {
