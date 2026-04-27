@@ -8,6 +8,7 @@ import { IBPixSendDoc } from './docs/internetBanking/IBPixSend';
 import { IBPixReceiveDoc } from './docs/internetBanking/IBPixReceive';
 import { IBPixKeysDoc } from './docs/internetBanking/IBPixKeys';
 import { IBPixLimitsDoc } from './docs/internetBanking/IBPixLimits';
+import { IBProofsDoc } from './docs/internetBanking/IBProofs';
 
 export const internetBankingModule = {
   id: 'internet-banking',
@@ -45,7 +46,7 @@ export const internetBankingModule = {
       id: 'comprovantes',
       label: 'Comprovantes',
       pages: [
-        { id: 'IBProofs', label: 'Comprovantes', route: '/IBProofs', content: null },
+        { id: 'IBProofs', label: 'Comprovantes 235L A MENOR PÁGINA do módulo IB inteiro até agora (79% IBPixReceive 271L / 35% IBPixSend 689L / 46% IBExtract 511L) — única página bloco Comprovantes / 4 blocos sem Modal/Dialog/Drawer (DIFERENTE do bloco PIX que todas têm): Header minimalista padrão IBPixReceive/Limits / Filters Card 3 filtros REDUNDANTES com IBExtract simplificados (period 4 opções SEM Personalizado / type 3 opções SEM duplicata Tipo+Direção / search) — 3/3 filtros CAPTURED-BUT-IGNORED bug arquitetural igual IBExtract repetido / Proofs List 5 rows c/ PRIMEIRO uso ArrowDownLeft+ArrowUpRight DIAGONAIS no módulo IB / Icon condicional bg-emerald-100 received / bg-red-100 sent / 4 linhas info: tipo+date+time / description / amount com cor+sinal condicional / ID format PIX-YYYYMMDDHHMMSS{5digits} semi-TXID BACEN / 2 Buttons direita PDF Download + Share2 icon-only AMBOS SEM onClick = 10 dead buttons total / Documents Section grid responsive 2 Cards: Extrato Mensal BLUE c/ PRIMEIRO FileSpreadsheet icon (gap semântico FileSpreadsheet sugere XLSX mas description diz PDF) "Gerar extrato em PDF de qualquer período" sem date picker / Informe Rendimentos PURPLE c/ PRIMEIRO File icon "Baixar 2025" HARDCODED TEMPORAL não detecta ano fiscal corrente (em 2027 ainda mostraria 2025) / Cards cursor-pointer SEM onClick dead actions enganosas / 3 useState 100% aproveitados (4º caso consecutivo zero-dead-state Receive→Keys→Limits→Proofs) / 5 DEAD IMPORTS (Filter, FileText, CardHeader, CardTitle, Badge) PIOR cleanup do módulo IB / formatCurrency 7ª repetição no módulo inteiro NÃO extraída / Sem agrupamento por data (IBExtract agrupa via reduce IBProofs não) inconsistência arquitetural / Sem distinção visual JÁ baixados / Sem ordenação/paginação/Modal preview/bulk download/URL compartilhada / Sem filtro valor range nem destinatário / Redundância conceitual com IBExtract sem distinção clara UX / 0 useEffect ZERO uso Transaction.list SDK apesar schema completo / Continua ZERO i18n inter-página IB / Continua ilha cross-page nav)', route: '/IBProofs', content: IBProofsDoc },
       ],
     },
     {
