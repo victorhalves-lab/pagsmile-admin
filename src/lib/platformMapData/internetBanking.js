@@ -9,6 +9,7 @@ import { IBPixReceiveDoc } from './docs/internetBanking/IBPixReceive';
 import { IBPixKeysDoc } from './docs/internetBanking/IBPixKeys';
 import { IBPixLimitsDoc } from './docs/internetBanking/IBPixLimits';
 import { IBProofsDoc } from './docs/internetBanking/IBProofs';
+import { IBSettingsDoc } from './docs/internetBanking/IBSettings';
 
 export const internetBankingModule = {
   id: 'internet-banking',
@@ -53,7 +54,7 @@ export const internetBankingModule = {
       id: 'settings',
       label: 'Configurações',
       pages: [
-        { id: 'IBSettings', label: 'Configurações Gerais', route: '/IBSettings', content: null },
+        { id: 'IBSettings', label: 'Configurações 90L A NOVA MENOR PÁGINA do módulo IB inteiro até agora (38% IBProofs 235L / 13% IBPixSend 689L / 30% IBHome 297L) — primeira página bloco Configurações / HUB-PURO sem dados/filtros/CRUD apenas redireciona p/ 4 sub-páginas / 2 blocos: Header minimalista 4º caso consecutivo (Receive→Limits→Proofs→Settings) / Settings Menu Card divide-y c/ 4 rows iteradas via .map sobre array settingsItems PRIMEIRA arquitetura DATA-DRIVEN settings no IB / Cada row é Link to=createPageUrl(item.page) PRIMEIRO uso Link react-router-dom + createPageUrl no módulo IB QUEBRANDO padrão ilha das 7 páginas anteriores / PRIMEIRO hover styling em row do módulo IB (hover:bg-slate-50) / PRIMEIRO <item.icon /> rendering pattern / 4 settings: Account User BLUE / Security Shield EMERALD / Notifications Bell AMBER / Access Users PURPLE — paleta convergente IBHome QuickActions + IBProofs Documents / 0 useState PRIMEIRO caso zero hooks no módulo IB coerente HUB-puro / 4 DEAD IMPORTS MASSIVOS (Building2, CreditCard, Lock, Smartphone) revelam ROADMAP de sub-páginas planejadas mas não implementadas (Empresa/Cartões/Privacidade/Dispositivos) — gap de planejamento histórico apps bancários reais têm 6-8+ sub-páginas Settings / Sem agrupamento/seções settings (apps maduros têm Conta/Comunicação/Acesso) / Sem badge NOVO/RECOMENDADO / Sem indicador status atual ex Notif 5 ativas / 2FA habilitado / 3 usuários / Sem sub-item Sobre-Versão / Sem sub-item Logout / Sem busca settings / Touch-target p-4 32px abaixo HIG 44px / Item Perfis Acesso só faz sentido conta PJ sem distinção tipo conta / Sem analytics tracking clicks / Sem confirmação ações destrutivas / Continua ZERO i18n inter-página / Quebra padrão das 7 anteriores que TODAS usavam formatCurrency 7→0 helpers / 4 sub-pages targets EXISTEM Links válidos)', route: '/IBSettings', content: IBSettingsDoc },
         { id: 'IBSettingsAccount', label: 'Conta', route: '/IBSettingsAccount', content: null },
         { id: 'IBSettingsSecurity', label: 'Segurança', route: '/IBSettingsSecurity', content: null },
         { id: 'IBSettingsNotifications', label: 'Notificações', route: '/IBSettingsNotifications', content: null },
