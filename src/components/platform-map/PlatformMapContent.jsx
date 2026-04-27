@@ -112,11 +112,135 @@ function PlaceholderContent({ module, page }) {
  *  - { type: 'callout', variant, title, body }
  */
 function DocumentedContent({ content }) {
+  // Formato clássico: array de blocos { type, ... }
+  if (Array.isArray(content)) {
+    return (
+      <div className="space-y-6">
+        {content.map((block, idx) => (
+          <ContentBlock key={idx} block={block} />
+        ))}
+      </div>
+    );
+  }
+
+  // Formato microscópico: objeto { pageId, explainer, technical, ... }
+  if (content && typeof content === 'object') {
+    return <MicroscopicContent doc={content} />;
+  }
+
+  return null;
+}
+
+/**
+ * Renderiza documentos no formato microscópico:
+ * { pageId, pagePaths, module, section, explainer: {...}, technical: {...} }
+ */
+function MicroscopicContent({ doc }) {
+  const renderValue = (value, depth = 0) => {
+    if (value === null || value === undefined) return null;
+
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+      return <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{String(value)}</p>;
+    }
+
+    if (Array.isArray(value)) {
+      return (
+        <ul className="space-y-1.5 text-sm text-slate-700">
+          {value.map((item, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <span className="text-slate-400 mt-1">•</span>
+              <span className="flex-1">
+                {typeof item === 'object' && item !== null
+                  ? renderValue(item, depth + 1)
+                  : String(item)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    if (typeof value === 'object') {
+      return (
+        <div className={depth === 0 ? 'space-y-4' : 'space-y-2 pl-3 border-l-2 border-slate-200'}>
+          {Object.entries(value).map(([k, v]) => (
+            <div key={k}>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                {k.replace(/([A-Z])/g, ' $1').trim()}
+              </h5>
+              {renderValue(v, depth + 1)}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="space-y-6">
-      {content.map((block, idx) => (
-        <ContentBlock key={idx} block={block} />
-      ))}
+      {/* Metadata header */}
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          {doc.pageId && (
+            <div>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider">Page ID:</span>{' '}
+              <span className="font-mono text-slate-700">{doc.pageId}</span>
+            </div>
+          )}
+          {doc.module && (
+            <div>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider">Módulo:</span>{' '}
+              <span className="text-slate-700">{doc.module}</span>
+            </div>
+          )}
+          {doc.section && (
+            <div className="col-span-2">
+              <span className="font-semibold text-slate-500 uppercase tracking-wider">Seção:</span>{' '}
+              <span className="text-slate-700">{doc.section}</span>
+            </div>
+          )}
+          {Array.isArray(doc.pagePaths) && doc.pagePaths.length > 0 && (
+            <div className="col-span-2">
+              <span className="font-semibold text-slate-500 uppercase tracking-wider">Rotas:</span>{' '}
+              <span className="font-mono text-slate-700">{doc.pagePaths.join(', ')}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Explainer block */}
+      {doc.explainer && (
+        <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+            🔸 Explainer
+          </h2>
+          {renderValue(doc.explainer)}
+        </section>
+      )}
+
+      {/* Technical block */}
+      {doc.technical && (
+        <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+            🔧 Technical
+          </h2>
+          {renderValue(doc.technical)}
+        </section>
+      )}
+
+      {/* Fallback for any other top-level keys not yet rendered */}
+      {Object.entries(doc)
+        .filter(([k]) => !['pageId', 'pagePaths', 'module', 'section', 'explainer', 'technical'].includes(k))
+        .map(([k, v]) => (
+          <section key={k} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              🔸 {k.replace(/([A-Z])/g, ' $1').trim()}
+            </h2>
+            {renderValue(v)}
+          </section>
+        ))}
     </div>
   );
 }
