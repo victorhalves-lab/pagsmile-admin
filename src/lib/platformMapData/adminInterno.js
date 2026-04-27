@@ -17,6 +17,7 @@ import { AdminIntFinancialCoreDoc } from './docs/adminInterno/AdminIntFinancialC
 import { AdminIntFinancialOpsDoc } from './docs/adminInterno/AdminIntFinancialOps';
 import { AdminIntSubaccountsDetailDoc } from './docs/adminInterno/AdminIntSubaccountsDetail';
 import { AdminIntReportsDoc } from './docs/adminInterno/AdminIntReports';
+import { AdminIntCommunicationDoc } from './docs/adminInterno/AdminIntCommunication';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -159,14 +160,14 @@ export const adminInternoModule = {
     },
     {
       id: 'communication',
-      label: 'Comunicação',
+      label: 'Comunicação — 6 páginas (ordem do menu layout.jsx)',
       pages: [
-        { id: 'AdminIntCommDashboard', label: 'Dashboard de Comunicação', route: '/AdminIntCommDashboard', content: null },
-        { id: 'AdminIntCommAutomations', label: 'Automações de E-mail', route: '/AdminIntCommAutomations', content: null },
-        { id: 'AdminIntCommTemplates', label: 'Templates', route: '/AdminIntCommTemplates', content: null },
-        { id: 'AdminIntCommSMTP', label: 'Configuração SMTP', route: '/AdminIntCommSMTP', content: null },
-        { id: 'AdminIntCommSenders', label: 'Remetentes', route: '/AdminIntCommSenders', content: null },
-        { id: 'AdminIntCommLogs', label: 'Logs', route: '/AdminIntCommLogs', content: null },
+        { id: 'AdminIntCommDashboard', label: 'Dashboard (5 KPIs c/ isNegative invertido / LineChart Volume / 5 barras CUSTOM Distribuição / Top 5 Templates / 3 Problemas / Top Automações Table 5-col)', route: '/AdminIntCommDashboard', content: AdminIntCommunicationDoc },
+        { id: 'AdminIntCommAutomations', label: 'Régua de E-mails (Stats grid-5 + 4 categorias 11 automações + Modal 4-tab Info/Trigger SelectGroup hack/Template/Config + 2 checkboxes default)', route: '/AdminIntCommAutomations', content: AdminIntCommunicationDoc },
+        { id: 'AdminIntCommTemplates', label: 'Templates (12 hardcoded + filtragem REAL + Editor 4-tab Visual/HTML + Variables 12 mustache c/ clipboard REAL + Preview vazio)', route: '/AdminIntCommTemplates', content: AdminIntCommunicationDoc },
+        { id: 'AdminIntCommSMTP', label: 'Configuração SMTP (Status Card + 5 providers selecionáveis MAS form hardcoded SES + Secret hardcoded em código + 4 checkboxes tracking + Test 2s)', route: '/AdminIntCommSMTP', content: AdminIntCommunicationDoc },
+        { id: 'AdminIntCommSenders', label: 'Remetentes (4 senders + 2 domains + 3 DNS records SPF/DKIM/DMARC c/ clipboard REAL + StatusIcon helper + 2 modais)', route: '/AdminIntCommSenders', content: AdminIntCommunicationDoc },
+        { id: 'AdminIntCommLogs', label: 'Logs (5 filtros decorativos + 6 mocks 5 status + Cards verticais c/ hover actions + Pagination 100% fake + Detail Modal 3-tab Info/Content vazio/Timeline)', route: '/AdminIntCommLogs', content: AdminIntCommunicationDoc },
       ],
     },
     {
