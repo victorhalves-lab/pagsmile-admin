@@ -19,6 +19,7 @@ import { AdminIntSubaccountsDetailDoc } from './docs/adminInterno/AdminIntSubacc
 import { AdminIntReportsDoc } from './docs/adminInterno/AdminIntReports';
 import { AdminIntCommunicationDoc } from './docs/adminInterno/AdminIntCommunication';
 import { AdminIntAdministrationCoreDoc } from './docs/adminInterno/AdminIntAdministrationCore';
+import { AdminIntAdministrationAdvancedDoc } from './docs/adminInterno/AdminIntAdministrationAdvanced';
 
 export const adminInternoModule = {
   id: 'admin-interno',
@@ -183,11 +184,11 @@ export const adminInternoModule = {
         { id: 'AdminIntIntegrations', label: 'Integrações (4 categorias: Acquirers/Antifraude/Banking/Notif + IntegrationCard inline + 2 SideDrawers — única usando SideDrawer)', route: '/AdminIntIntegrations', content: AdminIntAdministrationCoreDoc },
         { id: 'AdminIntTemplates', label: 'Templates (4 Tabs c/ 15 templates — DUPLICA AdminIntCommTemplates 12 templates / Edit + Preview Dialog)', route: '/AdminIntTemplates', content: AdminIntAdministrationCoreDoc },
         { id: 'AdminIntSystemLogs', label: 'Logs do Sistema (4 Tabs Audit/System terminal/API table/Errors PLACEHOLDER + filtros decorativos + Pagination fake)', route: '/AdminIntSystemLogs', content: AdminIntAdministrationCoreDoc },
-        { id: 'AdminIntMCCs', label: 'MCCs (Entrega 10)', route: '/AdminIntMCCs', content: null },
-        { id: 'AdminIntMCCsAnalysis', label: 'Análise de MCCs (Entrega 10)', route: '/AdminIntMCCsAnalysis', content: null },
-        { id: 'AdminIntPartners', label: 'Parceiros & Custos (Entrega 10)', route: '/AdminIntPartners', content: null },
-        { id: 'AdminIntFeePlans', label: 'Planos de Taxa (Entrega 10)', route: '/AdminIntFeePlans', content: null },
-        { id: 'AdminIntAiAgents', label: 'Configuração de Agentes IA (Entrega 10)', route: '/AdminIntAiAgents', content: null },
+        { id: 'AdminIntMCCs', label: 'MCCs (Catálogo c/ KPICard external + Insights c/ Link órfão / Table 5 MCCs / Modal Novo c/ 4 fields)', route: '/AdminIntMCCs', content: AdminIntAdministrationAdvancedDoc },
+        { id: 'AdminIntMCCsAnalysis', label: 'Análise de MCCs (ÚNICA REAL c/ useQuery Subaccount filter status=active limit 500 + KPIs computados useMemo + Detail Modal 5 seções condicionais)', route: '/AdminIntMCCsAnalysis', content: AdminIntAdministrationAdvancedDoc },
+        { id: 'AdminIntPartners', label: 'Parceiros & Custos (DataTable c/ 5 partners — BUG: Status sempre Badge "Ativo" hardcoded ignora data + Link sem ID p/ Detail órfã)', route: '/AdminIntPartners', content: AdminIntAdministrationAdvancedDoc },
+        { id: 'AdminIntFeePlans', label: 'Planos de Taxa (4 cards Starter→Enterprise / SideDrawer 7 fields / 2 Links órfãs Simulador+Detail)', route: '/AdminIntFeePlans', content: AdminIntAdministrationAdvancedDoc },
+        { id: 'AdminIntAiAgents', label: 'Configuração de Agentes IA (Showcase 100% estático / 3 AgentCards PRISCILA+HELENA+DIA / Configurar+Logs SEM onClick / não linka para páginas reais dos agentes)', route: '/AdminIntAiAgents', content: AdminIntAdministrationAdvancedDoc },
       ],
     },
     {
