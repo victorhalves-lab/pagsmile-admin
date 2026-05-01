@@ -539,50 +539,71 @@ export default function Fees() {
         {/* ==================== ABA TARIFAS (FIXAS) ==================== */}
         <TabsContent value="tarifas" className="space-y-6">
           
-          {/* Cards resumo */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Cards resumo - todas as tarifas operacionais visíveis */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <Card className="bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                    <Receipt className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-slate-400 text-sm">Tarifa por Transação</p>
-                    <p className="text-2xl font-bold">{formatCurrency(0.49)}</p>
-                  </div>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Receipt className="w-4 h-4" />
+                  <p className="text-slate-300 text-xs font-medium">Gateway</p>
                 </div>
-                <p className="text-xs text-slate-500">Cobrada em transações aprovadas</p>
+                <p className="text-xl font-bold">{formatCurrency(0.49)}</p>
+                <p className="text-[10px] text-slate-400 mt-1">Por transação aprovada</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-200">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-blue-600" />
+                  <p className="text-slate-700 text-xs font-medium">3DS</p>
+                </div>
+                <p className="text-xl font-bold text-blue-700">{formatCurrency(0.30)}</p>
+                <p className="text-[10px] text-slate-500 mt-1">Autenticação 3D Secure</p>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-br from-orange-50 to-white border-orange-200">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-orange-600" />
-                  </div>
-                  <div>
-                    <p className="text-slate-600 text-sm">Antifraude</p>
-                    <p className="text-2xl font-bold text-slate-900">{formatCurrency(0.70)}</p>
-                  </div>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-orange-600" />
+                  <p className="text-slate-700 text-xs font-medium">Antifraude Cartão</p>
                 </div>
-                <p className="text-xs text-slate-500">Análise automática de fraude</p>
+                <p className="text-xl font-bold text-orange-700">{formatCurrency(0.70)}</p>
+                <p className="text-[10px] text-slate-500 mt-1">Por análise em cartão</p>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-200">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                  </div>
-                  <div>
-                    <p className="text-slate-600 text-sm">Saque via PIX</p>
-                    <p className="text-2xl font-bold text-emerald-600">Grátis</p>
-                  </div>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-emerald-600" />
+                  <p className="text-slate-700 text-xs font-medium">Antifraude PIX</p>
                 </div>
-                <p className="text-xs text-slate-500">Sem custo para saques</p>
+                <p className="text-xl font-bold text-emerald-700">{formatCurrency(0.08)}</p>
+                <p className="text-[10px] text-slate-500 mt-1">Por análise em PIX</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-amber-50 to-white border-amber-200">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="w-4 h-4 text-amber-600" />
+                  <p className="text-slate-700 text-xs font-medium">Pré-Chargeback</p>
+                </div>
+                <p className="text-xl font-bold text-amber-700">{formatCurrency(8.00)}</p>
+                <p className="text-[10px] text-slate-500 mt-1">Por alerta Ethoca/Verifi</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-red-50 to-white border-red-200">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingDown className="w-4 h-4 text-red-600" />
+                  <p className="text-slate-700 text-xs font-medium">Chargeback</p>
+                </div>
+                <p className="text-xl font-bold text-red-700">{formatCurrency(30.00)}</p>
+                <p className="text-[10px] text-slate-500 mt-1">Multa por chargeback</p>
               </CardContent>
             </Card>
           </div>
