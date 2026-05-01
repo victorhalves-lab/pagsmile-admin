@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Plus, Settings } from 'lucide-react';
+import { Plus, Settings, Calculator } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { toast } from 'sonner';
@@ -49,7 +49,16 @@ export default function AdminIntPartners() {
                 title="Parceiros & Custos" 
                 subtitle="Gestão de Provedores e Estrutura de Custos"
                 breadcrumbs={[{ label: 'Administração', page: '#' }, { label: 'Parceiros', page: 'AdminIntPartners' }]}
-                actions={<Button onClick={() => setNewPartnerModal(true)}><Plus className="w-4 h-4 mr-2" /> Novo Parceiro</Button>}
+                actions={
+                    <div className="flex gap-2">
+                        <Button variant="outline" asChild>
+                            <Link to={createPageUrl('AdminIntGlobalCosts')}>
+                                <Calculator className="w-4 h-4 mr-2" /> Custos Globais PagSmile
+                            </Link>
+                        </Button>
+                        <Button onClick={() => setNewPartnerModal(true)}><Plus className="w-4 h-4 mr-2" /> Novo Parceiro</Button>
+                    </div>
+                }
             />
 
             <Card>
