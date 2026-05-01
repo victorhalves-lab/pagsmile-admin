@@ -10,9 +10,10 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import {
   Banknote, CreditCard, ShieldAlert, Lock, AlertTriangle, QrCode,
-  TrendingUp, Calculator, Info, Receipt
+  TrendingUp, Calculator, Info, Receipt, Users
 } from 'lucide-react';
 import { toast } from 'sonner';
+import CostPerTransactionCalculator from '@/components/admin-interno/costs/CostPerTransactionCalculator';
 
 const brands = ['Visa', 'Mastercard', 'Elo', 'Amex', 'Hipercard'];
 
@@ -49,6 +50,9 @@ export default function AdminIntGlobalCosts() {
           Os custos globais são a média ponderada dos custos contratados com cada parceiro (Adyen, Stone, Cielo, Visa, Mastercard, etc.) somados aos custos diretos da PagSmile. Eles servem como referência para calcular a margem em cada plano comercial e detectar taxas vendidas abaixo do custo.
         </AlertDescription>
       </Alert>
+
+      {/* Calculadora de custo médio por transação (custo fixo rateado) */}
+      <CostPerTransactionCalculator editing={editing} />
 
       {/* Resumo de margens */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
