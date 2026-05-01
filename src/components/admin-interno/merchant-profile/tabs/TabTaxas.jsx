@@ -86,8 +86,16 @@ export default function TabTaxas({ merchant }) {
     pix_fixed: 0.00,
     // Boleto
     boleto_fee: 2.50,
-    // Antifraude
+    // Gateway (cobrada por transação processada)
+    gateway_fee_approved: 0.49,
+    gateway_fee_refused: 0.00,
+    // 3DS (autenticação)
+    threeds_fee: 0.30,
+    threeds_charge_only_authenticated: true,
+    // Antifraude Cartão
     antifraud_fee: 0.15,
+    // Antifraude PIX
+    antifraud_pix_fee: 0.08,
     // Pré-chargeback
     pre_cb_fee: 8.00,
     // Multa por chargeback
@@ -424,18 +432,68 @@ export default function TabTaxas({ merchant }) {
         </Card>
       </div>
 
-      {/* ── Antifraude & Chargeback ────────────────────────────── */}
+      {/* ── Gateway (por transação processada) ─────────────────── */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
-            <ShieldAlert className="w-5 h-5 text-red-500" />
-            Antifraude & Chargebacks
+            <Banknote className="w-5 h-5 text-cyan-500" />
+            Taxa de Gateway
           </CardTitle>
+          <CardDescription>Cobrada por transação processada (independente de aprovação)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
-              <p className="text-xs text-slate-500 mb-1">Taxa Antifraude (por transação)</p>
+              <p className="text-xs text-slate-500 mb-1">Gateway - Transação Aprovada</p>
+              {editing ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">R$</span>
+                  <Input type="number" step="0.01" value={rates.gateway_fee_approved} onChange={(e) => handleRateChange('gateway_fee_approved', e.target.value)} className="h-8 w-28 text-center" />
+                </div>
+              ) : (
+                <p className="text-xl font-bold text-cyan-700 dark:text-cyan-400">R$ {rates.gateway_fee_approved.toFixed(2)}</p>
+              )}
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+              <p className="text-xs text-slate-500 mb-1">Gateway - Transação Recusada</p>
+              {editing ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">R$</span>
+                  <Input type="number" step="0.01" value={rates.gateway_fee_refused} onChange={(e) => handleRateChange('gateway_fee_refused', e.target.value)} className="h-8 w-28 text-center" />
+                </div>
+              ) : (
+                <p className="text-xl font-bold text-slate-700 dark:text-slate-200">R$ {rates.gateway_fee_refused.toFixed(2)}</p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── 3DS & Antifraude ───────────────────────────────────── */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <ShieldAlert className="w-5 h-5 text-blue-500" />
+            Autenticação 3DS & Antifraude
+          </CardTitle>
+          <CardDescription>Taxas de proteção: 3D Secure (autenticação) e análise de risco</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-blue-50 dark:bg-blue-900/10 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+              <p className="text-xs text-slate-500 mb-1">Taxa 3DS (autenticação)</p>
+              {editing ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">R$</span>
+                  <Input type="number" step="0.01" value={rates.threeds_fee} onChange={(e) => handleRateChange('threeds_fee', e.target.value)} className="h-8 w-28 text-center" />
+                </div>
+              ) : (
+                <p className="text-xl font-bold text-blue-700 dark:text-blue-400">R$ {rates.threeds_fee.toFixed(2)}</p>
+              )}
+              <p className="text-[10px] text-slate-400 mt-1">Por tentativa de autenticação</p>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+              <p className="text-xs text-slate-500 mb-1">Antifraude - Cartão</p>
               {editing ? (
                 <div className="flex items-center gap-2">
                   <span className="text-sm">R$</span>
@@ -444,8 +502,46 @@ export default function TabTaxas({ merchant }) {
               ) : (
                 <p className="text-xl font-bold text-slate-700 dark:text-slate-200">R$ {rates.antifraud_fee.toFixed(2)}</p>
               )}
+              <p className="text-[10px] text-slate-400 mt-1">Por análise em transação cartão</p>
             </div>
             <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+              <p className="text-xs text-slate-500 mb-1">Antifraude - PIX</p>
+              {editing ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">R$</span>
+                  <Input type="number" step="0.01" value={rates.antifraud_pix_fee} onChange={(e) => handleRateChange('antifraud_pix_fee', e.target.value)} className="h-8 w-28 text-center" />
+                </div>
+              ) : (
+                <p className="text-xl font-bold text-emerald-700 dark:text-emerald-400">R$ {rates.antifraud_pix_fee.toFixed(2)}</p>
+              )}
+              <p className="text-[10px] text-slate-400 mt-1">Por análise em transação PIX</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+            <Switch
+              checked={rates.threeds_charge_only_authenticated}
+              onCheckedChange={(v) => setRates(prev => ({ ...prev, threeds_charge_only_authenticated: v }))}
+              disabled={!editing}
+            />
+            <div>
+              <p className="text-sm font-medium">Cobrar 3DS apenas em autenticações bem-sucedidas</p>
+              <p className="text-[11px] text-slate-500">Quando ativo, tentativas falhas de 3DS não geram cobrança.</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── Pré-Chargeback & Chargebacks ───────────────────────── */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <ShieldAlert className="w-5 h-5 text-red-500" />
+            Pré-Chargeback & Chargebacks
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-orange-50 dark:bg-orange-900/10 rounded-lg p-4 border border-orange-200 dark:border-orange-800">
               <p className="text-xs text-slate-500 mb-1">Taxa Pré-Chargeback</p>
               {editing ? (
                 <div className="flex items-center gap-2">
@@ -455,8 +551,9 @@ export default function TabTaxas({ merchant }) {
               ) : (
                 <p className="text-xl font-bold text-orange-600">R$ {rates.pre_cb_fee.toFixed(2)}</p>
               )}
+              <p className="text-[10px] text-slate-400 mt-1">Por alerta Ethoca/Verifi recebido</p>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+            <div className="bg-red-50 dark:bg-red-900/10 rounded-lg p-4 border border-red-200 dark:border-red-800">
               <p className="text-xs text-slate-500 mb-1">Multa por Chargeback</p>
               {editing ? (
                 <div className="flex items-center gap-2">
@@ -466,6 +563,7 @@ export default function TabTaxas({ merchant }) {
               ) : (
                 <p className="text-xl font-bold text-red-600">R$ {rates.cb_penalty.toFixed(2)}</p>
               )}
+              <p className="text-[10px] text-slate-400 mt-1">Por chargeback recebido</p>
             </div>
           </div>
         </CardContent>

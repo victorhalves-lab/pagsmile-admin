@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatCurrency } from '@/components/utils';
-import { CreditCard, QrCode, FileText, Shield } from 'lucide-react';
+import { CreditCard, QrCode, FileText, Shield, Banknote, Lock } from 'lucide-react';
 
 function RateRow({ label, value }) {
   return (
@@ -40,11 +40,28 @@ export default function TabTaxasReadonly({ subaccount }) {
         <RateRow label="Prazo de Liquidação" value={fmtDays(rc.settlement_days)} />
       </div>
 
-      <SectionHeader title="Proteção e Fraude" icon={Shield} iconColor="text-orange-500" />
+      <SectionHeader title="Gateway" icon={Banknote} iconColor="text-cyan-500" />
+      <div className="bg-gray-50 rounded-xl p-4">
+        <RateRow label="Gateway - Transação Aprovada" value={fmtBrl(rc.gateway_fee_approved)} />
+        <RateRow label="Gateway - Transação Recusada" value={fmtBrl(rc.gateway_fee_refused)} />
+      </div>
+
+      <SectionHeader title="Autenticação 3DS" icon={Lock} iconColor="text-blue-500" />
+      <div className="bg-gray-50 rounded-xl p-4">
+        <RateRow label="Taxa 3DS (autenticação)" value={fmtBrl(rc.threeds_fee)} />
+        <RateRow label="Cobra apenas autenticadas" value={rc.threeds_charge_only_authenticated ? 'Sim' : 'Não'} />
+      </div>
+
+      <SectionHeader title="Antifraude" icon={Shield} iconColor="text-orange-500" />
+      <div className="bg-gray-50 rounded-xl p-4">
+        <RateRow label="Antifraude - Cartão" value={fmtBrl(rc.antifraud_fee)} />
+        <RateRow label="Antifraude - PIX" value={fmtBrl(rc.antifraud_pix_fee)} />
+      </div>
+
+      <SectionHeader title="Pré-Chargeback & Chargebacks" icon={Shield} iconColor="text-red-500" />
       <div className="bg-gray-50 rounded-xl p-4">
         <RateRow label="Taxa de Pré-Chargeback" value={fmtBrl(rc.pre_chargeback_fee)} />
-        <RateRow label="Taxa de Chargeback" value={fmtBrl(rc.chargeback_fee)} />
-        <RateRow label="Taxa de Antifraude" value={fmtBrl(rc.antifraud_fee)} />
+        <RateRow label="Multa por Chargeback" value={fmtBrl(rc.chargeback_fee)} />
       </div>
 
       <SectionHeader title="Retenção de Cartão (Rolling Reserve)" icon={Shield} iconColor="text-red-500" />

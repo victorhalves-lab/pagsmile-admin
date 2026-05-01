@@ -143,14 +143,16 @@ export default function Fees() {
 
   // ==================== TARIFAS (FIXAS) ====================
   const tarifasFixas = [
-    { categoria: 'Gateway', nome: 'Tarifa por Transação Aprovada', valor: 0.49, tipo: 'por_transacao' },
-    { categoria: 'Gateway', nome: 'Tarifa por Transação Recusada', valor: 0.00, tipo: 'por_transacao' },
-    { categoria: 'Antifraude', nome: 'Análise Antifraude', valor: 0.70, tipo: 'por_transacao' },
-    { categoria: 'Antifraude', nome: 'Análise Premium (3DS)', valor: 0.30, tipo: 'por_transacao' },
+    { categoria: 'Gateway', nome: 'Gateway - Transação Aprovada', valor: 0.49, tipo: 'por_transacao' },
+    { categoria: 'Gateway', nome: 'Gateway - Transação Recusada', valor: 0.00, tipo: 'por_transacao' },
+    { categoria: '3DS', nome: 'Autenticação 3D Secure', valor: 0.30, tipo: 'por_transacao' },
+    { categoria: 'Antifraude', nome: 'Antifraude - Cartão', valor: 0.70, tipo: 'por_transacao' },
+    { categoria: 'Antifraude', nome: 'Antifraude - PIX', valor: 0.08, tipo: 'por_transacao' },
+    { categoria: 'Pré-Chargeback', nome: 'Taxa de Pré-Chargeback (alerta Ethoca/Verifi)', valor: 8.00, tipo: 'por_ocorrencia' },
+    { categoria: 'Chargeback', nome: 'Multa por Chargeback', valor: 30.00, tipo: 'por_ocorrencia' },
     { categoria: 'Saques', nome: 'Saque via TED', valor: 3.90, tipo: 'por_operacao' },
     { categoria: 'Saques', nome: 'Saque via PIX', valor: 0.00, tipo: 'por_operacao' },
     { categoria: 'Estornos', nome: 'Estorno/Cancelamento', valor: 0.00, tipo: 'por_operacao' },
-    { categoria: 'Chargeback', nome: 'Taxa de Chargeback', valor: 15.00, tipo: 'por_ocorrencia' },
     { categoria: 'Boleto', nome: 'Emissão de Boleto', valor: 2.90, tipo: 'por_boleto' },
     { categoria: 'Boleto', nome: 'Boleto Compensado', valor: 0.00, tipo: 'por_boleto' },
   ];
@@ -167,6 +169,7 @@ export default function Fees() {
 
     const valorMDR = amount * (mdr / 100);
     const tarifaGateway = 0.49;
+    const tarifa3DS = 0.30;
     const tarifaAntifraude = 0.70;
     
     // Antecipação
@@ -175,7 +178,7 @@ export default function Fees() {
     const custoAntecipacaoPercent = (diasAntecipados / 30) * taxaAntecipacao;
     const valorAntecipacao = amount * (custoAntecipacaoPercent / 100);
 
-    const custoTotal = valorMDR + tarifaGateway + tarifaAntifraude + valorAntecipacao;
+    const custoTotal = valorMDR + tarifaGateway + tarifa3DS + tarifaAntifraude + valorAntecipacao;
     const valorLiquido = amount - custoTotal;
     const percentualEfetivo = (custoTotal / amount) * 100;
 
@@ -184,6 +187,7 @@ export default function Fees() {
       mdr: mdr,
       valorMDR,
       tarifaGateway,
+      tarifa3DS,
       tarifaAntifraude,
       custoAntecipacaoPercent,
       valorAntecipacao,
@@ -508,6 +512,10 @@ export default function Fees() {
                     <div className="flex justify-between">
                       <span className="text-slate-400">Tarifa Gateway</span>
                       <span className="text-red-400">-{formatCurrency(simulation.tarifaGateway)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Autenticação 3DS</span>
+                      <span className="text-red-400">-{formatCurrency(simulation.tarifa3DS)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-400">Antifraude</span>
