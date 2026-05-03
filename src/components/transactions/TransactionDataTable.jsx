@@ -63,15 +63,22 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import StatusBadge from '@/components/common/StatusBadge';
+import DatesCell from './cells/DatesCell';
+import ValuesCell from './cells/ValuesCell';
+import FeesCell from './cells/FeesCell';
 
 const DEFAULT_COLUMNS = [
   { key: 'transaction_id', label: 'ID', visible: true, sortable: true },
-  { key: 'created_date', label: 'Data/Hora', visible: true, sortable: true },
-  { key: 'type', label: 'Método', visible: true, sortable: true },
-  { key: 'amount', label: 'Valor', visible: true, sortable: true },
-  { key: 'status', label: 'Status', visible: true, sortable: true },
-  { key: 'merchant', label: 'Cliente (Merchant)', visible: true, sortable: true },
-  { key: 'customer', label: 'Pagador', visible: true, sortable: true },
+  { key: 'merchant', label: 'Vendedor', visible: true, sortable: true },
+  { key: 'customer', label: 'Comprador', visible: true, sortable: true },
+  { key: 'payment_block', label: 'Pagamento', visible: true, sortable: false },
+  { key: 'dates_block', label: 'Datas', visible: true, sortable: false },
+  { key: 'values_block', label: 'Valores', visible: true, sortable: false },
+  { key: 'fees_block', label: 'Comissões e Taxas', visible: true, sortable: false },
+  { key: 'created_date', label: 'Data/Hora', visible: false, sortable: true },
+  { key: 'type', label: 'Método', visible: false, sortable: true },
+  { key: 'amount', label: 'Valor', visible: false, sortable: true },
+  { key: 'status', label: 'Status', visible: false, sortable: true },
   { key: 'sub_seller', label: 'Sub-seller', visible: false, sortable: true },
   { key: 'card_brand', label: 'Bandeira', visible: false, sortable: true },
   { key: 'card_last_four', label: 'Últimos 4', visible: false },
@@ -84,36 +91,34 @@ const DEFAULT_COLUMNS = [
 
 const CARD_COLUMNS = [
   { key: 'transaction_id', label: 'ID', visible: true, sortable: true },
-  { key: 'created_date', label: 'Data/Hora', visible: true, sortable: true },
-  { key: 'type', label: 'Método', visible: true, sortable: true },
-  { key: 'amount', label: 'Valor', visible: true, sortable: true },
-  { key: 'status', label: 'Status', visible: true, sortable: true },
-  { key: 'merchant', label: 'Cliente (Merchant)', visible: true, sortable: true },
-  { key: 'customer', label: 'Pagador', visible: true, sortable: true },
-  { key: 'sub_seller', label: 'Sub-seller', visible: true, sortable: true },
-  { key: 'card_brand', label: 'Bandeira', visible: true, sortable: true },
+  { key: 'merchant', label: 'Vendedor', visible: true, sortable: true },
+  { key: 'customer', label: 'Comprador', visible: true, sortable: true },
+  { key: 'payment_block', label: 'Pagamento', visible: true, sortable: false },
+  { key: 'dates_block', label: 'Datas', visible: true, sortable: false },
+  { key: 'values_block', label: 'Valores', visible: true, sortable: false },
+  { key: 'fees_block', label: 'Comissões e Taxas', visible: true, sortable: false },
+  { key: 'card_brand', label: 'Bandeira', visible: false, sortable: true },
   { key: 'card_last_four', label: 'Últimos 4', visible: false },
-  { key: 'installments', label: 'Parcelas', visible: true, sortable: true },
-  { key: 'bin', label: 'BIN', visible: true },
+  { key: 'installments', label: 'Parcelas', visible: false, sortable: true },
+  { key: 'bin', label: 'BIN', visible: false },
   { key: 'issuer', label: 'Emissor', visible: false },
   { key: 'authorization_code', label: 'Cód. Autorização', visible: false },
-  { key: 'threeds', label: '3DS', visible: true },
-  { key: 'net_amount', label: 'Líquido', visible: false, sortable: true },
-  { key: 'fee_amount', label: 'Taxa', visible: false },
+  { key: 'threeds', label: '3DS', visible: false },
+  { key: 'sub_seller', label: 'Sub-seller', visible: false, sortable: true },
 ];
 
 const PIX_COLUMNS = [
   { key: 'transaction_id', label: 'ID', visible: true, sortable: true },
-  { key: 'created_date', label: 'Data/Hora', visible: true, sortable: true },
-  { key: 'pix_transaction_type', label: 'Tipo PIX', visible: true, sortable: true },
-  { key: 'amount', label: 'Valor', visible: true, sortable: true },
-  { key: 'status', label: 'Status', visible: true, sortable: true },
-  { key: 'merchant', label: 'Cliente (Merchant)', visible: true, sortable: true },
-  { key: 'payer', label: 'Pagador', visible: true, sortable: true },
-  { key: 'e2eid', label: 'E2EID', visible: true },
+  { key: 'merchant', label: 'Vendedor', visible: true, sortable: true },
+  { key: 'payer', label: 'Comprador', visible: true, sortable: true },
+  { key: 'payment_block', label: 'Pagamento', visible: true, sortable: false },
+  { key: 'dates_block', label: 'Datas', visible: true, sortable: false },
+  { key: 'values_block', label: 'Valores', visible: true, sortable: false },
+  { key: 'fees_block', label: 'Comissões e Taxas', visible: true, sortable: false },
+  { key: 'pix_transaction_type', label: 'Tipo PIX', visible: false, sortable: true },
+  { key: 'e2eid', label: 'E2EID', visible: false },
   { key: 'pix_type', label: 'Tipo Cobrança', visible: false },
   { key: 'payment_time', label: 'Tempo Pgto', visible: false },
-  { key: 'net_amount', label: 'Líquido', visible: false, sortable: true },
 ];
 
 export default function TransactionDataTable({
@@ -286,15 +291,15 @@ export default function TransactionDataTable({
 
       case 'merchant':
         return (
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">{row?.merchant_name || row?.subaccount_name || 'N/A'}</p>
-            <p className="text-xs text-gray-500 truncate">{row?.subaccount_id ? `ID: ${row.subaccount_id.slice(0, 8)}...` : ''}</p>
+          <div className="min-w-0 max-w-[180px]">
+            <p className="text-sm font-medium text-gray-900 truncate uppercase">{row?.merchant_name || row?.subaccount_name || 'N/A'}</p>
+            <p className="text-xs text-gray-500 truncate lowercase">{row?.merchant_email || row?.subaccount_email || ''}</p>
           </div>
         );
 
       case 'customer':
         return (
-          <div className="min-w-0">
+          <div className="min-w-0 max-w-[180px]">
             <p className="text-sm font-medium text-gray-900 truncate">{row?.customer?.name || row?.customer_name || 'N/A'}</p>
             <p className="text-xs text-gray-500 truncate">{row?.customer?.email || row?.customer_email || ''}</p>
           </div>
@@ -353,6 +358,30 @@ export default function TransactionDataTable({
         return row.merchant_order_id ? (
           <span className="font-mono text-xs truncate max-w-24 block">{row.merchant_order_id}</span>
         ) : '-';
+
+      case 'payment_block':
+        return (
+          <div className="space-y-1 min-w-[140px]">
+            <StatusBadge status={row.status} />
+            <p className="text-xs text-gray-500">
+              {row.type === 'pix' ? 'PIX' : row.card_brand ? `Cartão · ${row.card_brand}` : 'Cartão'}
+            </p>
+            {row.status === 'refused' && row.refusal_reason && (
+              <p className="text-[10px] text-red-600 truncate max-w-[140px]" title={row.refusal_reason}>
+                {row.refusal_reason}
+              </p>
+            )}
+          </div>
+        );
+
+      case 'dates_block':
+        return <DatesCell row={row} />;
+
+      case 'values_block':
+        return <ValuesCell row={row} />;
+
+      case 'fees_block':
+        return <FeesCell row={row} />;
 
       case 'bin':
         return row.type === 'card' && row.card_last_four ? (
