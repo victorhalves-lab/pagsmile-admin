@@ -66,6 +66,10 @@ import StatusBadge from '@/components/common/StatusBadge';
 import DatesCell from './cells/DatesCell';
 import ValuesCell from './cells/ValuesCell';
 import FeesCell from './cells/FeesCell';
+import ValuesCellMerchant from './cells/ValuesCellMerchant';
+import ValuesCellInternal from './cells/ValuesCellInternal';
+import FeesCellMerchant from './cells/FeesCellMerchant';
+import FeesCellInternal from './cells/FeesCellInternal';
 
 const DEFAULT_COLUMNS = [
   { key: 'transaction_id', label: 'ID', visible: true, sortable: true },
@@ -125,6 +129,7 @@ export default function TransactionDataTable({
   data = [],
   loading = false,
   viewMode = 'all', // 'all', 'card', 'pix'
+  viewContext = 'merchant', // 'merchant' (Admin Sub) | 'internal' (Admin Interno)
   selectable = true,
   selectedRows = [],
   onSelectRows,
@@ -145,7 +150,10 @@ export default function TransactionDataTable({
 }) {
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const cols = viewMode === 'card' ? CARD_COLUMNS : viewMode === 'pix' ? PIX_COLUMNS : DEFAULT_COLUMNS;
-    return cols.filter(c => c.visible).map(c => c.key);
+    let visible = cols.filter(c => c.visible).map(c => c.key);
+    // No contexto merchant, esconder coluna "Vendedor" (é o próprio merchant olhando)
+    if (viewContext === 'merchant') visible = visible.filter(k => k !== 'merchant');
+    return visible;
   });
 
   const allColumns = viewMode === 'card' ? CARD_COLUMNS : viewMode === 'pix' ? PIX_COLUMNS : DEFAULT_COLUMNS;
@@ -378,9 +386,13 @@ export default function TransactionDataTable({
         return <DatesCell row={row} />;
 
       case 'values_block':
+        if (viewContext === 'internal') return <ValuesCellInternal row={row} />;
+        if (viewContext === 'merchant') return <ValuesCellMerchant row={row} />;
         return <ValuesCell row={row} />;
 
       case 'fees_block':
+        if (viewContext === 'internal') return <FeesCellInternal row={row} />;
+        if (viewContext === 'merchant') return <FeesCellMerchant row={row} />;
         return <FeesCell row={row} />;
 
       case 'bin':

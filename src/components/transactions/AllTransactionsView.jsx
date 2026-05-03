@@ -176,6 +176,7 @@ export default function AllTransactionsView() {
         data={paginatedTransactions}
         loading={isLoading}
         viewMode="all"
+        viewContext="merchant"
         selectable
         selectedRows={selectedRows}
         onSelectRows={setSelectedRows}

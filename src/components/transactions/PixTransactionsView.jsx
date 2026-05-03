@@ -459,6 +459,7 @@ export default function PixTransactionsView() {
         data={paginatedTransactions}
         loading={isLoading}
         viewMode="pix"
+        viewContext="merchant"
         selectable
         selectedRows={selectedRows}
         onSelectRows={setSelectedRows}

@@ -18,6 +18,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import StatusBadge from '@/components/common/StatusBadge';
 import { mockTransactions } from '@/components/mockData/adminInternoMocks';
 import { cn } from '@/lib/utils';
+import TransactionDataTable from '@/components/transactions/TransactionDataTable';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 
@@ -90,6 +91,21 @@ export default function AdminIntTransactionsList() {
 
   const paginatedTxs = filteredTxs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   const totalPages = Math.ceil(filteredTxs.length / itemsPerPage);
+
+  // Adapter: converter o shape do mock (id, date, method) para o shape esperado pelo TransactionDataTable
+  const adaptedTxs = paginatedTxs.map(tx => ({
+    ...tx,
+    transaction_id: tx.transaction_id || tx.id,
+    created_date: tx.created_date || tx.date,
+    type: tx.method === 'pix' ? 'pix' : 'card',
+    card_brand: tx.brand || tx.card_brand,
+    merchant_name: tx.merchant_name,
+    customer_name: tx.customer?.name || tx.payer_name,
+    customer_email: tx.customer?.email,
+    customer_document: tx.customer?.document || tx.payer_document,
+  }));
+
+  const tableViewMode = activeTab === 'pix' ? 'pix' : activeTab === 'card' ? 'card' : 'all';
 
   // Estatísticas gerais
   const allApproved = mockTransactions.filter(t => t.status === 'approved');
@@ -235,7 +251,7 @@ export default function AdminIntTransactionsList() {
         </CardContent>
       </Card>
 
-      {/* Tabela de Transações */}
+      {/* Tabela de Transações - Componente unificado com viewContext="internal" */}
       <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
         <CardHeader className="py-3 px-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center justify-between">
@@ -245,168 +261,23 @@ export default function AdminIntTransactionsList() {
               {activeTab === 'all' && <Wallet className="w-4 h-4 text-slate-500" />}
               {filteredTxs.length.toLocaleString()} transações
             </CardTitle>
-            <span className="text-xs text-slate-500">
-              Exibindo {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, filteredTxs.length)}
-            </span>
+            <span className="text-xs text-slate-500">Visão PagSmile · Receita / Custo / Margem por transação</span>
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-                  <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">ID / Referência</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Data</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Merchant</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Pagador</th>
-                  <th className="text-right py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Valor</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Método</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Status</th>
-                  <th className="text-center py-3 px-4 font-medium text-slate-500 dark:text-slate-400 text-xs">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedTxs.map(tx => {
-                  const method = paymentMethodConfig[tx.method] || paymentMethodConfig.credit_card;
-                  const status = statusConfig[tx.status] || statusConfig.pending;
-                  const StatusIcon = status.icon;
-                  const MethodIcon = method.icon;
-                  
-                  return (
-                    <tr key={tx.id} className="border-b border-slate-50 dark:border-slate-800/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                      <td className="py-3 px-4">
-                        <Link to={createPageUrl('AdminIntTransactionDetail') + '?id=' + tx.id} className="font-mono text-xs text-[#2bc196] hover:underline font-medium">
-                          {tx.id.slice(0, 12)}...
-                        </Link>
-                        {tx.external_reference && (
-                          <p className="text-[10px] text-slate-400 mt-0.5 truncate max-w-[120px]">Ref: {tx.external_reference}</p>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-xs text-slate-600 dark:text-slate-300">
-                        <div>{new Date(tx.date).toLocaleDateString('pt-BR')}</div>
-                        <div className="text-[10px] text-slate-400">{new Date(tx.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <Link to={createPageUrl('AdminIntMerchantProfile') + '?id=' + tx.merchant_id} className="text-xs text-slate-900 dark:text-white hover:text-[#2bc196] font-medium">
-                          {tx.merchant_name}
-                        </Link>
-                        <p className="text-[10px] text-slate-400">ID: {tx.merchant_id}</p>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                            <User className="w-3 h-3 text-slate-500" />
-                          </div>
-                          <div>
-                            <p className="text-xs text-slate-900 dark:text-white font-medium truncate max-w-[120px]">
-                              {tx.customer?.name || tx.payer_name || 'N/A'}
-                            </p>
-                            <p className="text-[10px] text-slate-400 truncate max-w-[120px]">
-                              {tx.customer?.document || tx.payer_document || tx.customer?.email || ''}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <span className="font-semibold text-slate-900 dark:text-white">{formatCurrency(tx.amount)}</span>
-                        {tx.installments > 1 && (
-                          <p className="text-[10px] text-slate-400">{tx.installments}x</p>
-                        )}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className={cn("inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium", method.color)}>
-                          <MethodIcon className="w-3 h-3" />
-                          {method.label}
-                          {tx.brand && <span className="text-[10px] opacity-70">• {tx.brand}</span>}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className={cn("inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium", status.color)}>
-                          <StatusIcon className="w-3 h-3" />
-                          {status.label}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <Link to={createPageUrl('AdminIntTransactionDetail') + '?id=' + tx.id}>
-                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                              <Eye className="w-4 h-4 text-slate-500" />
-                            </Button>
-                          </Link>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                                <MoreVertical className="w-4 h-4 text-slate-500" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                              <DropdownMenuItem><Eye className="w-4 h-4 mr-2" /> Ver Detalhes</DropdownMenuItem>
-                              <DropdownMenuItem><Receipt className="w-4 h-4 mr-2" /> Copiar ID</DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              {tx.status === 'approved' && (
-                                <DropdownMenuItem className="text-red-600"><RefreshCw className="w-4 h-4 mr-2" /> Estornar</DropdownMenuItem>
-                              )}
-                              <DropdownMenuItem><Zap className="w-4 h-4 mr-2" /> Reenviar Webhook</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Paginação */}
-          <div className="flex items-center justify-between p-4 border-t border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(p => p - 1)}
-                className="h-8"
-              >
-                <ChevronLeft className="w-4 h-4 mr-1" /> Anterior
-              </Button>
-              <div className="flex items-center gap-1">
-                {[...Array(Math.min(5, totalPages))].map((_, i) => {
-                  const page = i + 1;
-                  return (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "ghost"}
-                      size="sm"
-                      className={cn("h-8 w-8 p-0", currentPage === page && "bg-[#2bc196] hover:bg-[#239b7a]")}
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      {page}
-                    </Button>
-                  );
-                })}
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(p => p + 1)}
-                className="h-8"
-              >
-                Próxima <ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
-            </div>
-            <Select defaultValue="25">
-              <SelectTrigger className="w-[120px] h-8">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="25">25 por pág</SelectItem>
-                <SelectItem value="50">50 por pág</SelectItem>
-                <SelectItem value="100">100 por pág</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <TransactionDataTable
+            data={adaptedTxs}
+            viewMode={tableViewMode}
+            viewContext="internal"
+            selectable={false}
+            pagination
+            pageSize={itemsPerPage}
+            currentPage={currentPage}
+            totalItems={filteredTxs.length}
+            onPageChange={setCurrentPage}
+            onPageSizeChange={() => {}}
+            emptyMessage="Nenhuma transação encontrada"
+          />
         </CardContent>
       </Card>
     </div>

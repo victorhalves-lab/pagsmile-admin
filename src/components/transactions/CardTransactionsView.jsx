@@ -308,6 +308,7 @@ export default function CardTransactionsView() {
         data={paginatedTransactions}
         loading={isLoading}
         viewMode="card"
+        viewContext="merchant"
         selectable
         selectedRows={selectedRows}
         onSelectRows={setSelectedRows}
