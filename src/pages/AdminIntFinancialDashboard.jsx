@@ -3,8 +3,11 @@ import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { TrendingUp, TrendingDown, AlertTriangle, Calendar, DollarSign, Wallet, ArrowUpFromLine, Clock } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, Calendar, DollarSign, Wallet, ArrowUpFromLine, Clock, Target, ArrowRight } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 const formatCurrencyShort = (v) => {
@@ -61,6 +64,28 @@ export default function AdminIntFinancialDashboard() {
                     </Select>
                 }
             />
+
+            {/* Profitability Highlight Card */}
+            <Card className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white border-0 shadow-xl overflow-hidden">
+                <CardContent className="p-6 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                            <Target className="w-7 h-7" />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold">📊 Visão de Rentabilidade Unificada</h3>
+                            <p className="text-sm text-white/90 mt-1">
+                                Margem líquida = Receita − Custo Variável − Custo Fixo. Veja realizado, projeção 90d, simulações e margem por cliente.
+                            </p>
+                        </div>
+                    </div>
+                    <Button asChild variant="secondary" className="bg-white text-emerald-700 hover:bg-emerald-50 shadow-md">
+                        <Link to={createPageUrl('AdminIntProfitabilityView')}>
+                            Abrir Análise <ArrowRight className="w-4 h-4 ml-2" />
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
 
             {/* Main KPIs */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">

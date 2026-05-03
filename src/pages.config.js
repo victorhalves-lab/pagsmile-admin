@@ -129,6 +129,7 @@ import AdminIntPartners from './pages/AdminIntPartners';
 import AdminIntPaymentAgenda from './pages/AdminIntPaymentAgenda';
 import AdminIntPreChargebacks from './pages/AdminIntPreChargebacks';
 import AdminIntPriceSimulator from './pages/AdminIntPriceSimulator';
+import AdminIntProfitabilityView from './pages/AdminIntProfitabilityView';
 import AdminIntProfiles from './pages/AdminIntProfiles';
 import AdminIntProposalDetails from './pages/AdminIntProposalDetails';
 import AdminIntReconciliation from './pages/AdminIntReconciliation';
@@ -339,6 +340,7 @@ export const PAGES = {
     "AdminIntPaymentAgenda": AdminIntPaymentAgenda,
     "AdminIntPreChargebacks": AdminIntPreChargebacks,
     "AdminIntPriceSimulator": AdminIntPriceSimulator,
+    "AdminIntProfitabilityView": AdminIntProfitabilityView,
     "AdminIntProfiles": AdminIntProfiles,
     "AdminIntProposalDetails": AdminIntProposalDetails,
     "AdminIntReconciliation": AdminIntReconciliation,

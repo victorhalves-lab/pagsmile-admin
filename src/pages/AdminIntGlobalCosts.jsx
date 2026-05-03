@@ -13,6 +13,8 @@ import {
   TrendingUp, Calculator, Info, Receipt, Users
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import CostPerTransactionCalculator from '@/components/admin-interno/costs/CostPerTransactionCalculator';
 
 const brands = ['Visa', 'Mastercard', 'Elo', 'Amex', 'Hipercard'];
@@ -37,7 +39,14 @@ export default function AdminIntGlobalCosts() {
               <Button onClick={() => { toast.success('Custos globais salvos!'); setEditing(false); }}>Salvar</Button>
             </div>
           ) : (
-            <Button onClick={() => setEditing(true)}>Editar Custos Globais</Button>
+            <div className="flex gap-2">
+              <Button asChild variant="outline">
+                <Link to={createPageUrl('AdminIntProfitabilityView')}>
+                  <TrendingUp className="w-4 h-4 mr-2" /> Visão de Rentabilidade
+                </Link>
+              </Button>
+              <Button onClick={() => setEditing(true)}>Editar Custos Globais</Button>
+            </div>
           )
         }
       />
