@@ -47,6 +47,9 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveCont
 import AgentChatInterface from '@/components/agents/AgentChatInterface';
 import AgentFloatingButton from '@/components/agents/AgentFloatingButton';
 import { processConverterAgentMessage, converterAgentQuickPrompts } from '@/components/agents/ConverterAgentChatLogic';
+import InsightOfTheDayCard from '@/components/checkout/converter/InsightOfTheDayCard';
+import AbTestDetailedCard from '@/components/checkout/converter/AbTestDetailedCard';
+import AutoPilotCard from '@/components/checkout/converter/AutoPilotCard';
 
 export default function ConverterAgent() {
   // Control states
@@ -203,6 +206,12 @@ export default function ConverterAgent() {
           </Link>
         </div>
       </div>
+
+      {/* Insight do dia — porta de entrada acionável */}
+      <InsightOfTheDayCard />
+
+      {/* Auto-Pilot card */}
+      <AutoPilotCard />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -548,10 +557,12 @@ export default function ConverterAgent() {
 
         {/* A/B Tests Tab */}
         <TabsContent value="ab-tests" className="space-y-6">
+          <AbTestDetailedCard />
+
           <Card>
             <CardHeader>
-              <CardTitle>Resultados de Experimentos A/B</CardTitle>
-              <CardDescription>Comparação de variantes testadas</CardDescription>
+              <CardTitle>Resultados de Experimentos A/B (legado)</CardTitle>
+              <CardDescription>Comparação simplificada de variantes</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

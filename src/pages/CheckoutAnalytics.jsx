@@ -30,6 +30,10 @@ import {
   ArrowRight,
   Download
 } from 'lucide-react';
+import SmartInsightsBar from '@/components/checkout/analytics/SmartInsightsBar';
+import FullCheckoutFunnel from '@/components/checkout/analytics/FullCheckoutFunnel';
+import AnalyticsDecomposition from '@/components/checkout/analytics/AnalyticsDecomposition';
+import CheckoutHealthScore from '@/components/checkout/CheckoutHealthScore';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', {
@@ -126,6 +130,10 @@ export default function CheckoutAnalytics() {
         }
       />
 
+      {/* Smart Insights da IA + Health Score */}
+      <SmartInsightsBar />
+      <CheckoutHealthScore score={78} />
+
       {/* KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map((kpi, index) => (
@@ -155,12 +163,18 @@ export default function CheckoutAnalytics() {
         ))}
       </div>
 
-      {/* Funil de Conversão */}
+      {/* Funil completo de 10 etapas */}
+      <FullCheckoutFunnel />
+
+      {/* Decomposição por dimensão */}
+      <AnalyticsDecomposition />
+
+      {/* Funil semanal (mantido para sazonalidade) */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MousePointerClick className="w-5 h-5" />
-            Funil de Conversão
+            Tráfego semanal por etapa
           </CardTitle>
         </CardHeader>
         <CardContent>

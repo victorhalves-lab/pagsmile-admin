@@ -30,6 +30,11 @@ import LayoutSettings from '@/components/checkout/LayoutSettings.jsx';
 import PaymentMethodSettings from '@/components/checkout/PaymentMethodSettings.jsx';
 import ExperienceSettings from '@/components/checkout/ExperienceSettings.jsx';
 import ConverterAgentTab from '@/components/checkout/ConverterAgentTab.jsx';
+import SaveStateIndicator from '@/components/checkout/builder/SaveStateIndicator.jsx';
+import PublishConfirmDialog from '@/components/checkout/builder/PublishConfirmDialog.jsx';
+import InlineAIInsights from '@/components/checkout/builder/InlineAIInsights.jsx';
+import CheckoutHealthScore from '@/components/checkout/CheckoutHealthScore.jsx';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 const defaultCheckoutConfig = {
@@ -181,7 +186,9 @@ export default function CheckoutBuilder() {
   const [history, setHistory] = useState([defaultCheckoutConfig]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
-  
+  const [isDirty, setIsDirty] = useState(false);
+  const [showPublishDialog, setShowPublishDialog] = useState(false);
+
   const queryClient = useQueryClient();
 
   // Get checkout ID from URL if editing existing
@@ -218,7 +225,8 @@ export default function CheckoutBuilder() {
   const updateConfig = (updates) => {
     const newConfig = { ...checkoutConfig, ...updates };
     setCheckoutConfig(newConfig);
-    
+    setIsDirty(true);
+
     // Add to history for undo/redo
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push(newConfig);
@@ -242,7 +250,17 @@ export default function CheckoutBuilder() {
 
   const handleSave = () => {
     setIsSaving(true);
-    saveMutation.mutate(checkoutConfig);
+    saveMutation.mutate(checkoutConfig, {
+      onSuccess: () => {
+        setIsDirty(false);
+        toast.success('Checkout salvo');
+      }
+    });
+  };
+
+  const handlePublish = () => {
+    toast.success('Checkout publicado em produção');
+    setIsDirty(false);
   };
 
   const handleAddElement = (element) => {
@@ -285,28 +303,40 @@ export default function CheckoutBuilder() {
         ]}
         actions={
           <div className="flex items-center gap-2">
+            <SaveStateIndicator state={isSaving ? 'saving' : isDirty ? 'dirty' : 'saved'} />
+            <div className="h-6 w-px bg-gray-200 mx-1" />
+            <CheckoutHealthScore score={78} compact />
+            <div className="h-6 w-px bg-gray-200 mx-1" />
             <Button variant="outline" size="sm" onClick={handleUndo} disabled={historyIndex === 0}>
               <Undo2 className="w-4 h-4" />
             </Button>
             <Button variant="outline" size="sm" onClick={handleRedo} disabled={historyIndex === history.length - 1}>
               <Redo2 className="w-4 h-4" />
             </Button>
-            <div className="h-6 w-px bg-gray-200 mx-2" />
+            <div className="h-6 w-px bg-gray-200 mx-1" />
             <Button variant="outline" size="sm">
               <Eye className="w-4 h-4 mr-2" />
               Preview
             </Button>
-            <Button size="sm" onClick={handleSave} disabled={isSaving} className="bg-[#00D26A] hover:bg-[#00B85C]">
+            <Button size="sm" onClick={handleSave} disabled={isSaving || !isDirty} className="bg-[#2bc196] hover:bg-[#25a880]">
               <Save className="w-4 h-4 mr-2" />
               {isSaving ? 'Salvando...' : 'Salvar'}
             </Button>
-            <Button size="sm" className="bg-[#101F3E] hover:bg-[#1a2d52]">
+            <Button size="sm" variant="outline" className="border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white" onClick={() => setShowPublishDialog(true)}>
               <Play className="w-4 h-4 mr-2" />
               Publicar
             </Button>
           </div>
         }
       />
+
+      <PublishConfirmDialog
+        open={showPublishDialog}
+        onOpenChange={setShowPublishDialog}
+        onConfirm={handlePublish}
+      />
+
+      <InlineAIInsights />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="h-auto flex-wrap gap-1 p-1 bg-white border">
