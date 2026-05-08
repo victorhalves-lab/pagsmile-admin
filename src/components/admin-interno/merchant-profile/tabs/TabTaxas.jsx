@@ -11,10 +11,12 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Edit, Save, X, History, CreditCard, QrCode, Receipt, ShieldAlert,
   AlertTriangle, Info, Percent, Lock, TrendingUp, Clock, Banknote,
-  ChevronDown, ChevronUp, Calculator
+  ChevronDown, ChevronUp, Calculator, Tag
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import MdrRateGrid from '@/components/admin-interno/rates/MdrRateGrid';
+import { createDefaultRateTable } from '@/lib/mdrCalculator';
 
 // ── Mock MCC cost base data ───────────────────────────────────────────
 const mccCostDatabase = {
@@ -71,6 +73,11 @@ export default function TabTaxas({ merchant }) {
   const [selectedMcc, setSelectedMcc] = useState(merchant.mcc || '5651');
   const [mccEnabled, setMccEnabled] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+
+  // Nova grade MDR (substitui a tabela antiga "vista/2_6/7_12 chapados")
+  const [mdrGrid, setMdrGrid] = useState(createDefaultRateTable());
+  const [mdrAnticipation, setMdrAnticipation] = useState(1.89);
+  const [mdrOverrideEnabled, setMdrOverrideEnabled] = useState(true);
 
   // ── Rate state ──────────────────────────────────────────────────────
   const [rates, setRates] = useState({
@@ -211,43 +218,67 @@ export default function TabTaxas({ merchant }) {
         </div>
       </div>
 
+      {/* ── MCC do Cliente (sempre visível e em destaque) ─────── */}
+      <Card className="border-2 border-purple-300 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 dark:border-purple-700">
+        <CardContent className="p-4 flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
+              <Tag className="w-5 h-5 text-purple-700 dark:text-purple-200" />
+            </div>
+            <div>
+              <p className="text-xs text-slate-500 uppercase font-semibold tracking-wide">MCC do Cliente (em vigor)</p>
+              <div className="flex items-center gap-2 mt-1">
+                <Badge className="bg-purple-600 text-white text-base px-3 py-1 font-bold">
+                  {selectedMcc}
+                </Badge>
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                  {mccCostDatabase[selectedMcc]?.label?.split(' - ')[1] || 'Categoria não classificada'}
+                </span>
+              </div>
+            </div>
+          </div>
+          {editing && (
+            <div className="flex items-center gap-2">
+              <Label className="text-xs">Alterar MCC:</Label>
+              <Select value={selectedMcc} onValueChange={setSelectedMcc}>
+                <SelectTrigger className="h-8 w-64 bg-white dark:bg-slate-800">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(mccCostDatabase).map(([code, data]) => (
+                    <SelectItem key={code} value={code}>{data.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* ── MCC Cost Base (Optional) ───────────────────────────── */}
       <Card className="border-blue-200 bg-blue-50/30 dark:bg-blue-900/10 dark:border-blue-800">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base flex items-center gap-2">
               <Lock className="w-5 h-5 text-blue-600" />
-              MCC - Custo Base de Referência
+              Custo Base do MCC - Referência (proteção de margem)
               <Badge variant="outline" className="text-xs">Opcional</Badge>
             </CardTitle>
             <Switch checked={mccEnabled} onCheckedChange={setMccEnabled} />
           </div>
           <CardDescription>
-            Ao ativar, o sistema exibe o custo base do MCC como referência para não colocar taxas abaixo do custo.
+            Ao ativar, o sistema exibe o custo base do MCC como referência para alertar quando taxas estiverem abaixo do custo.
           </CardDescription>
         </CardHeader>
         {mccEnabled && (
           <CardContent className="space-y-4">
-            <div className="flex gap-4 items-end flex-wrap">
-              <div className="flex-1 min-w-[250px]">
-                <Label>MCC do Cliente</Label>
-                <Select value={selectedMcc} onValueChange={setSelectedMcc}>
-                  <SelectTrigger className="mt-1 bg-white dark:bg-slate-800">
-                    <SelectValue placeholder="Selecione o MCC" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(mccCostDatabase).map(([code, data]) => (
-                      <SelectItem key={code} value={code}>{data.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              {editing && (
+            {editing && (
+              <div className="flex justify-end">
                 <Button variant="outline" size="sm" onClick={handleLoadMccDefaults}>
-                  <Calculator className="w-4 h-4 mr-1" /> Carregar Taxas Sugeridas
+                  <Calculator className="w-4 h-4 mr-1" /> Carregar Taxas Sugeridas (custo + markup padrão)
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
             {mccCosts && (
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {[
@@ -285,50 +316,43 @@ export default function TabTaxas({ merchant }) {
         ))}
       </div>
 
-      {/* ── Cartão de Crédito - MDR ────────────────────────────── */}
+      {/* ── MDR Cartão de Crédito - Grade unificada por bandeira × faixa ───── */}
+      <Card className="border-emerald-200 bg-emerald-50/30 dark:bg-emerald-900/10 dark:border-emerald-800">
+        <CardContent className="p-4 flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <Label className="text-sm font-semibold flex items-center gap-2">
+              Override de Taxas para este Merchant
+            </Label>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              Quando ativo, este merchant usa as taxas abaixo (sobrescreve plano e MCC). Quando inativo, herda da hierarquia: <strong>MCC → Plano → Global</strong>.
+            </p>
+          </div>
+          <Switch checked={mdrOverrideEnabled} onCheckedChange={setMdrOverrideEnabled} disabled={!editing} />
+        </CardContent>
+      </Card>
+
+      {mdrOverrideEnabled && (
+        <MdrRateGrid
+          value={mdrGrid}
+          onChange={setMdrGrid}
+          anticipationRate={mdrAnticipation}
+          onAnticipationChange={setMdrAnticipation}
+          readOnly={!editing}
+          title="MDR - Cartão de Crédito (override do merchant)"
+          description="Configure por bandeira × faixa. Use Auto para calcular parcelado da antecipação ou Manual para sobrescrever. Detalhe parcela a parcela quando precisar."
+        />
+      )}
+
+      {/* ── Cartão de Débito + FI ────────────────────────────── */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
             <CreditCard className="w-5 h-5 text-purple-500" />
-            MDR - Cartão de Crédito
+            Cartão de Débito & Taxa Fixa
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b-2 border-slate-200 dark:border-slate-700">
-                  <th className="text-left py-3 px-3 font-semibold text-slate-600">Bandeira</th>
-                  <th className="text-center py-3 px-3 font-semibold text-slate-600">À Vista</th>
-                  <th className="text-center py-3 px-3 font-semibold text-slate-600">2-6x</th>
-                  <th className="text-center py-3 px-3 font-semibold text-slate-600">7-12x</th>
-                  <th className="text-center py-3 px-3 font-semibold text-slate-600">13-21x</th>
-                </tr>
-              </thead>
-              <tbody>
-                {brands.map((brand) => (
-                  <tr key={brand} className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                    <td className="py-3 px-3 font-medium flex items-center gap-2">
-                      <div className="w-8 h-5 bg-slate-100 dark:bg-slate-700 rounded flex items-center justify-center text-[10px] font-bold text-slate-500">{brand.slice(0, 2).toUpperCase()}</div>
-                      {brand}
-                    </td>
-                    {['vista', '2_6', '7_12', '13_21'].map(key => (
-                      <td key={key} className="py-3 px-3">
-                        <RateCell
-                          value={rates[key]}
-                          editing={editing}
-                          onChange={(v) => handleRateChange(key, v)}
-                          costBase={mccEnabled && mccCosts ? mccCosts[key === 'vista' ? 'vista' : key] : undefined}
-                        />
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {/* Débito */}
-          <Separator className="my-4" />
+          <Separator className="my-2" />
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <p className="font-semibold text-sm mb-1">Cartão de Débito</p>

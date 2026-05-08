@@ -1,16 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { useParams } from 'react-router-dom';
-import { Settings, BarChart2, Users, DollarSign, Calculator, ArrowRight } from 'lucide-react';
+import { Settings, BarChart2, Users, DollarSign, Calculator, ArrowRight, Save } from 'lucide-react';
+import { toast } from 'sonner';
+import MdrRateGrid from '@/components/admin-interno/rates/MdrRateGrid';
+import { createDefaultRateTable } from '@/lib/mdrCalculator';
 
 export default function AdminIntMCCDetail() {
     const { code } = useParams();
     const mccCode = code || '5411';
+    const [mccOverrideEnabled, setMccOverrideEnabled] = useState(false);
+    const [mccMdr, setMccMdr] = useState(createDefaultRateTable());
+    const [mccAnticipation, setMccAnticipation] = useState(1.99);
 
     return (
         <div className="space-y-6">
@@ -98,11 +106,44 @@ export default function AdminIntMCCDetail() {
                 </div>
             </div>
 
-            <Tabs defaultValue="costs" className="w-full">
+            <Tabs defaultValue="rates" className="w-full">
                 <TabsList>
+                    <TabsTrigger value="rates">Taxas MDR (Override por MCC)</TabsTrigger>
                     <TabsTrigger value="costs">Custos & Interchange</TabsTrigger>
                     <TabsTrigger value="history">Histórico</TabsTrigger>
                 </TabsList>
+                <TabsContent value="rates" className="mt-4 space-y-4">
+                    <Card className="border-blue-200 bg-blue-50/40 dark:bg-blue-900/10 dark:border-blue-800">
+                        <CardContent className="p-4 flex items-center justify-between flex-wrap gap-3">
+                            <div>
+                                <Label className="text-sm font-semibold flex items-center gap-2">
+                                    Sobrescrever taxas para este MCC
+                                </Label>
+                                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                                    Quando ativo, merchants com este MCC usam estas taxas (ainda podem ser sobrescritas individualmente). Quando inativo, herdam do plano.
+                                </p>
+                            </div>
+                            <Switch checked={mccOverrideEnabled} onCheckedChange={setMccOverrideEnabled} />
+                        </CardContent>
+                    </Card>
+                    {mccOverrideEnabled && (
+                        <>
+                            <MdrRateGrid
+                                value={mccMdr}
+                                onChange={setMccMdr}
+                                anticipationRate={mccAnticipation}
+                                onAnticipationChange={setMccAnticipation}
+                                title={`MDR específico para MCC ${mccCode}`}
+                                description="Taxas que substituem o plano para todos os merchants deste MCC. Auto calcula parcelado; Manual sobrescreve."
+                            />
+                            <div className="flex justify-end">
+                                <Button onClick={() => toast.success('Taxas do MCC salvas!')}>
+                                    <Save className="w-4 h-4 mr-2" /> Salvar Taxas do MCC
+                                </Button>
+                            </div>
+                        </>
+                    )}
+                </TabsContent>
                 <TabsContent value="costs" className="mt-4">
                     <Card>
                         <CardHeader><CardTitle>Interchange por Bandeira</CardTitle></CardHeader>

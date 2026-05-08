@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,8 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Calculator } from 'lucide-react';
+import MdrRateGrid from '@/components/admin-interno/rates/MdrRateGrid';
+import { createDefaultRateTable } from '@/lib/mdrCalculator';
 
 export default function AdminIntFeePlanDetail() {
+    const [planMdr, setPlanMdr] = useState(createDefaultRateTable());
+    const [planAnticipation, setPlanAnticipation] = useState(1.99);
+
     return (
         <div className="space-y-6">
             <PageHeader 
@@ -52,38 +57,16 @@ export default function AdminIntFeePlanDetail() {
                                 <TabsTrigger value="antifraud">Antifraude & CB</TabsTrigger>
                                 <TabsTrigger value="antecipation">Antecipação</TabsTrigger>
                             </TabsList>
-                            <TabsContent value="card" className="mt-4">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Bandeira</TableHead>
-                                            <TableHead>Crédito 1x</TableHead>
-                                            <TableHead>Crédito 2-6x</TableHead>
-                                            <TableHead>Crédito 7-12x</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell className="font-medium">Visa</TableCell>
-                                            <TableCell><Input className="w-20 h-8" defaultValue="3.99%" /></TableCell>
-                                            <TableCell><Input className="w-20 h-8" defaultValue="4.49%" /></TableCell>
-                                            <TableCell><Input className="w-20 h-8" defaultValue="5.49%" /></TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell className="font-medium">Mastercard</TableCell>
-                                            <TableCell><Input className="w-20 h-8" defaultValue="3.99%" /></TableCell>
-                                            <TableCell><Input className="w-20 h-8" defaultValue="4.49%" /></TableCell>
-                                            <TableCell><Input className="w-20 h-8" defaultValue="5.49%" /></TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell className="font-medium">Elo</TableCell>
-                                            <TableCell><Input className="w-20 h-8" defaultValue="4.19%" /></TableCell>
-                                            <TableCell><Input className="w-20 h-8" defaultValue="4.69%" /></TableCell>
-                                            <TableCell><Input className="w-20 h-8" defaultValue="5.69%" /></TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                                <div className="mt-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm flex items-center gap-2">
+                            <TabsContent value="card" className="mt-4 space-y-4">
+                                <MdrRateGrid
+                                    value={planMdr}
+                                    onChange={setPlanMdr}
+                                    anticipationRate={planAnticipation}
+                                    onAnticipationChange={setPlanAnticipation}
+                                    title="MDR do Plano por Bandeira e Faixa"
+                                    description="Taxas deste plano. Use Auto p/ calcular parcelado da antecipação ou Manual p/ sobrescrever. Detalhe parcela a parcela quando precisar."
+                                />
+                                <div className="p-3 bg-blue-50 text-blue-700 rounded-lg text-sm flex items-center gap-2">
                                     <Calculator className="w-4 h-4" /> Margem média estimada: 1.95% (vs Custo Médio)
                                 </div>
                             </TabsContent>

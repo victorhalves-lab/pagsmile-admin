@@ -148,6 +148,23 @@ export default function MerchantHeader({ merchant }) {
                                 <Building2 className="w-3 h-3" />
                                 <span>Categoria: <span className="font-medium text-[var(--color-text-secondary)]">{merchant.category || 'Varejo'}</span></span>
                             </div>
+                            {/* MCC em destaque - sempre visível */}
+                            <div className="mt-2 pt-2 border-t border-dashed border-[var(--color-border-light)]">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)] font-semibold">MCC:</span>
+                                    <Badge className="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-2 py-0.5">
+                                        {merchant.mcc || '5651'}
+                                    </Badge>
+                                    <span className="text-xs text-[var(--color-text-secondary)]">
+                                        {merchant.mcc_description || 'Varejo de Roupas'}
+                                    </span>
+                                    {merchant.mcc_compliance_status === 'potential_deviation' && (
+                                        <Badge variant="outline" className="text-[10px] text-amber-600 border-amber-300 gap-1">
+                                            ⚠️ Possível desvio
+                                        </Badge>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

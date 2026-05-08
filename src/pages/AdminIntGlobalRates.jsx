@@ -5,73 +5,48 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CreditCard, Smartphone, FileText, Zap, ArrowUpFromLine, Calendar, Edit } from 'lucide-react';
+import { CreditCard, Smartphone, FileText, Zap, ArrowUpFromLine, Calendar, Edit, Save } from 'lucide-react';
 import { toast } from 'sonner';
+import MdrRateGrid from '@/components/admin-interno/rates/MdrRateGrid';
+import { createDefaultRateTable } from '@/lib/mdrCalculator';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 const formatPercent = (v) => `${v.toFixed(2)}%`;
 
-const creditCardRates = [
-    { brand: 'Visa', '1x': 2.99, '2_6x': 3.49, '7_12x': 3.99, '13x': 4.49, intl: 4.99 },
-    { brand: 'Mastercard', '1x': 2.99, '2_6x': 3.49, '7_12x': 3.99, '13x': 4.49, intl: 4.99 },
-    { brand: 'Elo', '1x': 3.29, '2_6x': 3.79, '7_12x': 4.29, '13x': 4.79, intl: 5.29 },
-    { brand: 'Amex', '1x': 3.99, '2_6x': 4.49, '7_12x': 4.99, '13x': 5.49, intl: 5.99 },
-    { brand: 'Hipercard', '1x': 3.49, '2_6x': 3.99, '7_12x': 4.49, '13x': 4.99, intl: 5.49 },
-];
-
 export default function AdminIntGlobalRates() {
     const [editModal, setEditModal] = useState(null);
+    const [globalMdr, setGlobalMdr] = useState(createDefaultRateTable());
+    const [globalAnticipation, setGlobalAnticipation] = useState(1.99);
+
+    const handleSaveMdr = () => {
+        toast.success('Tabela de MDR Global salva com sucesso! (simulação)');
+    };
 
     return (
         <div className="space-y-6">
             <PageHeader 
                 title="Taxas Globais"
                 breadcrumbs={[{ label: 'Administração' }, { label: 'Taxas' }]}
+                actions={
+                    <Button onClick={handleSaveMdr}>
+                        <Save className="w-4 h-4 mr-2" /> Salvar Alterações
+                    </Button>
+                }
             />
 
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
-                ⚠️ Estas são as taxas padrão aplicadas a novos merchants. Merchants existentes podem ter taxas personalizadas configuradas em seus perfis.
+                ⚠️ Estas são as taxas padrão aplicadas a novos merchants. Hierarquia: <strong>Merchant Override → MCC → Plano → Global (esta tabela)</strong>. Merchants existentes podem ter taxas personalizadas em seus perfis.
             </div>
 
-            {/* Credit Card MDR */}
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle className="text-base flex items-center gap-2">
-                        <CreditCard className="w-5 h-5" /> Cartão de Crédito - MDR Padrão
-                    </CardTitle>
-                    <Button variant="outline" size="sm" onClick={() => setEditModal('credit')}>
-                        <Edit className="w-4 h-4 mr-1" /> Editar
-                    </Button>
-                </CardHeader>
-                <CardContent>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                            <thead>
-                                <tr className="border-b">
-                                    <th className="text-left py-2 px-3">Bandeira</th>
-                                    <th className="text-center py-2 px-3">1x</th>
-                                    <th className="text-center py-2 px-3">2-6x</th>
-                                    <th className="text-center py-2 px-3">7-12x</th>
-                                    <th className="text-center py-2 px-3">13+x</th>
-                                    <th className="text-center py-2 px-3">Internacional</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {creditCardRates.map((row, idx) => (
-                                    <tr key={idx} className="border-b hover:bg-slate-50">
-                                        <td className="py-3 px-3 font-medium">{row.brand}</td>
-                                        <td className="py-3 px-3 text-center">{formatPercent(row['1x'])}</td>
-                                        <td className="py-3 px-3 text-center">{formatPercent(row['2_6x'])}</td>
-                                        <td className="py-3 px-3 text-center">{formatPercent(row['7_12x'])}</td>
-                                        <td className="py-3 px-3 text-center">{formatPercent(row['13x'])}</td>
-                                        <td className="py-3 px-3 text-center">{formatPercent(row.intl)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </CardContent>
-            </Card>
+            {/* Tabela MDR Global - novo grid unificado */}
+            <MdrRateGrid
+                value={globalMdr}
+                onChange={setGlobalMdr}
+                anticipationRate={globalAnticipation}
+                onAnticipationChange={setGlobalAnticipation}
+                title="Cartão de Crédito - MDR Padrão por Bandeira e Faixa"
+                description="Estas são as taxas globais default. Use Auto para calcular taxas parceladas a partir do MDR à vista + antecipação, ou Manual para sobrescrever."
+            />
 
             {/* Debit Card */}
             <Card>
