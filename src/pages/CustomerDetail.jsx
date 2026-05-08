@@ -24,6 +24,8 @@ import {
   Eye,
   Ban,
   Shield,
+  Clock as TimelineIcon,
+  Brain,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -65,6 +67,13 @@ import SubscriptionsEnhanced from '@/components/customers/v2/SubscriptionsEnhanc
 import DisputesEnhanced from '@/components/customers/v2/DisputesEnhanced';
 import CustomerNotes from '@/components/customers/v2/CustomerNotes';
 import CustomerCommsHistory from '@/components/customers/v2/CustomerCommsHistory';
+// Phase 2: Customer 360 vision
+import CustomerTimeline from '@/components/customers/v2/CustomerTimeline';
+import CustomerPredictions from '@/components/customers/v2/CustomerPredictions';
+import CustomerJourneyMap from '@/components/customers/v2/CustomerJourneyMap';
+import CustomerSimilarity from '@/components/customers/v2/CustomerSimilarity';
+import SegmentChips from '@/components/customers/v2/SegmentChips';
+import CustomerActivityCompact from '@/components/customers/v2/CustomerActivityCompact';
 
 export default function CustomerDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -216,6 +225,10 @@ export default function CustomerDetail() {
                     Online há 5min
                   </Badge>
                 </div>
+                {/* AI dynamic segments */}
+                <div className="mt-3">
+                  <SegmentChips customer={customer} />
+                </div>
               </div>
             </div>
           </div>
@@ -227,12 +240,23 @@ export default function CustomerDetail() {
         </CardContent>
       </Card>
 
+      {/* Customer Journey Map */}
+      <CustomerJourneyMap customer={customer} />
+
       {/* AI Insights */}
       <CustomerAiInsights customer={customer} />
 
       {/* Tabs */}
-      <Tabs defaultValue="info" className="space-y-6">
+      <Tabs defaultValue="timeline" className="space-y-6">
         <TabsList className="flex-wrap h-auto">
+          <TabsTrigger value="timeline">
+            <TimelineIcon className="w-3.5 h-3.5 mr-1" />
+            Timeline
+          </TabsTrigger>
+          <TabsTrigger value="ai" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-900">
+            <Brain className="w-3.5 h-3.5 mr-1" />
+            AI Predictions
+          </TabsTrigger>
           <TabsTrigger value="info">Informações</TabsTrigger>
           <TabsTrigger value="transactions">
             Transações <Badge variant="secondary" className="ml-2">{transactions.length}</Badge>
@@ -254,11 +278,23 @@ export default function CustomerDetail() {
             <StickyNote className="w-3.5 h-3.5 mr-1" />
             Notas
           </TabsTrigger>
-          <TabsTrigger value="activity">
-            <Activity className="w-3.5 h-3.5 mr-1" />
-            Atividade
-          </TabsTrigger>
         </TabsList>
+
+        {/* Timeline (default) — unified cross-channel events */}
+        <TabsContent value="timeline">
+          <CustomerTimeline
+            customer={customer}
+            transactions={transactions}
+            subscriptions={subscriptions}
+            disputes={disputes}
+          />
+        </TabsContent>
+
+        {/* AI Predictions */}
+        <TabsContent value="ai" className="space-y-6">
+          <CustomerPredictions customer={customer} />
+          <CustomerSimilarity customer={customer} />
+        </TabsContent>
 
         {/* Info Tab */}
         <TabsContent value="info">
@@ -435,38 +471,9 @@ export default function CustomerDetail() {
           <CustomerCommsHistory />
         </TabsContent>
 
-        <TabsContent value="notes">
+        <TabsContent value="notes" className="space-y-6">
           <CustomerNotes customer={customer} />
-        </TabsContent>
-
-        <TabsContent value="activity">
-          <Card>
-            <CardContent className="p-6">
-              <p className="text-sm font-semibold mb-3">Logs de Atividade</p>
-              <div className="space-y-2 text-xs">
-                {[
-                  { time: 'há 5 min', event: 'Cliente acessou portal', icon: Activity, color: 'emerald' },
-                  { time: 'hoje 09:32', event: 'Email "Recovery campaign" aberto', icon: Mail, color: 'blue' },
-                  { time: 'ontem 14:15', event: 'Compra realizada — R$ 299,00', icon: ShoppingBag, color: 'purple' },
-                  { time: '3 dias atrás', event: 'Cartão atualizado via Account Updater', icon: CreditCard, color: 'orange' },
-                  { time: '1 semana atrás', event: 'Tag "Premium" adicionada por Ana Costa', icon: Tag, color: 'yellow' },
-                ].map((a, i) => {
-                  const Icon = a.icon;
-                  return (
-                    <div key={i} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg">
-                      <div className={`w-7 h-7 rounded-lg bg-${a.color}-50 text-${a.color}-600 flex items-center justify-center`}>
-                        <Icon className="w-3.5 h-3.5" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm">{a.event}</p>
-                      </div>
-                      <span className="text-[10px] text-slate-400">{a.time}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+          <CustomerActivityCompact />
         </TabsContent>
       </Tabs>
 
