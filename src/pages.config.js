@@ -195,6 +195,7 @@ import CouponsOverview from './pages/CouponsOverview';
 import CustomDashboards from './pages/CustomDashboards';
 import CustomerDetail from './pages/CustomerDetail';
 import Customers from './pages/Customers';
+import CustomersHub from './pages/CustomersHub';
 import DIACopilot from './pages/DIACopilot';
 import Dashboard from './pages/Dashboard';
 import DeclineAnalysis from './pages/DeclineAnalysis';
@@ -417,6 +418,7 @@ export const PAGES = {
     "CustomDashboards": CustomDashboards,
     "CustomerDetail": CustomerDetail,
     "Customers": Customers,
+    "CustomersHub": CustomersHub,
     "DIACopilot": DIACopilot,
     "Dashboard": Dashboard,
     "DeclineAnalysis": DeclineAnalysis,

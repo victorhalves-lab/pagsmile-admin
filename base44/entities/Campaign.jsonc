@@ -1,0 +1,148 @@
+{
+  "name": "Campaign",
+  "type": "object",
+  "properties": {
+    "campaign_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome da campanha"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "one_time",
+        "recurring",
+        "triggered",
+        "ab_test"
+      ],
+      "default": "one_time"
+    },
+    "goal": {
+      "type": "string",
+      "enum": [
+        "recovery",
+        "retention",
+        "upsell",
+        "cross_sell",
+        "winback",
+        "welcome",
+        "engagement",
+        "nps",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "scheduled",
+        "running",
+        "paused",
+        "completed",
+        "cancelled"
+      ],
+      "default": "draft"
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "email",
+          "whatsapp",
+          "sms",
+          "push"
+        ]
+      },
+      "default": [
+        "email"
+      ]
+    },
+    "segment_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Segmentos alvo"
+    },
+    "template_id": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "scheduled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "send_at_optimal_time": {
+      "type": "boolean",
+      "default": true
+    },
+    "ab_test_variants": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "audience_size": {
+      "type": "number",
+      "default": 0
+    },
+    "sent_count": {
+      "type": "number",
+      "default": 0
+    },
+    "delivered_count": {
+      "type": "number",
+      "default": 0
+    },
+    "opened_count": {
+      "type": "number",
+      "default": 0
+    },
+    "clicked_count": {
+      "type": "number",
+      "default": 0
+    },
+    "converted_count": {
+      "type": "number",
+      "default": 0
+    },
+    "revenue_generated": {
+      "type": "number",
+      "default": 0
+    },
+    "cost": {
+      "type": "number",
+      "default": 0
+    },
+    "open_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "click_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "conversion_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "roi": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

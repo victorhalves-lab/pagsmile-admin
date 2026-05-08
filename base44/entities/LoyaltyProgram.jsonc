@@ -1,0 +1,79 @@
+{
+  "name": "LoyaltyProgram",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "currency_name": {
+      "type": "string",
+      "default": "Pontos"
+    },
+    "points_per_real": {
+      "type": "number",
+      "default": 1,
+      "description": "Quantos pontos por R$ 1 gasto"
+    },
+    "redemption_value": {
+      "type": "number",
+      "default": 100,
+      "description": "Quantos pontos = R$ 1"
+    },
+    "tiers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "min_points": {
+            "type": "number"
+          },
+          "min_spent": {
+            "type": "number"
+          },
+          "color": {
+            "type": "string"
+          },
+          "benefits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "multiplier": {
+            "type": "number",
+            "default": 1
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "description": "Regras: bonus_first_purchase, birthday_bonus, etc"
+    },
+    "total_active_members": {
+      "type": "number",
+      "default": 0
+    },
+    "total_points_issued": {
+      "type": "number",
+      "default": 0
+    },
+    "total_points_redeemed": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

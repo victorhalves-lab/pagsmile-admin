@@ -198,6 +198,10 @@ const getAdminSubMenuItems = (t) => [
     label: t('menu.customers'),
     icon: UserCircle,
     page: 'Customers',
+    submenu: [
+      { label: 'Lista de Clientes', page: 'Customers' },
+      { label: '✨ Engagement Hub', page: 'CustomersHub' },
+    ]
   },
   {
     id: 'analytics',

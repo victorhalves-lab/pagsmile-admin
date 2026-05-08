@@ -1,0 +1,78 @@
+{
+  "name": "NPSResponse",
+  "type": "object",
+  "properties": {
+    "response_id": {
+      "type": "string"
+    },
+    "customer_id": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "campaign_id": {
+      "type": "string"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "promoter",
+        "passive",
+        "detractor"
+      ]
+    },
+    "comment": {
+      "type": "string"
+    },
+    "responded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "email",
+        "whatsapp",
+        "sms",
+        "push",
+        "in_app"
+      ]
+    },
+    "sentiment": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "neutral",
+        "negative"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "follow_up_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "pending",
+        "in_progress",
+        "resolved"
+      ],
+      "default": "none"
+    }
+  },
+  "required": [
+    "score"
+  ]
+}

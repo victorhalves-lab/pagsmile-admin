@@ -1,0 +1,80 @@
+{
+  "name": "CommunicationTemplate",
+  "type": "object",
+  "properties": {
+    "template_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "recovery",
+        "retention",
+        "welcome",
+        "upsell",
+        "winback",
+        "transactional",
+        "nps",
+        "other"
+      ]
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "email",
+        "whatsapp",
+        "sms",
+        "push"
+      ],
+      "default": "email"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string",
+      "description": "Markdown / HTML"
+    },
+    "preview_image_url": {
+      "type": "string"
+    },
+    "variables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Vari\u00e1veis din\u00e2micas: {customer_name}, {amount}, etc."
+    },
+    "is_system": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_approved_whatsapp": {
+      "type": "boolean",
+      "default": false
+    },
+    "performance_score": {
+      "type": "number",
+      "default": 0
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0
+    },
+    "avg_open_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "avg_click_rate": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "channel"
+  ]
+}
