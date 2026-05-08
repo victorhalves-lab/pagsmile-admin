@@ -3,6 +3,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/common/PageHeader';
 import SplitRuleCard from '@/components/financial/SplitRuleCard';
+import SplitFlowDiagram from '@/components/financial/v2/SplitFlowDiagram';
+import SplitSimulator from '@/components/financial/v2/SplitSimulator';
+import SplitTemplatesPicker from '@/components/financial/v2/SplitTemplatesPicker';
+import RuleConditionsBuilder from '@/components/financial/v2/RuleConditionsBuilder';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -46,6 +50,8 @@ export default function SplitManagement() {
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
   const [editingRule, setEditingRule] = useState(null);
+  const [previewRule, setPreviewRule] = useState(null);
+  const [viewMode, setViewMode] = useState('grid');
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -53,7 +59,8 @@ export default function SplitManagement() {
     fee_payer: 'seller',
     chargeback_liable: 'seller',
     is_default: false,
-    recipients: [{ name: '', subaccount_id: '', type: 'percentage', value: 0 }]
+    recipients: [{ name: '', subaccount_id: '', type: 'percentage', value: 0 }],
+    conditions: []
   });
 
   const { data: rules = [], isLoading } = useQuery({
@@ -263,38 +270,101 @@ export default function SplitManagement() {
           ))}
         </div>
       ) : rules.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {rules.map(rule => (
-            <SplitRuleCard
-              key={rule.id}
-              rule={rule}
-              onEdit={handleOpenDialog}
-              onDelete={(rule) => deleteMutation.mutate(rule.id)}
-              onDuplicate={(rule) => {
-                handleOpenDialog({
-                  ...rule,
-                  name: `${rule.name} (Cópia)`,
-                  is_default: false
-                });
-              }}
-            />
-          ))}
-        </div>
+        <>
+          {/* v2: Toggle Grid/Lista + Preview */}
+          <div className="flex items-center justify-between">
+            <div className="inline-flex bg-slate-100 rounded-lg p-1">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={cn('px-3 py-1.5 rounded-md text-xs font-medium transition', viewMode === 'grid' ? 'bg-white shadow text-slate-800' : 'text-slate-500')}
+              >
+                Grid
+              </button>
+              <button
+                onClick={() => setViewMode('preview')}
+                className={cn('px-3 py-1.5 rounded-md text-xs font-medium transition', viewMode === 'preview' ? 'bg-white shadow text-slate-800' : 'text-slate-500')}
+              >
+                Preview visual
+              </button>
+            </div>
+            <p className="text-xs text-slate-500">{rules.length} regra{rules.length !== 1 ? 's' : ''}</p>
+          </div>
+
+          {viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {rules.map(rule => (
+                <div key={rule.id} className="space-y-2">
+                  <SplitRuleCard
+                    rule={rule}
+                    onEdit={handleOpenDialog}
+                    onDelete={(rule) => deleteMutation.mutate(rule.id)}
+                    onDuplicate={(rule) => {
+                      handleOpenDialog({
+                        ...rule,
+                        name: `${rule.name} (Cópia)`,
+                        is_default: false
+                      });
+                    }}
+                  />
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewRule(rule)}>
+                      <Info className="w-3.5 h-3.5 mr-1" /> Ver fluxo
+                    </Button>
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => toast.success(`Status alternado: ${rule.name}`)}>
+                      {rule.status === 'active' ? 'Pausar' : 'Ativar'}
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {rules.map(rule => (
+                <div key={rule.id} className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold text-slate-800">{rule.name}</h4>
+                    <Button variant="ghost" size="sm" onClick={() => handleOpenDialog(rule)}>Editar</Button>
+                  </div>
+                  <SplitFlowDiagram rule={rule} sampleAmount={100} />
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       ) : (
         <Card>
-          <CardContent className="p-12 text-center">
-            <ArrowLeftRight className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium mb-2">Nenhuma regra de split criada</h3>
-            <p className="text-gray-500 mb-4">
-              Crie sua primeira regra para dividir automaticamente os pagamentos
-            </p>
-            <Button onClick={() => handleOpenDialog()}>
-              <Plus className="w-4 h-4 mr-2" />
-              Criar Regra
-            </Button>
+          <CardContent className="p-8">
+            <SplitTemplatesPicker
+              onSelect={(config) => {
+                setEditingRule(null);
+                setFormData({
+                  ...config,
+                  conditions: []
+                });
+                setShowDialog(true);
+              }}
+            />
+            <div className="text-center mt-6 pt-6 border-t border-slate-100">
+              <p className="text-sm text-slate-500 mb-3">Ou crie uma regra do zero</p>
+              <Button onClick={() => handleOpenDialog()} variant="outline">
+                <Plus className="w-4 h-4 mr-2" />
+                Criar Regra Customizada
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
+
+      {/* v2: Drawer/Dialog de preview do fluxo */}
+      <Dialog open={!!previewRule} onOpenChange={(open) => !open && setPreviewRule(null)}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{previewRule?.name}</DialogTitle>
+            <DialogDescription>Visualize e simule esta regra com diferentes valores</DialogDescription>
+          </DialogHeader>
+          {previewRule && <SplitSimulator rule={previewRule} />}
+        </DialogContent>
+      </Dialog>
 
       {/* Create/Edit Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -493,6 +563,20 @@ export default function SplitManagement() {
                 onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_default: checked }))}
               />
             </div>
+
+            {/* v2: Condições visuais */}
+            <RuleConditionsBuilder
+              conditions={formData.conditions || []}
+              onChange={(next) => setFormData(prev => ({ ...prev, conditions: next }))}
+            />
+
+            {/* v2: Preview do fluxo dentro do dialog */}
+            {formData.recipients?.length > 0 && formData.recipients[0].value > 0 && (
+              <div className="pt-2">
+                <Label className="text-sm mb-2 block">Pré-visualização do fluxo</Label>
+                <SplitFlowDiagram rule={formData} sampleAmount={100} />
+              </div>
+            )}
           </div>
 
           <DialogFooter>

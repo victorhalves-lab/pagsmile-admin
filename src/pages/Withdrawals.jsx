@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-// PageHeader removed - using simple h1
+import PageHeader from '@/components/common/PageHeader';
+import WithdrawalKpiBar from '@/components/financial/v2/WithdrawalKpiBar';
+import IncidentBanner from '@/components/financial/v2/IncidentBanner';
+import WithdrawalTimelineDrawer from '@/components/financial/v2/WithdrawalTimelineDrawer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -166,18 +169,48 @@ export default function Withdrawals() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [selectedWithdrawal, setSelectedWithdrawal] = useState(null);
 
   const filteredWithdrawals = withdrawals.filter(w => {
     const matchesSearch = !searchQuery || 
       w.withdrawal_id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      String(w.amount).includes(searchQuery);
+      String(w.amount).includes(searchQuery) ||
+      w.bank_name?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || w.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesType = typeFilter === 'all' || (typeFilter === 'pix' ? !!w.pix_key : !w.pix_key);
+    return matchesSearch && matchesStatus && matchesType;
   });
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-800">Saques</h1>
+      <PageHeader
+        title="Saques"
+        subtitle="Solicite saques, acompanhe status e configure auto-saque"
+        breadcrumbs={[{ label: 'Financeiro', href: 'Financial' }, { label: 'Saques' }]}
+        actions={
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => toast.info('Configurações de auto-saque (mock)')}>
+              <Settings className="w-4 h-4 mr-2" /> Configurações
+            </Button>
+            <Button size="sm" className="bg-[#2bc196] hover:bg-[#239b7a]" onClick={() => setShowWithdrawDialog(true)}>
+              <Plus className="w-4 h-4 mr-2" /> Novo saque
+            </Button>
+          </div>
+        }
+      />
+
+      {/* v2: Banner de incidente (mock — só aparece em condições reais) */}
+      {false && (
+        <IncidentBanner
+          severity="warning"
+          title="PIX com instabilidade"
+          description="Saques via PIX podem demorar mais que o normal. TED operando normalmente."
+        />
+      )}
+
+      {/* v2: KPI bar adicional */}
+      <WithdrawalKpiBar withdrawals={withdrawals} config={config} />
 
       {/* Summary Cards - 4 columns */}
       <Card>
@@ -269,7 +302,17 @@ export default function Withdrawals() {
             className="pl-9"
           />
         </div>
-        <div className="flex items-center gap-3 ml-auto">
+        <div className="flex items-center gap-3 ml-auto flex-wrap">
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="w-[120px]">
+              <SelectValue placeholder="Tipo" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os tipos</SelectItem>
+              <SelectItem value="pix">PIX</SelectItem>
+              <SelectItem value="ted">TED</SelectItem>
+            </SelectContent>
+          </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Status" />
@@ -296,24 +339,45 @@ export default function Withdrawals() {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50">
-                <TableHead>ID de pagamento</TableHead>
+                <TableHead>ID</TableHead>
                 <TableHead>Valor</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>Conta destino</TableHead>
+                <TableHead>Taxa</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Criação</TableHead>
+                <TableHead></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredWithdrawals.map((withdrawal) => {
                 const statusConf = statusConfig[withdrawal.status] || statusConfig.pending;
                 const StatusIcon = statusConf.icon;
+                const isPix = !!withdrawal.pix_key;
 
                 return (
-                  <TableRow key={withdrawal.id}>
+                  <TableRow
+                    key={withdrawal.id}
+                    className="cursor-pointer hover:bg-slate-50"
+                    onClick={() => setSelectedWithdrawal(withdrawal)}
+                  >
                     <TableCell className="font-medium text-slate-700">
                       {withdrawal.withdrawal_id}
                     </TableCell>
                     <TableCell className="font-semibold">
                       {formatCurrency(withdrawal.amount)}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="gap-1">
+                        {isPix ? <QrCode className="w-3 h-3" /> : <Building2 className="w-3 h-3" />}
+                        {isPix ? 'PIX' : 'TED'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-sm text-slate-600">
+                      {withdrawal.bank_name || '—'}
+                    </TableCell>
+                    <TableCell className="text-sm text-slate-500">
+                      {formatCurrency(withdrawal.fee || 0)}
                     </TableCell>
                     <TableCell>
                       <Badge className={cn("gap-1", statusConf.color)}>
@@ -324,8 +388,11 @@ export default function Withdrawals() {
                         {statusConf.label}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-slate-500">
-                      {format(new Date(withdrawal.created_date), 'dd/MM/yyyy HH:mm')}
+                    <TableCell className="text-slate-500 text-sm">
+                      {format(new Date(withdrawal.created_date), 'dd/MM HH:mm')}
+                    </TableCell>
+                    <TableCell>
+                      <ChevronRight className="w-4 h-4 text-slate-400" />
                     </TableCell>
                   </TableRow>
                 );
@@ -456,8 +523,34 @@ export default function Withdrawals() {
               </p>
             </div>
           )}
+
+          {/* v2: Preview do saldo após saque */}
+          {withdrawAmount && parseFloat(withdrawAmount) > 0 && (
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-100 space-y-1">
+              <p className="text-xs text-blue-600 font-medium uppercase">Preview</p>
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-600">Saldo atual</span>
+                <span className="text-slate-700">{formatCurrency(availableBalance)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-600">Saque</span>
+                <span className="text-red-600">-{formatCurrency(parseFloat(withdrawAmount))}</span>
+              </div>
+              <div className="flex justify-between text-sm pt-1 border-t border-blue-200">
+                <span className="font-semibold text-slate-700">Saldo após saque</span>
+                <span className="font-bold text-blue-700">{formatCurrency(availableBalance - parseFloat(withdrawAmount))}</span>
+              </div>
+            </div>
+          )}
         </div>
       </SideDrawer>
+
+      {/* v2: Drawer de detalhes do saque */}
+      <WithdrawalTimelineDrawer
+        withdrawal={selectedWithdrawal}
+        open={!!selectedWithdrawal}
+        onOpenChange={(open) => !open && setSelectedWithdrawal(null)}
+      />
     </div>
   );
 }

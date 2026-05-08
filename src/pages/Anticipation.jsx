@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/common/PageHeader';
 import AnticipationSimulator from '@/components/financial/AnticipationSimulator';
+import AnticipationCompareCard from '@/components/financial/v2/AnticipationCompareCard';
+import AnticipationPricingTiers from '@/components/financial/v2/AnticipationPricingTiers';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -128,6 +130,24 @@ export default function Anticipation() {
         ]}
       />
 
+      {/* v2: Card hero "Disponível para antecipar" em destaque */}
+      <Card className="bg-gradient-to-br from-purple-50 via-white to-purple-50 border-purple-200">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <p className="text-sm text-purple-600 font-medium uppercase">Disponível para antecipar agora</p>
+              <p className="text-4xl font-bold text-purple-700 mt-1">{formatCurrency(availableAmount)}</p>
+              <p className="text-sm text-slate-500 mt-1">{receivables.length} recebíveis antecipáveis</p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-slate-500">Taxa atual</p>
+              <p className="text-2xl font-bold text-slate-800">{config.fee_percentage_monthly}%<span className="text-sm font-normal text-slate-500"> a.m.</span></p>
+              <p className="text-xs text-emerald-600 mt-1">Crédito em até 1h</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Tabs defaultValue="simulate" className="space-y-6">
         <TabsList>
           <TabsTrigger value="simulate">Simular e Antecipar</TabsTrigger>
@@ -137,6 +157,15 @@ export default function Anticipation() {
 
         {/* Simulate Tab */}
         <TabsContent value="simulate">
+          {/* v2: Comparativo Antecipar vs Aguardar vs Empréstimo */}
+          <div className="mb-6">
+            <AnticipationCompareCard
+              amount={Math.min(availableAmount, 10000) || 10000}
+              anticipationRate={config.fee_percentage_monthly}
+              daysToWait={15}
+            />
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <AnticipationSimulator
               availableAmount={availableAmount}
@@ -145,6 +174,11 @@ export default function Anticipation() {
             />
 
             <div className="space-y-6">
+              {/* v2: Pricing tiers transparentes */}
+              <AnticipationPricingTiers
+                currentRate={config.fee_percentage_monthly}
+                monthVolume={config.total_anticipated || 18500}
+              />
               {/* Stats */}
               <Card>
                 <CardHeader>
