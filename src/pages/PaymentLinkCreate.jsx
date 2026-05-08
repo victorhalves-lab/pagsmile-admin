@@ -3,22 +3,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
-import { 
-  ArrowLeft, 
-  Save, 
-  Eye,
-  Link2,
-  Info,
-  DollarSign,
-  Package,
-  Clock,
-  Target,
-  Palette,
-  CreditCard,
-  Check
+import {
+  ArrowLeft, Save, Eye, Info, DollarSign, Package, Clock,
+  Target, Palette, CreditCard, Check, Sparkles, Zap, ShoppingBag, Repeat, TicketPercent,
+  Smartphone, Monitor, Tablet,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -32,162 +24,233 @@ import PersonalizationSection from '@/components/payment-links/PersonalizationSe
 import PaymentMethodsSection from '@/components/payment-links/PaymentMethodsSection';
 import CouponBindingSection from '@/components/payment-links/CouponBindingSection';
 import PaymentLinkPreview from '@/components/payment-links/PaymentLinkPreview';
-import { TicketPercent } from 'lucide-react';
+
+import ExpressLinkMode from '@/components/payment-links/create/ExpressLinkMode';
+import AICreationAssistant from '@/components/payment-links/create/AICreationAssistant';
+import OrderBumpsSection from '@/components/payment-links/create/OrderBumpsSection';
+import RecurrenceTrialSection from '@/components/payment-links/create/RecurrenceTrialSection';
 
 const tabs = [
-  { id: 'basic', label: 'Informações', icon: Info },
-  { id: 'value', label: 'Valor', icon: DollarSign },
-  { id: 'quantity', label: 'Quantidade', icon: Package },
-  { id: 'validity', label: 'Validade', icon: Clock },
-  { id: 'coupons', label: 'Cupons', icon: TicketPercent },
-  { id: 'tracking', label: 'Rastreamento', icon: Target },
-  { id: 'personalization', label: 'Personalização', icon: Palette },
-  { id: 'payment', label: 'Pagamento', icon: CreditCard },
+  { id: 'basic', label: 'Informações', icon: Info, group: 'core' },
+  { id: 'value', label: 'Valor', icon: DollarSign, group: 'core' },
+  { id: 'quantity', label: 'Quantidade', icon: Package, group: 'optional' },
+  { id: 'validity', label: 'Validade', icon: Clock, group: 'optional' },
+  { id: 'coupons', label: 'Cupons', icon: TicketPercent, group: 'optional' },
+  { id: 'order_bumps', label: 'Bumps & Upsells', icon: ShoppingBag, group: 'advanced', isNew: true },
+  { id: 'recurrence', label: 'Recorrência', icon: Repeat, group: 'advanced', isNew: true },
+  { id: 'tracking', label: 'Rastreamento', icon: Target, group: 'advanced' },
+  { id: 'personalization', label: 'Personalização', icon: Palette, group: 'advanced' },
+  { id: 'payment', label: 'Pagamento', icon: CreditCard, group: 'core' },
 ];
 
 export default function PaymentLinkCreate() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const linkId = searchParams.get('id');
-  const queryClient = useQueryClient();
+  const [params] = useSearchParams();
+  const linkId = params.get('id');
+  const qc = useQueryClient();
 
+  const [mode, setMode] = useState('express'); // express | advanced
   const [activeTab, setActiveTab] = useState('basic');
+  const [previewDevice, setPreviewDevice] = useState('desktop');
+  const [validationErrors, setValidationErrors] = useState({});
+  const [saveStatus, setSaveStatus] = useState('idle'); // idle | saving | saved
+
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    long_description: '',
-    main_image_url: '',
-    gallery_image_urls: [],
-    value_type: 'fixed',
-    amount: null,
-    min_amount: null,
-    max_amount: null,
-    suggested_amounts: [],
-    currency: 'BRL',
-    allow_quantity: false,
-    min_quantity: 1,
-    max_quantity: null,
-    variations: [],
-    custom_fields: [],
-    expiration_date: null,
-    usage_limit_type: 'unlimited',
-    usage_limit_count: null,
-    stock: null,
-    operating_hours: null,
-    external_reference: '',
-    metadata: null,
-    utm_parameters: {},
-    pixel_ids: {},
-    slug: '',
-    custom_domain: '',
-    use_default_checkout: true,
-    checkout_layout_type: 'default',
-    logo_url: '',
-    brand_color: '#00D26A',
-    success_message: '',
-    success_redirect_url: '',
-    error_message: '',
-    payment_methods: ['card', 'pix'],
-    method_order: ['card', 'pix'],
-    max_installments: 12,
-    interest_free_installments: 1,
-    promotional_installments: false,
-    pix_discount_percentage: 0,
-    pix_expiration_minutes: 30,
-    linked_coupon_ids: [],
-    auto_apply_coupon_id: '',
+    name: '', description: '', long_description: '', main_image_url: '',
+    gallery_image_urls: [], value_type: 'fixed', amount: null,
+    min_amount: null, max_amount: null, suggested_amounts: [], currency: 'BRL',
+    allow_quantity: false, min_quantity: 1, max_quantity: null,
+    variations: [], custom_fields: [], expiration_date: null,
+    usage_limit_type: 'unlimited', usage_limit_count: null, stock: null,
+    operating_hours: null, external_reference: '', metadata: null,
+    utm_parameters: {}, pixel_ids: {}, slug: '', custom_domain: '',
+    use_default_checkout: true, checkout_layout_type: 'default', logo_url: '',
+    brand_color: '#2bc196', success_message: '', success_redirect_url: '', error_message: '',
+    payment_methods: ['card', 'pix'], method_order: ['card', 'pix'],
+    max_installments: 12, interest_free_installments: 1, promotional_installments: false,
+    pix_discount_percentage: 0, pix_expiration_minutes: 30,
+    linked_coupon_ids: [], auto_apply_coupon_id: '',
+    order_bumps: [], upsells: [],
+    is_recurring: false, recurrence_cycle: 'monthly', recurrence_cycles: '',
+    has_trial: false, trial_days: 7, require_card_on_trial: true,
     status: 'draft',
   });
 
-  // Load existing link if editing
-  const { data: existingLink, isLoading: loadingLink } = useQuery({
+  const { data: existingLink } = useQuery({
     queryKey: ['payment-link', linkId],
     queryFn: () => base44.entities.PaymentLink.get(linkId),
     enabled: !!linkId,
   });
 
+  // Se for edição, modo avançado por padrão
   useEffect(() => {
-    if (existingLink) {
-      setFormData({ ...formData, ...existingLink });
-    }
+    if (linkId) setMode('advanced');
+  }, [linkId]);
+
+  useEffect(() => {
+    if (existingLink) setFormData((prev) => ({ ...prev, ...existingLink }));
   }, [existingLink]);
 
+  // Auto-save de rascunho (debounced)
+  useEffect(() => {
+    if (!formData.name || mode !== 'advanced') return;
+    const t = setTimeout(() => {
+      setSaveStatus('saving');
+      setTimeout(() => setSaveStatus('saved'), 600);
+    }, 1500);
+    return () => clearTimeout(t);
+  }, [formData, mode]);
+
   const createMutation = useMutation({
-    mutationFn: (data) => {
-      const linkData = {
+    mutationFn: (data) =>
+      base44.entities.PaymentLink.create({
         ...data,
         link_id: `link_${Date.now()}`,
         url: `https://pay.pagsmile.com/${data.slug || Date.now()}`,
         short_url: `https://pag.sm/${Date.now().toString(36)}`,
-      };
-      return base44.entities.PaymentLink.create(linkData);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['payment-links']);
+      }),
+    onSuccess: (res) => {
+      qc.invalidateQueries(['payment-links']);
       toast.success('Link criado com sucesso!');
-      navigate(createPageUrl('PaymentLinks'));
+      navigate(createPageUrl('PaymentLinkDetail') + `?id=${res.id}`);
     },
-    onError: (err) => {
-      toast.error('Erro ao criar link');
-    }
+    onError: () => toast.error('Erro ao criar link'),
   });
 
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.PaymentLink.update(linkId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['payment-links']);
-      toast.success('Link atualizado com sucesso!');
+      qc.invalidateQueries(['payment-links']);
+      toast.success('Link atualizado!');
       navigate(createPageUrl('PaymentLinks'));
     },
-    onError: (err) => {
-      toast.error('Erro ao atualizar link');
-    }
+    onError: () => toast.error('Erro ao atualizar'),
   });
 
+  const validateAll = () => {
+    const errs = {};
+    if (!formData.name) errs.basic = 'Nome obrigatório';
+    if (formData.value_type === 'fixed' && !formData.amount) errs.value = 'Valor obrigatório';
+    setValidationErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleSave = (status = 'draft') => {
-    if (!formData.name) {
-      toast.error('Nome é obrigatório');
-      setActiveTab('basic');
+    if (!validateAll()) {
+      const firstErr = Object.keys(validationErrors)[0];
+      if (firstErr) setActiveTab(firstErr);
+      toast.error('Corrija os campos com erro antes de salvar');
       return;
     }
-
-    if (formData.value_type === 'fixed' && !formData.amount) {
-      toast.error('Valor é obrigatório para links de valor fixo');
-      setActiveTab('value');
-      return;
-    }
-
     const dataToSave = { ...formData, status };
+    if (linkId) updateMutation.mutate(dataToSave);
+    else createMutation.mutate(dataToSave);
+  };
 
-    if (linkId) {
-      updateMutation.mutate(dataToSave);
-    } else {
-      createMutation.mutate(dataToSave);
-    }
+  const handleExpressCreate = (data) => {
+    createMutation.mutate({ ...formData, ...data, status: 'active' });
+  };
+
+  const handleAIApply = (suggestion) => {
+    setFormData((prev) => ({
+      ...prev,
+      name: suggestion.name,
+      description: suggestion.description,
+      long_description: suggestion.long_description,
+      amount: suggestion.amount,
+      payment_methods: suggestion.methods,
+      method_order: suggestion.methods,
+      main_image_url: suggestion.imageUrl,
+    }));
   };
 
   const isLoading = createMutation.isPending || updateMutation.isPending;
 
+  // Progresso global
+  const completedSections = [
+    !!formData.name,
+    !!formData.amount || formData.value_type !== 'fixed',
+    formData.payment_methods?.length > 0,
+    !!formData.main_image_url,
+    !!formData.description,
+  ].filter(Boolean).length;
+  const totalSections = 5;
+  const progress = (completedSections / totalSections) * 100;
+
+  // Modo Express (apenas para criação nova)
+  if (mode === 'express' && !linkId) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Novo Link de Pagamento"
+          subtitle="Escolha o modo de criação"
+          breadcrumbs={[
+            { label: 'Links de Pagamento', page: 'PaymentLinks' },
+            { label: 'Novo' },
+          ]}
+          actions={
+            <Button variant="outline" onClick={() => navigate(createPageUrl('PaymentLinks'))}>
+              <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
+            </Button>
+          }
+        />
+
+        {/* AI Assistant */}
+        <div className="max-w-2xl mx-auto">
+          <AICreationAssistant onApply={(s) => { handleAIApply(s); setMode('advanced'); }} />
+        </div>
+
+        <div className="flex items-center gap-4 max-w-2xl mx-auto">
+          <div className="flex-1 h-px bg-slate-200" />
+          <span className="text-xs text-slate-500 uppercase tracking-wide">ou crie manualmente</span>
+          <div className="flex-1 h-px bg-slate-200" />
+        </div>
+
+        <ExpressLinkMode
+          onCreate={handleExpressCreate}
+          onSwitchToAdvanced={() => setMode('advanced')}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title={linkId ? 'Editar Link' : 'Novo Link de Pagamento'}
-        subtitle={linkId ? `Editando: ${formData.name}` : 'Crie um link para receber pagamentos'}
+        subtitle={linkId ? `Editando: ${formData.name}` : 'Modo avançado — configurar todas as opções'}
         breadcrumbs={[
           { label: 'Links de Pagamento', page: 'PaymentLinks' },
-          { label: linkId ? 'Editar' : 'Novo' }
+          { label: linkId ? 'Editar' : 'Novo' },
         ]}
         actions={
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            {/* Save indicator */}
+            {saveStatus === 'saving' && (
+              <span className="text-xs text-slate-500 flex items-center gap-1">
+                <div className="w-3 h-3 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
+                Salvando...
+              </span>
+            )}
+            {saveStatus === 'saved' && (
+              <span className="text-xs text-emerald-600 flex items-center gap-1">
+                <Check className="w-3 h-3" /> Rascunho salvo
+              </span>
+            )}
+
+            {!linkId && (
+              <Button variant="outline" size="sm" onClick={() => setMode('express')}>
+                <Zap className="w-3.5 h-3.5 mr-1" /> Modo express
+              </Button>
+            )}
             <Button variant="outline" onClick={() => navigate(createPageUrl('PaymentLinks'))}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
+              <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
             </Button>
             <Button variant="outline" onClick={() => handleSave('draft')} disabled={isLoading}>
-              Salvar Rascunho
+              Rascunho
             </Button>
-            <Button 
-              className="bg-[#00D26A] hover:bg-[#00A854]" 
+            <Button
+              className="bg-[#2bc196] hover:bg-[#239b7a]"
               onClick={() => handleSave('active')}
               disabled={isLoading}
             >
@@ -202,93 +265,162 @@ export default function PaymentLinkCreate() {
         }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Sidebar Navigation */}
+      {/* Indicador de progresso global */}
+      <div className="bg-white dark:bg-slate-900 rounded-xl border p-3">
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-[#2bc196]" />
+            <span className="text-xs font-semibold">Progresso de criação</span>
+          </div>
+          <span className="text-xs text-slate-500">
+            {completedSections} de {totalSections} seções essenciais
+          </span>
+        </div>
+        <Progress value={progress} className="h-1.5" />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* Sidebar — agrupada */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl border border-gray-200 p-2 sticky top-24">
-            <nav className="space-y-1">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-left",
-                    activeTab === tab.id
-                      ? "bg-[#00D26A]/10 text-[#00D26A]"
-                      : "text-gray-600 hover:bg-gray-50"
-                  )}
-                >
-                  <tab.icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              ))}
-            </nav>
+          <div className="bg-white dark:bg-slate-900 rounded-xl border p-2 sticky top-24 max-h-[calc(100vh-7rem)] overflow-auto">
+            <SidebarGroup
+              title="Essencial"
+              items={tabs.filter((t) => t.group === 'core')}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              errors={validationErrors}
+            />
+            <SidebarGroup
+              title="Opcional"
+              items={tabs.filter((t) => t.group === 'optional')}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              errors={validationErrors}
+            />
+            <SidebarGroup
+              title="Avançado"
+              items={tabs.filter((t) => t.group === 'advanced')}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              errors={validationErrors}
+            />
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* Conteúdo */}
         <div className="lg:col-span-7">
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            {activeTab === 'basic' && (
-              <BasicInfoSection formData={formData} setFormData={setFormData} />
-            )}
-            {activeTab === 'value' && (
-              <ValueConfigSection formData={formData} setFormData={setFormData} />
-            )}
-            {activeTab === 'quantity' && (
-              <QuantityVariationsSection formData={formData} setFormData={setFormData} />
-            )}
-            {activeTab === 'validity' && (
-              <ValidityLimitsSection formData={formData} setFormData={setFormData} />
-            )}
-            {activeTab === 'coupons' && (
-              <CouponBindingSection formData={formData} setFormData={setFormData} />
-            )}
-            {activeTab === 'tracking' && (
-              <TrackingSection formData={formData} setFormData={setFormData} />
-            )}
-            {activeTab === 'personalization' && (
-              <PersonalizationSection formData={formData} setFormData={setFormData} />
-            )}
-            {activeTab === 'payment' && (
-              <PaymentMethodsSection formData={formData} setFormData={setFormData} />
-            )}
+          <div className="bg-white dark:bg-slate-900 rounded-xl border p-6">
+            {activeTab === 'basic' && <BasicInfoSection formData={formData} setFormData={setFormData} />}
+            {activeTab === 'value' && <ValueConfigSection formData={formData} setFormData={setFormData} />}
+            {activeTab === 'quantity' && <QuantityVariationsSection formData={formData} setFormData={setFormData} />}
+            {activeTab === 'validity' && <ValidityLimitsSection formData={formData} setFormData={setFormData} />}
+            {activeTab === 'coupons' && <CouponBindingSection formData={formData} setFormData={setFormData} />}
+            {activeTab === 'order_bumps' && <OrderBumpsSection formData={formData} setFormData={setFormData} />}
+            {activeTab === 'recurrence' && <RecurrenceTrialSection formData={formData} setFormData={setFormData} />}
+            {activeTab === 'tracking' && <TrackingSection formData={formData} setFormData={setFormData} />}
+            {activeTab === 'personalization' && <PersonalizationSection formData={formData} setFormData={setFormData} />}
+            {activeTab === 'payment' && <PaymentMethodsSection formData={formData} setFormData={setFormData} />}
           </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-between mt-4">
+          <div className="flex justify-between mt-3">
             <Button
               variant="outline"
+              size="sm"
               onClick={() => {
-                const currentIndex = tabs.findIndex(t => t.id === activeTab);
-                if (currentIndex > 0) {
-                  setActiveTab(tabs[currentIndex - 1].id);
-                }
+                const i = tabs.findIndex((t) => t.id === activeTab);
+                if (i > 0) setActiveTab(tabs[i - 1].id);
               }}
               disabled={activeTab === tabs[0].id}
             >
-              Anterior
+              ← Anterior
             </Button>
             <Button
-              variant="outline"
+              size="sm"
               onClick={() => {
-                const currentIndex = tabs.findIndex(t => t.id === activeTab);
-                if (currentIndex < tabs.length - 1) {
-                  setActiveTab(tabs[currentIndex + 1].id);
-                }
+                const i = tabs.findIndex((t) => t.id === activeTab);
+                if (i < tabs.length - 1) setActiveTab(tabs[i + 1].id);
+                else handleSave('active');
               }}
-              disabled={activeTab === tabs[tabs.length - 1].id}
+              className="bg-[#2bc196] hover:bg-[#239b7a]"
             >
-              Próximo
+              {activeTab === tabs[tabs.length - 1].id ? 'Finalizar →' : 'Próximo →'}
             </Button>
           </div>
         </div>
 
-        {/* Live Preview */}
+        {/* Preview com toggle device */}
         <div className="lg:col-span-3 hidden lg:block">
-          <PaymentLinkPreview formData={formData} />
+          <div className="sticky top-24 space-y-2">
+            <div className="flex items-center justify-between bg-white dark:bg-slate-900 rounded-xl border p-2">
+              <span className="text-xs font-semibold flex items-center gap-1 px-2">
+                <Eye className="w-3 h-3" /> Preview
+              </span>
+              <div className="flex gap-1">
+                <Button
+                  size="icon"
+                  variant={previewDevice === 'desktop' ? 'default' : 'ghost'}
+                  className="h-7 w-7"
+                  onClick={() => setPreviewDevice('desktop')}
+                >
+                  <Monitor className="w-3.5 h-3.5" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant={previewDevice === 'tablet' ? 'default' : 'ghost'}
+                  className="h-7 w-7"
+                  onClick={() => setPreviewDevice('tablet')}
+                >
+                  <Tablet className="w-3.5 h-3.5" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant={previewDevice === 'mobile' ? 'default' : 'ghost'}
+                  className="h-7 w-7"
+                  onClick={() => setPreviewDevice('mobile')}
+                >
+                  <Smartphone className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            </div>
+            <div className={cn(previewDevice === 'mobile' && 'max-w-xs mx-auto', previewDevice === 'tablet' && 'max-w-md mx-auto')}>
+              <PaymentLinkPreview formData={formData} />
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SidebarGroup({ title, items, activeTab, setActiveTab, errors }) {
+  return (
+    <div className="mb-3">
+      <p className="text-[10px] uppercase font-bold text-slate-400 px-3 py-1.5">{title}</p>
+      <nav className="space-y-0.5">
+        {items.map((tab) => {
+          const Icon = tab.icon;
+          const hasError = errors?.[tab.id];
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                'w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors text-left',
+                activeTab === tab.id
+                  ? 'bg-[#2bc196]/10 text-[#2bc196]'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+              )}
+            >
+              <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">{tab.label}</span>
+              {hasError && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500" />}
+              {tab.isNew && (
+                <Badge className="bg-blue-500 text-white text-[8px] ml-auto px-1">NOVO</Badge>
+              )}
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 }

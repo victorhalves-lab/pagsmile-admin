@@ -1,71 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
-import { 
-  Link2, 
-  Plus, 
-  Copy, 
-  Eye, 
-  MoreHorizontal,
-  ExternalLink,
-  QrCode,
-  TrendingUp,
-  DollarSign,
-  BarChart3,
-  Trash2,
-  Edit,
-  Share2,
-  Pause,
-  Play,
-  Archive,
-  LayoutGrid,
-  List,
-  Filter,
-  Download
+import {
+  Link2, Plus, Copy, MoreHorizontal, ExternalLink, QrCode,
+  Trash2, Edit, Share2, Pause, Play, LayoutGrid, Upload, Sparkles,
+  Eye, KanbanSquare,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import SideDrawer from '@/components/common/SideDrawer';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 import PageHeader from '@/components/common/PageHeader';
-import DataTable from '@/components/common/DataTable';
-import StatusBadge from '@/components/common/StatusBadge';
-import KPICard from '@/components/dashboard/KPICard';
 import EmptyState from '@/components/common/EmptyState';
 import ShareOptions from '@/components/payment-links/ShareOptions';
+
+import PaymentLinksKpiBar from '@/components/payment-links/list/PaymentLinksKpiBar';
+import PaymentLinkHealthScore, { calcLinkHealth } from '@/components/payment-links/list/PaymentLinkHealthScore';
+import PaymentLinkSparkline from '@/components/payment-links/list/PaymentLinkSparkline';
+import PaymentLinksFilters from '@/components/payment-links/list/PaymentLinksFilters';
+import PaymentLinksBulkBar from '@/components/payment-links/list/PaymentLinksBulkBar';
+import PaymentLinksInsightsPanel from '@/components/payment-links/list/PaymentLinksInsightsPanel';
+import ImportLinksModal from '@/components/payment-links/list/ImportLinksModal';
+
+const formatBRL = (v) =>
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
+
+// Tempo desde ts → "há 12 min" / "há 3 dias"
+const timeSince = (link) => {
+  if (!link?.usage_count || link.usage_count === 0) return '—';
+  // Mock baseado em volume
+  if (link.usage_count > 10) return 'há 12 min';
+  if (link.usage_count > 3) return 'há 3h';
+  return 'há 2 dias';
+};
+
+const statusBadge = (status) => {
+  const map = {
+    active: { label: 'Ativo', cls: 'bg-emerald-100 text-emerald-700' },
+    inactive: { label: 'Inativo', cls: 'bg-slate-100 text-slate-600' },
+    expired: { label: 'Expirado', cls: 'bg-slate-100 text-slate-500' },
+    sold_out: { label: 'Esgotado', cls: 'bg-amber-100 text-amber-700' },
+    draft: { label: 'Rascunho', cls: 'bg-blue-100 text-blue-700' },
+  };
+  const c = map[status] || map.draft;
+  return <Badge className={`${c.cls} text-[10px]`}>{c.label}</Badge>;
+};
 
 export default function PaymentLinks() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const qc = useQueryClient();
+
   const [viewMode, setViewMode] = useState('table');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [shareLink, setShareLink] = useState(null);
+  const [methodFilter, setMethodFilter] = useState('all');
+  const [valueTypeFilter, setValueTypeFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('recent');
   const [searchTerm, setSearchTerm] = useState('');
-
-  const queryClient = useQueryClient();
+  const [shareLink, setShareLink] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [importOpen, setImportOpen] = useState(false);
+  const [showInsights, setShowInsights] = useState(true);
 
   const { data: links = [], isLoading, refetch } = useQuery({
     queryKey: ['payment-links'],
@@ -75,24 +79,85 @@ export default function PaymentLinks() {
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.PaymentLink.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['payment-links']);
-      toast.success('Link atualizado!');
-    }
+      qc.invalidateQueries(['payment-links']);
+      toast.success('Link atualizado');
+    },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.PaymentLink.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(['payment-links']);
-      toast.success('Link excluído!');
-    }
+      qc.invalidateQueries(['payment-links']);
+      toast.success('Link excluído');
+    },
   });
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value || 0);
+  // Filtragem + ordenação
+  const filteredLinks = useMemo(() => {
+    let list = [...links];
+
+    if (searchTerm) {
+      const t = searchTerm.toLowerCase();
+      list = list.filter((l) => l.name?.toLowerCase().includes(t) || l.link_id?.toLowerCase().includes(t));
+    }
+
+    if (statusFilter === 'problem') {
+      list = list.filter((l) => l.status === 'active' && (l.usage_count || 0) === 0 && (l.views_count || 0) > 30);
+    } else if (statusFilter !== 'all') {
+      list = list.filter((l) => l.status === statusFilter);
+    }
+
+    if (methodFilter !== 'all') {
+      list = list.filter((l) => {
+        const m = l.payment_methods || [];
+        if (methodFilter === 'pix') return m.length === 1 && m[0] === 'pix';
+        if (methodFilter === 'card') return m.length === 1 && m[0] === 'card';
+        if (methodFilter === 'both') return m.includes('pix') && m.includes('card');
+        return true;
+      });
+    }
+
+    if (valueTypeFilter !== 'all') {
+      list = list.filter((l) => l.value_type === valueTypeFilter);
+    }
+
+    // Sort
+    switch (sortBy) {
+      case 'best_seller':
+        list.sort((a, b) => (b.usage_count || 0) - (a.usage_count || 0));
+        break;
+      case 'best_conversion':
+        list.sort((a, b) => {
+          const cA = a.views_count > 0 ? (a.usage_count || 0) / a.views_count : 0;
+          const cB = b.views_count > 0 ? (b.usage_count || 0) / b.views_count : 0;
+          return cB - cA;
+        });
+        break;
+      case 'highest_revenue':
+        list.sort((a, b) => (b.total_collected || 0) - (a.total_collected || 0));
+        break;
+      case 'worst_perf':
+        list.sort((a, b) => calcLinkHealth(a).score - calcLinkHealth(b).score);
+        break;
+      case 'recent':
+      default:
+        list.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+    }
+
+    return list;
+  }, [links, searchTerm, statusFilter, methodFilter, valueTypeFilter, sortBy]);
+
+  const activeFiltersCount =
+    (statusFilter !== 'all' ? 1 : 0) +
+    (methodFilter !== 'all' ? 1 : 0) +
+    (valueTypeFilter !== 'all' ? 1 : 0) +
+    (searchTerm ? 1 : 0);
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setStatusFilter('all');
+    setMethodFilter('all');
+    setValueTypeFilter('all');
   };
 
   const copyToClipboard = (text) => {
@@ -100,256 +165,54 @@ export default function PaymentLinks() {
     toast.success('Link copiado!');
   };
 
-  // Filter links
-  const filteredLinks = links.filter(link => {
-    const matchesStatus = statusFilter === 'all' || link.status === statusFilter;
-    const matchesSearch = !searchTerm || 
-      link.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      link.link_id?.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+  const goToDetail = (id) => navigate(createPageUrl('PaymentLinkDetail') + `?id=${id}`);
+  const goToEdit = (id) => navigate(createPageUrl('PaymentLinkCreate') + `?id=${id}`);
 
-  // Calculate metrics
-  const activeLinks = links.filter(l => l.status === 'active');
-  const totalCollected = links.reduce((sum, l) => sum + (l.total_collected || 0), 0);
-  const totalViews = links.reduce((sum, l) => sum + (l.views_count || 0), 0);
-  const totalSales = links.reduce((sum, l) => sum + (l.usage_count || 0), 0);
-  const avgConversion = totalViews > 0 ? (totalSales / totalViews) * 100 : 0;
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+  const selectAllVisible = () => {
+    setSelectedIds(filteredLinks.map((l) => l.id));
+  };
+  const clearSelection = () => setSelectedIds([]);
 
-  const getStatusBadge = (status) => {
-    const statusConfig = {
-      active: { label: 'Ativo', className: 'bg-green-100 text-green-700' },
-      inactive: { label: 'Inativo', className: 'bg-gray-100 text-gray-600' },
-      expired: { label: 'Expirado', className: 'bg-gray-100 text-gray-600' },
-      sold_out: { label: 'Esgotado', className: 'bg-yellow-100 text-yellow-700' },
-      draft: { label: 'Rascunho', className: 'bg-blue-100 text-blue-700' },
-    };
-    const config = statusConfig[status] || statusConfig.draft;
-    return <Badge className={config.className}>{config.label}</Badge>;
+  const handleBulkAction = (action) => {
+    // Mock — em prod chamaria backend
+    if (action === 'pause') {
+      selectedIds.forEach((id) => updateMutation.mutate({ id, data: { status: 'inactive' } }));
+    } else if (action === 'activate') {
+      selectedIds.forEach((id) => updateMutation.mutate({ id, data: { status: 'active' } }));
+    }
+    clearSelection();
   };
 
-  const columns = [
-    {
-      key: 'name',
-      label: 'Link',
-      render: (value, row) => (
-        <div className="flex items-center gap-3">
-          {row.main_image_url ? (
-            <img 
-              src={row.main_image_url} 
-              alt={value} 
-              className="w-10 h-10 rounded-lg object-cover"
-            />
-          ) : (
-            <div className={cn(
-              "w-10 h-10 rounded-lg flex items-center justify-center",
-              row.status === 'active' ? 'bg-blue-100' : 'bg-gray-100'
-            )}>
-              <Link2 className={cn(
-                "w-5 h-5",
-                row.status === 'active' ? 'text-blue-600' : 'text-gray-400'
-              )} />
-            </div>
-          )}
-          <div>
-            <p className="font-medium text-gray-900 text-sm">{value}</p>
-            <p className="text-xs text-gray-500 truncate max-w-[200px]">{row.short_url || row.url}</p>
-          </div>
-        </div>
-      )
-    },
-    {
-      key: 'amount',
-      label: 'Valor',
-      render: (value, row) => (
-        <div>
-          {row.value_type === 'open' ? (
-            <span className="text-sm text-gray-500">Valor aberto</span>
-          ) : row.value_type === 'minimum' ? (
-            <span className="text-sm">Min. {formatCurrency(row.min_amount)}</span>
-          ) : (
-            <span className="font-semibold text-gray-900">{formatCurrency(value)}</span>
-          )}
-        </div>
-      )
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      render: (value) => getStatusBadge(value)
-    },
-    {
-      key: 'usage_count',
-      label: 'Uso',
-      render: (value, row) => (
-        <div>
-          <p className="text-sm text-gray-900">{value || 0} vendas</p>
-          <p className="text-xs text-gray-500">{row.views_count || 0} visualizações</p>
-        </div>
-      )
-    },
-    {
-      key: 'total_collected',
-      label: 'Arrecadado',
-      render: (value) => (
-        <span className="font-semibold text-emerald-600">{formatCurrency(value)}</span>
-      )
-    },
-    {
-      key: 'conversion_rate',
-      label: 'Conversão',
-      render: (_, row) => {
-        const rate = row.views_count > 0 
-          ? ((row.usage_count || 0) / row.views_count) * 100 
-          : 0;
-        return (
-          <span className={cn(
-            "text-sm font-medium",
-            rate >= 5 ? 'text-green-600' : rate >= 2 ? 'text-yellow-600' : 'text-gray-500'
-          )}>
-            {rate.toFixed(1)}%
-          </span>
-        );
-      }
-    },
-    {
-      key: 'actions',
-      label: '',
-      render: (_, row) => (
-        <div className="flex items-center gap-1">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8"
-            onClick={() => copyToClipboard(row.short_url || row.url)}
-          >
-            <Copy className="w-4 h-4" />
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8"
-            onClick={() => setShareLink(row)}
-          >
-            <Share2 className="w-4 h-4" />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <MoreHorizontal className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => window.open(row.url, '_blank')}>
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Abrir link
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate(createPageUrl('PaymentLinkCreate') + `?id=${row.id}`)}>
-                <Edit className="w-4 h-4 mr-2" />
-                Editar
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShareLink(row)}>
-                <QrCode className="w-4 h-4 mr-2" />
-                QR Code
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {row.status === 'active' ? (
-                <DropdownMenuItem onClick={() => updateMutation.mutate({ id: row.id, data: { status: 'inactive' } })}>
-                  <Pause className="w-4 h-4 mr-2" />
-                  Desativar
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem onClick={() => updateMutation.mutate({ id: row.id, data: { status: 'active' } })}>
-                  <Play className="w-4 h-4 mr-2" />
-                  Ativar
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem className="text-red-600" onClick={() => {
-                if (confirm('Excluir este link?')) {
-                  deleteMutation.mutate(row.id);
-                }
-              }}>
-                <Trash2 className="w-4 h-4 mr-2" />
-                Excluir
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )
-    }
-  ];
-
-  // Card view for links
-  const LinkCard = ({ link }) => (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-      {link.main_image_url ? (
-        <img 
-          src={link.main_image_url} 
-          alt={link.name} 
-          className="w-full h-40 object-cover"
-        />
-      ) : (
-        <div className="w-full h-40 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-          <Link2 className="w-12 h-12 text-gray-400" />
-        </div>
-      )}
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="font-semibold text-gray-900 truncate flex-1">{link.name}</h3>
-          {getStatusBadge(link.status)}
-        </div>
-        <p className="text-lg font-bold text-gray-900 mb-3">
-          {link.value_type === 'fixed' ? formatCurrency(link.amount) : 'Valor variável'}
-        </p>
-        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-          <span>{link.usage_count || 0} vendas</span>
-          <span>{formatCurrency(link.total_collected || 0)}</span>
-        </div>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex-1"
-            onClick={() => copyToClipboard(link.short_url || link.url)}
-          >
-            <Copy className="w-4 h-4 mr-1" />
-            Copiar
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setShareLink(link)}
-          >
-            <Share2 className="w-4 h-4" />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => navigate(createPageUrl('PaymentLinkCreate') + `?id=${link.id}`)}
-          >
-            <Edit className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+  // Group by status para Kanban
+  const kanbanGroups = useMemo(() => {
+    const groups = { active: [], draft: [], inactive: [], expired: [], sold_out: [] };
+    filteredLinks.forEach((l) => {
+      if (groups[l.status]) groups[l.status].push(l);
+    });
+    return groups;
+  }, [filteredLinks]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title={t('payment_links.title')}
-        subtitle={t('payment_links.title')}
-        breadcrumbs={[
-          { label: t('payment_links.title'), page: 'PaymentLinks' }
-        ]}
+        subtitle="Crie, gerencie e otimize seus links de pagamento"
+        breadcrumbs={[{ label: t('payment_links.title'), page: 'PaymentLinks' }]}
         actions={
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setImportOpen(true)}>
+              <Upload className="w-4 h-4 mr-2" />
+              Importar CSV
+            </Button>
             <Button variant="outline" onClick={() => navigate(createPageUrl('PaymentLinkShowcase'))}>
               <LayoutGrid className="w-4 h-4 mr-2" />
-              Vitrines
+              Vitrine
             </Button>
-            <Button 
-              className="bg-[#00D26A] hover:bg-[#00A854]"
+            <Button
+              className="bg-[#2bc196] hover:bg-[#239b7a]"
               onClick={() => navigate(createPageUrl('PaymentLinkCreate'))}
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -359,114 +222,99 @@ export default function PaymentLinks() {
         }
       />
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard
-          title={t('payment_links.active_links')}
-          value={activeLinks.length}
-          format="number"
-          icon={Link2}
-          iconBg="bg-blue-100"
-          iconColor="text-blue-600"
-        />
-        <KPICard
-          title={t('payment_links.total_collected')}
-          value={totalCollected}
-          format="currency"
-          change={15.3}
-          icon={DollarSign}
-          iconBg="bg-emerald-100"
-          iconColor="text-emerald-600"
-        />
-        <KPICard
-          title={t('dashboard.total_transactions')}
-          value={totalSales}
-          format="number"
-          icon={BarChart3}
-          iconBg="bg-purple-100"
-          iconColor="text-purple-600"
-        />
-        <KPICard
-          title={t('checkout.conversion_rate')}
-          value={avgConversion}
-          format="percentage"
-          icon={TrendingUp}
-          iconBg="bg-orange-100"
-          iconColor="text-orange-600"
-        />
-      </div>
+      {/* KPI Bar — clicável para filtrar */}
+      <PaymentLinksKpiBar
+        links={links}
+        onFilterClick={(filterKey) => {
+          if (filterKey === 'problem') {
+            setStatusFilter('problem');
+            toast.info('Filtrando links com problema');
+          }
+        }}
+      />
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white p-4 rounded-xl border">
-        <div className="flex flex-1 gap-3">
-          <Input
-            placeholder="Buscar por nome ou ID..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="max-w-xs"
-          />
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="active">Ativos</SelectItem>
-              <SelectItem value="inactive">Inativos</SelectItem>
-              <SelectItem value="expired">Expirados</SelectItem>
-              <SelectItem value="sold_out">Esgotados</SelectItem>
-              <SelectItem value="draft">Rascunhos</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex gap-2">
+      {/* Painel Insights cross-link */}
+      {showInsights && (
+        <div className="relative">
+          <PaymentLinksInsightsPanel links={links} />
           <Button
-            variant={viewMode === 'table' ? 'default' : 'outline'}
-            size="icon"
-            onClick={() => setViewMode('table')}
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2 text-xs"
+            onClick={() => setShowInsights(false)}
           >
-            <List className="w-4 h-4" />
-          </Button>
-          <Button
-            variant={viewMode === 'cards' ? 'default' : 'outline'}
-            size="icon"
-            onClick={() => setViewMode('cards')}
-          >
-            <LayoutGrid className="w-4 h-4" />
+            Ocultar
           </Button>
         </div>
-      </div>
+      )}
 
-      {/* Content */}
+      {/* Filtros */}
+      <PaymentLinksFilters
+        searchTerm={searchTerm}
+        onSearch={setSearchTerm}
+        statusFilter={statusFilter}
+        onStatusChange={setStatusFilter}
+        methodFilter={methodFilter}
+        onMethodChange={setMethodFilter}
+        valueTypeFilter={valueTypeFilter}
+        onValueTypeChange={setValueTypeFilter}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        activeFiltersCount={activeFiltersCount}
+        onClearFilters={clearFilters}
+      />
+
+      {/* Conteúdo */}
       {filteredLinks.length === 0 && !isLoading ? (
         <EmptyState
           icon={Link2}
-          title="Nenhum link de pagamento"
-          description="Crie seu primeiro link de pagamento para começar a receber"
+          title="Nenhum link encontrado"
+          description={
+            activeFiltersCount > 0
+              ? 'Tente limpar os filtros ou criar um novo link.'
+              : 'Crie seu primeiro link de pagamento para começar a receber.'
+          }
           actionLabel="Criar Link"
           onAction={() => navigate(createPageUrl('PaymentLinkCreate'))}
         />
+      ) : viewMode === 'kanban' ? (
+        <KanbanView groups={kanbanGroups} onCardClick={goToDetail} />
       ) : viewMode === 'cards' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filteredLinks.map((link) => (
-            <LinkCard key={link.id} link={link} />
-          ))}
-        </div>
+        <CardsView
+          links={filteredLinks}
+          onCardClick={goToDetail}
+          onEdit={goToEdit}
+          onShare={setShareLink}
+          onCopy={copyToClipboard}
+          selectedIds={selectedIds}
+          onToggleSelect={toggleSelect}
+        />
       ) : (
-        <DataTable
-          columns={columns}
-          data={filteredLinks}
-          loading={isLoading}
-          pagination
-          pageSize={25}
-          currentPage={1}
-          totalItems={filteredLinks.length}
-          onRefresh={refetch}
-          emptyMessage="Nenhum link encontrado"
+        <TableView
+          links={filteredLinks}
+          isLoading={isLoading}
+          onRowClick={goToDetail}
+          onEdit={goToEdit}
+          onShare={setShareLink}
+          onCopy={copyToClipboard}
+          onUpdate={updateMutation.mutate}
+          onDelete={deleteMutation.mutate}
+          selectedIds={selectedIds}
+          onToggleSelect={toggleSelect}
+          onSelectAll={selectAllVisible}
         />
       )}
 
-      {/* Share Side Drawer */}
+      {/* Bulk Bar */}
+      <PaymentLinksBulkBar
+        selectedCount={selectedIds.length}
+        onClear={clearSelection}
+        onAction={handleBulkAction}
+      />
+
+      {/* Drawers */}
       <SideDrawer
         open={!!shareLink}
         onOpenChange={(open) => !open && setShareLink(null)}
@@ -475,6 +323,278 @@ export default function PaymentLinks() {
       >
         <ShareOptions link={shareLink} onClose={() => setShareLink(null)} />
       </SideDrawer>
+
+      <ImportLinksModal open={importOpen} onOpenChange={setImportOpen} />
+    </div>
+  );
+}
+
+/* ----------------- Subviews ----------------- */
+
+function TableView({ links, onRowClick, onEdit, onShare, onCopy, onUpdate, onDelete, selectedIds, onToggleSelect, onSelectAll }) {
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-xl border overflow-hidden">
+      <table className="w-full text-sm">
+        <thead className="bg-slate-50 dark:bg-slate-800 text-xs">
+          <tr>
+            <th className="p-2.5 w-8">
+              <Checkbox onCheckedChange={onSelectAll} />
+            </th>
+            <th className="text-left p-2.5 font-semibold">Link</th>
+            <th className="text-left p-2.5 font-semibold">Saúde</th>
+            <th className="text-right p-2.5 font-semibold">Valor</th>
+            <th className="text-left p-2.5 font-semibold">Status</th>
+            <th className="text-left p-2.5 font-semibold">Vendas</th>
+            <th className="text-left p-2.5 font-semibold">Tendência</th>
+            <th className="text-right p-2.5 font-semibold">Arrecadado</th>
+            <th className="text-left p-2.5 font-semibold">Última venda</th>
+            <th className="p-2.5"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {links.map((row) => {
+            const conversion = row.views_count > 0 ? ((row.usage_count || 0) / row.views_count * 100).toFixed(1) : 0;
+            return (
+              <tr
+                key={row.id}
+                className="border-t hover:bg-slate-50 dark:hover:bg-slate-800/50 group"
+              >
+                <td className="p-2.5" onClick={(e) => e.stopPropagation()}>
+                  <Checkbox
+                    checked={selectedIds.includes(row.id)}
+                    onCheckedChange={() => onToggleSelect(row.id)}
+                  />
+                </td>
+                <td className="p-2.5 cursor-pointer" onClick={() => onRowClick(row.id)}>
+                  <div className="flex items-center gap-2">
+                    {row.main_image_url ? (
+                      <img src={row.main_image_url} alt="" className="w-8 h-8 rounded object-cover" />
+                    ) : (
+                      <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                        <Link2 className="w-3.5 h-3.5 text-slate-400" />
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <p className="font-medium text-xs truncate max-w-[180px]">{row.name}</p>
+                      <p className="text-[10px] text-slate-500 truncate max-w-[180px]">{row.short_url || row.url}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="p-2.5 cursor-pointer" onClick={() => onRowClick(row.id)}>
+                  <PaymentLinkHealthScore link={row} />
+                </td>
+                <td className="p-2.5 text-right cursor-pointer" onClick={() => onRowClick(row.id)}>
+                  {row.value_type === 'fixed' ? (
+                    <span className="font-semibold text-xs">{formatBRL(row.amount)}</span>
+                  ) : (
+                    <span className="text-[11px] text-slate-500">
+                      {row.value_type === 'open' ? 'Aberto' : `Min ${formatBRL(row.min_amount)}`}
+                    </span>
+                  )}
+                </td>
+                <td className="p-2.5 cursor-pointer" onClick={() => onRowClick(row.id)}>
+                  {statusBadge(row.status)}
+                </td>
+                <td className="p-2.5 cursor-pointer" onClick={() => onRowClick(row.id)}>
+                  <p className="text-xs font-medium">{row.usage_count || 0}</p>
+                  <p className="text-[10px] text-slate-500">{conversion}% conv</p>
+                </td>
+                <td className="p-2.5 cursor-pointer" onClick={() => onRowClick(row.id)}>
+                  <PaymentLinkSparkline link={row} />
+                </td>
+                <td className="p-2.5 text-right cursor-pointer" onClick={() => onRowClick(row.id)}>
+                  <span className="font-semibold text-xs text-emerald-600">{formatBRL(row.total_collected)}</span>
+                </td>
+                <td className="p-2.5 cursor-pointer" onClick={() => onRowClick(row.id)}>
+                  <span className="text-[11px] text-slate-500">{timeSince(row)}</span>
+                </td>
+                <td className="p-2.5" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => onCopy(row.short_url || row.url)}
+                      title="Copiar"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onShare(row)} title="Compartilhar">
+                      <Share2 className="w-3.5 h-3.5" />
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-7 w-7">
+                          <MoreHorizontal className="w-3.5 h-3.5" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => onRowClick(row.id)}>
+                          <Eye className="w-4 h-4 mr-2" /> Ver detalhe
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.open(row.url, '_blank')}>
+                          <ExternalLink className="w-4 h-4 mr-2" /> Abrir
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onEdit(row.id)}>
+                          <Edit className="w-4 h-4 mr-2" /> Editar
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onShare(row)}>
+                          <QrCode className="w-4 h-4 mr-2" /> QR Code
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        {row.status === 'active' ? (
+                          <DropdownMenuItem onClick={() => onUpdate({ id: row.id, data: { status: 'inactive' } })}>
+                            <Pause className="w-4 h-4 mr-2" /> Desativar
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem onClick={() => onUpdate({ id: row.id, data: { status: 'active' } })}>
+                            <Play className="w-4 h-4 mr-2" /> Ativar
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem
+                          className="text-red-600"
+                          onClick={() => {
+                            if (confirm('Excluir este link?')) onDelete(row.id);
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" /> Excluir
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function CardsView({ links, onCardClick, onEdit, onShare, onCopy, selectedIds, onToggleSelect }) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+      {links.map((link) => {
+        const conversion = link.views_count > 0 ? ((link.usage_count || 0) / link.views_count * 100).toFixed(1) : 0;
+        return (
+          <div
+            key={link.id}
+            className={cn(
+              'bg-white dark:bg-slate-900 rounded-xl border overflow-hidden hover:shadow-md transition-all group cursor-pointer',
+              selectedIds.includes(link.id) && 'ring-2 ring-[#2bc196]'
+            )}
+            onClick={() => onCardClick(link.id)}
+          >
+            {/* Imagem 25% */}
+            {link.main_image_url ? (
+              <img src={link.main_image_url} alt={link.name} className="w-full h-24 object-cover" />
+            ) : (
+              <div className="w-full h-24 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center">
+                <Link2 className="w-8 h-8 text-slate-400" />
+              </div>
+            )}
+
+            <div className="p-3 space-y-2">
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="font-semibold text-sm truncate flex-1">{link.name}</h3>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <Checkbox
+                    checked={selectedIds.includes(link.id)}
+                    onCheckedChange={() => onToggleSelect(link.id)}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                {statusBadge(link.status)}
+                <PaymentLinkHealthScore link={link} />
+              </div>
+
+              {/* 4 KPIs */}
+              <div className="grid grid-cols-2 gap-1.5 text-[11px]">
+                <div className="p-1.5 bg-slate-50 dark:bg-slate-800 rounded">
+                  <p className="text-slate-500">Valor</p>
+                  <p className="font-semibold">
+                    {link.value_type === 'fixed' ? formatBRL(link.amount) : 'Variável'}
+                  </p>
+                </div>
+                <div className="p-1.5 bg-slate-50 dark:bg-slate-800 rounded">
+                  <p className="text-slate-500">Vendas</p>
+                  <p className="font-semibold">{link.usage_count || 0}</p>
+                </div>
+                <div className="p-1.5 bg-slate-50 dark:bg-slate-800 rounded">
+                  <p className="text-slate-500">Conv</p>
+                  <p className="font-semibold">{conversion}%</p>
+                </div>
+                <div className="p-1.5 bg-emerald-50 dark:bg-emerald-900/20 rounded">
+                  <p className="text-emerald-600">Total</p>
+                  <p className="font-semibold text-emerald-600">{formatBRL(link.total_collected)}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-1 pt-1" onClick={(e) => e.stopPropagation()}>
+                <PaymentLinkSparkline link={link} width={80} height={20} />
+                <div className="flex gap-1">
+                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => onCopy(link.short_url || link.url)}>
+                    <Copy className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => onShare(link)}>
+                    <Share2 className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => onEdit(link.id)}>
+                    <Edit className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function KanbanView({ groups, onCardClick }) {
+  const cols = [
+    { key: 'active', label: 'Ativos', color: 'bg-emerald-100 text-emerald-700' },
+    { key: 'draft', label: 'Rascunhos', color: 'bg-blue-100 text-blue-700' },
+    { key: 'inactive', label: 'Inativos', color: 'bg-slate-100 text-slate-700' },
+    { key: 'sold_out', label: 'Esgotados', color: 'bg-amber-100 text-amber-700' },
+    { key: 'expired', label: 'Expirados', color: 'bg-slate-100 text-slate-500' },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      {cols.map((col) => (
+        <div key={col.key} className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3">
+          <div className="flex items-center justify-between mb-3">
+            <Badge className={`${col.color} text-[10px]`}>{col.label}</Badge>
+            <span className="text-xs text-slate-500">{groups[col.key]?.length || 0}</span>
+          </div>
+          <div className="space-y-2 max-h-[600px] overflow-auto">
+            {groups[col.key]?.map((link) => (
+              <div
+                key={link.id}
+                onClick={() => onCardClick(link.id)}
+                className="bg-white dark:bg-slate-900 p-2.5 rounded-lg border hover:shadow-sm cursor-pointer"
+              >
+                <p className="text-xs font-medium truncate">{link.name}</p>
+                <p className="text-[10px] text-slate-500 mt-1">
+                  {link.usage_count || 0} vendas • {formatBRL(link.total_collected)}
+                </p>
+                <div className="mt-1.5 flex items-center justify-between">
+                  <PaymentLinkHealthScore link={link} />
+                  <PaymentLinkSparkline link={link} width={40} height={14} />
+                </div>
+              </div>
+            ))}
+            {(!groups[col.key] || groups[col.key].length === 0) && (
+              <p className="text-xs text-slate-400 text-center py-4">Vazio</p>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

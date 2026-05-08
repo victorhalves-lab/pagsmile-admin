@@ -237,6 +237,8 @@ import OnboardingAgentChat from './pages/OnboardingAgentChat';
 import OriginationAgent from './pages/OriginationAgent';
 import OriginationAgentSettings from './pages/OriginationAgentSettings';
 import PaymentLinkCreate from './pages/PaymentLinkCreate';
+import PaymentLinkDetail from './pages/PaymentLinkDetail';
+import PaymentLinkShowcase from './pages/PaymentLinkShowcase';
 import PaymentLinks from './pages/PaymentLinks';
 import PixTransactions from './pages/PixTransactions';
 import PlanSelection from './pages/PlanSelection';
@@ -457,6 +459,8 @@ export const PAGES = {
     "OriginationAgent": OriginationAgent,
     "OriginationAgentSettings": OriginationAgentSettings,
     "PaymentLinkCreate": PaymentLinkCreate,
+    "PaymentLinkDetail": PaymentLinkDetail,
+    "PaymentLinkShowcase": PaymentLinkShowcase,
     "PaymentLinks": PaymentLinks,
     "PixTransactions": PixTransactions,
     "PlanSelection": PlanSelection,
