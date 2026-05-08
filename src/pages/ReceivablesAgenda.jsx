@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import PageHeader from '@/components/common/PageHeader';
 import ReceivablesCalendar from '@/components/financial/ReceivablesCalendar';
+import ReceivablesHeatmap from '@/components/financial/v2/ReceivablesHeatmap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -255,6 +256,9 @@ export default function ReceivablesAgenda() {
           </div>
         </CardContent>
       </Card>
+
+      {/* v2: Receivables heatmap */}
+      <ReceivablesHeatmap receivables={filteredReceivables} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Calendar View */}

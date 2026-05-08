@@ -43,6 +43,9 @@ import {
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfMonth, endOfMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import StatementInsightsBar from '@/components/financial/v2/StatementInsightsBar';
+import SmartSavedFilters from '@/components/financial/v2/SmartSavedFilters';
+import StatementDrillDownDrawer from '@/components/financial/v2/StatementDrillDownDrawer';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
@@ -77,6 +80,13 @@ export default function FinancialStatement() {
   });
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
+  const [drillEntry, setDrillEntry] = useState(null);
+
+  const handleSmartFilter = (f) => {
+    if (f.period) handlePeriodChange(f.period);
+    if (f.category !== undefined) setCategoryFilter(f.category || 'all');
+    if (f.type !== undefined) setTypeFilter(f.type || 'all');
+  };
 
   const { data: entries = [], isLoading, refetch } = useQuery({
     queryKey: ['financial-entries', dateRange],
@@ -186,6 +196,9 @@ export default function FinancialStatement() {
           </div>
         }
       />
+
+      {/* v2: Insights bar */}
+      <StatementInsightsBar entries={filteredEntries} />
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -326,6 +339,9 @@ export default function FinancialStatement() {
               {filteredEntries.length} lançamentos
             </Badge>
           </div>
+          <div className="pt-3 mt-3 border-t">
+            <SmartSavedFilters onApply={handleSmartFilter} />
+          </div>
         </CardContent>
       </Card>
 
@@ -335,9 +351,17 @@ export default function FinancialStatement() {
           <FinancialStatementTable 
             entries={filteredEntries}
             isLoading={isLoading}
+            onRowClick={setDrillEntry}
           />
         </CardContent>
       </Card>
+
+      {/* v2: Drill-down drawer */}
+      <StatementDrillDownDrawer
+        entry={drillEntry}
+        open={!!drillEntry}
+        onClose={() => setDrillEntry(null)}
+      />
     </div>
   );
 }

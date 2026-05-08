@@ -46,7 +46,7 @@ const categoryConfig = {
   transfer: { label: 'Transferência', icon: ArrowLeftRight, color: 'text-indigo-600' },
 };
 
-export default function FinancialStatementTable({ entries, isLoading, onViewTransaction }) {
+export default function FinancialStatementTable({ entries, isLoading, onViewTransaction, onRowClick }) {
   if (isLoading) {
     return (
       <div className="space-y-2">
@@ -86,7 +86,11 @@ export default function FinancialStatementTable({ entries, isLoading, onViewTran
             const isCredit = entry.type === 'credit';
 
             return (
-              <TableRow key={entry.id} className="hover:bg-gray-50">
+              <TableRow
+                key={entry.id}
+                className={cn("hover:bg-gray-50", onRowClick && "cursor-pointer")}
+                onClick={() => onRowClick?.(entry)}
+              >
                 <TableCell className="text-sm">
                   <div>
                     {format(new Date(entry.created_date), 'dd/MM/yyyy', { locale: ptBR })}
@@ -138,7 +142,10 @@ export default function FinancialStatementTable({ entries, isLoading, onViewTran
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
-                      onClick={() => onViewTransaction?.(entry.reference_id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onViewTransaction?.(entry.reference_id);
+                      }}
                     >
                       <ExternalLink className="w-4 h-4" />
                     </Button>

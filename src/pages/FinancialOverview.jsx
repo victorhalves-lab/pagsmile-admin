@@ -6,6 +6,12 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import PageHeader from '@/components/common/PageHeader';
 import BalanceSummaryCards from '@/components/financial/BalanceSummaryCards';
+import DailySummaryCard from '@/components/financial/v2/DailySummaryCard';
+import CashFlowProjector from '@/components/financial/v2/CashFlowProjector';
+import TopMoversCard from '@/components/financial/v2/TopMoversCard';
+import FinancialAnomaliesCard from '@/components/financial/v2/FinancialAnomaliesCard';
+import PayoutsTimeline from '@/components/financial/v2/PayoutsTimeline';
+import UnsettledFundsExplainer from '@/components/financial/v2/UnsettledFundsExplainer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -189,12 +195,44 @@ export default function FinancialOverview() {
         }
       />
 
+      {/* Daily Summary (v2) */}
+      <DailySummaryCard entries={entries} />
+
       {/* Balance Cards */}
       <BalanceSummaryCards 
         balances={balances} 
         isLoading={entriesLoading}
         onAction={handleBalanceAction}
       />
+
+      {/* "Por que esses valores estão pendentes/bloqueados?" — explainability links */}
+      <div className="flex items-center gap-4 -mt-2 px-1">
+        <UnsettledFundsExplainer
+          category="pending"
+          breakdown={balances.pendingBreakdown}
+          total={balances.pending}
+        />
+        <UnsettledFundsExplainer
+          category="blocked"
+          breakdown={balances.blockedBreakdown}
+          total={balances.blocked}
+        />
+      </div>
+
+      {/* v2: Cash Flow + Anomalies + Top Movers + Payouts Timeline */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <CashFlowProjector
+          currentBalance={balances.available}
+          receivables={receivables}
+          withdrawals={withdrawals}
+        />
+        <FinancialAnomaliesCard />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TopMoversCard entries={entries} />
+        <PayoutsTimeline withdrawals={withdrawals} anticipations={[]} />
+      </div>
 
       {/* Quick Links */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">

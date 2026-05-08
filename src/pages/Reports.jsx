@@ -61,6 +61,7 @@ import {
 
 import PageHeader from '@/components/common/PageHeader';
 import DataTable from '@/components/common/DataTable';
+import ReportsPresets from '@/components/financial/v2/ReportsPresets';
 
 const COLORS = ['#00D26A', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6'];
 
@@ -232,6 +233,9 @@ export default function Reports() {
           </div>
         }
       />
+
+      {/* v2: Reports presets */}
+      <ReportsPresets />
 
       <Tabs defaultValue="sales" className="space-y-6">
         <TabsList className="grid grid-cols-4 w-full max-w-2xl">

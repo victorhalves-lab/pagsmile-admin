@@ -44,6 +44,7 @@ import PageHeader from '@/components/common/PageHeader';
 import ChartCard from '@/components/dashboard/ChartCard';
 import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
+import MoneyFlowWaterfall from '@/components/financial/v2/MoneyFlowWaterfall';
 
 export default function Financial() {
   const [showValues, setShowValues] = useState(true);
@@ -267,6 +268,9 @@ export default function Financial() {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
+          {/* v2: Money Flow Waterfall — entrada → taxas → CB → líquido */}
+          <MoneyFlowWaterfall />
+
           {/* Flow Chart */}
           <ChartCard
             title="Fluxo Financeiro"
