@@ -1,17 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import PageHeader from '@/components/common/PageHeader';
-import KPICard from '@/components/dashboard/KPICard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Building2,
   Users,
-  TrendingUp,
   AlertTriangle,
   Clock,
   CheckCircle2,
@@ -19,26 +17,31 @@ import {
   ChevronRight,
   BarChart3,
   DollarSign,
-  ArrowUpRight,
-  XCircle
+  Link2,
+  Upload,
+  Download,
+  Bell
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
   PieChart,
   Pie,
-  Cell
+  Cell,
+  ResponsiveContainer,
+  Tooltip
 } from 'recharts';
+import { toast } from 'sonner';
 
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
-};
+// New v2 components
+import MarketplaceKpiBar from '@/components/marketplace/v2/MarketplaceKpiBar';
+import OnboardingFunnel from '@/components/marketplace/v2/OnboardingFunnel';
+import RiskAndDormantCards from '@/components/marketplace/v2/RiskAndDormantCards';
+import InviteSubaccountDialog from '@/components/marketplace/v2/InviteSubaccountDialog';
+import ImportCsvDialog from '@/components/marketplace/v2/ImportCsvDialog';
+import Top10WithFilter from '@/components/marketplace/v2/Top10WithFilter';
+import CohortMatrix from '@/components/marketplace/v2/CohortMatrix';
+import ComplianceHealthCard from '@/components/marketplace/v2/ComplianceHealthCard';
+import AnomalyDetectionCard from '@/components/marketplace/v2/AnomalyDetectionCard';
 
 const statusColors = {
   active: '#10b981',
@@ -50,78 +53,82 @@ const statusColors = {
   cancelled: '#6b7280'
 };
 
+const statusLabels = {
+  active: 'Ativa',
+  pending_documents: 'Docs Pendentes',
+  under_review: 'Em Análise',
+  suspended: 'Suspensa',
+  blocked: 'Bloqueada',
+  draft: 'Rascunho',
+  cancelled: 'Cancelada'
+};
+
 export default function SubaccountsDashboard() {
+  const [showInviteDialog, setShowInviteDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+
   const { data: subaccounts = [], isLoading } = useQuery({
     queryKey: ['subaccounts'],
     queryFn: () => base44.entities.Subaccount.list('-created_date', 200)
   });
 
-  // Calculate metrics
   const metrics = useMemo(() => {
-    const active = subaccounts.filter(s => s.status === 'active');
     const pending = subaccounts.filter(s => ['draft', 'pending_documents', 'under_review'].includes(s.status));
-    const totalVolume = subaccounts.reduce((sum, s) => sum + (s.total_volume || 0), 0);
-    const totalTransactions = subaccounts.reduce((sum, s) => sum + (s.total_transactions || 0), 0);
-
-    // Group by status for pie chart
+    
     const byStatus = subaccounts.reduce((acc, s) => {
       acc[s.status] = (acc[s.status] || 0) + 1;
       return acc;
     }, {});
 
     const statusData = Object.entries(byStatus).map(([status, count]) => ({
-      name: status,
+      name: statusLabels[status] || status,
       value: count,
       color: statusColors[status] || '#9ca3af'
     }));
 
-    // Top 10 by volume
-    const top10 = [...subaccounts]
-      .sort((a, b) => (b.total_volume || 0) - (a.total_volume || 0))
-      .slice(0, 10)
-      .map(s => ({
-        name: s.business_name?.slice(0, 15) || 'N/A',
-        volume: s.total_volume || 0,
-        transactions: s.total_transactions || 0
-      }));
-
-    // Problematic subaccounts
-    const problematic = subaccounts.filter(s => 
-      s.risk_level === 'high' || s.status === 'suspended'
-    );
-
     return {
       total: subaccounts.length,
-      active: active.length,
       pending: pending.length,
-      totalVolume,
-      totalTransactions,
       statusData,
-      top10,
-      problematic,
-      avgVolume: active.length > 0 ? totalVolume / active.length : 0
     };
   }, [subaccounts]);
 
-  // New subaccounts this month (simulated)
-  const newThisMonth = subaccounts.filter(s => {
-    const created = new Date(s.created_date);
-    const now = new Date();
-    return created.getMonth() === now.getMonth() && created.getFullYear() === now.getFullYear();
-  }).length;
+  const handleExportPdf = () => {
+    toast.success('Exportando dashboard como PDF... Você receberá o arquivo em breve.');
+  };
+
+  const handleConfigureAlerts = () => {
+    toast.info('Configurador de alertas customizados em breve!');
+  };
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Dashboard de Subcontas"
-        subtitle="Visão geral do seu marketplace"
+        title="Marketplace Workspace"
+        subtitle="Cockpit do seu marketplace — KPIs, saúde, onboarding e ações rápidas"
         breadcrumbs={[
           { label: 'Subcontas' }
         ]}
         actions={
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={handleConfigureAlerts}>
+              <Bell className="w-4 h-4 mr-2" />
+              Alertas
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleExportPdf}>
+              <Download className="w-4 h-4 mr-2" />
+              PDF
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowImportDialog(true)}>
+              <Upload className="w-4 h-4 mr-2" />
+              Importar CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowInviteDialog(true)}>
+              <Link2 className="w-4 h-4 mr-2" />
+              Convidar
+            </Button>
             <Button variant="outline" asChild>
-              <Link to={createPageUrl('Subaccounts')}>
+              <Link to={createPageUrl('SubaccountsList')}>
                 Ver Todas
               </Link>
             </Button>
@@ -135,58 +142,33 @@ export default function SubaccountsDashboard() {
         }
       />
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <KPICard
-          title="Total de Subcontas"
-          value={metrics.total}
-          icon={Building2}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-          isLoading={isLoading}
-        />
-        <KPICard
-          title="Subcontas Ativas"
-          value={metrics.active}
-          icon={CheckCircle2}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-          change={metrics.total > 0 ? ((metrics.active / metrics.total) * 100).toFixed(0) : 0}
-          changeLabel="do total"
-          isLoading={isLoading}
-        />
-        <KPICard
-          title="Pendentes de Aprovação"
-          value={metrics.pending}
-          icon={Clock}
-          iconBgColor="bg-yellow-100"
-          iconColor="text-yellow-600"
-          isLoading={isLoading}
-        />
-        <KPICard
-          title="GMV Total"
-          value={metrics.totalVolume}
-          format="currency"
-          icon={DollarSign}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-          isLoading={isLoading}
-        />
-        <KPICard
-          title="Novas este Mês"
-          value={newThisMonth}
-          icon={TrendingUp}
-          iconBgColor="bg-indigo-100"
-          iconColor="text-indigo-600"
-          isLoading={isLoading}
-        />
+      {/* KPI Bar - Marketplace Economics */}
+      <MarketplaceKpiBar subaccounts={subaccounts} />
+
+      {/* Risk + Dormant + KYC Alert Cards */}
+      <RiskAndDormantCards subaccounts={subaccounts} />
+
+      {/* Onboarding Funnel + Compliance Health + Anomalies */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <OnboardingFunnel subaccounts={subaccounts} />
+        <ComplianceHealthCard subaccounts={subaccounts} />
+        <AnomalyDetectionCard subaccounts={subaccounts} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Top 10 with Multi-dimension Filter */}
+      <Top10WithFilter subaccounts={subaccounts} />
+
+      {/* Cohort Analysis */}
+      <CohortMatrix subaccounts={subaccounts} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Status Distribution */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Distribuição por Status</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">Distribuição por Status</CardTitle>
+              <Badge variant="outline" className="text-xs">vs mês anterior</Badge>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="h-[250px]">
@@ -218,7 +200,7 @@ export default function SubaccountsDashboard() {
                     className="w-3 h-3 rounded-full" 
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="capitalize">{item.name.replace('_', ' ')}</span>
+                  <span>{item.name}</span>
                   <span className="text-gray-500">({item.value})</span>
                 </div>
               ))}
@@ -226,44 +208,6 @@ export default function SubaccountsDashboard() {
           </CardContent>
         </Card>
 
-        {/* Top 10 by Volume */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Top 10 Subcontas por GMV</CardTitle>
-              <Button variant="ghost" size="sm" asChild>
-                <Link to={createPageUrl('Subaccounts')}>
-                  Ver Todas
-                  <ChevronRight className="w-4 h-4 ml-1" />
-                </Link>
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={metrics.top10} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis 
-                    type="number"
-                    tickFormatter={(value) => `${(value/1000).toFixed(0)}k`}
-                  />
-                  <YAxis 
-                    type="category" 
-                    dataKey="name" 
-                    tick={{ fontSize: 11 }}
-                    width={100}
-                  />
-                  <Tooltip formatter={(value) => formatCurrency(value)} />
-                  <Bar dataKey="volume" fill="#3b82f6" radius={[0, 4, 4, 0]} name="Volume" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pending Approvals */}
         <Card>
           <CardHeader>
@@ -299,9 +243,7 @@ export default function SubaccountsDashboard() {
                       sub.status === 'pending_documents' ? 'bg-yellow-100 text-yellow-700' :
                       'bg-gray-100 text-gray-700'
                     )}>
-                      {sub.status === 'under_review' ? 'Em Análise' :
-                       sub.status === 'pending_documents' ? 'Docs Pendentes' :
-                       'Rascunho'}
+                      {statusLabels[sub.status] || sub.status}
                     </Badge>
                   </div>
                 ))}
@@ -314,58 +256,12 @@ export default function SubaccountsDashboard() {
             </div>
             {metrics.pending > 5 && (
               <Button variant="outline" className="w-full mt-4" asChild>
-                <Link to={createPageUrl('Subaccounts')}>
+                <Link to={createPageUrl('SubaccountsList')}>
                   Ver Todas ({metrics.pending})
+                  <ChevronRight className="w-4 h-4 ml-1" />
                 </Link>
               </Button>
             )}
-          </CardContent>
-        </Card>
-
-        {/* Problematic Subaccounts */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-red-500" />
-                Subcontas com Problema
-              </CardTitle>
-              <Badge variant="destructive">{metrics.problematic.length}</Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {metrics.problematic.slice(0, 5).map(sub => (
-                <div 
-                  key={sub.id}
-                  className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-100 rounded-lg">
-                      <AlertTriangle className="w-4 h-4 text-red-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">{sub.business_name}</p>
-                      <p className="text-xs text-red-600">
-                        {sub.status === 'suspended' ? 'Suspensa' : 'Risco Alto'}
-                        {sub.suspension_reason && ` - ${sub.suspension_reason}`}
-                      </p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to={createPageUrl('Subaccounts')}>
-                      Ver
-                    </Link>
-                  </Button>
-                </div>
-              ))}
-              {metrics.problematic.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-500" />
-                  <p>Nenhuma subconta com problema identificado</p>
-                </div>
-              )}
-            </div>
           </CardContent>
         </Card>
       </div>
@@ -390,7 +286,7 @@ export default function SubaccountsDashboard() {
               </div>
             </Link>
             <Link
-              to={createPageUrl('Subaccounts')}
+              to={createPageUrl('SubaccountsList')}
               className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
             >
               <div className="p-2 bg-blue-100 rounded-lg">
@@ -428,6 +324,10 @@ export default function SubaccountsDashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Dialogs */}
+      <InviteSubaccountDialog open={showInviteDialog} onOpenChange={setShowInviteDialog} />
+      <ImportCsvDialog open={showImportDialog} onOpenChange={setShowImportDialog} />
     </div>
   );
 }

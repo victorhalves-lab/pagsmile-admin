@@ -19,6 +19,10 @@ import {
 } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import OnboardingStepper from '@/components/marketplace/v2/OnboardingStepper';
+import AutoFillField from '@/components/marketplace/v2/AutoFillField';
+import { format as formatDate } from 'date-fns';
+import { Save } from 'lucide-react';
 import {
   Building2,
   User,
@@ -58,6 +62,7 @@ const mccOptions = [
 export default function SubaccountOnboarding() {
   const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(1);
+  const [draftSavedAt, setDraftSavedAt] = useState(null);
   const [formData, setFormData] = useState({
     // Company data
     document: '',
@@ -171,6 +176,38 @@ export default function SubaccountOnboarding() {
     createMutation.mutate(formData);
   };
 
+  const handleSaveDraft = () => {
+    // Mock save: in a real app this would persist to backend or localStorage
+    setDraftSavedAt(formatDate(new Date(), 'HH:mm'));
+    toast.success('Rascunho salvo! Você pode continuar mais tarde.');
+  };
+
+  // Mock CNPJ lookup (simulates ReceitaWS)
+  const lookupCnpj = async (cnpj) => {
+    await new Promise(r => setTimeout(r, 800));
+    return {
+      legal_name: 'EMPRESA EXEMPLO LTDA',
+      business_name: 'Empresa Exemplo',
+      opening_date: '2018-05-12',
+      mcc: '5999',
+    };
+  };
+
+  // Mock CEP lookup (simulates ViaCEP)
+  const lookupCep = async (cep) => {
+    await new Promise(r => setTimeout(r, 600));
+    return {
+      street: 'Av. Paulista',
+      neighborhood: 'Bela Vista',
+      city: 'São Paulo',
+      state: 'SP',
+    };
+  };
+
+  const handleStepClick = (stepId) => {
+    setCurrentStep(stepId);
+  };
+
   const progress = (currentStep / 5) * 100;
 
   return (
@@ -182,50 +219,22 @@ export default function SubaccountOnboarding() {
           { label: 'Subcontas', href: 'SubaccountsDashboard' },
           { label: 'Novo Cadastro' }
         ]}
+        actions={
+          <Button variant="outline" size="sm" onClick={handleSaveDraft}>
+            <Save className="w-4 h-4 mr-2" />
+            Salvar Rascunho
+          </Button>
+        }
       />
 
-      {/* Progress */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            {steps.map((step, index) => (
-              <div 
-                key={step.id}
-                className={cn(
-                  "flex items-center",
-                  index < steps.length - 1 && "flex-1"
-                )}
-              >
-                <div className={cn(
-                  "flex items-center justify-center w-10 h-10 rounded-full transition-all",
-                  currentStep > step.id ? "bg-green-500 text-white" :
-                  currentStep === step.id ? "bg-blue-500 text-white" :
-                  "bg-gray-200 text-gray-500"
-                )}>
-                  {currentStep > step.id ? (
-                    <CheckCircle2 className="w-5 h-5" />
-                  ) : (
-                    <step.icon className="w-5 h-5" />
-                  )}
-                </div>
-                <span className={cn(
-                  "ml-2 text-sm font-medium hidden md:block",
-                  currentStep >= step.id ? "text-gray-900" : "text-gray-500"
-                )}>
-                  {step.title}
-                </span>
-                {index < steps.length - 1 && (
-                  <div className={cn(
-                    "flex-1 h-0.5 mx-4",
-                    currentStep > step.id ? "bg-green-500" : "bg-gray-200"
-                  )} />
-                )}
-              </div>
-            ))}
-          </div>
-          <Progress value={progress} className="h-2" />
-        </CardContent>
-      </Card>
+      {/* Progress - Enhanced Stepper */}
+      <OnboardingStepper
+        steps={steps}
+        currentStep={currentStep}
+        onStepClick={handleStepClick}
+        draftSavedAt={draftSavedAt}
+        estimatedMinutes={8}
+      />
 
       {/* Step Content */}
       <Card>
@@ -241,14 +250,26 @@ export default function SubaccountOnboarding() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>CNPJ *</Label>
-                  <Input
-                    value={formData.document}
-                    onChange={(e) => updateField('document', e.target.value)}
-                    placeholder="00.000.000/0000-00"
-                  />
-                </div>
+                <AutoFillField
+                  label="CNPJ"
+                  required
+                  value={formData.document}
+                  onChange={(v) => updateField('document', v)}
+                  placeholder="00.000.000/0000-00"
+                  minLength={14}
+                  helpText="Os dados da empresa serão preenchidos automaticamente"
+                  onLookup={lookupCnpj}
+                  onAutoFill={(data) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      legal_name: data.legal_name || prev.legal_name,
+                      business_name: data.business_name || prev.business_name,
+                      opening_date: data.opening_date || prev.opening_date,
+                      mcc: data.mcc || prev.mcc,
+                    }));
+                    toast.success('Dados da empresa preenchidos automaticamente!');
+                  }}
+                />
                 <div className="space-y-2">
                   <Label>Razão Social *</Label>
                   <Input
@@ -321,14 +342,29 @@ export default function SubaccountOnboarding() {
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-4">Endereço Comercial</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label>CEP *</Label>
-                    <Input
-                      value={formData.address.zip_code}
-                      onChange={(e) => updateNestedField('address', 'zip_code', e.target.value)}
-                      placeholder="00000-000"
-                    />
-                  </div>
+                  <AutoFillField
+                    label="CEP"
+                    required
+                    value={formData.address.zip_code}
+                    onChange={(v) => updateNestedField('address', 'zip_code', v)}
+                    placeholder="00000-000"
+                    minLength={8}
+                    helpText="Endereço será preenchido automaticamente"
+                    onLookup={lookupCep}
+                    onAutoFill={(data) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        address: {
+                          ...prev.address,
+                          street: data.street || prev.address.street,
+                          neighborhood: data.neighborhood || prev.address.neighborhood,
+                          city: data.city || prev.address.city,
+                          state: data.state || prev.address.state,
+                        }
+                      }));
+                      toast.success('Endereço preenchido!');
+                    }}
+                  />
                   <div className="space-y-2 md:col-span-2">
                     <Label>Rua *</Label>
                     <Input

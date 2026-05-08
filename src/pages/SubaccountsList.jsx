@@ -49,7 +49,10 @@ import {
   DollarSign,
   AlertTriangle,
   Mail,
-  Phone
+  Phone,
+  Link2,
+  Upload,
+  Heart
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -58,6 +61,11 @@ import { formatCurrency } from '@/components/utils';
 import SubaccountDetailModal from '@/components/subaccounts/SubaccountDetailModal';
 import SubaccountLimitsModal from '@/components/subaccounts/SubaccountLimitsModal';
 import SubaccountRatesModal from '@/components/subaccounts/SubaccountRatesModal';
+import SubaccountsBulkBar from '@/components/marketplace/v2/SubaccountsBulkBar';
+import SubaccountsQuickFilters from '@/components/marketplace/v2/SubaccountsQuickFilters';
+import InviteSubaccountDialog from '@/components/marketplace/v2/InviteSubaccountDialog';
+import ImportCsvDialog from '@/components/marketplace/v2/ImportCsvDialog';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const statusConfig = {
   draft: { label: 'Rascunho', color: 'bg-gray-100 text-gray-700' },
@@ -81,6 +89,10 @@ export default function SubaccountsList() {
   const [showLimitsModal, setShowLimitsModal] = useState(false);
   const [showRatesModal, setShowRatesModal] = useState(false);
   const [modalSubaccount, setModalSubaccount] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [quickFilter, setQuickFilter] = useState('all');
+  const [showInviteDialog, setShowInviteDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
 
   const { data: subaccounts = [], isLoading, refetch } = useQuery({
     queryKey: ['subaccounts'],
@@ -107,9 +119,50 @@ export default function SubaccountsList() {
       
       const matchesStatus = statusFilter === 'all' || sub.status === statusFilter;
 
-      return matchesSearch && matchesStatus;
+      let matchesQuick = true;
+      if (quickFilter === 'active') matchesQuick = sub.status === 'active';
+      else if (quickFilter === 'pending') matchesQuick = ['draft', 'pending_documents', 'under_review'].includes(sub.status);
+      else if (quickFilter === 'risk') matchesQuick = sub.risk_level === 'high' || sub.status === 'suspended';
+      else if (quickFilter === 'dormant') matchesQuick = sub.status === 'active' && (sub.total_transactions || 0) === 0;
+      else if (quickFilter === 'no_kyc') matchesQuick = sub.compliance_status !== 'compliant';
+
+      return matchesSearch && matchesStatus && matchesQuick;
     });
-  }, [subaccounts, searchTerm, statusFilter]);
+  }, [subaccounts, searchTerm, statusFilter, quickFilter]);
+
+  const allFilteredIds = filteredSubaccounts.map(s => s.id);
+  const isAllSelected = allFilteredIds.length > 0 && allFilteredIds.every(id => selectedIds.includes(id));
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds(prev => prev.filter(id => !allFilteredIds.includes(id)));
+    } else {
+      setSelectedIds(prev => [...new Set([...prev, ...allFilteredIds])]);
+    }
+  };
+
+  const toggleSelectOne = (id) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  const getHealthScore = (sub) => {
+    let score = 100;
+    if (sub.status !== 'active') score -= 30;
+    if (sub.risk_level === 'high') score -= 30;
+    else if (sub.risk_level === 'medium') score -= 15;
+    if (sub.compliance_status !== 'compliant') score -= 20;
+    if ((sub.total_transactions || 0) === 0 && sub.status === 'active') score -= 15;
+    if ((sub.avg_chargeback_ratio || 0) > 0.01) score -= 20;
+    return Math.max(0, score);
+  };
+
+  const getHealthColor = (score) => {
+    if (score >= 80) return 'text-emerald-700 bg-emerald-100 border-emerald-200';
+    if (score >= 60) return 'text-amber-700 bg-amber-100 border-amber-200';
+    return 'text-red-700 bg-red-100 border-red-200';
+  };
 
   const handleAction = (subaccount, action) => {
     setSelectedSubaccount(subaccount);
@@ -142,6 +195,22 @@ export default function SubaccountsList() {
 
   const columns = [
     {
+      key: '_select',
+      title: (
+        <Checkbox 
+          checked={isAllSelected}
+          onCheckedChange={toggleSelectAll}
+        />
+      ),
+      render: (_, row) => (
+        <Checkbox
+          checked={selectedIds.includes(row.id)}
+          onCheckedChange={() => toggleSelectOne(row.id)}
+          onClick={(e) => e.stopPropagation()}
+        />
+      )
+    },
+    {
       key: 'business_name',
       title: 'Subconta',
       render: (_, row) => (
@@ -155,6 +224,19 @@ export default function SubaccountsList() {
           </div>
         </div>
       )
+    },
+    {
+      key: '_health',
+      title: 'Health',
+      render: (_, row) => {
+        const score = getHealthScore(row);
+        return (
+          <Badge className={cn("font-mono", getHealthColor(score))}>
+            <Heart className="w-3 h-3 mr-1" />
+            {score}
+          </Badge>
+        );
+      }
     },
     {
       key: 'contact',
@@ -328,14 +410,41 @@ export default function SubaccountsList() {
           { label: 'Lista' }
         ]}
         actions={
-          <Button asChild>
-            <Link to={createPageUrl('SubaccountOnboarding')}>
-              <Plus className="w-4 h-4 mr-2" />
-              Nova Subconta
-            </Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={() => setShowImportDialog(true)}>
+              <Upload className="w-4 h-4 mr-2" />
+              Importar CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowInviteDialog(true)}>
+              <Link2 className="w-4 h-4 mr-2" />
+              Convidar
+            </Button>
+            <Button asChild>
+              <Link to={createPageUrl('SubaccountOnboarding')}>
+                <Plus className="w-4 h-4 mr-2" />
+                Nova Subconta
+              </Link>
+            </Button>
+          </div>
         }
       />
+
+      {/* Bulk Actions Bar */}
+      <SubaccountsBulkBar 
+        selectedIds={selectedIds} 
+        onClear={() => setSelectedIds([])}
+      />
+
+      {/* Quick Filters */}
+      <Card>
+        <CardContent className="p-3">
+          <SubaccountsQuickFilters 
+            subaccounts={subaccounts}
+            activePreset={quickFilter}
+            onChange={setQuickFilter}
+          />
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <Card>
@@ -449,6 +558,18 @@ export default function SubaccountsList() {
         open={showRatesModal}
         onOpenChange={setShowRatesModal}
         subaccount={modalSubaccount}
+      />
+
+      {/* Invite Dialog */}
+      <InviteSubaccountDialog
+        open={showInviteDialog}
+        onOpenChange={setShowInviteDialog}
+      />
+
+      {/* Import CSV Dialog */}
+      <ImportCsvDialog
+        open={showImportDialog}
+        onOpenChange={setShowImportDialog}
       />
     </div>
   );
