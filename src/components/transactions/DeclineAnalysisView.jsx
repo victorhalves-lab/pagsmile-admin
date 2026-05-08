@@ -45,6 +45,8 @@ import {
   Legend
 } from 'recharts';
 import { cn } from '@/lib/utils';
+import DeclinePareto from './declines/DeclinePareto';
+import WhatToDoActions from './declines/WhatToDoActions';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', {
@@ -266,6 +268,10 @@ export default function DeclineAnalysisView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Pareto 80/20 + Playbooks */}
+      <DeclinePareto />
+      <WhatToDoActions />
 
       {/* DIA Recommendations */}
       <Card className="border-[#00D26A]/30 bg-gradient-to-r from-[#00D26A]/5 to-transparent">

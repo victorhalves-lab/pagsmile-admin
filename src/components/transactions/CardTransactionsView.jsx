@@ -27,6 +27,9 @@ const formatCurrency = (value) => {
 import TransactionAdvancedFilters from './TransactionAdvancedFilters';
 import TransactionMassActions from './TransactionMassActions';
 import TransactionDataTable from './TransactionDataTable';
+import BrandHealthCard from './card/BrandHealthCard';
+import OrchestrationHealthCard from './card/OrchestrationHealthCard';
+import RetryRecommendationCard from './card/RetryRecommendationCard';
 
 export default function CardTransactionsView() {
   const navigate = useNavigate();
@@ -222,6 +225,13 @@ export default function CardTransactionsView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Saúde da Orquestração + Recomendações Prescritivas */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <OrchestrationHealthCard />
+        <BrandHealthCard />
+      </div>
+      <RetryRecommendationCard />
 
       {/* Brand Breakdown */}
       <Card>

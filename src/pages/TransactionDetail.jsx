@@ -53,6 +53,9 @@ import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import PageHeader from '@/components/common/PageHeader';
 import StatusBadge from '@/components/common/StatusBadge';
+import RelatedTransactionsCard from '@/components/transactions/detail/RelatedTransactionsCard';
+import AntifraudExplainCard from '@/components/transactions/detail/AntifraudExplainCard';
+import CustomerJourneyCard from '@/components/transactions/detail/CustomerJourneyCard';
 
 const TimelineEvent = ({ icon: Icon, iconColor, title, description, timestamp, isLast }) => (
   <div className="flex gap-3">
@@ -296,6 +299,16 @@ export default function TransactionDetail() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Antifraude Explicável + Jornada do cliente + Relacionadas */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <AntifraudExplainCard transaction={transaction} />
+        </div>
+        <CustomerJourneyCard />
+      </div>
+
+      <RelatedTransactionsCard transaction={transaction} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column */}

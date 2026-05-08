@@ -81,6 +81,8 @@ import {
   Bar,
   Cell
 } from 'recharts';
+import OrchestrationStudio from './recovery/OrchestrationStudio';
+import BeforeAfterCard from './recovery/BeforeAfterCard';
 
 const RECOVERY_STRATEGIES = [
   { id: 'nsf', name: 'Saldo Insuficiente (NSF)', description: 'Retry após 24h + oferecer Pix', rate: 28 },
@@ -221,6 +223,12 @@ export default function PaymentRecoveryAgentView() {
           </Button>
         </div>
       </div>
+
+      {/* Antes vs Depois */}
+      <BeforeAfterCard />
+
+      {/* Orchestration Studio */}
+      <OrchestrationStudio />
 
       {/* Dashboard KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">

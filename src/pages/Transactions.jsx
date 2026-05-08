@@ -19,6 +19,7 @@ import HubActionBar from '@/components/transactions/hub/HubActionBar';
 import StickyFiltersBar from '@/components/transactions/hub/StickyFiltersBar';
 import TransactionsTabs from '@/components/transactions/hub/TransactionsTabs';
 import DiaInsightsSidePanel from '@/components/transactions/hub/DiaInsightsSidePanel';
+import KeyboardShortcutsHelp from '@/components/transactions/hub/KeyboardShortcutsHelp';
 
 function TransactionsHubInner() {
   const { t } = useTranslation();
@@ -89,6 +90,9 @@ function TransactionsHubInner() {
 
       {/* DIA Insights side panel */}
       <DiaInsightsSidePanel open={diaOpen} onClose={() => setDiaOpen(false)} />
+
+      {/* Atalhos de teclado (?) */}
+      <KeyboardShortcutsHelp />
     </div>
   );
 }

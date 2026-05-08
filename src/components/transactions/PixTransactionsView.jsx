@@ -53,6 +53,8 @@ const formatCurrency = (value) => {
 import TransactionAdvancedFilters from './TransactionAdvancedFilters';
 import TransactionMassActions from './TransactionMassActions';
 import TransactionDataTable from './TransactionDataTable';
+import PixOpsLiveCard from './pix/PixOpsLiveCard';
+import PixOutLiquidityCard from './pix/PixOutLiquidityCard';
 
 export default function PixTransactionsView() {
   const navigate = useNavigate();
@@ -221,6 +223,14 @@ export default function PixTransactionsView() {
 
   return (
     <div className="space-y-6">
+      {/* PIX Live Operations */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2">
+          <PixOpsLiveCard />
+        </div>
+        <PixOutLiquidityCard />
+      </div>
+
       {/* PIX In/Out Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border-emerald-200">
