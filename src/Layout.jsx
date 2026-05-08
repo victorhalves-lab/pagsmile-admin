@@ -76,6 +76,20 @@ const getAdminSubMenuItems = (t) => [
     page: 'Dashboard',
   },
   {
+    id: 'inbox',
+    label: 'Inbox',
+    icon: Mail,
+    page: 'Inbox',
+    badge: '10',
+    badgeVariant: 'destructive',
+  },
+  {
+    id: 'ai-hub',
+    label: 'Agentes IA',
+    icon: Sparkles,
+    page: 'AiAgentsHub',
+  },
+  {
     id: 'transactions',
     label: t('menu.transactions'),
     icon: ArrowLeftRight,
@@ -204,6 +218,48 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.webhooks'), page: 'Webhooks' },
       { label: t('menu.plugins'), page: 'Plugins' },
     ]
+  },
+  {
+    id: 'documents',
+    label: 'Documentos',
+    icon: FileText,
+    page: 'Documents',
+  },
+  {
+    id: 'developers',
+    label: 'Developer Hub',
+    icon: KeyRound,
+    page: 'Developers',
+  },
+  {
+    id: 'playbooks',
+    label: 'Playbooks',
+    icon: Briefcase,
+    page: 'Playbooks',
+  },
+  {
+    id: 'impact-preview',
+    label: 'Preview de Impacto',
+    icon: Gauge,
+    page: 'ImpactPreviewDemo',
+  },
+  {
+    id: 'audit',
+    label: 'Auditoria',
+    icon: ShieldCheck,
+    page: 'AuditTrail',
+  },
+  {
+    id: 'notifications',
+    label: 'Notificações',
+    icon: Bell,
+    page: 'NotificationCenter',
+  },
+  {
+    id: 'team',
+    label: 'Time & Permissões',
+    icon: UserPlus,
+    page: 'TeamSettings',
   },
   {
     id: 'settings',
@@ -465,6 +521,8 @@ const adminInternoPages = [
 
 import { Sun, Moon } from 'lucide-react';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
+import CommandPalette from '@/components/common/CommandPalette';
+import DemoModeBanner from '@/components/common/DemoModeBanner';
 // DIAWidget removed as it is now integrated into the header panel
 
 export default function Layout({ children, currentPageName }) {
@@ -473,6 +531,7 @@ export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState(['transactions', 'financial', 'ib-pix']);
   const [showAIPanel, setShowAIPanel] = useState(false);
+  const [showCmdPalette, setShowCmdPalette] = useState(false);
   const [dismissedComplianceAlertForSession, setDismissedComplianceAlertForSession] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
   
@@ -567,6 +626,8 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className={cn("min-h-screen font-sans antialiased selection:bg-[#2bc196]/20 selection:text-[#2bc196]", theme)}>
+      <DemoModeBanner />
+      <CommandPalette open={showCmdPalette} onOpenChange={setShowCmdPalette} />
       <div className="min-h-screen bg-slate-50 dark:bg-[#101F3E] text-slate-900 dark:text-slate-100 transition-colors duration-300">
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
@@ -960,13 +1021,16 @@ export default function Layout({ children, currentPageName }) {
                 <Menu className="w-5 h-5" />
               </Button>
               {(currentModule === 'admin-sub' || currentModule === 'admin-interno') && (
-                <div className="relative hidden sm:block group">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
-                  <Input
-                    placeholder={currentModule === 'admin-interno' ? "Buscar universal... (⌘K)" : "Buscar transações, clientes, (⌘K)"}
-                    className="w-64 lg:w-96 pl-10 bg-slate-50 border-slate-200 focus:bg-white transition-all shadow-sm"
-                  />
-                </div>
+                <button
+                  onClick={() => setShowCmdPalette(true)}
+                  className="hidden sm:flex items-center gap-2 w-64 lg:w-96 pl-3 pr-2 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-left text-sm text-slate-500 hover:border-[#2bc196]/40 hover:bg-white dark:hover:bg-slate-800/80 transition-all shadow-sm group"
+                >
+                  <Search className="w-4 h-4 text-slate-400 group-hover:text-[#2bc196]" />
+                  <span className="flex-1 truncate">{currentModule === 'admin-interno' ? "Buscar universal..." : "Buscar transações, clientes, páginas..."}</span>
+                  <kbd className="hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-500">
+                    ⌘K
+                  </kbd>
+                </button>
               )}
               {currentModule === 'internet-banking' && (
                 <div className="flex items-center gap-2">
