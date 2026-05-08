@@ -1,439 +1,226 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { 
-  ShieldAlert, 
-  AlertTriangle, 
-  Clock, 
-  CheckCircle, 
-  XCircle,
-  FileText,
-  Upload,
-  MessageSquare,
-  TrendingUp,
-  TrendingDown,
-  Sparkles,
-  Calendar,
-  Eye,
-  MoreHorizontal
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
-import SideDrawer from '@/components/common/SideDrawer';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
-
 import PageHeader from '@/components/common/PageHeader';
-import DataTable from '@/components/common/DataTable';
-import StatusBadge from '@/components/common/StatusBadge';
-import KPICard from '@/components/dashboard/KPICard';
+import { Button } from '@/components/ui/button';
+import { Download, Inbox, Sparkles } from 'lucide-react';
+import { differenceInHours, differenceInDays } from 'date-fns';
+
+import UnifiedQueueKpiBar from '@/components/disputes/v2/UnifiedQueueKpiBar';
+import UnifiedTriageBar from '@/components/disputes/v2/UnifiedTriageBar';
+import UnifiedQueueFilters from '@/components/disputes/v2/UnifiedQueueFilters';
+import UnifiedQueueTable from '@/components/disputes/v2/UnifiedQueueTable';
+import UnifiedBulkBar from '@/components/disputes/v2/UnifiedBulkBar';
+import { computeUrgency } from '@/components/disputes/v2/utils';
 
 export default function Disputes() {
-  const [selectedDispute, setSelectedDispute] = useState(null);
+  const [search, setSearch] = useState('');
+  const [channelFilter, setChannelFilter] = useState('all');
+  const [brandFilter, setBrandFilter] = useState('all');
+  const [valueRange, setValueRange] = useState('all');
+  const [urgencyFilter, setUrgencyFilter] = useState('all');
+  const [currentView, setCurrentView] = useState(null);
+  const [currentChip, setCurrentChip] = useState(null);
+  const [selected, setSelected] = useState(new Set());
 
-  const { data: disputes = [], isLoading, refetch } = useQuery({
-    queryKey: ['disputes'],
-    queryFn: () => base44.entities.Dispute.list('-created_date', 50),
+  const { data: disputes = [] } = useQuery({
+    queryKey: ['disputes-unified'],
+    queryFn: () => base44.entities.Dispute.list('-created_date', 200),
   });
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value || 0);
+  const { data: meds = [] } = useQuery({
+    queryKey: ['meds-unified'],
+    queryFn: () => base44.entities.MED.list('-created_date', 100),
+  });
+
+  // Normaliza tudo para uma fila única com _channel
+  const unifiedItems = useMemo(() => {
+    const precbs = disputes
+      .filter((d) => ['alert_ethoca', 'alert_verifi'].includes(d.type))
+      .map((d) => ({ ...d, _channel: 'precb' }));
+    const cbs = disputes
+      .filter((d) => d.type === 'chargeback')
+      .map((d) => ({ ...d, _channel: 'cb' }));
+    const medItems = (meds || []).map((m) => ({ ...m, _channel: 'med', amount: m.requested_amount, customer_name: m.payer_name }));
+    return [...precbs, ...cbs, ...medItems];
+  }, [disputes, meds]);
+
+  const isOpen = (item) => {
+    if (item._channel === 'precb') return ['received', 'pending'].includes(item.status);
+    if (item._channel === 'cb') return ['received', 'in_analysis', 'in_contestation'].includes(item.status);
+    if (item._channel === 'med') return ['pending', 'analyzing'].includes(item.status);
+    return false;
   };
 
-  // Calculate metrics
-  const openDisputes = disputes.filter(d => d.status === 'open' || d.status === 'under_review');
-  const totalOpenAmount = openDisputes.reduce((sum, d) => sum + (d.amount || 0), 0);
-  const wonDisputes = disputes.filter(d => d.status === 'won');
-  const lostDisputes = disputes.filter(d => d.status === 'lost');
-  const winRate = (wonDisputes.length + lostDisputes.length) > 0 
-    ? (wonDisputes.length / (wonDisputes.length + lostDisputes.length)) * 100 
-    : 0;
-  
-  // Mock chargeback ratio (in real app, calculate from transactions)
-  const chargebackRatio = 0.45;
-
-  const columns = [
-    {
-      key: 'dispute_id',
-      label: 'ID',
-      render: (value, row) => (
-        <div className="flex items-center gap-3">
-          <div className={cn(
-            "w-10 h-10 rounded-lg flex items-center justify-center",
-            row.type === 'chargeback' ? 'bg-red-100' : 'bg-yellow-100'
-          )}>
-            {row.type === 'chargeback' ? (
-              <ShieldAlert className="w-5 h-5 text-red-600" />
-            ) : (
-              <AlertTriangle className="w-5 h-5 text-yellow-600" />
-            )}
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 text-sm">{value}</p>
-            <p className="text-xs text-gray-500 capitalize">{row.type?.replace('_', ' ')}</p>
-          </div>
-        </div>
-      )
-    },
-    {
-      key: 'customer_name',
-      label: 'Cliente',
-      render: (value, row) => (
-        <div>
-          <p className="font-medium text-gray-900 text-sm">{value || 'N/A'}</p>
-          <p className="text-xs text-gray-500">{row.transaction_id}</p>
-        </div>
-      )
-    },
-    {
-      key: 'amount',
-      label: 'Valor',
-      render: (value) => (
-        <span className="font-semibold text-gray-900">{formatCurrency(value)}</span>
-      )
-    },
-    {
-      key: 'reason_description',
-      label: 'Motivo',
-      render: (value, row) => (
-        <div>
-          <p className="text-sm text-gray-900">{value || 'Não especificado'}</p>
-          <p className="text-xs text-gray-500">Código: {row.reason_code}</p>
-        </div>
-      )
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      render: (value) => <StatusBadge status={value} />
-    },
-    {
-      key: 'deadline_date',
-      label: 'Prazo',
-      render: (value) => {
-        if (!value) return 'N/A';
-        const deadline = new Date(value);
-        const today = new Date();
-        const daysLeft = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
-        
-        return (
-          <div>
-            <p className="text-sm text-gray-900">
-              {format(deadline, 'dd/MM/yyyy', { locale: ptBR })}
-            </p>
-            <p className={cn(
-              "text-xs",
-              daysLeft <= 3 ? 'text-red-500 font-medium' : daysLeft <= 7 ? 'text-yellow-600' : 'text-gray-500'
-            )}>
-              {daysLeft > 0 ? `${daysLeft} dias restantes` : 'Prazo expirado'}
-            </p>
-          </div>
-        );
-      }
-    },
-    {
-      key: 'win_probability',
-      label: 'Prob. Vitória',
-      render: (value) => {
-        const prob = value || Math.random() * 100;
-        return (
-          <div className="flex items-center gap-2">
-            <Progress value={prob} className="w-16 h-2" />
-            <span className={cn(
-              "text-sm font-medium",
-              prob >= 70 ? 'text-emerald-600' : prob >= 40 ? 'text-yellow-600' : 'text-red-600'
-            )}>
-              {prob.toFixed(0)}%
-            </span>
-          </div>
-        );
-      }
-    },
-    {
-      key: 'actions',
-      label: '',
-      render: (_, row) => (
-        <div className="flex items-center gap-1">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8"
-            onClick={() => setSelectedDispute(row)}
-          >
-            <Eye className="w-4 h-4" />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <MoreHorizontal className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Upload className="w-4 h-4 mr-2" />
-                Enviar Evidências
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <MessageSquare className="w-4 h-4 mr-2" />
-                Adicionar Nota
-              </DropdownMenuItem>
-              <DropdownMenuItem>Aceitar Disputa</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )
+  // Aplica saved view
+  const applyView = (item) => {
+    if (currentView === 'critical') return computeUrgency(item).level === 'critical' && isOpen(item);
+    if (currentView === 'precb') return item._channel === 'precb' && isOpen(item);
+    if (currentView === 'cb_high_prob') return item._channel === 'cb' && (item.win_probability || 0) >= 60 && isOpen(item);
+    if (currentView === 'med_2h') {
+      if (item._channel !== 'med' || !isOpen(item)) return false;
+      const h = differenceInHours(new Date(item.deadline_at), new Date());
+      return h >= 0 && h <= 2;
     }
-  ];
+    if (currentView === 'high_value') return (item.amount || item.requested_amount || 0) >= 2000;
+    return true;
+  };
+
+  const applyChip = (item) => {
+    if (!currentChip) return true;
+    if (['critical', 'high', 'medium'].includes(currentChip)) return computeUrgency(item).level === currentChip;
+    if (currentChip === 'precb') return item._channel === 'precb';
+    if (currentChip === 'cb') return item._channel === 'cb';
+    if (currentChip === 'med') return item._channel === 'med';
+    return true;
+  };
+
+  const filtered = useMemo(() => {
+    return unifiedItems.filter((item) => {
+      if (!isOpen(item) && !currentView && !currentChip) return false;
+      if (channelFilter !== 'all' && item._channel !== channelFilter) return false;
+      if (brandFilter !== 'all') {
+        if (brandFilter === 'pix' && item._channel !== 'med') return false;
+        if (brandFilter !== 'pix' && item.card_brand !== brandFilter) return false;
+      }
+      const v = item.amount || item.requested_amount || 0;
+      if (valueRange === 'low' && v >= 100) return false;
+      if (valueRange === 'mid' && (v < 100 || v >= 500)) return false;
+      if (valueRange === 'high' && (v < 500 || v >= 2000)) return false;
+      if (valueRange === 'vhigh' && v < 2000) return false;
+      if (urgencyFilter !== 'all' && computeUrgency(item).level !== urgencyFilter) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        const hay = [item.dispute_id, item.med_id, item.transaction_id, item.arn, item.customer_name, item.customer_email, item.payer_name]
+          .filter(Boolean).join(' ').toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      if (!applyView(item)) return false;
+      if (!applyChip(item)) return false;
+      return true;
+    }).sort((a, b) => {
+      // Ordena por urgência × valor
+      const ua = computeUrgency(a), ub = computeUrgency(b);
+      const ord = { critical: 0, high: 1, medium: 2, expired: 3, low: 4 };
+      const diff = (ord[ua.level] ?? 5) - (ord[ub.level] ?? 5);
+      if (diff !== 0) return diff;
+      return (b.amount || b.requested_amount || 0) - (a.amount || a.requested_amount || 0);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unifiedItems, channelFilter, brandFilter, valueRange, urgencyFilter, search, currentView, currentChip]);
+
+  const stats = useMemo(() => {
+    const open = unifiedItems.filter(isOpen);
+    const critical = open.filter((i) => computeUrgency(i).level === 'critical');
+    const precb = open.filter((i) => i._channel === 'precb');
+    const med = open.filter((i) => i._channel === 'med');
+    const cb = unifiedItems.filter((i) => i._channel === 'cb');
+    const won = cb.filter((d) => d.status === 'won');
+    const lost = cb.filter((d) => ['lost', 'accepted'].includes(d.status));
+    const winRate = (won.length + lost.length) > 0 ? Math.round((won.length / (won.length + lost.length)) * 100) : 0;
+    const sum = (arr) => arr.reduce((s, x) => s + (x.amount || x.requested_amount || 0), 0);
+
+    return {
+      criticalCount: critical.length,
+      openCount: open.length,
+      openValue: sum(open),
+      atRiskValue: sum(open) * 0.7,
+      precbCount: precb.length,
+      precbValue: sum(precb),
+      medCount: med.length,
+      medValue: sum(med),
+      winRate,
+      wonCount: won.length,
+    };
+  }, [unifiedItems]);
+
+  const triageCounts = useMemo(() => ({
+    critical: unifiedItems.filter((i) => isOpen(i) && computeUrgency(i).level === 'critical').length,
+    high: unifiedItems.filter((i) => isOpen(i) && computeUrgency(i).level === 'high').length,
+    medium: unifiedItems.filter((i) => isOpen(i) && computeUrgency(i).level === 'medium').length,
+    precb: unifiedItems.filter((i) => isOpen(i) && i._channel === 'precb').length,
+    cb: unifiedItems.filter((i) => isOpen(i) && i._channel === 'cb').length,
+    med: unifiedItems.filter((i) => isOpen(i) && i._channel === 'med').length,
+  }), [unifiedItems]);
+
+  const activeFilterCount =
+    (channelFilter !== 'all' ? 1 : 0) +
+    (brandFilter !== 'all' ? 1 : 0) +
+    (valueRange !== 'all' ? 1 : 0) +
+    (urgencyFilter !== 'all' ? 1 : 0) +
+    (search ? 1 : 0);
+
+  const clearFilters = () => {
+    setSearch(''); setChannelFilter('all'); setBrandFilter('all'); setValueRange('all'); setUrgencyFilter('all');
+    setCurrentView(null); setCurrentChip(null);
+  };
+
+  const toggleSelect = (id) => {
+    setSelected((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id); else n.add(id);
+      return n;
+    });
+  };
+
+  const toggleAll = () => {
+    if (filtered.every((i) => selected.has(i.id))) setSelected(new Set());
+    else setSelected(new Set(filtered.map((i) => i.id)));
+  };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <PageHeader
-        title="Disputas e Chargebacks"
-        subtitle="Gerencie suas disputas e contestações"
-        breadcrumbs={[
-          { label: 'Disputas', page: 'Disputes' }
-        ]}
+        title="Disputas"
+        subtitle="Cockpit unificado: Pre-Chargebacks, Chargebacks e MEDs em uma única fila ordenada por urgência"
+        breadcrumbs={[{ label: 'Disputas' }]}
         actions={
-          <Button className="bg-[#00D26A] hover:bg-[#00A854]">
-            <Sparkles className="w-4 h-4 mr-2" />
-            Dispute Manager AI
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm">
+              <Sparkles className="w-4 h-4 mr-2" /> Triagem IA
+            </Button>
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" /> Exportar
+            </Button>
+          </div>
         }
       />
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard
-          title="Disputas Abertas"
-          value={openDisputes.length}
-          format="number"
-          icon={ShieldAlert}
-          iconBg="bg-red-100"
-          iconColor="text-red-600"
-        />
-        <KPICard
-          title="Valor em Disputa"
-          value={totalOpenAmount}
-          format="currency"
-          icon={AlertTriangle}
-          iconBg="bg-yellow-100"
-          iconColor="text-yellow-600"
-        />
-        <KPICard
-          title="Win Rate"
-          value={winRate}
-          format="percentage"
-          change={5.2}
-          icon={TrendingUp}
-          iconBg="bg-emerald-100"
-          iconColor="text-emerald-600"
-        />
-        <div className="bg-white rounded-xl border border-gray-100 p-5">
-          <div className="flex items-start justify-between mb-2">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Chargeback Ratio</p>
-              <p className="text-2xl font-bold text-gray-900">{chargebackRatio.toFixed(2)}%</p>
-            </div>
-            <div className={cn(
-              "p-2.5 rounded-lg",
-              chargebackRatio < 0.5 ? 'bg-emerald-100' : chargebackRatio < 1 ? 'bg-yellow-100' : 'bg-red-100'
-            )}>
-              <TrendingDown className={cn(
-                "w-5 h-5",
-                chargebackRatio < 0.5 ? 'text-emerald-600' : chargebackRatio < 1 ? 'text-yellow-600' : 'text-red-600'
-              )} />
-            </div>
-          </div>
-          <Progress 
-            value={chargebackRatio * 100} 
-            className="h-2 mb-2" 
-          />
-          <p className="text-xs text-gray-500">
-            Meta: &lt; 1.0% • {chargebackRatio < 1 ? '✓ Dentro do limite' : '⚠️ Atenção necessária'}
-          </p>
-        </div>
+      <UnifiedQueueKpiBar stats={stats} />
+
+      <UnifiedTriageBar counts={triageCounts} currentChip={currentChip} onSelectChip={(c) => setCurrentChip(currentChip === c ? null : c)} />
+
+      <UnifiedQueueFilters
+        search={search} onSearch={setSearch}
+        channelFilter={channelFilter} onChannelChange={setChannelFilter}
+        brandFilter={brandFilter} onBrandChange={setBrandFilter}
+        valueRange={valueRange} onValueRangeChange={setValueRange}
+        urgencyFilter={urgencyFilter} onUrgencyChange={setUrgencyFilter}
+        activeFilterCount={activeFilterCount} onClearFilters={clearFilters}
+        currentView={currentView} onSelectView={(id) => setCurrentView(currentView === id ? null : id)}
+      />
+
+      <div className="flex items-center justify-between text-xs text-slate-500 px-1">
+        <p className="flex items-center gap-1.5">
+          <Inbox className="w-3.5 h-3.5" />
+          {filtered.length} {filtered.length === 1 ? 'disputa' : 'disputas'} • ordenadas por urgência × valor
+        </p>
       </div>
 
-      {/* Compliance Alert */}
-      {chargebackRatio >= 0.9 && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 className="font-semibold text-yellow-900">Atenção: Aproximando do limite</h4>
-              <p className="text-sm text-yellow-800 mt-1">
-                Seu chargeback ratio está se aproximando do limite de 1.0% estabelecido pelas bandeiras. 
-                Considere ações preventivas para evitar penalidades.
-              </p>
-              <Button variant="outline" size="sm" className="mt-3 border-yellow-300 text-yellow-700">
-                Ver recomendações
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <UnifiedQueueTable
+        items={filtered}
+        selected={selected}
+        onToggleSelect={toggleSelect}
+        onToggleAll={toggleAll}
+        onView={() => {}}
+        onAction={() => {}}
+      />
 
-      {/* Tabs */}
-      <Tabs defaultValue="all" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="all">
-            Todas
-            <Badge variant="secondary" className="ml-2">{disputes.length}</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="open">
-            Abertas
-            <Badge variant="secondary" className="ml-2 bg-red-100 text-red-700">{openDisputes.length}</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="alerts">Alertas</TabsTrigger>
-          <TabsTrigger value="compliance">Compliance</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="all">
-          <DataTable
-            columns={columns}
-            data={disputes}
-            loading={isLoading}
-            searchable
-            searchPlaceholder="Buscar por ID, cliente ou transação..."
-            pagination
-            pageSize={25}
-            currentPage={1}
-            totalItems={disputes.length}
-            onRefresh={refetch}
-            emptyMessage="Nenhuma disputa encontrada"
-          />
-        </TabsContent>
-
-        <TabsContent value="open">
-          <DataTable
-            columns={columns}
-            data={openDisputes}
-            loading={isLoading}
-            searchable
-            pagination
-            pageSize={25}
-            currentPage={1}
-            totalItems={openDisputes.length}
-            emptyMessage="Nenhuma disputa aberta"
-          />
-        </TabsContent>
-
-        <TabsContent value="alerts">
-          <div className="bg-white rounded-xl border border-gray-100 p-8 text-center">
-            <AlertTriangle className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="font-semibold text-gray-900 mb-2">Alertas Ethoca/Verifi</h3>
-            <p className="text-gray-500 mb-4">Gerencie alertas preventivos das bandeiras</p>
-            <Button variant="outline">Configurar Alertas</Button>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="compliance">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <h4 className="font-semibold text-gray-900 mb-4">Programa Visa</h4>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">VDMP (Dispute)</span>
-                  <Badge className="bg-emerald-100 text-emerald-700">Normal</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">VFMP (Fraud)</span>
-                  <Badge className="bg-emerald-100 text-emerald-700">Normal</Badge>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <h4 className="font-semibold text-gray-900 mb-4">Programa Mastercard</h4>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">ECM (Chargeback)</span>
-                  <Badge className="bg-emerald-100 text-emerald-700">Normal</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">EFM (Fraud)</span>
-                  <Badge className="bg-emerald-100 text-emerald-700">Normal</Badge>
-                </div>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      {/* Dispute Detail Side Drawer */}
-      <SideDrawer
-        open={!!selectedDispute}
-        onOpenChange={() => setSelectedDispute(null)}
-        title="Detalhes da Disputa"
-        description={selectedDispute?.dispute_id}
-        icon={ShieldAlert}
-        iconClassName="bg-red-100 text-red-600"
-        size="lg"
-        footer={
-          selectedDispute && (
-            <div className="flex gap-3">
-              <Button className="flex-1 bg-[#00D26A] hover:bg-[#00A854]">
-                <Upload className="w-4 h-4 mr-2" />
-                Enviar Evidências
-              </Button>
-              <Button variant="outline" className="flex-1">
-                Aceitar Disputa
-              </Button>
-            </div>
-          )
-        }
-      >
-        {selectedDispute && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Valor</p>
-                <p className="font-semibold text-lg">{formatCurrency(selectedDispute.amount)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Status</p>
-                <StatusBadge status={selectedDispute.status} />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Tipo</p>
-                <p className="font-medium capitalize">{selectedDispute.type?.replace('_', ' ')}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Bandeira</p>
-                <p className="font-medium capitalize">{selectedDispute.card_brand || 'N/A'}</p>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Motivo</p>
-              <p className="text-gray-900">{selectedDispute.reason_description || 'Não especificado'}</p>
-              <p className="text-sm text-gray-500">Código: {selectedDispute.reason_code}</p>
-            </div>
-
-            {selectedDispute.ai_recommendation && (
-              <div className="bg-gradient-to-br from-[#00D26A]/10 to-[#00D26A]/5 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-[#00D26A]" />
-                  <span className="font-medium text-gray-900">Recomendação do AI</span>
-                </div>
-                <p className="text-sm text-gray-700">{selectedDispute.ai_recommendation}</p>
-              </div>
-            )}
-          </div>
-        )}
-      </SideDrawer>
+      <UnifiedBulkBar
+        selectedCount={selected.size}
+        onClear={() => setSelected(new Set())}
+        onAction={() => setSelected(new Set())}
+      />
     </div>
   );
 }

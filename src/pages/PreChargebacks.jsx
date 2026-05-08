@@ -36,6 +36,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { differenceInHours, differenceInDays, format } from 'date-fns';
+import PrecbAutoRefundRulesCard from '@/components/disputes/v2/PrecbAutoRefundRulesCard';
+import PrecbImpactPreview from '@/components/disputes/v2/PrecbImpactPreview';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
@@ -296,6 +298,9 @@ export default function PreChargebacks() {
         />
       </div>
 
+      {/* Auto-refund Rule Engine (v2) */}
+      <PrecbAutoRefundRulesCard />
+
       {/* Urgent Alert Banner */}
       {urgentAlerts.length > 0 && (
         <Card className="border-red-300 bg-gradient-to-r from-red-50 to-orange-50 shadow-sm">
@@ -525,6 +530,9 @@ export default function PreChargebacks() {
                   )}
                 </div>
               </div>
+
+              {/* Impact Preview (v2) */}
+              <PrecbImpactPreview alert={detailsDialog.alert} />
 
               {/* Tip */}
               <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl space-y-2">

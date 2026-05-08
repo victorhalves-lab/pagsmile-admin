@@ -35,6 +35,9 @@ import {
 import { toast } from 'sonner';
 import { formatCurrency } from '@/components/utils';
 import { cn } from '@/lib/utils';
+import MedCountdown from '@/components/disputes/v2/MedCountdown';
+import MedDeadlineHorizon from '@/components/disputes/v2/MedDeadlineHorizon';
+import MedAutoDecisionCard from '@/components/disputes/v2/MedAutoDecisionCard';
 
 // Mock data para demonstração
 const mockMEDs = [
@@ -266,17 +269,7 @@ function MEDDetailDialog({ med, open, onOpenChange, onAction }) {
                 {reasonConfig[med.reason]?.label || med.reason}
               </Badge>
             </div>
-            <div className={cn(
-              "flex items-center gap-2 text-sm font-medium",
-              isExpired ? "text-gray-500" : isUrgent ? "text-red-600" : "text-amber-600"
-            )}>
-              <Timer className="h-4 w-4" />
-              {isExpired ? (
-                <span>Prazo expirado</span>
-              ) : (
-                <span>{hoursLeft}h restantes</span>
-              )}
-            </div>
+            <MedCountdown deadline={med.deadline_at} />
           </div>
 
           {/* Informações da Transação */}
@@ -502,6 +495,12 @@ export default function MEDDashboard() {
       {/* KPI Cards */}
       <MEDKPICards meds={medList} />
 
+      {/* Horizonte de prazos + Auto-decisão (v2) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <MedDeadlineHorizon meds={medList} />
+        <MedAutoDecisionCard />
+      </div>
+
       {/* Filtros */}
       <Card className="mb-6">
         <CardContent className="pt-6">
@@ -686,17 +685,7 @@ function MEDTable({ meds, isLoading, onViewDetails }) {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <div className={cn(
-                      "flex items-center gap-1 text-sm",
-                      isExpired ? "text-gray-500" : isUrgent ? "text-red-600 font-medium" : "text-slate-600"
-                    )}>
-                      <Timer className="h-4 w-4" />
-                      {isExpired ? (
-                        <span>Expirado</span>
-                      ) : (
-                        <span>{hoursLeft}h</span>
-                      )}
-                    </div>
+                    <MedCountdown deadline={med.deadline_at} compact />
                   </TableCell>
                   <TableCell>
                     <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onViewDetails(med); }}>

@@ -8,6 +8,10 @@ import DisputeTrendChart from '@/components/disputes/DisputeTrendChart';
 import ComplianceOverview from '@/components/disputes/ComplianceOverview';
 import AgentDashboardSummary from '@/components/disputes/AgentDashboardSummary';
 import DisputeKPICards from '@/components/disputes/DisputeKPICards';
+import RatioForecastCard from '@/components/disputes/v2/RatioForecastCard';
+import DashboardKpiExtras from '@/components/disputes/v2/DashboardKpiExtras';
+import DashboardAnomalies from '@/components/disputes/v2/DashboardAnomalies';
+import DashboardNextActions from '@/components/disputes/v2/DashboardNextActions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -197,6 +201,18 @@ export default function DisputeDashboard() {
       {/* KPI Cards */}
       <DisputeKPICards data={kpiData} isLoading={loadingDisputes} />
 
+      {/* KPI Extras (v2): Provisão, Net Loss, Tempo médio, Recovery Pre-CB, Hoje, SLA crítico */}
+      <DashboardKpiExtras kpiData={kpiData} />
+
+      {/* Forecast de Ratios (v2) */}
+      <RatioForecastCard />
+
+      {/* Anomalias detectadas + Próximas ações sugeridas (v2) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <DashboardAnomalies />
+        <DashboardNextActions />
+      </div>
+
       {/* Charts and Compliance */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <DisputeTrendChart 
@@ -216,7 +232,26 @@ export default function DisputeDashboard() {
       />
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Link to={createPageUrl('Disputes')}>
+          <Card className="hover:shadow-md transition-shadow cursor-pointer border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-emerald-100 rounded-lg">
+                    <Shield className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-emerald-900">Cockpit Unificado</p>
+                    <p className="text-sm text-emerald-700">Pre-CB + CB + MED em uma fila</p>
+                  </div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-emerald-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
         <Link to={createPageUrl('PreChargebacks')}>
           <Card className="hover:shadow-md transition-shadow cursor-pointer border-orange-200 bg-orange-50">
             <CardContent className="p-4">

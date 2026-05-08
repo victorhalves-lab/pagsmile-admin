@@ -154,6 +154,7 @@ const getAdminSubMenuItems = (t) => [
     badge: '3',
     badgeVariant: 'destructive',
     submenu: [
+      { label: 'Cockpit Unificado', page: 'Disputes' },
       { label: t('menu.dashboard'), page: 'DisputeDashboard' },
       { label: t('menu.pre_chargebacks'), page: 'PreChargebacks' },
       { label: t('menu.chargebacks'), page: 'Chargebacks' },

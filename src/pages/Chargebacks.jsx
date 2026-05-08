@@ -35,6 +35,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, differenceInDays } from 'date-fns';
+import WinProbabilityExplain from '@/components/disputes/v2/WinProbabilityExplain';
+import EvidencePackChecklist from '@/components/disputes/v2/EvidencePackChecklist';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
@@ -436,7 +438,9 @@ export default function Chargebacks() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <WinProbabilityBadge probability={row?.win_probability} />
+                      <WinProbabilityExplain dispute={row}>
+                        <WinProbabilityBadge probability={row?.win_probability} />
+                      </WinProbabilityExplain>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
@@ -551,9 +555,15 @@ export default function Chargebacks() {
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-emerald-500" />
                   <span className="text-sm font-semibold text-slate-700">Probabilidade de Ganho</span>
+                  <span className="ml-auto text-[10px] text-purple-600 font-bold">Click para decompor →</span>
                 </div>
-                <WinProbabilityBadge probability={selectedDispute?.win_probability} />
+                <WinProbabilityExplain dispute={selectedDispute}>
+                  <WinProbabilityBadge probability={selectedDispute?.win_probability} />
+                </WinProbabilityExplain>
               </div>
+
+              {/* Evidence Pack Checklist (v2) */}
+              <EvidencePackChecklist dispute={selectedDispute} />
 
               {/* AI Recommendation */}
               {selectedDispute?.ai_recommendation && (
