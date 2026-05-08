@@ -12,6 +12,14 @@ import { getLogoUrlByTheme } from '@/components/utils/branding';
 import { cn } from "@/lib/utils";
 import SelectionButton from '@/components/ui/selection-button';
 import LanguageSelector from '@/components/i18n/LanguageSelector';
+import StepProgressEnhanced from '@/components/onboarding/v2/StepProgressEnhanced';
+import PasswordStrength from '@/components/onboarding/v2/PasswordStrength';
+import PasswordInput from '@/components/onboarding/v2/PasswordInput';
+import VerificationChannelPicker from '@/components/onboarding/v2/VerificationChannelPicker';
+import CodeInput from '@/components/onboarding/v2/CodeInput';
+import HelpFloater from '@/components/onboarding/v2/HelpFloater';
+import ShareInviteButton from '@/components/onboarding/v2/ShareInviteButton';
+import SocialLoginButtons from '@/components/onboarding/v2/SocialLoginButtons';
 
 export default function AccountCreationStep1() {
   const { t } = useTranslation();
@@ -66,31 +74,19 @@ export default function AccountCreationStep1() {
             <CardDescription className="text-base text-slate-500 dark:text-slate-400">{t('onboarding.responsible_data')}</CardDescription>
           </div>
           
-          {/* Enhanced Progress Bar */}
-          <div className="flex items-center justify-center gap-3 mt-6">
-            <div className="flex flex-col items-center gap-2">
-              <div className="relative">
-                <div className="w-3 h-3 rounded-full bg-white border-2 border-[#2bc196] z-10 relative shadow-[0_0_10px_rgba(0,194,149,0.4)]" />
-                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#2bc196]" />
-              </div>
-              <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-[#2bc196] to-emerald-500 shadow-sm" />
-            </div>
-            
-            <div className="flex flex-col items-center gap-2 opacity-30">
-               <div className="w-3 h-3 rounded-full bg-slate-200 border-2 border-slate-300" />
-               <div className="w-24 h-1.5 rounded-full bg-slate-200" />
-            </div>
-            
-            <div className="flex flex-col items-center gap-2 opacity-30">
-               <div className="w-3 h-3 rounded-full bg-slate-200 border-2 border-slate-300" />
-               <div className="w-24 h-1.5 rounded-full bg-slate-200" />
-            </div>
+          {/* Enhanced Progress Bar with labels + estimated time */}
+          <div className="mt-6">
+            <StepProgressEnhanced currentStep={1} />
           </div>
         </CardHeader>
         
         <CardContent className="space-y-6 pt-2">
           {!showVerification ? (
             <>
+              {/* Social login at top */}
+              <div className="max-w-md mx-auto">
+                <SocialLoginButtons />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                 <div className="space-y-2 md:col-span-6">
                   <Label htmlFor="fullName">{t('onboarding.full_name')}</Label>
@@ -139,11 +135,15 @@ export default function AccountCreationStep1() {
                 
                 <div className="space-y-2 md:col-span-6">
                   <Label htmlFor="password">{t('onboarding.password')}</Label>
-                  <Input id="password" type="password" placeholder={t('onboarding.password_placeholder')} value={formData.password} onChange={handleChange} />
+                  <PasswordInput id="password" placeholder={t('onboarding.password_placeholder')} value={formData.password} onChange={handleChange} />
+                  <PasswordStrength password={formData.password} />
                 </div>
                 <div className="space-y-2 md:col-span-6">
                   <Label htmlFor="confirmPassword">{t('onboarding.confirm_password')}</Label>
-                  <Input id="confirmPassword" type="password" placeholder={t('onboarding.password_placeholder')} value={formData.confirmPassword} onChange={handleChange} />
+                  <PasswordInput id="confirmPassword" placeholder={t('onboarding.password_placeholder')} value={formData.confirmPassword} onChange={handleChange} />
+                  {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                    <p className="text-xs text-red-500 mt-1">As senhas não conferem</p>
+                  )}
                 </div>
 
                 <div className="md:col-span-12 pt-2">
@@ -190,45 +190,10 @@ export default function AccountCreationStep1() {
                                     </p>
                                   </div>
 
-                                  <div className="grid grid-cols-2 gap-3 w-full max-w-sm mx-auto">
-                                      <button
-                                          type="button"
-                                          onClick={() => setVerificationMethod('email')}
-                                          className={cn(
-                                              "flex flex-row items-center justify-center p-3 rounded-xl border-2 transition-all duration-200 h-14 gap-2",
-                                              verificationMethod === 'email'
-                                                  ? "border-[#2bc196] bg-[#2bc196]/5 text-[#2bc196]"
-                                                  : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
-                                          )}
-                                      >
-                                          <div className={cn(
-                                              "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
-                                              verificationMethod === 'email' ? "bg-[#2bc196] text-white" : "bg-slate-100 text-slate-400"
-                                          )}>
-                                              <Mail className="w-3 h-3" />
-                                          </div>
-                                          <span className="font-semibold text-xs">{t('onboarding.via_email')}</span>
-                                      </button>
-
-                                      <button
-                                          type="button"
-                                          onClick={() => setVerificationMethod('sms')}
-                                          className={cn(
-                                              "flex flex-row items-center justify-center p-3 rounded-xl border-2 transition-all duration-200 h-14 gap-2",
-                                              verificationMethod === 'sms'
-                                                  ? "border-[#2bc196] bg-[#2bc196]/5 text-[#2bc196]"
-                                                  : "border-slate-100 bg-white text-slate-500 hover:border-slate-200 hover:bg-slate-50"
-                                          )}
-                                      >
-                                          <div className={cn(
-                                              "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
-                                              verificationMethod === 'sms' ? "bg-[#2bc196] text-white" : "bg-slate-100 text-slate-400"
-                                          )}>
-                                              <Smartphone className="w-3 h-3" />
-                                          </div>
-                                          <span className="font-semibold text-xs">{t('onboarding.via_sms')}</span>
-                                      </button>
-                                  </div>
+                                  <VerificationChannelPicker 
+                                    value={verificationMethod} 
+                                    onChange={setVerificationMethod} 
+                                  />
 
                 <div className="bg-[#2bc196]/5 border border-[#2bc196]/10 rounded-lg p-3 max-w-xs mx-auto">
                 <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">{t('onboarding.code_sent_to')}</p>
@@ -238,16 +203,9 @@ export default function AccountCreationStep1() {
                 </div>
               </div>
 
-              <div className="space-y-3 max-w-xs mx-auto">
-                <Label htmlFor="verificationCode" className="text-center block text-slate-700">{t('onboarding.six_digit_code')}</Label>
-                <Input 
-                  id="verificationCode" 
-                  placeholder={t('onboarding.code_placeholder')} 
-                  value={verificationCode} 
-                  onChange={(e) => setVerificationCode(e.target.value)}
-                  className="text-center text-2xl tracking-[0.5em] font-mono font-bold h-14 border-slate-300 focus:border-[#2bc196] focus:ring-[#2bc196]/20"
-                  maxLength={6}
-                />
+              <div className="space-y-3 max-w-md mx-auto">
+                <Label className="text-center block text-slate-700">{t('onboarding.six_digit_code')}</Label>
+                <CodeInput value={verificationCode} onChange={setVerificationCode} length={6} />
               </div>
 
               <p className="text-sm text-slate-500 text-center">
@@ -268,7 +226,8 @@ export default function AccountCreationStep1() {
                   {t('onboarding.continue')} <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
-              <div className="w-full text-center mt-4">
+              <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+                <ShareInviteButton variant="ghost" />
                 <a 
                   href="https://pagsmileonboarding.base44.app/QuestionarioPublico?tipo=manual" 
                   target="_blank" 
@@ -291,6 +250,7 @@ export default function AccountCreationStep1() {
           )}
         </CardFooter>
       </Card>
+      <HelpFloater />
     </div>
   );
 }

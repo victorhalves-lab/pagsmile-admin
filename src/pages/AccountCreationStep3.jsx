@@ -13,11 +13,20 @@ import { ArrowLeft, ArrowRight, Building2, Search } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import SelectionButton from '@/components/ui/selection-button';
 import LanguageSelector from '@/components/i18n/LanguageSelector';
+import StepProgressEnhanced from '@/components/onboarding/v2/StepProgressEnhanced';
+import BusinessTypeSelector from '@/components/onboarding/v2/BusinessTypeSelector';
+import CompliancePreviewCard from '@/components/onboarding/v2/CompliancePreviewCard';
+import ShareInviteButton from '@/components/onboarding/v2/ShareInviteButton';
+import HelpFloater from '@/components/onboarding/v2/HelpFloater';
+import { Sparkles, Loader2, CheckCircle2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 
 export default function AccountCreationStep3() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [cnpjLookupStatus, setCnpjLookupStatus] = useState('idle'); // idle | loading | done
   const [formData, setFormData] = useState({
     cnpj: '',
     corporateName: '',
@@ -38,16 +47,22 @@ export default function AccountCreationStep3() {
     setFormData(prev => ({ ...prev, [id]: value }));
   };
 
-  const handleCnpjLookup = () => {
-    // Simula consulta CNPJ
-    if (formData.cnpj.length >= 14) {
-      setFormData(prev => ({
-        ...prev,
-        corporateName: 'Empresa Exemplo Ltda',
-        tradeName: 'Empresa Exemplo',
-        address: 'Rua das Flores, 123 - Centro - São Paulo/SP',
-      }));
+  const handleCnpjLookup = async () => {
+    if (formData.cnpj.replace(/\D/g, '').length < 14) {
+      toast.error('Digite um CNPJ válido (14 dígitos)');
+      return;
     }
+    setCnpjLookupStatus('loading');
+    // Simula consulta a BrasilAPI / ReceitaWS
+    await new Promise(r => setTimeout(r, 1200));
+    setFormData(prev => ({
+      ...prev,
+      corporateName: 'Empresa Exemplo Ltda',
+      tradeName: 'Empresa Exemplo',
+      address: 'Rua das Flores, 123 - Centro - São Paulo/SP',
+    }));
+    setCnpjLookupStatus('done');
+    toast.success('Dados da empresa preenchidos automaticamente!');
   };
 
   const handleFinish = async () => {
@@ -101,44 +116,40 @@ export default function AccountCreationStep3() {
           <CardTitle className="text-3xl font-extrabold text-slate-900 tracking-tight">{t('onboarding.company_data')}</CardTitle>
           <CardDescription className="text-slate-500 text-base mt-2">{t('onboarding.step_3_of_3')}</CardDescription>
           
-          {/* Enhanced Progress Bar */}
-          <div className="flex items-center justify-center gap-3 mt-8">
-             <div className="flex flex-col items-center gap-2">
-               <div className="w-3 h-3 rounded-full bg-[#2bc196] border-2 border-[#2bc196]" />
-               <div className="w-24 h-1.5 rounded-full bg-[#2bc196]" />
-             </div>
-             
-             <div className="flex flex-col items-center gap-2">
-               <div className="w-3 h-3 rounded-full bg-[#2bc196] border-2 border-[#2bc196]" />
-               <div className="w-24 h-1.5 rounded-full bg-[#2bc196]" />
-             </div>
-             
-             <div className="flex flex-col items-center gap-2">
-              <div className="relative">
-                <div className="w-3 h-3 rounded-full bg-white border-2 border-[#2bc196] z-10 relative shadow-[0_0_10px_rgba(0,194,149,0.4)]" />
-                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#2bc196]" />
-              </div>
-              <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-[#2bc196] to-emerald-500 shadow-sm" />
-            </div>
+          {/* Enhanced Progress Bar with labels + estimated time */}
+          <div className="mt-6">
+            <StepProgressEnhanced currentStep={3} />
           </div>
         </CardHeader>
         
         <CardContent className="space-y-4 pt-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             <div className="space-y-2 md:col-span-4">
-              <Label htmlFor="cnpj">{t('onboarding.cnpj')}</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="cnpj">{t('onboarding.cnpj')} *</Label>
+                {cnpjLookupStatus === 'done' && (
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] gap-1">
+                    <Sparkles className="w-2.5 h-2.5" />
+                    Auto-preenchido
+                  </Badge>
+                )}
+              </div>
               <div className="flex gap-2">
                 <Input 
                   id="cnpj" 
                   placeholder={t('onboarding.cnpj_placeholder')} 
                   value={formData.cnpj} 
                   onChange={handleChange}
+                  onBlur={() => formData.cnpj.replace(/\D/g,'').length >= 14 && cnpjLookupStatus === 'idle' && handleCnpjLookup()}
                   className="flex-1"
                 />
-                <Button type="button" variant="outline" onClick={handleCnpjLookup}>
-                  <Search className="h-4 w-4" />
+                <Button type="button" variant="outline" onClick={handleCnpjLookup} disabled={cnpjLookupStatus === 'loading'}>
+                  {cnpjLookupStatus === 'loading' ? <Loader2 className="h-4 w-4 animate-spin" /> : 
+                   cnpjLookupStatus === 'done' ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> :
+                   <Search className="h-4 w-4" />}
                 </Button>
               </div>
+              <p className="text-[10px] text-slate-500">Os dados da empresa serão preenchidos automaticamente</p>
             </div>
             
             <div className="space-y-2 md:col-span-4">
@@ -178,26 +189,11 @@ export default function AccountCreationStep3() {
             </div>
             
             <div className="space-y-2 md:col-span-12">
-              <Label htmlFor="businessType">{t('onboarding.business_type')}</Label>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
-                {[
-                  { value: 'ecommerce', label: t('onboarding.type_ecommerce') },
-                  { value: 'saas', label: t('onboarding.type_saas') },
-                  { value: 'services', label: t('onboarding.type_services') },
-                  { value: 'retail', label: t('onboarding.type_retail') },
-                  { value: 'marketplace', label: t('onboarding.type_marketplace') },
-                  { value: 'infoproducts', label: t('onboarding.type_infoproducts') },
-                  { value: 'other', label: t('onboarding.type_other') }
-                ].map(opt => (
-                  <SelectionButton
-                    key={opt.value}
-                    selected={formData.businessType === opt.value}
-                    onClick={() => setFormData(p => ({...p, businessType: opt.value}))}
-                  >
-                    {opt.label}
-                  </SelectionButton>
-                ))}
-              </div>
+              <Label>{t('onboarding.business_type')}</Label>
+              <BusinessTypeSelector
+                value={formData.businessType}
+                onChange={(v) => setFormData(p => ({...p, businessType: v}))}
+              />
             </div>
             
             <div className="space-y-2 md:col-span-6">
@@ -245,15 +241,30 @@ export default function AccountCreationStep3() {
               <Label htmlFor="positionInCompany">{t('onboarding.position_company')}</Label>
               <Input id="positionInCompany" placeholder={t('onboarding.position_placeholder')} value={formData.positionInCompany} onChange={handleChange} />
             </div>
+
+            {/* Compliance Preview Card - aparece após preencher dados básicos */}
+            {formData.cnpj && formData.businessType && formData.avgMonthlyRevenue && (
+              <div className="md:col-span-12">
+                <CompliancePreviewCard 
+                  score={82}
+                  etaHours={24}
+                  feePix="0.99%"
+                  feeCard="2.99%"
+                />
+              </div>
+            )}
           </div>
         </CardContent>
         
         <CardFooter className="flex justify-between pt-6 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-20 md:static md:bg-transparent md:border-0 md:p-8">
-          <Button variant="ghost" asChild>
-            <Link to={createPageUrl('PlanSelection')}>
-              <ArrowLeft className="mr-2 h-4 w-4" /> {t('onboarding.back')}
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" asChild>
+              <Link to={createPageUrl('PlanSelection')}>
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t('onboarding.back')}
+              </Link>
+            </Button>
+            <ShareInviteButton variant="outline" />
+          </div>
           <Button 
             onClick={handleFinish} 
             disabled={loading} 
@@ -264,6 +275,7 @@ export default function AccountCreationStep3() {
           </Button>
         </CardFooter>
       </Card>
+      <HelpFloater />
     </div>
   );
 }
