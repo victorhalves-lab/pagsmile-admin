@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import {
-  ArrowLeft,
   Mail,
   Phone,
   CreditCard,
@@ -16,16 +13,17 @@ import {
   Star,
   Tag,
   Send,
-  Plus,
-  Trash2,
-  Monitor,
-  Smartphone,
-  MoreHorizontal,
-  Eye,
   RefreshCw,
-  Shield,
   Crown,
-  Clock
+  Clock,
+  MoreHorizontal,
+  Activity,
+  StickyNote,
+  MessageCircle,
+  Sparkles,
+  Eye,
+  Ban,
+  Shield,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -47,6 +45,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -56,6 +55,16 @@ import { toast } from 'sonner';
 import PageHeader from '@/components/common/PageHeader';
 import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
+
+// Customer 360 v2 components
+import CustomerHeaderKpis from '@/components/customers/v2/CustomerHeaderKpis';
+import CommsInlineBar from '@/components/customers/v2/CommsInlineBar';
+import CustomerAiInsights from '@/components/customers/v2/CustomerAiInsights';
+import SavedCardsEnhanced from '@/components/customers/v2/SavedCardsEnhanced';
+import SubscriptionsEnhanced from '@/components/customers/v2/SubscriptionsEnhanced';
+import DisputesEnhanced from '@/components/customers/v2/DisputesEnhanced';
+import CustomerNotes from '@/components/customers/v2/CustomerNotes';
+import CustomerCommsHistory from '@/components/customers/v2/CustomerCommsHistory';
 
 export default function CustomerDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -92,12 +101,8 @@ export default function CustomerDetail() {
     enabled: !!customer?.email,
   });
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value || 0);
-  };
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
 
   const segmentConfig = {
     new: { label: 'Novo', color: 'bg-blue-100 text-blue-700', icon: Star },
@@ -112,72 +117,68 @@ export default function CustomerDetail() {
       key: 'transaction_id',
       label: 'ID',
       render: (value) => (
-        <code className="text-xs bg-gray-100 px-2 py-1 rounded">{value?.slice(0, 12)}...</code>
+        <code className="text-xs bg-slate-100 px-2 py-1 rounded">{value?.slice(0, 12)}...</code>
       )
     },
-    {
-      key: 'created_date',
-      label: 'Data',
-      render: (value) => value ? format(new Date(value), 'dd/MM/yyyy HH:mm', { locale: ptBR }) : '-'
-    },
-    {
-      key: 'type',
-      label: 'Tipo',
-      render: (value) => (
-        <Badge variant="outline" className="capitalize">{value}</Badge>
-      )
-    },
-    {
-      key: 'amount',
-      label: 'Valor',
-      render: (value) => <span className="font-semibold">{formatCurrency(value)}</span>
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      render: (value) => <StatusBadge status={value} />
-    },
+    { key: 'created_date', label: 'Data',
+      render: (value) => value ? format(new Date(value), 'dd/MM/yyyy HH:mm', { locale: ptBR }) : '-' },
+    { key: 'type', label: 'Tipo',
+      render: (value) => <Badge variant="outline" className="capitalize">{value}</Badge> },
+    { key: 'amount', label: 'Valor',
+      render: (value) => <span className="font-semibold">{formatCurrency(value)}</span> },
+    { key: 'status', label: 'Status', render: (value) => <StatusBadge status={value} /> },
   ];
 
   if (isLoading || !customer) {
     return (
       <div className="flex items-center justify-center h-64">
-        <RefreshCw className="w-6 h-6 animate-spin text-gray-400" />
+        <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
       </div>
     );
   }
 
   const config = segmentConfig[customer.segment] || segmentConfig.new;
+  const ConfigIcon = config.icon;
 
   return (
     <div className="space-y-6">
       <PageHeader
         title={customer.name}
-        subtitle="Perfil 360° do cliente"
+        subtitle="Customer 360°"
         breadcrumbs={[
           { label: 'Clientes', page: 'Customers' },
           { label: customer.name }
         ]}
         actions={
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Mail className="w-4 h-4 mr-2" />
-              Enviar E-mail
-            </Button>
+            {/* Comms inline bar (Email / WhatsApp / SMS / Push) */}
+            <CommsInlineBar customer={customer} />
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuItem onClick={() => setIsAddTagOpen(true)}>
-                  <Tag className="w-4 h-4 mr-2" />
-                  Adicionar Tag
+                  <Tag className="w-4 h-4 mr-2" /> Adicionar Tag
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setIsAddCardOpen(true)}>
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  Solicitar Cartão
+                  <CreditCard className="w-4 h-4 mr-2" /> Solicitar Cartão
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => toast.success('Promovido a VIP')}>
+                  <Crown className="w-4 h-4 mr-2" /> Promover a VIP
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => toast.success('Campanha iniciada')}>
+                  <Send className="w-4 h-4 mr-2" /> Iniciar campanha
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => toast.info('Visualizando como cliente...')}>
+                  <Eye className="w-4 h-4 mr-2" /> Ver como cliente
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-red-600" onClick={() => toast.warning('Cliente bloqueado')}>
+                  <Ban className="w-4 h-4 mr-2" /> Bloquear cliente
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -188,7 +189,7 @@ export default function CustomerDetail() {
       {/* Header Card */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col md:flex-row gap-6 items-start">
             <div className="flex items-start gap-4">
               <Avatar className="h-20 w-20">
                 <AvatarFallback className="bg-[#101F3E] text-white text-2xl">
@@ -196,211 +197,210 @@ export default function CustomerDetail() {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">{customer.name}</h2>
-                <p className="text-gray-500">{customer.email}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Badge className={config.color}>
-                    <config.icon className="w-3 h-3 mr-1" />
+                <h2 className="text-2xl font-bold text-slate-900">{customer.name}</h2>
+                <p className="text-slate-500 text-sm">{customer.email}</p>
+                {customer.phone && <p className="text-slate-500 text-sm">{customer.phone}</p>}
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  <Badge className={cn('gap-1', config.color)}>
+                    <ConfigIcon className="w-3 h-3" />
                     {config.label}
                   </Badge>
                   {customer.tags?.map((tag, idx) => (
-                    <Badge key={idx} variant="outline">{tag}</Badge>
+                    <Badge key={idx} variant="outline" className="gap-1">
+                      <Tag className="w-2.5 h-2.5" />
+                      {tag}
+                    </Badge>
                   ))}
+                  <Badge variant="outline" className="gap-1 bg-emerald-50 text-emerald-700 border-emerald-200">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Online há 5min
+                  </Badge>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 md:ml-auto">
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <p className="text-3xl font-bold text-gray-900">{customer.total_purchases || 0}</p>
-                <p className="text-sm text-gray-500">Compras</p>
-              </div>
-              <div className="text-center p-4 bg-emerald-50 rounded-lg">
-                <p className="text-3xl font-bold text-emerald-600">{formatCurrency(customer.total_spent)}</p>
-                <p className="text-sm text-gray-500">LTV</p>
-              </div>
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <p className="text-3xl font-bold text-blue-600">{formatCurrency(customer.average_ticket)}</p>
-                <p className="text-sm text-gray-500">Ticket Médio</p>
-              </div>
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <p className="text-3xl font-bold text-purple-600">{customer.risk_score || 0}</p>
-                <p className="text-sm text-gray-500">Score de Risco</p>
-              </div>
-            </div>
+          {/* 7 KPIs incluindo Health, Churn, LTV projection, Risk com explainability */}
+          <div className="mt-6">
+            <CustomerHeaderKpis customer={customer} />
           </div>
         </CardContent>
       </Card>
 
+      {/* AI Insights */}
+      <CustomerAiInsights customer={customer} />
+
       {/* Tabs */}
       <Tabs defaultValue="info" className="space-y-6">
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="info">Informações</TabsTrigger>
           <TabsTrigger value="transactions">
-            Transações
-            <Badge variant="secondary" className="ml-2">{transactions.length}</Badge>
+            Transações <Badge variant="secondary" className="ml-2">{transactions.length}</Badge>
           </TabsTrigger>
-          <TabsTrigger value="cards">Cartões</TabsTrigger>
-          <TabsTrigger value="subscriptions">Assinaturas</TabsTrigger>
-          <TabsTrigger value="disputes">Disputas</TabsTrigger>
+          <TabsTrigger value="cards">
+            Cartões <Badge variant="secondary" className="ml-2">{customer.saved_cards?.length || 0}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="subscriptions">
+            Assinaturas <Badge variant="secondary" className="ml-2">{subscriptions.length}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="disputes">
+            Disputas <Badge variant="secondary" className="ml-2">{disputes.length}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="comms">
+            <MessageCircle className="w-3.5 h-3.5 mr-1" />
+            Comunicação
+          </TabsTrigger>
+          <TabsTrigger value="notes">
+            <StickyNote className="w-3.5 h-3.5 mr-1" />
+            Notas
+          </TabsTrigger>
+          <TabsTrigger value="activity">
+            <Activity className="w-3.5 h-3.5 mr-1" />
+            Atividade
+          </TabsTrigger>
         </TabsList>
 
         {/* Info Tab */}
         <TabsContent value="info">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Contact Info */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">Informações de Contato</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gray-100 rounded-lg">
-                    <Mail className="w-4 h-4 text-gray-600" />
+                  <div className="p-2 bg-slate-100 rounded-lg">
+                    <Mail className="w-4 h-4 text-slate-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">E-mail</p>
-                    <p className="font-medium">{customer.email}</p>
+                    <p className="text-xs text-slate-500">E-mail</p>
+                    <p className="font-medium text-sm">{customer.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gray-100 rounded-lg">
-                    <Phone className="w-4 h-4 text-gray-600" />
+                  <div className="p-2 bg-slate-100 rounded-lg">
+                    <Phone className="w-4 h-4 text-slate-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Telefone</p>
-                    <p className="font-medium">{customer.phone || 'Não informado'}</p>
+                    <p className="text-xs text-slate-500">Telefone</p>
+                    <p className="font-medium text-sm">{customer.phone || 'Não informado'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gray-100 rounded-lg">
-                    <CreditCard className="w-4 h-4 text-gray-600" />
+                  <div className="p-2 bg-slate-100 rounded-lg">
+                    <CreditCard className="w-4 h-4 text-slate-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Documento</p>
-                    <p className="font-medium">{customer.document} ({customer.document_type?.toUpperCase()})</p>
+                    <p className="text-xs text-slate-500">Documento</p>
+                    <p className="font-medium text-sm font-mono">{customer.document} ({customer.document_type?.toUpperCase()})</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Activity */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Atividade</CardTitle>
+                <CardTitle className="text-base">Datas-chave</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-emerald-100 rounded-lg">
-                      <Calendar className="w-4 h-4 text-emerald-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Primeira Compra</p>
-                      <p className="font-medium">
-                        {customer.first_purchase_date 
-                          ? format(new Date(customer.first_purchase_date), 'dd/MM/yyyy', { locale: ptBR })
-                          : 'N/A'
-                        }
-                      </p>
-                    </div>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50">
+                  <Calendar className="w-4 h-4 text-emerald-600" />
+                  <div className="flex-1">
+                    <p className="text-xs text-slate-500">Primeira Compra</p>
+                    <p className="font-medium text-sm">
+                      {customer.first_purchase_date
+                        ? format(new Date(customer.first_purchase_date), 'dd/MM/yyyy', { locale: ptBR })
+                        : 'N/A'}
+                    </p>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <ShoppingBag className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Última Compra</p>
-                      <p className="font-medium">
-                        {customer.last_purchase_date 
-                          ? format(new Date(customer.last_purchase_date), 'dd/MM/yyyy', { locale: ptBR })
-                          : 'N/A'
-                        }
-                      </p>
-                    </div>
+                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50">
+                  <ShoppingBag className="w-4 h-4 text-blue-600" />
+                  <div className="flex-1">
+                    <p className="text-xs text-slate-500">Última Compra</p>
+                    <p className="font-medium text-sm">
+                      {customer.last_purchase_date
+                        ? format(new Date(customer.last_purchase_date), 'dd/MM/yyyy', { locale: ptBR })
+                        : 'N/A'}
+                    </p>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <CreditCard className="w-4 h-4 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Método Preferido</p>
-                      <p className="font-medium capitalize">{customer.preferred_payment_method || 'Cartão'}</p>
-                    </div>
+                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50">
+                  <CreditCard className="w-4 h-4 text-purple-600" />
+                  <div className="flex-1">
+                    <p className="text-xs text-slate-500">Método Preferido</p>
+                    <p className="font-medium text-sm capitalize">{customer.preferred_payment_method || 'Cartão'}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Addresses */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Endereços</CardTitle>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <MapPin className="w-4 h-4" /> Endereços
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 {customer.addresses?.length > 0 ? (
                   <div className="space-y-3">
                     {customer.addresses.map((addr, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                        <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                        <MapPin className="w-4 h-4 text-slate-400 mt-0.5" />
                         <div className="text-sm">
                           <p className="font-medium">{addr.street}, {addr.number}</p>
-                          <p className="text-gray-500">{addr.city} - {addr.state}, {addr.zip_code}</p>
+                          <p className="text-slate-500">{addr.city} - {addr.state}, {addr.zip_code}</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">Nenhum endereço cadastrado</p>
+                  <p className="text-sm text-slate-500 text-center py-4">Nenhum endereço cadastrado</p>
                 )}
               </CardContent>
             </Card>
 
-            {/* Risk & Disputes */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Risco e Disputas</CardTitle>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Shield className="w-4 h-4" /> Resumo de Risco
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm">Score de Risco</span>
-                  </div>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                  <span className="text-sm flex items-center gap-2">
+                    <Sparkles className="w-3 h-3 text-purple-500" />
+                    Risk Score (clique no header para detalhes)
+                  </span>
                   <span className={cn(
-                    "font-bold",
-                    (customer.risk_score || 0) < 30 ? "text-emerald-600" :
-                    (customer.risk_score || 0) < 60 ? "text-yellow-600" : "text-red-600"
+                    'font-bold text-sm',
+                    (customer.risk_score || 0) < 30 ? 'text-emerald-600' :
+                    (customer.risk_score || 0) < 60 ? 'text-yellow-600' : 'text-red-600'
                   )}>
                     {customer.risk_score || 0}/100
                   </span>
                 </div>
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm">Chargebacks</span>
-                  </div>
-                  <span className={cn("font-bold", customer.chargebacks_count > 0 && "text-red-600")}>
+                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                  <span className="text-sm flex items-center gap-2">
+                    <AlertTriangle className="w-3 h-3 text-slate-500" />
+                    Chargebacks
+                  </span>
+                  <span className={cn('font-bold text-sm', customer.chargebacks_count > 0 && 'text-red-600')}>
                     {customer.chargebacks_count || 0}
                   </span>
                 </div>
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <RefreshCw className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm">Estornos</span>
-                  </div>
-                  <span className="font-bold">{customer.refunds_count || 0}</span>
+                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                  <span className="text-sm flex items-center gap-2">
+                    <RefreshCw className="w-3 h-3 text-slate-500" />
+                    Estornos
+                  </span>
+                  <span className="font-bold text-sm">{customer.refunds_count || 0}</span>
                 </div>
               </CardContent>
             </Card>
           </div>
         </TabsContent>
 
-        {/* Transactions Tab */}
         <TabsContent value="transactions">
           <Card>
             <CardContent className="p-6">
@@ -419,124 +419,58 @@ export default function CustomerDetail() {
           </Card>
         </TabsContent>
 
-        {/* Cards Tab */}
         <TabsContent value="cards">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base">Cartões Tokenizados</CardTitle>
-              <Button size="sm" onClick={() => setIsAddCardOpen(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                Solicitar Cartão
-              </Button>
-            </CardHeader>
-            <CardContent>
-              {customer.saved_cards?.length > 0 ? (
-                <div className="space-y-3">
-                  {customer.saved_cards.map((card, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 bg-gray-100 rounded-lg">
-                          <CreditCard className="w-5 h-5 text-gray-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium">•••• {card.last_four}</p>
-                          <p className="text-sm text-gray-500">{card.brand} • Expira {card.expiry}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700">Ativo</Badge>
-                        <Button variant="ghost" size="icon" className="text-red-500">
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <CreditCard className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500">Nenhum cartão salvo</p>
-                  <Button variant="outline" className="mt-4" onClick={() => setIsAddCardOpen(true)}>
-                    Solicitar Cadastro de Cartão
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <SavedCardsEnhanced customer={customer} onRequestNew={() => setIsAddCardOpen(true)} />
         </TabsContent>
 
-        {/* Subscriptions Tab */}
         <TabsContent value="subscriptions">
-          <Card>
-            <CardContent className="p-6">
-              {subscriptions.length > 0 ? (
-                <div className="space-y-4">
-                  {subscriptions.map((sub) => (
-                    <div key={sub.id} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg">
-                      <div>
-                        <p className="font-medium">{sub.plan_name}</p>
-                        <p className="text-sm text-gray-500">
-                          {formatCurrency(sub.amount)} / {sub.billing_cycle === 'monthly' ? 'mês' : sub.billing_cycle}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="text-sm text-gray-500">Próxima cobrança</p>
-                          <p className="font-medium">
-                            {sub.next_billing_date 
-                              ? format(new Date(sub.next_billing_date), 'dd/MM/yyyy', { locale: ptBR })
-                              : 'N/A'
-                            }
-                          </p>
-                        </div>
-                        <StatusBadge status={sub.status} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <RefreshCw className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500">Nenhuma assinatura ativa</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <SubscriptionsEnhanced subscriptions={subscriptions} />
         </TabsContent>
 
-        {/* Disputes Tab */}
         <TabsContent value="disputes">
+          <DisputesEnhanced disputes={disputes} customer={customer} />
+        </TabsContent>
+
+        <TabsContent value="comms">
+          <CustomerCommsHistory />
+        </TabsContent>
+
+        <TabsContent value="notes">
+          <CustomerNotes customer={customer} />
+        </TabsContent>
+
+        <TabsContent value="activity">
           <Card>
             <CardContent className="p-6">
-              {disputes.length > 0 ? (
-                <div className="space-y-4">
-                  {disputes.map((dispute) => (
-                    <div key={dispute.id} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg">
-                      <div>
-                        <p className="font-medium">Disputa #{dispute.dispute_id}</p>
-                        <p className="text-sm text-gray-500">
-                          {dispute.type} • {dispute.reason_description}
-                        </p>
+              <p className="text-sm font-semibold mb-3">Logs de Atividade</p>
+              <div className="space-y-2 text-xs">
+                {[
+                  { time: 'há 5 min', event: 'Cliente acessou portal', icon: Activity, color: 'emerald' },
+                  { time: 'hoje 09:32', event: 'Email "Recovery campaign" aberto', icon: Mail, color: 'blue' },
+                  { time: 'ontem 14:15', event: 'Compra realizada — R$ 299,00', icon: ShoppingBag, color: 'purple' },
+                  { time: '3 dias atrás', event: 'Cartão atualizado via Account Updater', icon: CreditCard, color: 'orange' },
+                  { time: '1 semana atrás', event: 'Tag "Premium" adicionada por Ana Costa', icon: Tag, color: 'yellow' },
+                ].map((a, i) => {
+                  const Icon = a.icon;
+                  return (
+                    <div key={i} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg">
+                      <div className={`w-7 h-7 rounded-lg bg-${a.color}-50 text-${a.color}-600 flex items-center justify-center`}>
+                        <Icon className="w-3.5 h-3.5" />
                       </div>
-                      <div className="flex items-center gap-4">
-                        <span className="font-semibold text-red-600">{formatCurrency(dispute.amount)}</span>
-                        <StatusBadge status={dispute.status} />
+                      <div className="flex-1">
+                        <p className="text-sm">{a.event}</p>
                       </div>
+                      <span className="text-[10px] text-slate-400">{a.time}</span>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <Shield className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500">Nenhuma disputa registrada</p>
-                </div>
-              )}
+                  );
+                })}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
 
-      {/* Add Tag Dialog */}
+      {/* Dialogs */}
       <Dialog open={isAddTagOpen} onOpenChange={setIsAddTagOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
@@ -545,51 +479,36 @@ export default function CustomerDetail() {
           </DialogHeader>
           <div>
             <Label>Nome da Tag</Label>
-            <Input
-              placeholder="Ex: Premium, Empresa, Parceiro"
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-            />
+            <Input placeholder="Ex: Premium, Empresa, Parceiro" value={newTag} onChange={(e) => setNewTag(e.target.value)} />
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddTagOpen(false)}>Cancelar</Button>
-            <Button 
-              className="bg-[#00D26A] hover:bg-[#00A854]"
-              onClick={() => {
-                toast.success('Tag adicionada!');
-                setIsAddTagOpen(false);
-                setNewTag('');
-              }}
-            >
+            <Button className="bg-[#2bc196] hover:bg-[#239b7a]"
+              onClick={() => { toast.success('Tag adicionada!'); setIsAddTagOpen(false); setNewTag(''); }}>
               Adicionar
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Add Card Dialog */}
       <Dialog open={isAddCardOpen} onOpenChange={setIsAddCardOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Solicitar Cadastro de Cartão</DialogTitle>
             <DialogDescription>Envie um link seguro para o cliente cadastrar um cartão</DialogDescription>
           </DialogHeader>
-          <p className="text-sm text-gray-600">
-            Um e-mail será enviado para <strong>{customer.email}</strong> com um link seguro para cadastro de cartão.
+          <p className="text-sm text-slate-600">
+            Um link seguro será enviado para <strong>{customer.email}</strong> ou via WhatsApp para <strong>{customer.phone}</strong>.
           </p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAddCardOpen(false)}>Cancelar</Button>
-            <Button 
-              className="bg-[#00D26A] hover:bg-[#00A854]"
-              onClick={() => {
-                toast.success('Link enviado por e-mail!');
-                setIsAddCardOpen(false);
-              }}
-            >
-              <Send className="w-4 h-4 mr-2" />
-              Enviar Link
+          <div className="grid grid-cols-2 gap-2">
+            <Button variant="outline" className="text-xs" onClick={() => { toast.success('Link enviado por email'); setIsAddCardOpen(false); }}>
+              <Mail className="w-3 h-3 mr-1" /> Por Email
             </Button>
-          </DialogFooter>
+            <Button className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs"
+              onClick={() => { toast.success('QR/Link enviado por WhatsApp'); setIsAddCardOpen(false); }}>
+              <Send className="w-3 h-3 mr-1" /> Por WhatsApp
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
