@@ -1,6 +1,9 @@
 import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Sparkles,
   Layers,
@@ -9,6 +12,8 @@ import {
   Pause,
   CalendarClock,
   ShieldAlert,
+  Target,
+  ArrowRight,
 } from 'lucide-react';
 
 const formatCurrency = (v) =>
@@ -71,7 +76,11 @@ export default function MentorSplitKPIBar({ rules = [] }) {
           <p className="text-xs font-bold text-violet-700 dark:text-violet-300">
             Mentor · KPIs Operacionais do Split
           </p>
-          <Badge className="bg-violet-100 text-violet-700 text-[9px] ml-auto">Wave H.5</Badge>
+          <Link to={createPageUrl('SplitRiskOpportunityHub')} className="ml-auto">
+            <Button size="sm" variant="outline" className="h-7 text-[11px] border-violet-300 text-violet-700 hover:bg-violet-50">
+              <Target className="w-3 h-3 mr-1" /> Análise Risco/Oportunidade <ArrowRight className="w-3 h-3 ml-1" />
+            </Button>
+          </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
           <KPI
