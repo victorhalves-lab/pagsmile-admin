@@ -81,6 +81,7 @@ import AdminIntSalesRepDetail from './pages/AdminIntSalesRepDetail';
 import AdminIntProjects from './pages/AdminIntProjects';
 import AdminIntProjectDetail from './pages/AdminIntProjectDetail';
 import AdminIntProjectsConsolidatedDashboard from './pages/AdminIntProjectsConsolidatedDashboard';
+import AdminIntSupplierCredentials from './pages/AdminIntSupplierCredentials';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -204,6 +205,7 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntProjects" element={<LayoutWrapper currentPageName="AdminIntProjects"><AdminIntProjects /></LayoutWrapper>} />
       <Route path="/AdminIntProjectDetail" element={<LayoutWrapper currentPageName="AdminIntProjectDetail"><AdminIntProjectDetail /></LayoutWrapper>} />
       <Route path="/AdminIntProjectsConsolidatedDashboard" element={<LayoutWrapper currentPageName="AdminIntProjectsConsolidatedDashboard"><AdminIntProjectsConsolidatedDashboard /></LayoutWrapper>} />
+      <Route path="/AdminIntSupplierCredentials" element={<LayoutWrapper currentPageName="AdminIntSupplierCredentials"><AdminIntSupplierCredentials /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
