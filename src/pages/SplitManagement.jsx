@@ -11,6 +11,9 @@ import MentorSplitTypeSelector from '@/components/mentor/split/MentorSplitTypeSe
 import MentorScaledSplitBuilder from '@/components/mentor/split/MentorScaledSplitBuilder';
 import MentorConditionalSplitBuilder from '@/components/mentor/split/MentorConditionalSplitBuilder';
 import MentorSplitVigencyFields from '@/components/mentor/split/MentorSplitVigencyFields';
+import MentorSplitKPIBar from '@/components/mentor/split/MentorSplitKPIBar';
+import MentorSplitBulkActionsBar from '@/components/mentor/split/MentorSplitBulkActionsBar';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -59,6 +62,7 @@ export default function SplitManagement() {
   const [editingRule, setEditingRule] = useState(null);
   const [previewRule, setPreviewRule] = useState(null);
   const [viewMode, setViewMode] = useState('grid');
+  const [selectedIds, setSelectedIds] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -278,6 +282,17 @@ export default function SplitManagement() {
         </Card>
       </div>
 
+      {/* Mentor: KPI Bar enriquecida (Wave H.5) */}
+      <MentorSplitKPIBar rules={rules} />
+
+      {/* Mentor: Bulk Actions Bar (Wave H.5) */}
+      <MentorSplitBulkActionsBar
+        rules={rules}
+        selectedIds={selectedIds}
+        onChange={setSelectedIds}
+        onClear={() => setSelectedIds([])}
+      />
+
       {/* Rules Grid */}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -309,7 +324,17 @@ export default function SplitManagement() {
           {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {rules.map(rule => (
-                <div key={rule.id} className="space-y-2">
+                <div key={rule.id} className="space-y-2 relative">
+                  {/* Mentor: checkbox de seleção em massa */}
+                  <div className="absolute top-2 left-2 z-10 bg-white rounded p-0.5 shadow-sm border">
+                    <Checkbox
+                      checked={selectedIds.includes(rule.id)}
+                      onCheckedChange={(checked) => {
+                        if (checked) setSelectedIds([...selectedIds, rule.id]);
+                        else setSelectedIds(selectedIds.filter((id) => id !== rule.id));
+                      }}
+                    />
+                  </div>
                   <SplitRuleCard
                     rule={rule}
                     onEdit={handleOpenDialog}
