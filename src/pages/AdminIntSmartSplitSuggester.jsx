@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Sparkles, TrendingUp, TrendingDown, Users, Check, X, Brain } from 'lucide-react';
 import PageHeader from '@/components/common/PageHeader';
+import PreviewBanner from '@/components/common/PreviewBanner';
 import { mockSmartSplitSuggestions } from '@/components/orchestration/mockData';
 
 export default function AdminIntSmartSplitSuggester() {
@@ -21,6 +22,8 @@ export default function AdminIntSmartSplitSuggester() {
         icon={Brain}
         breadcrumbs={[{ label: 'Admin Interno', page: 'AdminIntDashboard' }, { label: 'Marketplace' }]}
       />
+
+      <PreviewBanner message="A Tuna entrega split por transação (§5) e ajustes via Partner API (§18). 'Smart Suggester' baseado em IA é construção PagSmile sobre esses dados, não um endpoint Tuna. Sugestões mostradas são derivadas de heurística interna." />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="border-l-4 border-l-violet-500">

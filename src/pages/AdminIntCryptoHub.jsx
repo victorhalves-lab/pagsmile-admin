@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Coins, Bitcoin, TrendingUp, Activity } from 'lucide-react';
 import PageHeader from '@/components/common/PageHeader';
+import PreviewBanner from '@/components/common/PreviewBanner';
 
 const CRYPTO_KPIS = [
   { coin: 'BTC', symbol: '₿', txs: 142, volume: 1284000, color: 'from-orange-400 to-orange-600' },
@@ -28,6 +29,8 @@ export default function AdminIntCryptoHub() {
         icon={Coins}
         breadcrumbs={[{ label: 'Admin Interno', page: 'AdminIntDashboard' }, { label: 'Transações' }]}
       />
+
+      <PreviewBanner message="A API Tuna oficial expõe apenas o provider Bancryp para cripto via Payment API. Esta tela exibe um hub multi-coin que ainda não corresponde 1:1 ao endpoint Tuna. Use como visão futura." />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {CRYPTO_KPIS.map((c) => (
