@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Edit, Layers, Activity, Wrench, Shield, Building2, Users, DollarSign, History, ExternalLink, Zap, Banknote, Settings } from 'lucide-react';
 import ChannelParametersTab from '@/components/mentor/projects/parameters/ChannelParametersTab';
+import SpreadMDRTab from '@/components/mentor/projects/mdr/SpreadMDRTab';
+import { Grid3x3 } from 'lucide-react';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import PageHeader from '@/components/common/PageHeader';
 import { MOCK_PROJECTS, PROJECT_STATUSES, PROJECT_TYPES, REGULATORY_REGIONS, PROJECT_AUDIT_EVENTS } from '@/components/mentor/mocks/projectsMock';
@@ -90,6 +92,7 @@ export default function AdminIntProjectDetail() {
           <TabsTrigger value="users" className="gap-1.5"><Users className="w-3.5 h-3.5" />Usuários</TabsTrigger>
           <TabsTrigger value="financial" className="gap-1.5"><DollarSign className="w-3.5 h-3.5" />Parâmetros financeiros</TabsTrigger>
           <TabsTrigger value="channel_params" className="gap-1.5"><Settings className="w-3.5 h-3.5" />Parâmetros por Canal</TabsTrigger>
+          <TabsTrigger value="spread_mdr" className="gap-1.5"><Grid3x3 className="w-3.5 h-3.5" />Spreads MDR</TabsTrigger>
           <TabsTrigger value="audit" className="gap-1.5"><History className="w-3.5 h-3.5" />Auditoria</TabsTrigger>
         </TabsList>
 
@@ -270,6 +273,10 @@ export default function AdminIntProjectDetail() {
 
         <TabsContent value="channel_params">
           <ChannelParametersTab projectId={project.id} />
+        </TabsContent>
+
+        <TabsContent value="spread_mdr">
+          <SpreadMDRTab projectId={project.id} />
         </TabsContent>
 
         <TabsContent value="audit">
