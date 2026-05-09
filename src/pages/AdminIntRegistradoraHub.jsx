@@ -4,7 +4,7 @@ import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Database, ArrowLeft, Sparkles, RefreshCw, AlertTriangle, CheckCircle2, Activity } from 'lucide-react';
+import { Database, ArrowLeft, RefreshCw, AlertTriangle, CheckCircle2, Activity } from 'lucide-react';
 import { createPageUrl } from '@/components/utils';
 import { registradorasStatus } from '@/components/mentor/mocks/spotAnticipationMock';
 import { toast } from 'sonner';
@@ -27,22 +27,17 @@ export default function AdminIntRegistradoraHub() {
           { label: 'Registradoras' }
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor
-            </Badge>
-            <Link to={createPageUrl('AdminIntAnticipations')}>
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-              </Button>
-            </Link>
-          </div>
+          <Link to={createPageUrl('AdminIntAnticipations')}>
+            <Button variant="outline" size="sm">
+              <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
+            </Button>
+          </Link>
         }
       />
 
-      <Card className="border-l-4 border-l-violet-500">
+      <Card className="border-l-4 border-l-blue-500">
         <CardContent className="p-4 flex items-start gap-3">
-          <Database className="w-6 h-6 text-violet-600 flex-shrink-0 mt-1" />
+          <Database className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
           <div className="text-sm">
             <p className="font-medium mb-1">Registro obrigatório de recebíveis antecipados</p>
             <p className="text-slate-600">

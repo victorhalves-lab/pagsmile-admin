@@ -16,7 +16,7 @@ export default function ExposureLimitCard() {
     <Card className={isWarning ? 'border-amber-300' : ''}>
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
-          <Wallet className="w-5 h-5 text-violet-600" />
+          <Wallet className="w-5 h-5 text-slate-600" />
           Limite de Exposição
           {isWarning && <Badge className="bg-amber-100 text-amber-700"><AlertTriangle className="w-3 h-3 mr-1" /> Atenção</Badge>}
         </CardTitle>

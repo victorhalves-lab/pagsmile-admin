@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Download, Eye, Check, X, Calendar, TrendingUp, Sparkles, ShieldCheck, Database } from 'lucide-react';
+import { Download, Eye, Check, X, Calendar, TrendingUp, ShieldCheck, Database } from 'lucide-react';
 import { toast } from 'sonner';
 import MentorAnticipationKPIBar from '@/components/mentor/anticipation/MentorAnticipationKPIBar';
 import MentorAnticipationFilters from '@/components/mentor/anticipation/MentorAnticipationFilters';
@@ -32,7 +32,7 @@ const statusConfig = {
 };
 
 export default function AdminIntAnticipations() {
-    const [tab, setTab] = useState('mentor_spot');
+    const [tab, setTab] = useState('spot');
     const [selected, setSelected] = useState([]);
     const toggleSelect = (id) => setSelected(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
     const toggleAll = () => setSelected(selected.length === spotAnticipationsList.length ? [] : spotAnticipationsList.map(s => s.id));
@@ -53,11 +53,8 @@ export default function AdminIntAnticipations() {
                 breadcrumbs={[{ label: 'Financeiro' }, { label: 'Antecipação' }]}
                 actions={
                     <div className="flex items-center gap-2 flex-wrap">
-                        <Badge className="bg-violet-100 text-violet-700 gap-1">
-                            <Sparkles className="w-3 h-3" /> Mentor
-                        </Badge>
                         <Link to={createPageUrl('AdminIntAnticipationGovernanceCenter')}>
-                            <Button variant="outline" size="sm" className="border-violet-300 text-violet-700">
+                            <Button variant="outline" size="sm">
                                 <ShieldCheck className="w-4 h-4 mr-1" /> Governance
                             </Button>
                         </Link>
@@ -102,13 +99,13 @@ export default function AdminIntAnticipations() {
 
             <Tabs value={tab} onValueChange={setTab}>
                 <TabsList>
-                    <TabsTrigger value="mentor_spot">✨ Mentor Spot</TabsTrigger>
-                    <TabsTrigger value="requests">📋 Solicitações</TabsTrigger>
-                    <TabsTrigger value="agenda">📅 Agenda Antecipável</TabsTrigger>
-                    <TabsTrigger value="history">📜 Histórico</TabsTrigger>
+                    <TabsTrigger value="spot">Spot</TabsTrigger>
+                    <TabsTrigger value="requests">Solicitações</TabsTrigger>
+                    <TabsTrigger value="agenda">Agenda Antecipável</TabsTrigger>
+                    <TabsTrigger value="history">Histórico</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="mentor_spot" className="space-y-4">
+                <TabsContent value="spot" className="space-y-4">
                     <MentorAnticipationKPIBar kpis={spotAnticipationKPIs} />
                     <MentorAnticipationFilters onApply={() => toast.success('Filtros aplicados')} />
                     <MentorAnticipationBulkBar count={selected.length} onClear={() => setSelected([])} totalValue={selectedTotal} />

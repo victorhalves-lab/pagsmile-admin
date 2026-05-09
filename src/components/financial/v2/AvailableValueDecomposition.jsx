@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calculator, Sparkles } from 'lucide-react';
+import { Calculator } from 'lucide-react';
 import { availableValueMock } from '@/components/mentor/mocks/spotAnticipationMock';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
@@ -10,12 +10,11 @@ export default function AvailableValueDecomposition() {
   const data = availableValueMock;
 
   return (
-    <Card className="border-violet-200">
+    <Card>
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
-          <Calculator className="w-5 h-5 text-violet-600" />
+          <Calculator className="w-5 h-5 text-slate-600" />
           Como seu valor disponível é calculado
-          <Badge className="bg-violet-100 text-violet-700 text-[10px]"><Sparkles className="w-2.5 h-2.5 mr-1" /> Transparência Mentor</Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2 font-mono text-sm">

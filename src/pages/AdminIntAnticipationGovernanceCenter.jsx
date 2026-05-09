@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { ShieldCheck, ArrowLeft, Sparkles, Undo2, AlertTriangle, Wallet, FileSearch, CheckCircle2, Clock } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, Undo2, AlertTriangle, Wallet, FileSearch, CheckCircle2, Clock } from 'lucide-react';
 import { createPageUrl } from '@/components/utils';
 import { pendingApprovals, reversalsHistory, spotAnticipationKPIs } from '@/components/mentor/mocks/spotAnticipationMock';
 import { toast } from 'sonner';
@@ -29,16 +29,11 @@ export default function AdminIntAnticipationGovernanceCenter() {
           { label: 'Governance' }
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor
-            </Badge>
-            <Link to={createPageUrl('AdminIntAnticipations')}>
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-              </Button>
-            </Link>
-          </div>
+          <Link to={createPageUrl('AdminIntAnticipations')}>
+            <Button variant="outline" size="sm">
+              <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
+            </Button>
+          </Link>
         }
       />
 

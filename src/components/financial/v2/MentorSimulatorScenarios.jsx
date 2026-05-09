@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Lightbulb, Star } from 'lucide-react';
+import { Lightbulb, Star, GitCompare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { simulatorScenarios } from '@/components/mentor/mocks/spotAnticipationMock';
 import { toast } from 'sonner';
@@ -10,17 +10,16 @@ const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency'
 
 export default function MentorSimulatorScenarios() {
   return (
-    <Card className="border-violet-200">
+    <Card>
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-violet-600" />
-          Cenários Comparativos Mentor
-          <Badge className="bg-violet-100 text-violet-700 text-[10px]">F3299 IA</Badge>
+          <GitCompare className="w-5 h-5 text-slate-600" />
+          Cenários Comparativos
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-xs text-slate-500 mb-3">
-          Compare cenários antes de decidir — simulador inteligente recomenda o melhor para você
+          Compare cenários antes de decidir — recomendamos o melhor para você
         </p>
         <div className="space-y-2">
           {simulatorScenarios.map((sc, i) => (

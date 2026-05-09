@@ -156,13 +156,13 @@ export default function Anticipation() {
       <Tabs defaultValue="simulate" className="space-y-6">
         <TabsList>
           <TabsTrigger value="simulate">Simular e Antecipar</TabsTrigger>
-          <TabsTrigger value="mentor"><Sparkles className="w-3.5 h-3.5 mr-1 text-violet-600" /> Visão Mentor</TabsTrigger>
+          <TabsTrigger value="insights"><Sparkles className="w-3.5 h-3.5 mr-1" /> Insights</TabsTrigger>
           <TabsTrigger value="auto">Auto-Antecipação</TabsTrigger>
           <TabsTrigger value="history">Histórico</TabsTrigger>
         </TabsList>
 
-        {/* ✨ NOVA ABA Mentor — transparência total */}
-        <TabsContent value="mentor" className="space-y-6">
+        {/* Insights — transparência total */}
+        <TabsContent value="insights" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <AvailableValueDecomposition />
             <AvailableValueProjection />

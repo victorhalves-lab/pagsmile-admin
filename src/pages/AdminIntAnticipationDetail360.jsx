@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Sparkles } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/common/PageHeader';
 import { createPageUrl } from '@/components/utils';
 
@@ -31,16 +30,11 @@ export default function AdminIntAnticipationDetail360() {
           { label: data.id }
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor Backoffice
-            </Badge>
-            <Link to={createPageUrl('AdminIntAnticipations')}>
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-              </Button>
-            </Link>
-          </div>
+          <Link to={createPageUrl('AdminIntAnticipations')}>
+            <Button variant="outline" size="sm">
+              <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
+            </Button>
+          </Link>
         }
       />
 
@@ -50,7 +44,7 @@ export default function AdminIntAnticipationDetail360() {
       {/* Barra de ações */}
       <AnticipationActionsBar data={data} />
 
-      {/* Insights Mentor */}
+      {/* Insights */}
       <AnticipationInsightsCard />
 
       {/* Grid principal — 2 colunas */}
