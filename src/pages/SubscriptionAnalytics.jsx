@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
-  Download, Mail, Share2, ArrowLeftRight, Bell, FileText,
+  Download, Mail, Share2, Bell, FileText,
   TrendingUp, TrendingDown, Users, Target,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,12 @@ import CohortMatrixAdvanced from '@/components/subscriptions/analytics/CohortMat
 import ChurnReasonsAdvanced from '@/components/subscriptions/analytics/ChurnReasonsAdvanced';
 import AnalyticsNarrative from '@/components/subscriptions/analytics/AnalyticsNarrative';
 import MRRForecastCard from '@/components/subscriptions/analytics/MRRForecastCard';
+import RetentionCardsRow from '@/components/subscriptions/analytics/RetentionCardsRow';
+import MovementDetailTab from '@/components/subscriptions/analytics/MovementDetailTab';
+import CustomerHealthTab from '@/components/subscriptions/analytics/CustomerHealthTab';
+import InsightBanner from '@/components/analytics/shared/InsightBanner';
+import SavedViewsManager from '@/components/analytics/shared/SavedViewsManager';
+import PeriodCompareToggle from '@/components/analytics/shared/PeriodCompareToggle';
 import { buildMRRMovement, calcSaasMetrics, fmtCurrency } from '@/components/subscriptions/utils';
 
 const churnByCycleData = [
@@ -43,6 +49,7 @@ const trialConversionByLength = [
 
 export default function SubscriptionAnalytics() {
   const [period, setPeriod] = useState('6m');
+  const [compareMode, setCompareMode] = useState(false);
 
   useQuery({
     queryKey: ['subscriptions'],
@@ -59,7 +66,7 @@ export default function SubscriptionAnalytics() {
         subtitle="MRR Movement, Quick Ratio, NRR/GRR, Cohort multi-dimensional"
         breadcrumbs={[{ label: 'Assinaturas', page: 'Subscriptions' }, { label: 'Analytics' }]}
         actions={
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Select value={period} onValueChange={setPeriod}>
               <SelectTrigger className="w-32 h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -68,6 +75,12 @@ export default function SubscriptionAnalytics() {
                 <SelectItem value="12m" className="text-xs">12 meses</SelectItem>
               </SelectContent>
             </Select>
+            <SavedViewsManager
+              storageKey="subscription_analytics_views"
+              currentState={{ period, compareMode }}
+              onLoadView={(s) => { setPeriod(s.period); setCompareMode(s.compareMode); }}
+            />
+            <PeriodCompareToggle active={compareMode} onToggle={() => setCompareMode(!compareMode)} />
             <Button variant="outline" size="sm" onClick={() => toast.success('PDF Board Pack exportado')}>
               <FileText className="w-3.5 h-3.5 mr-1" /> Board Pack
             </Button>
@@ -77,31 +90,51 @@ export default function SubscriptionAnalytics() {
             <Button variant="outline" size="sm" onClick={() => toast.success('Link compartilhado')}>
               <Share2 className="w-3.5 h-3.5 mr-1" /> Compartilhar
             </Button>
-            <Button variant="outline" size="sm" onClick={() => toast.success('Comparação ativa')}>
-              <ArrowLeftRight className="w-3.5 h-3.5 mr-1" /> Comparar períodos
-            </Button>
             <Button variant="outline" size="sm" onClick={() => toast.success('Alerta criado')}>
-              <Bell className="w-3.5 h-3.5 mr-1" /> Criar alerta
+              <Bell className="w-3.5 h-3.5 mr-1" /> Alerta
             </Button>
           </div>
         }
       />
 
+      {/* Insight banner */}
+      <InsightBanner
+        type="opportunity"
+        title="Insight do dia"
+        message="Seu Quick Ratio está em 5.2 (excelente!) — você adiciona R$5.20 de MRR para cada R$1 perdido. Continue priorizando expansão sobre aquisição."
+        actionLabel="Ver Movement Detail"
+      />
+
       {/* KPIs SaaS-grade */}
       <SaasMetricsKpiBar metrics={metrics} />
+
+      {/* NRR + GRR + Quick Ratio (NEW) */}
+      <RetentionCardsRow />
 
       {/* Narrativa IA */}
       <AnalyticsNarrative />
 
       <Tabs defaultValue="mrr" className="space-y-3">
-        <TabsList className="bg-white dark:bg-slate-900 border h-9">
+        <TabsList className="bg-white dark:bg-slate-900 border h-9 flex-wrap h-auto">
           <TabsTrigger value="mrr" className="text-xs">MRR Movement</TabsTrigger>
+          <TabsTrigger value="movement-detail" className="text-xs">Movement Detail</TabsTrigger>
+          <TabsTrigger value="health" className="text-xs">Customer Health</TabsTrigger>
           <TabsTrigger value="forecast" className="text-xs">Forecast</TabsTrigger>
           <TabsTrigger value="churn" className="text-xs">Churn Analysis</TabsTrigger>
           <TabsTrigger value="cohort" className="text-xs">Cohort</TabsTrigger>
-          <TabsTrigger value="trials" className="text-xs">Trials & Conversion</TabsTrigger>
-          <TabsTrigger value="ltv" className="text-xs">LTV & Unit Economics</TabsTrigger>
+          <TabsTrigger value="trials" className="text-xs">Trials</TabsTrigger>
+          <TabsTrigger value="ltv" className="text-xs">LTV</TabsTrigger>
         </TabsList>
+
+        {/* MOVEMENT DETAIL (NEW) */}
+        <TabsContent value="movement-detail" className="space-y-3">
+          <MovementDetailTab />
+        </TabsContent>
+
+        {/* CUSTOMER HEALTH (NEW) */}
+        <TabsContent value="health" className="space-y-3">
+          <CustomerHealthTab />
+        </TabsContent>
 
         {/* MRR MOVEMENT */}
         <TabsContent value="mrr" className="space-y-3">
