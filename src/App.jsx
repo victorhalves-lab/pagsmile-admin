@@ -98,6 +98,7 @@ import SplitTerminalLinker from './pages/SplitTerminalLinker';
 import SplitEditFlow from './pages/SplitEditFlow';
 import SplitRiskOpportunityHub from './pages/SplitRiskOpportunityHub';
 import AdminIntSplitsGovernance from './pages/AdminIntSplitsGovernance';
+import SplitTemplatesBulkApply from './pages/SplitTemplatesBulkApply';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -238,6 +239,7 @@ const AuthenticatedApp = () => {
       <Route path="/SplitEditFlow" element={<LayoutWrapper currentPageName="SplitEditFlow"><SplitEditFlow /></LayoutWrapper>} />
       <Route path="/SplitRiskOpportunityHub" element={<LayoutWrapper currentPageName="SplitRiskOpportunityHub"><SplitRiskOpportunityHub /></LayoutWrapper>} />
       <Route path="/AdminIntSplitsGovernance" element={<LayoutWrapper currentPageName="AdminIntSplitsGovernance"><AdminIntSplitsGovernance /></LayoutWrapper>} />
+      <Route path="/SplitTemplatesBulkApply" element={<LayoutWrapper currentPageName="SplitTemplatesBulkApply"><SplitTemplatesBulkApply /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
