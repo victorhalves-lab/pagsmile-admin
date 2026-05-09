@@ -12,12 +12,9 @@ import MentorSplitHistoryTimeline from '@/components/mentor/split/MentorSplitHis
 import MentorSplitActionsBar from '@/components/mentor/split/MentorSplitActionsBar';
 import MentorSplitDerivedInsights from '@/components/mentor/split/MentorSplitDerivedInsights';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/components/utils';
 
 export default function SplitDetail360() {
   const split = mockSplitDetail360;
-  const navigate = useNavigate();
 
   return (
     <div className="space-y-5 min-h-screen">
@@ -41,7 +38,7 @@ export default function SplitDetail360() {
 
       <MentorSplitActionsBar
         split={split}
-        onEdit={() => navigate(createPageUrl('SplitEditFlow'))}
+        onEdit={() => toast.info('Fluxo de edição — Wave H.4 (PUT com aviso prévio + cutover)')}
         onSuspend={() => toast.info('Suspensão temporária — Wave H.2 ações de status')}
         onTerminate={() => toast.warning('Encerramento exige OTP + alçada — Wave H.7 (admin interno)')}
       />
