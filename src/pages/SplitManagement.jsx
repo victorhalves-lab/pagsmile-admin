@@ -37,8 +37,11 @@ import {
   DollarSign,
   Trash2,
   Info,
-  Building2
+  Building2,
+  Sparkles
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -313,6 +316,11 @@ export default function SplitManagement() {
                     <Button variant="outline" size="sm" className="flex-1" onClick={() => toast.success(`Status alternado: ${rule.name}`)}>
                       {rule.status === 'active' ? 'Pausar' : 'Ativar'}
                     </Button>
+                    <Link to={createPageUrl('SplitDetail360')} className="flex-1">
+                      <Button variant="outline" size="sm" className="w-full border-violet-300 text-violet-700 hover:bg-violet-50">
+                        <Sparkles className="w-3.5 h-3.5 mr-1" /> Ficha 360
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               ))}

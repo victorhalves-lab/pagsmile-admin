@@ -92,6 +92,9 @@ import AdminIntTransactionReconciliation from './pages/AdminIntTransactionReconc
 import AdminIntTransactionSyncCenter from './pages/AdminIntTransactionSyncCenter';
 import AdminIntTransactionExportCenter from './pages/AdminIntTransactionExportCenter';
 
+// ====== Mentor — Wave H (Split) ======
+import SplitDetail360 from './pages/SplitDetail360';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -224,6 +227,9 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntTransactionReconciliation" element={<LayoutWrapper currentPageName="AdminIntTransactionReconciliation"><AdminIntTransactionReconciliation /></LayoutWrapper>} />
       <Route path="/AdminIntTransactionSyncCenter" element={<LayoutWrapper currentPageName="AdminIntTransactionSyncCenter"><AdminIntTransactionSyncCenter /></LayoutWrapper>} />
       <Route path="/AdminIntTransactionExportCenter" element={<LayoutWrapper currentPageName="AdminIntTransactionExportCenter"><AdminIntTransactionExportCenter /></LayoutWrapper>} />
+
+      {/* ====== Mentor — Wave H (Split) ====== */}
+      <Route path="/SplitDetail360" element={<LayoutWrapper currentPageName="SplitDetail360"><SplitDetail360 /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
