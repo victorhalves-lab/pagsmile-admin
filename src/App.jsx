@@ -99,6 +99,8 @@ import SplitEditFlow from './pages/SplitEditFlow';
 import SplitRiskOpportunityHub from './pages/SplitRiskOpportunityHub';
 import AdminIntSplitsGovernance from './pages/AdminIntSplitsGovernance';
 import SplitTemplatesBulkApply from './pages/SplitTemplatesBulkApply';
+import SplitReconciliationCenter from './pages/SplitReconciliationCenter';
+import SplitBeneficiaryHub from './pages/SplitBeneficiaryHub';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -240,6 +242,8 @@ const AuthenticatedApp = () => {
       <Route path="/SplitRiskOpportunityHub" element={<LayoutWrapper currentPageName="SplitRiskOpportunityHub"><SplitRiskOpportunityHub /></LayoutWrapper>} />
       <Route path="/AdminIntSplitsGovernance" element={<LayoutWrapper currentPageName="AdminIntSplitsGovernance"><AdminIntSplitsGovernance /></LayoutWrapper>} />
       <Route path="/SplitTemplatesBulkApply" element={<LayoutWrapper currentPageName="SplitTemplatesBulkApply"><SplitTemplatesBulkApply /></LayoutWrapper>} />
+      <Route path="/SplitReconciliationCenter" element={<LayoutWrapper currentPageName="SplitReconciliationCenter"><SplitReconciliationCenter /></LayoutWrapper>} />
+      <Route path="/SplitBeneficiaryHub" element={<LayoutWrapper currentPageName="SplitBeneficiaryHub"><SplitBeneficiaryHub /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
