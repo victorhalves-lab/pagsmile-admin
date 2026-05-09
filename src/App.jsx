@@ -88,6 +88,9 @@ import AdminIntSalesPlanDetail from './pages/AdminIntSalesPlanDetail';
 import AdminIntSalesPlanComparator from './pages/AdminIntSalesPlanComparator';
 import AdminIntCutoverScheduler from './pages/AdminIntCutoverScheduler';
 import AdminIntDriftMonitoring from './pages/AdminIntDriftMonitoring';
+import AdminIntTransactionReconciliation from './pages/AdminIntTransactionReconciliation';
+import AdminIntTransactionSyncCenter from './pages/AdminIntTransactionSyncCenter';
+import AdminIntTransactionExportCenter from './pages/AdminIntTransactionExportCenter';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -218,6 +221,9 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntSalesPlanComparator" element={<LayoutWrapper currentPageName="AdminIntSalesPlanComparator"><AdminIntSalesPlanComparator /></LayoutWrapper>} />
       <Route path="/AdminIntCutoverScheduler" element={<LayoutWrapper currentPageName="AdminIntCutoverScheduler"><AdminIntCutoverScheduler /></LayoutWrapper>} />
       <Route path="/AdminIntDriftMonitoring" element={<LayoutWrapper currentPageName="AdminIntDriftMonitoring"><AdminIntDriftMonitoring /></LayoutWrapper>} />
+      <Route path="/AdminIntTransactionReconciliation" element={<LayoutWrapper currentPageName="AdminIntTransactionReconciliation"><AdminIntTransactionReconciliation /></LayoutWrapper>} />
+      <Route path="/AdminIntTransactionSyncCenter" element={<LayoutWrapper currentPageName="AdminIntTransactionSyncCenter"><AdminIntTransactionSyncCenter /></LayoutWrapper>} />
+      <Route path="/AdminIntTransactionExportCenter" element={<LayoutWrapper currentPageName="AdminIntTransactionExportCenter"><AdminIntTransactionExportCenter /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>

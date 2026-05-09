@@ -12,7 +12,7 @@ import {
   Search, Download, Eye, MoreVertical, ChevronLeft, ChevronRight, Filter, X, 
   CreditCard, Smartphone, Receipt, TrendingUp, TrendingDown, CheckCircle2, 
   XCircle, Clock, AlertTriangle, RefreshCw, Zap, Building2, User, Calendar,
-  ArrowUpRight, ArrowDownRight, Banknote, QrCode, Wallet
+  ArrowUpRight, ArrowDownRight, Banknote, QrCode, Wallet, FileCheck, Sparkles
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import StatusBadge from '@/components/common/StatusBadge';
@@ -150,6 +150,52 @@ export default function AdminIntTransactionsList() {
           </div>
         }
       />
+
+      {/* Atalhos Mentor — Reconciliação · Sync · Export */}
+      <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
+        <CardContent className="p-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="w-4 h-4 text-violet-600" />
+            <p className="text-xs font-bold text-violet-900 dark:text-violet-200">Centros operacionais Mentor</p>
+            <Badge className="text-[9px] bg-violet-200 text-violet-800">novo</Badge>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <Link to={createPageUrl('AdminIntTransactionReconciliation')} className="group">
+              <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-900 rounded-lg border hover:border-violet-300 transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                  <FileCheck className="w-4 h-4 text-emerald-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold group-hover:text-violet-700">Reconciliação Adquirente</p>
+                  <p className="text-[10px] text-slate-500">PagSmile vs CNAB · divergências · fantasmas</p>
+                </div>
+              </div>
+            </Link>
+            <Link to={createPageUrl('AdminIntTransactionSyncCenter')} className="group">
+              <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-900 rounded-lg border hover:border-violet-300 transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <RefreshCw className="w-4 h-4 text-blue-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold group-hover:text-violet-700">Sync Center</p>
+                  <p className="text-[10px] text-slate-500">Sincronização ativa on-demand · troubleshoot</p>
+                </div>
+              </div>
+            </Link>
+            <Link to={createPageUrl('AdminIntTransactionExportCenter')} className="group">
+              <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-900 rounded-lg border hover:border-violet-300 transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
+                  <Download className="w-4 h-4 text-violet-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold group-hover:text-violet-700">Export Center</p>
+                  <p className="text-[10px] text-slate-500">Exportações assíncronas · PCI/LGPD · auditável</p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Tabs PIX vs Cartão */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
