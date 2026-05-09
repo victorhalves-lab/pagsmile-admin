@@ -83,6 +83,8 @@ import AdminIntProjectDetail from './pages/AdminIntProjectDetail';
 import AdminIntProjectsConsolidatedDashboard from './pages/AdminIntProjectsConsolidatedDashboard';
 import AdminIntSupplierCredentials from './pages/AdminIntSupplierCredentials';
 import AdminIntUsersHub from './pages/AdminIntUsersHub';
+import AdminIntSalesPlans from './pages/AdminIntSalesPlans';
+import AdminIntSalesPlanDetail from './pages/AdminIntSalesPlanDetail';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -208,6 +210,8 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntProjectsConsolidatedDashboard" element={<LayoutWrapper currentPageName="AdminIntProjectsConsolidatedDashboard"><AdminIntProjectsConsolidatedDashboard /></LayoutWrapper>} />
       <Route path="/AdminIntSupplierCredentials" element={<LayoutWrapper currentPageName="AdminIntSupplierCredentials"><AdminIntSupplierCredentials /></LayoutWrapper>} />
       <Route path="/AdminIntUsersHub" element={<LayoutWrapper currentPageName="AdminIntUsersHub"><AdminIntUsersHub /></LayoutWrapper>} />
+      <Route path="/AdminIntSalesPlans" element={<LayoutWrapper currentPageName="AdminIntSalesPlans"><AdminIntSalesPlans /></LayoutWrapper>} />
+      <Route path="/AdminIntSalesPlanDetail" element={<LayoutWrapper currentPageName="AdminIntSalesPlanDetail"><AdminIntSalesPlanDetail /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
