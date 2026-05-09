@@ -97,6 +97,7 @@ import SplitDetail360 from './pages/SplitDetail360';
 import SplitTerminalLinker from './pages/SplitTerminalLinker';
 import SplitEditFlow from './pages/SplitEditFlow';
 import SplitRiskOpportunityHub from './pages/SplitRiskOpportunityHub';
+import AdminIntSplitsGovernance from './pages/AdminIntSplitsGovernance';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -236,6 +237,7 @@ const AuthenticatedApp = () => {
       <Route path="/SplitTerminalLinker" element={<LayoutWrapper currentPageName="SplitTerminalLinker"><SplitTerminalLinker /></LayoutWrapper>} />
       <Route path="/SplitEditFlow" element={<LayoutWrapper currentPageName="SplitEditFlow"><SplitEditFlow /></LayoutWrapper>} />
       <Route path="/SplitRiskOpportunityHub" element={<LayoutWrapper currentPageName="SplitRiskOpportunityHub"><SplitRiskOpportunityHub /></LayoutWrapper>} />
+      <Route path="/AdminIntSplitsGovernance" element={<LayoutWrapper currentPageName="AdminIntSplitsGovernance"><AdminIntSplitsGovernance /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
