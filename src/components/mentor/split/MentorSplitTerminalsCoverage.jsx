@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Terminal, AlertTriangle, Plus, Minus } from 'lucide-react';
+import { Terminal, AlertTriangle, GitBranchPlus } from 'lucide-react';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 const formatDateTime = (iso) => new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
@@ -18,14 +20,11 @@ export default function MentorSplitTerminalsCoverage({ terminals = [], totalOwne
           <Terminal className="w-4 h-4 text-cyan-600" />
           Terminais Vinculados ({terminals.length})
         </CardTitle>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="gap-1 text-xs">
-            <Plus className="w-3 h-3" /> Adicionar
+        <Link to={createPageUrl('SplitTerminalLinker')}>
+          <Button variant="outline" size="sm" className="gap-1 text-xs border-violet-300 text-violet-700 hover:bg-violet-50">
+            <GitBranchPlus className="w-3 h-3" /> Gerenciar vínculos
           </Button>
-          <Button variant="outline" size="sm" className="gap-1 text-xs">
-            <Minus className="w-3 h-3" /> Remover
-          </Button>
-        </div>
+        </Link>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Cobertura */}
