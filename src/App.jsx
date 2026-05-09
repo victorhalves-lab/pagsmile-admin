@@ -85,6 +85,9 @@ import AdminIntSupplierCredentials from './pages/AdminIntSupplierCredentials';
 import AdminIntUsersHub from './pages/AdminIntUsersHub';
 import AdminIntSalesPlans from './pages/AdminIntSalesPlans';
 import AdminIntSalesPlanDetail from './pages/AdminIntSalesPlanDetail';
+import AdminIntSalesPlanComparator from './pages/AdminIntSalesPlanComparator';
+import AdminIntCutoverScheduler from './pages/AdminIntCutoverScheduler';
+import AdminIntDriftMonitoring from './pages/AdminIntDriftMonitoring';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -212,6 +215,9 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntUsersHub" element={<LayoutWrapper currentPageName="AdminIntUsersHub"><AdminIntUsersHub /></LayoutWrapper>} />
       <Route path="/AdminIntSalesPlans" element={<LayoutWrapper currentPageName="AdminIntSalesPlans"><AdminIntSalesPlans /></LayoutWrapper>} />
       <Route path="/AdminIntSalesPlanDetail" element={<LayoutWrapper currentPageName="AdminIntSalesPlanDetail"><AdminIntSalesPlanDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntSalesPlanComparator" element={<LayoutWrapper currentPageName="AdminIntSalesPlanComparator"><AdminIntSalesPlanComparator /></LayoutWrapper>} />
+      <Route path="/AdminIntCutoverScheduler" element={<LayoutWrapper currentPageName="AdminIntCutoverScheduler"><AdminIntCutoverScheduler /></LayoutWrapper>} />
+      <Route path="/AdminIntDriftMonitoring" element={<LayoutWrapper currentPageName="AdminIntDriftMonitoring"><AdminIntDriftMonitoring /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { FileText, Plus, GitCompare, Sparkles } from 'lucide-react';
+import { FileText, Plus, GitCompare, Sparkles, Calendar, Activity } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import PageHeader from '@/components/common/PageHeader';
+import { createPageUrl } from '@/components/utils';
 import SalesPlansKPIBar from '@/components/mentor/sales-plans/SalesPlansKPIBar';
 import SalesPlansFilters from '@/components/mentor/sales-plans/SalesPlansFilters';
 import SalesPlansLifecyclePipeline from '@/components/mentor/sales-plans/SalesPlansLifecyclePipeline';
@@ -50,8 +52,10 @@ export default function AdminIntSalesPlans() {
         actions={
           <div className="flex items-center gap-2">
             {selected.length >= 2 && selected.length <= 4 && (
-              <Button variant="outline" onClick={() => toast.info(`Comparando ${selected.length} planos lado a lado`)}>
-                <GitCompare className="w-4 h-4 mr-2" />Comparar ({selected.length})
+              <Button asChild variant="outline">
+                <Link to={`${createPageUrl('AdminIntSalesPlanComparator')}?ids=${selected.join(',')}`}>
+                  <GitCompare className="w-4 h-4 mr-2" />Comparar ({selected.length})
+                </Link>
               </Button>
             )}
             <Button onClick={() => toast.info('Wizard de criação · 5 passos guiados')}>
@@ -60,6 +64,48 @@ export default function AdminIntSalesPlans() {
           </div>
         }
       />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <Link to={createPageUrl('AdminIntSalesPlanComparator')} className="group">
+          <Card className="hover:border-violet-300 transition-colors h-full">
+            <CardContent className="p-3 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
+                <GitCompare className="w-5 h-5 text-violet-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold group-hover:text-violet-700">Comparador de Planos</p>
+                <p className="text-[10px] text-slate-500">Análise lado a lado · até 4 planos</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link to={createPageUrl('AdminIntCutoverScheduler')} className="group">
+          <Card className="hover:border-violet-300 transition-colors h-full">
+            <CardContent className="p-3 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold group-hover:text-violet-700">Cutover Scheduler</p>
+                <p className="text-[10px] text-slate-500">Calendário de transições · réguas automáticas</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link to={createPageUrl('AdminIntDriftMonitoring')} className="group">
+          <Card className="hover:border-violet-300 transition-colors h-full">
+            <CardContent className="p-3 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                <Activity className="w-5 h-5 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold group-hover:text-violet-700">Drift Monitoring</p>
+                <p className="text-[10px] text-slate-500">Configurado vs realizado · alertas IA</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
 
       <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
         <CardContent className="p-3 flex items-start gap-2">
