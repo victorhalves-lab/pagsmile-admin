@@ -101,6 +101,8 @@ import AdminIntSplitsGovernance from './pages/AdminIntSplitsGovernance';
 import SplitTemplatesBulkApply from './pages/SplitTemplatesBulkApply';
 import SplitReconciliationCenter from './pages/SplitReconciliationCenter';
 import SplitBeneficiaryHub from './pages/SplitBeneficiaryHub';
+import SplitTaxFiscalHub from './pages/SplitTaxFiscalHub';
+import SplitApiPlayground from './pages/SplitApiPlayground';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -244,6 +246,8 @@ const AuthenticatedApp = () => {
       <Route path="/SplitTemplatesBulkApply" element={<LayoutWrapper currentPageName="SplitTemplatesBulkApply"><SplitTemplatesBulkApply /></LayoutWrapper>} />
       <Route path="/SplitReconciliationCenter" element={<LayoutWrapper currentPageName="SplitReconciliationCenter"><SplitReconciliationCenter /></LayoutWrapper>} />
       <Route path="/SplitBeneficiaryHub" element={<LayoutWrapper currentPageName="SplitBeneficiaryHub"><SplitBeneficiaryHub /></LayoutWrapper>} />
+      <Route path="/SplitTaxFiscalHub" element={<LayoutWrapper currentPageName="SplitTaxFiscalHub"><SplitTaxFiscalHub /></LayoutWrapper>} />
+      <Route path="/SplitApiPlayground" element={<LayoutWrapper currentPageName="SplitApiPlayground"><SplitApiPlayground /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>

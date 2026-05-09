@@ -1,0 +1,170 @@
+/**
+ * Mock Mentor — Wave H.12 · API Playground & Webhook Inspector
+ * Área para devs testarem endpoints de split + monitorarem eventos de webhook
+ */
+
+export const mockApiEndpoints = [
+  {
+    method: 'POST',
+    path: '/v3/splits',
+    name: 'Criar split',
+    description: 'Cria nova regra de split vinculada ao merchant',
+    sample_request: {
+      merchant_id: 'M-00489',
+      rule_type: 'percentage',
+      recipients: [
+        { type: 'main', share: 89.5 },
+        { type: 'owner', share: 10 },
+        { type: 'additional', subaccount_id: 'BEN-014892', share: 0.5 },
+      ],
+      charge_processing_fee: 'liquid',
+      applicable_brands: ['visa', 'mastercard', 'elo'],
+      vigency_start: '2026-05-15',
+    },
+    sample_response: {
+      split_id: 'SPL-MKT-2026-00001',
+      status: 'active',
+      created_at: '2026-05-09T12:34:56Z',
+    },
+  },
+  {
+    method: 'GET',
+    path: '/v3/splits/{split_id}',
+    name: 'Consultar split',
+    description: 'Retorna a configuração completa de um split',
+    sample_request: {},
+    sample_response: {
+      split_id: 'SPL-MKT-2024-00489',
+      status: 'active',
+      rule_type: 'percentage',
+      recipients: [{ type: 'owner', share: 10 }],
+    },
+  },
+  {
+    method: 'PUT',
+    path: '/v3/splits/{split_id}',
+    name: 'Editar split',
+    description: 'Atualiza configuração com cutover programado e aviso prévio',
+    sample_request: {
+      recipients: [{ type: 'owner', share: 11.5 }, { type: 'main', share: 88.5 }],
+      effective_at: '2026-06-15T03:00:00Z',
+      justification: 'Renegociação contratual aprovada',
+    },
+    sample_response: {
+      split_id: 'SPL-MKT-2024-00489',
+      status: 'pending_cutover',
+      effective_at: '2026-06-15T03:00:00Z',
+    },
+  },
+  {
+    method: 'POST',
+    path: '/v3/splits/{split_id}/terminate',
+    name: 'Encerrar split',
+    description: 'Encerra split definitivamente (irreversível)',
+    sample_request: { reason: 'merchant_termination', justification: 'Encerramento contratual' },
+    sample_response: { split_id: 'SPL-MKT-2024-00489', status: 'terminated' },
+  },
+  {
+    method: 'POST',
+    path: '/v3/splits/simulate',
+    name: 'Simular split',
+    description: 'Simula divisão de uma transação sem persistir',
+    sample_request: {
+      split_id: 'SPL-MKT-2024-00489',
+      amount: 10000,
+      brand: 'visa',
+      installments: 1,
+    },
+    sample_response: {
+      gross_amount: 10000,
+      breakdown: [
+        { recipient: 'merchant', amount: 8950, mdr: 268.50 },
+        { recipient: 'owner', amount: 1000, mdr: 30 },
+        { recipient: 'additional', amount: 50, mdr: 1.50 },
+      ],
+    },
+  },
+];
+
+export const mockWebhookEvents = [
+  {
+    event_id: 'whv_2026-05-09-001',
+    type: 'split.created',
+    split_id: 'SPL-MKT-2026-00001',
+    timestamp: '2026-05-09T12:34:56Z',
+    delivery_status: 'delivered',
+    response_code: 200,
+    response_time_ms: 142,
+    attempts: 1,
+    payload: { split_id: 'SPL-MKT-2026-00001', status: 'active', merchant_id: 'M-00489' },
+  },
+  {
+    event_id: 'whv_2026-05-09-002',
+    type: 'split.executed',
+    split_id: 'SPL-MKT-2024-00489',
+    transaction_id: 'TXN-89019412',
+    timestamp: '2026-05-09T11:42:18Z',
+    delivery_status: 'delivered',
+    response_code: 200,
+    response_time_ms: 89,
+    attempts: 1,
+    payload: { split_id: 'SPL-MKT-2024-00489', transaction_id: 'TXN-89019412', total: 10000 },
+  },
+  {
+    event_id: 'whv_2026-05-09-003',
+    type: 'split.updated',
+    split_id: 'SPL-MKT-2024-00712',
+    timestamp: '2026-05-09T10:14:00Z',
+    delivery_status: 'failed',
+    response_code: 504,
+    response_time_ms: 30000,
+    attempts: 4,
+    next_retry: '2026-05-09T13:14:00Z',
+    payload: { split_id: 'SPL-MKT-2024-00712', changes: ['owner_share'] },
+    failure_reason: 'Timeout no endpoint do merchant após 4 tentativas',
+  },
+  {
+    event_id: 'whv_2026-05-09-004',
+    type: 'split.cutover_scheduled',
+    split_id: 'SPL-MKT-2024-00489',
+    timestamp: '2026-05-09T09:30:00Z',
+    delivery_status: 'delivered',
+    response_code: 200,
+    response_time_ms: 124,
+    attempts: 1,
+    payload: { split_id: 'SPL-MKT-2024-00489', effective_at: '2026-06-15T03:00:00Z' },
+  },
+  {
+    event_id: 'whv_2026-05-09-005',
+    type: 'split.terminated',
+    split_id: 'SPL-AFF-2024-00231',
+    timestamp: '2026-05-09T08:14:32Z',
+    delivery_status: 'delivered',
+    response_code: 200,
+    response_time_ms: 178,
+    attempts: 1,
+    payload: { split_id: 'SPL-AFF-2024-00231', reason: 'inactive_cleanup' },
+  },
+  {
+    event_id: 'whv_2026-05-08-892',
+    type: 'split.divergence_detected',
+    split_id: 'SPL-MKT-2023-00088',
+    timestamp: '2026-05-08T05:16:01Z',
+    delivery_status: 'pending_retry',
+    response_code: 503,
+    response_time_ms: 4200,
+    attempts: 2,
+    next_retry: '2026-05-09T13:30:00Z',
+    payload: { split_id: 'SPL-MKT-2023-00088', divergence_id: 'DIV-2026-0111' },
+    failure_reason: 'Endpoint do merchant retornou 503 · em fila de retry exponencial',
+  },
+];
+
+export const mockWebhookKPIs = {
+  events_24h: 1_842,
+  delivered: 1_807,
+  failed: 12,
+  pending_retry: 23,
+  avg_response_time_ms: 156,
+  delivery_rate: 98.1,
+};
