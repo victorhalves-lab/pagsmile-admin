@@ -18,7 +18,15 @@ import DevAppsMarketplace from './pages/DevAppsMarketplace';
 // Onboarding extras
 import SelectSegment from './pages/SelectSegment';
 
-// ====== Mentor (Admin Interno) ======
+// ====== Catálogos Mestres (Admin Interno) ======
+import AdminIntAcquirers from './pages/AdminIntAcquirers';
+import AdminIntAcquirerDetail from './pages/AdminIntAcquirerDetail';
+import AdminIntCardBrands from './pages/AdminIntCardBrands';
+import AdminIntCardBrandDetail from './pages/AdminIntCardBrandDetail';
+import AdminIntChannels from './pages/AdminIntChannels';
+import AdminIntChannelDetail from './pages/AdminIntChannelDetail';
+
+// ====== Operações Avançadas (Admin Interno) ======
 import AdminIntSettlementChangeFlow from './pages/AdminIntSettlementChangeFlow';
 import AdminIntContractEffectsRegistry from './pages/AdminIntContractEffectsRegistry';
 import AdminIntMerchantGroups from './pages/AdminIntMerchantGroups';
@@ -120,7 +128,15 @@ const AuthenticatedApp = () => {
       {/* Onboarding extras */}
       <Route path="/SelectSegment" element={<LayoutWrapper currentPageName="SelectSegment"><SelectSegment /></LayoutWrapper>} />
 
-      {/* ====== Mentor — Admin Interno ====== */}
+      {/* ====== Catálogos Mestres ====== */}
+      <Route path="/AdminIntAcquirers" element={<LayoutWrapper currentPageName="AdminIntAcquirers"><AdminIntAcquirers /></LayoutWrapper>} />
+      <Route path="/AdminIntAcquirerDetail" element={<LayoutWrapper currentPageName="AdminIntAcquirerDetail"><AdminIntAcquirerDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntCardBrands" element={<LayoutWrapper currentPageName="AdminIntCardBrands"><AdminIntCardBrands /></LayoutWrapper>} />
+      <Route path="/AdminIntCardBrandDetail" element={<LayoutWrapper currentPageName="AdminIntCardBrandDetail"><AdminIntCardBrandDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntChannels" element={<LayoutWrapper currentPageName="AdminIntChannels"><AdminIntChannels /></LayoutWrapper>} />
+      <Route path="/AdminIntChannelDetail" element={<LayoutWrapper currentPageName="AdminIntChannelDetail"><AdminIntChannelDetail /></LayoutWrapper>} />
+
+      {/* ====== Operações Avançadas ====== */}
       <Route path="/AdminIntSettlementChangeFlow" element={<LayoutWrapper currentPageName="AdminIntSettlementChangeFlow"><AdminIntSettlementChangeFlow /></LayoutWrapper>} />
       <Route path="/AdminIntContractEffectsRegistry" element={<LayoutWrapper currentPageName="AdminIntContractEffectsRegistry"><AdminIntContractEffectsRegistry /></LayoutWrapper>} />
       <Route path="/AdminIntMerchantGroups" element={<LayoutWrapper currentPageName="AdminIntMerchantGroups"><AdminIntMerchantGroups /></LayoutWrapper>} />
