@@ -5,10 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Layers, Save, Sparkles, AlertCircle, CheckCircle2, Eye, ShoppingCart } from 'lucide-react';
+import { Layers, Save, Sparkles, CheckCircle2, Eye, Rocket } from 'lucide-react';
 import PageHeader from '@/components/common/PageHeader';
 import PaymentSplitter from '@/components/orchestration/PaymentSplitter';
 import { CreditCard, QrCode, FileText, Wallet, Coins } from 'lucide-react';
+import { ConfirmActionDrawer } from '@/components/common/drawers';
+import { toast } from 'sonner';
 
 const PAYMENT_OPTIONS = [
   { id: 'credit_card', label: 'Cartão de Crédito', icon: CreditCard, description: 'Visa, Master, Elo, Amex, Hipercard' },
@@ -33,6 +35,8 @@ export default function MultiMethodCheckoutConfig() {
   const [enabledCombos, setEnabledCombos] = useState(['card_pix', 'two_cards']);
   const [minTicket, setMinTicket] = useState(500);
   const [savedAt, setSavedAt] = useState(null);
+  const [publishOpen, setPublishOpen] = useState(false);
+  const [publishing, setPublishing] = useState(false);
 
   const toggleMethod = (id) => {
     setEnabledMethods(prev => prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]);
@@ -40,6 +44,15 @@ export default function MultiMethodCheckoutConfig() {
 
   const toggleCombo = (id) => {
     setEnabledCombos(prev => prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
+  };
+
+  const handlePublish = async () => {
+    setPublishing(true);
+    await new Promise((r) => setTimeout(r, 800));
+    setSavedAt(new Date().toLocaleTimeString('pt-BR'));
+    setPublishing(false);
+    setPublishOpen(false);
+    toast.success('Configuração multi-método publicada · novos checkouts já usam essa config');
   };
 
   return (
@@ -50,7 +63,7 @@ export default function MultiMethodCheckoutConfig() {
         icon={Layers}
         breadcrumbs={[{ label: 'Checkout', page: 'CheckoutBuilder' }]}
         actions={
-          <Button onClick={() => setSavedAt(new Date().toLocaleTimeString('pt-BR'))}>
+          <Button onClick={() => setPublishOpen(true)}>
             <Save className="w-4 h-4 mr-2" />
             Salvar configuração
           </Button>
@@ -191,9 +204,30 @@ export default function MultiMethodCheckoutConfig() {
       {savedAt && (
         <div className="flex items-center gap-2 text-xs text-emerald-700">
           <CheckCircle2 className="w-4 h-4" />
-          Configuração salva às {savedAt}
+          Configuração publicada às {savedAt}
         </div>
       )}
+
+      {/* Drawer: Publicar configuração */}
+      <ConfirmActionDrawer
+        open={publishOpen}
+        onOpenChange={setPublishOpen}
+        title="Publicar configuração multi-método"
+        description="Os novos checkouts criados passarão a usar essa configuração"
+        icon={Rocket}
+        tone="success"
+        confirmLabel="Publicar"
+        submitting={publishing}
+        onConfirm={handlePublish}
+        size="md"
+        checklist={[
+          { label: 'Pagamento multi-método habilitado', ok: allowMultiMethod, hint: !allowMultiMethod ? 'Ative o switch master para publicar' : null },
+          { label: `${enabledMethods.length} métodos habilitados`, ok: enabledMethods.length >= 2, hint: enabledMethods.length < 2 ? 'Habilite ao menos 2 métodos' : null },
+          { label: `${enabledCombos.length} combos permitidos`, ok: enabledCombos.length >= 1 },
+          { label: `Ticket mínimo definido (R$ ${minTicket})`, ok: minTicket > 0 },
+        ]}
+        infoBlock="Esta configuração se aplica aos novos checkouts. Checkouts existentes mantêm a config atual até serem editados."
+      />
     </div>
   );
 }
