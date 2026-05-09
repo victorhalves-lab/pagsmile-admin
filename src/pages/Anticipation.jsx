@@ -5,6 +5,10 @@ import PageHeader from '@/components/common/PageHeader';
 import AnticipationSimulator from '@/components/financial/AnticipationSimulator';
 import AnticipationCompareCard from '@/components/financial/v2/AnticipationCompareCard';
 import AnticipationPricingTiers from '@/components/financial/v2/AnticipationPricingTiers';
+import AvailableValueDecomposition from '@/components/financial/v2/AvailableValueDecomposition';
+import AvailableValueProjection from '@/components/financial/v2/AvailableValueProjection';
+import ExposureLimitCard from '@/components/financial/v2/ExposureLimitCard';
+import MentorSimulatorScenarios from '@/components/financial/v2/MentorSimulatorScenarios';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -42,7 +46,8 @@ import {
   TrendingUp,
   Calendar,
   History,
-  Info
+  Info,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -151,9 +156,20 @@ export default function Anticipation() {
       <Tabs defaultValue="simulate" className="space-y-6">
         <TabsList>
           <TabsTrigger value="simulate">Simular e Antecipar</TabsTrigger>
+          <TabsTrigger value="mentor"><Sparkles className="w-3.5 h-3.5 mr-1 text-violet-600" /> Visão Mentor</TabsTrigger>
           <TabsTrigger value="auto">Auto-Antecipação</TabsTrigger>
           <TabsTrigger value="history">Histórico</TabsTrigger>
         </TabsList>
+
+        {/* ✨ NOVA ABA Mentor — transparência total */}
+        <TabsContent value="mentor" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <AvailableValueDecomposition />
+            <AvailableValueProjection />
+            <ExposureLimitCard />
+            <MentorSimulatorScenarios />
+          </div>
+        </TabsContent>
 
         {/* Simulate Tab */}
         <TabsContent value="simulate">

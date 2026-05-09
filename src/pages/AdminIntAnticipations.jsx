@@ -7,8 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Download, Eye, Check, X, Calendar, TrendingUp } from 'lucide-react';
+import { Download, Eye, Check, X, Calendar, TrendingUp, Sparkles, ShieldCheck, Database } from 'lucide-react';
 import { toast } from 'sonner';
+import MentorAnticipationKPIBar from '@/components/mentor/anticipation/MentorAnticipationKPIBar';
+import MentorAnticipationFilters from '@/components/mentor/anticipation/MentorAnticipationFilters';
+import MentorAnticipationBulkBar from '@/components/mentor/anticipation/MentorAnticipationBulkBar';
+import MentorAnticipationTable from '@/components/mentor/anticipation/MentorAnticipationTable';
+import { spotAnticipationKPIs, spotAnticipationsList } from '@/components/mentor/mocks/spotAnticipationMock';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 
@@ -27,7 +32,11 @@ const statusConfig = {
 };
 
 export default function AdminIntAnticipations() {
-    const [tab, setTab] = useState('requests');
+    const [tab, setTab] = useState('mentor_spot');
+    const [selected, setSelected] = useState([]);
+    const toggleSelect = (id) => setSelected(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+    const toggleAll = () => setSelected(selected.length === spotAnticipationsList.length ? [] : spotAnticipationsList.map(s => s.id));
+    const selectedTotal = spotAnticipationsList.filter(s => selected.includes(s.id)).reduce((sum, s) => sum + s.vl_ordered, 0);
 
     const stats = {
         available: 5200000,
@@ -42,6 +51,28 @@ export default function AdminIntAnticipations() {
             <PageHeader 
                 title="Antecipação"
                 breadcrumbs={[{ label: 'Financeiro' }, { label: 'Antecipação' }]}
+                actions={
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <Badge className="bg-violet-100 text-violet-700 gap-1">
+                            <Sparkles className="w-3 h-3" /> Mentor
+                        </Badge>
+                        <Link to={createPageUrl('AdminIntAnticipationGovernanceCenter')}>
+                            <Button variant="outline" size="sm" className="border-violet-300 text-violet-700">
+                                <ShieldCheck className="w-4 h-4 mr-1" /> Governance
+                            </Button>
+                        </Link>
+                        <Link to={createPageUrl('AdminIntRegistradoraHub')}>
+                            <Button variant="outline" size="sm">
+                                <Database className="w-4 h-4 mr-1" /> Registradoras
+                            </Button>
+                        </Link>
+                        <Link to={createPageUrl('ExportJobCenter')}>
+                            <Button variant="outline" size="sm">
+                                <Download className="w-4 h-4 mr-1" /> Export Center
+                            </Button>
+                        </Link>
+                    </div>
+                }
             />
 
             {/* Stats */}
@@ -71,10 +102,18 @@ export default function AdminIntAnticipations() {
 
             <Tabs value={tab} onValueChange={setTab}>
                 <TabsList>
+                    <TabsTrigger value="mentor_spot">✨ Mentor Spot</TabsTrigger>
                     <TabsTrigger value="requests">📋 Solicitações</TabsTrigger>
                     <TabsTrigger value="agenda">📅 Agenda Antecipável</TabsTrigger>
                     <TabsTrigger value="history">📜 Histórico</TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="mentor_spot" className="space-y-4">
+                    <MentorAnticipationKPIBar kpis={spotAnticipationKPIs} />
+                    <MentorAnticipationFilters onApply={() => toast.success('Filtros aplicados')} />
+                    <MentorAnticipationBulkBar count={selected.length} onClear={() => setSelected([])} totalValue={selectedTotal} />
+                    <MentorAnticipationTable items={spotAnticipationsList} selected={selected} onToggle={toggleSelect} onToggleAll={toggleAll} />
+                </TabsContent>
 
                 <TabsContent value="requests">
                     <Card>

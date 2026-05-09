@@ -116,6 +116,11 @@ import AdminIntBilletCreate from './pages/AdminIntBilletCreate';
 import AdminIntBilletLayouts from './pages/AdminIntBilletLayouts';
 import ExportJobCenter from './pages/ExportJobCenter';
 
+// ====== Wave J (Antecipação Spot Mentor — Entrega 6 Parte 1) ======
+import AdminIntAnticipationDetail360 from './pages/AdminIntAnticipationDetail360';
+import AdminIntAnticipationGovernanceCenter from './pages/AdminIntAnticipationGovernanceCenter';
+import AdminIntRegistradoraHub from './pages/AdminIntRegistradoraHub';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -272,6 +277,11 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntBilletCreate" element={<LayoutWrapper currentPageName="AdminIntBilletCreate"><AdminIntBilletCreate /></LayoutWrapper>} />
       <Route path="/AdminIntBilletLayouts" element={<LayoutWrapper currentPageName="AdminIntBilletLayouts"><AdminIntBilletLayouts /></LayoutWrapper>} />
       <Route path="/ExportJobCenter" element={<LayoutWrapper currentPageName="ExportJobCenter"><ExportJobCenter /></LayoutWrapper>} />
+
+      {/* ====== Wave J (Antecipação Spot Mentor) ====== */}
+      <Route path="/AdminIntAnticipationDetail360" element={<LayoutWrapper currentPageName="AdminIntAnticipationDetail360"><AdminIntAnticipationDetail360 /></LayoutWrapper>} />
+      <Route path="/AdminIntAnticipationGovernanceCenter" element={<LayoutWrapper currentPageName="AdminIntAnticipationGovernanceCenter"><AdminIntAnticipationGovernanceCenter /></LayoutWrapper>} />
+      <Route path="/AdminIntRegistradoraHub" element={<LayoutWrapper currentPageName="AdminIntRegistradoraHub"><AdminIntRegistradoraHub /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
