@@ -32,6 +32,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
+import PixSendExpressMode from '@/components/internet-banking/v2/PixSendExpressMode';
+import RecipientVerificationBadge from '@/components/internet-banking/v2/RecipientVerificationBadge';
+import CounterpartyHistoryHint from '@/components/internet-banking/v2/CounterpartyHistoryHint';
+import LimitsRemainingInline from '@/components/internet-banking/v2/LimitsRemainingInline';
 
 export default function IBPixSend() {
   const [step, setStep] = useState(0); // 0: choose method, 1: key, 2: value, 3: confirm, 4: success
@@ -111,6 +115,9 @@ export default function IBPixSend() {
             </div>
           </CardContent>
         </Card>
+
+        {/* B21 — Modo Express (toggle, mantém wizard original intacto) */}
+        <PixSendExpressMode />
 
         {/* Send Methods */}
         <div>
@@ -366,19 +373,25 @@ export default function IBPixSend() {
 
         {/* Recipient Found */}
         {recipientFound && (
-          <Card className="border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/20">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                <span className="font-medium text-emerald-700 dark:text-emerald-400">Chave encontrada</span>
-              </div>
-              <div className="space-y-1 text-sm">
-                <p><span className="text-slate-500">Nome:</span> <span className="font-medium text-slate-900 dark:text-white">{recipient.name}</span></p>
-                <p><span className="text-slate-500">CNPJ:</span> <span className="font-medium text-slate-900 dark:text-white">{recipient.document}</span></p>
-                <p><span className="text-slate-500">Banco:</span> <span className="font-medium text-slate-900 dark:text-white">{recipient.bank}</span></p>
-              </div>
-            </CardContent>
-          </Card>
+          <>
+            <Card className="border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/20">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                  <span className="font-medium text-emerald-700 dark:text-emerald-400">Chave encontrada</span>
+                </div>
+                <div className="space-y-1 text-sm">
+                  <p><span className="text-slate-500">Nome:</span> <span className="font-medium text-slate-900 dark:text-white">{recipient.name}</span></p>
+                  <p><span className="text-slate-500">CNPJ:</span> <span className="font-medium text-slate-900 dark:text-white">{recipient.document}</span></p>
+                  <p><span className="text-slate-500">Banco:</span> <span className="font-medium text-slate-900 dark:text-white">{recipient.bank}</span></p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* B21 — Verificação rica + counterparty history */}
+            <RecipientVerificationBadge status="verified" registeredDays={420} />
+            <CounterpartyHistoryHint count={3} lastDate="12/04/2026" lastAmount={2500} />
+          </>
         )}
 
         {/* Actions */}
@@ -443,6 +456,8 @@ export default function IBPixSend() {
           <p className="text-sm text-slate-500">
             Saldo disponível: {formatCurrency(balance)}
           </p>
+          {/* B21 — Limite remanescente inline (reduz fricção) */}
+          <LimitsRemainingInline used={2500} daily={200000} />
         </div>
 
         {/* Description */}

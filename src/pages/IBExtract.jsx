@@ -38,8 +38,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import NetCashflowCard from '@/components/internet-banking/v2/NetCashflowCard';
+import ExtractBulkBar from '@/components/internet-banking/v2/ExtractBulkBar';
+import MedRefundButton from '@/components/internet-banking/v2/MedRefundButton';
 
 export default function IBExtract() {
+  const [bulkSelected, setBulkSelected] = useState(0);
   const [period, setPeriod] = useState('30d');
   const [transactionType, setTransactionType] = useState('all');
   const [direction, setDirection] = useState('all');
@@ -274,8 +278,11 @@ export default function IBExtract() {
         </CardContent>
       </Card>
 
-      {/* Period Summary */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* B20 — Bulk action bar (sticky, aparece com seleção) */}
+      <ExtractBulkBar count={bulkSelected} onClear={() => setBulkSelected(0)} />
+
+      {/* Period Summary — agora com 5 cards (4 originais + Net Cashflow) */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <Card>
           <CardContent className="p-4">
             <p className="text-xs text-slate-500 uppercase tracking-wider">Saldo Inicial</p>
@@ -308,7 +315,18 @@ export default function IBExtract() {
             </p>
           </CardContent>
         </Card>
+        <NetCashflowCard entries={periodSummary.totalEntries} exits={periodSummary.totalExits} />
       </div>
+
+      {/* B20 — Hint de bulk (botão demonstrativo) */}
+      {bulkSelected === 0 && (
+        <div className="flex justify-end">
+          <Button variant="ghost" size="sm" className="text-slate-500 gap-2" onClick={() => setBulkSelected(3)}>
+            <FileText className="w-3.5 h-3.5" />
+            Selecionar múltiplas (demo)
+          </Button>
+        </div>
+      )}
 
       {/* Transactions List */}
       <Card>
@@ -492,7 +510,7 @@ export default function IBExtract() {
               )}
 
               {/* Actions */}
-              <div className="flex gap-3 pt-4 border-t dark:border-slate-700">
+              <div className="flex gap-3 pt-4 border-t dark:border-slate-700 flex-wrap">
                 <Button variant="outline" className="flex-1">
                   <FileText className="w-4 h-4 mr-2" />
                   Baixar Comprovante
@@ -501,6 +519,7 @@ export default function IBExtract() {
                   <Share2 className="w-4 h-4 mr-2" />
                   Compartilhar
                 </Button>
+                <MedRefundButton transaction={selectedTransaction} />
               </div>
             </div>
           )}

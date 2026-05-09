@@ -32,8 +32,10 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
+import PixKeyShareInline from '@/components/internet-banking/v2/PixKeyShareInline';
 
 export default function IBPixKeys() {
+  const [pausedKeys, setPausedKeys] = useState({});
   const [copiedKey, setCopiedKey] = useState(null);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -185,7 +187,7 @@ export default function IBPixKeys() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 mt-4 ml-13">
+                <div className="flex items-center gap-2 mt-4 ml-13 flex-wrap">
                   <Button
                     variant="outline"
                     size="sm"
@@ -207,6 +209,13 @@ export default function IBPixKeys() {
                       </>
                     )}
                   </Button>
+
+                  {/* B21 — Share inline + Pause toggle */}
+                  <PixKeyShareInline
+                    pixKey={key}
+                    paused={!!pausedKeys[key.id]}
+                    onTogglePause={() => setPausedKeys(s => ({ ...s, [key.id]: !s[key.id] }))}
+                  />
 
                   {key.isPrimary ? (
                     <Button variant="outline" size="sm" disabled>

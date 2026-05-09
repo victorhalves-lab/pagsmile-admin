@@ -27,6 +27,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import HeroBalanceSparkline from '@/components/internet-banking/v2/HeroBalanceSparkline';
+import PsConnectionBanner from '@/components/internet-banking/v2/PsConnectionBanner';
+import BillsDueWidget from '@/components/internet-banking/v2/BillsDueWidget';
+import QuickActionsExtended from '@/components/internet-banking/v2/QuickActionsExtended';
 
 export default function IBHome() {
   const { t } = useTranslation();
@@ -89,6 +93,9 @@ export default function IBHome() {
         </Badge>
       </div>
 
+      {/* B20 — Banner de conexão com PSP core (tese principal) */}
+      <PsConnectionBanner />
+
       {/* Main Balance Card */}
       <Card className="bg-gradient-to-br from-[#002443] via-[#003459] to-[#004D73] text-white border-0 shadow-2xl overflow-hidden relative">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#2bc196] opacity-10 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
@@ -111,6 +118,7 @@ export default function IBHome() {
                   <p className="text-4xl font-black tracking-tight text-white mt-1">
                     {formatCurrency(balance.available)}
                   </p>
+                  {showBalance && <HeroBalanceSparkline change={8.4} />}
                 </div>
               </div>
 
@@ -223,6 +231,12 @@ export default function IBHome() {
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      {/* B20 — Outras Ações + A Pagar (próximas obrigações) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <QuickActionsExtended />
+        <BillsDueWidget />
       </div>
 
       {/* Recent Transactions */}

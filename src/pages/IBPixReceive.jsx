@@ -23,6 +23,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import ReceiveCobrancaPlaceholder from '@/components/internet-banking/v2/ReceiveCobrancaPlaceholder';
+import ReceiveRecentList from '@/components/internet-banking/v2/ReceiveRecentList';
 
 export default function IBPixReceive() {
   const [copiedKey, setCopiedKey] = useState(null);
@@ -157,6 +159,12 @@ export default function IBPixReceive() {
           </Card>
         </div>
       </div>
+
+      {/* B21 — PIX Cobrança + PIX Automático placeholders (roadmap) */}
+      <ReceiveCobrancaPlaceholder />
+
+      {/* B21 — Últimos PIX recebidos (conexão visual com Extract) */}
+      <ReceiveRecentList />
 
       {/* QR Code Modal */}
       <Dialog open={showQrModal} onOpenChange={setShowQrModal}>

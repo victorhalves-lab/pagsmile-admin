@@ -25,6 +25,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import LimitProactiveAlert from '@/components/internet-banking/v2/LimitProactiveAlert';
 
 export default function IBPixLimits() {
   const [showEditModal, setShowEditModal] = useState(false);
@@ -42,7 +43,7 @@ export default function IBPixLimits() {
     daytime: {
       perTransaction: 50000,
       daily: 200000,
-      usedToday: 2500,
+      usedToday: 165000,
       period: '6h às 20h'
     },
     nighttime: {
@@ -90,6 +91,9 @@ export default function IBPixLimits() {
           <p className="text-slate-500 dark:text-slate-400">Gerencie seus limites de transferência</p>
         </div>
       </div>
+
+      {/* B21 — Alerta proativo (uso > 70%) */}
+      <LimitProactiveAlert used={limits.daytime.usedToday} daily={limits.daytime.daily} />
 
       {/* Current Limits */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -279,6 +283,20 @@ export default function IBPixLimits() {
                   onChange={(e) => setNewLimitValue(e.target.value)}
                   className="pl-10"
                 />
+              </div>
+            </div>
+
+            {/* B21 — Justificativa rica + duração */}
+            <div className="space-y-2">
+              <Label>Justificativa do aumento</Label>
+              <Input placeholder="Ex: Vou pagar fornecedor pontual de R$ 80k semana que vem" />
+            </div>
+            <div className="space-y-2">
+              <Label>Duração desejada</Label>
+              <div className="grid grid-cols-3 gap-2">
+                <Button variant="outline" size="sm" className="text-xs">Pontual (1 dia)</Button>
+                <Button variant="outline" size="sm" className="text-xs">30 dias</Button>
+                <Button variant="outline" size="sm" className="text-xs">Permanente</Button>
               </div>
             </div>
 

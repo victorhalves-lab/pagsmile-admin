@@ -23,6 +23,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import ProofsStatsHeader from '@/components/internet-banking/v2/ProofsStatsHeader';
+import ProofShareWhatsApp from '@/components/internet-banking/v2/ProofShareWhatsApp';
 
 export default function IBProofs() {
   const [period, setPeriod] = useState('30d');
@@ -88,6 +90,9 @@ export default function IBProofs() {
           <p className="text-slate-500 dark:text-slate-400">Central de documentos e comprovantes</p>
         </div>
       </div>
+
+      {/* B20 — Stats header com bulk download */}
+      <ProofsStatsHeader proofs={proofs} />
 
       {/* Filters */}
       <Card>
@@ -179,6 +184,7 @@ export default function IBProofs() {
                       <Download className="w-4 h-4 mr-1" />
                       PDF
                     </Button>
+                    <ProofShareWhatsApp proof={proof} />
                     <Button variant="ghost" size="sm">
                       <Share2 className="w-4 h-4" />
                     </Button>
