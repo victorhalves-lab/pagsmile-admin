@@ -137,6 +137,213 @@ export const mockRecoveryFunnel = {
   revenueRecovered: 612480.50,
 };
 
+export const mockOrchestrationFlows = [
+  {
+    id: 'flow_001',
+    name: 'High-ticket Routing',
+    description: 'Roteia tickets > R$ 1.000 para Adyen, com fallback Cielo',
+    isActive: true,
+    volume: 1284,
+    successRate: 91.4,
+    nodes: [
+      { id: 1, type: 'trigger', label: 'payment.init', config: { event: 'payment.init' } },
+      { id: 2, type: 'condition', label: 'amount > 1000', config: { rule: 'amount > 1000' } },
+      { id: 3, type: 'acquirer', label: 'Adyen (premium)', config: { acquirer: 'adyen', timeout: 8 } },
+      { id: 4, type: 'fallback', label: 'Cielo', config: { acquirer: 'cielo', after: 'soft_decline' } },
+    ],
+  },
+  {
+    id: 'flow_002',
+    name: 'PIX-First Subscriptions',
+    description: 'Assinaturas tentam PIX automático antes de cartão',
+    isActive: true,
+    volume: 4827,
+    successRate: 88.9,
+    nodes: [
+      { id: 1, type: 'trigger', label: 'subscription.charge', config: {} },
+      { id: 2, type: 'acquirer', label: 'PIX automático', config: { method: 'pix' } },
+      { id: 3, type: 'fallback', label: 'Cartão saved', config: {} },
+    ],
+  },
+  {
+    id: 'flow_003',
+    name: 'BIN-Based Routing',
+    description: 'Visa/Master para Adyen; Elo para Cielo; Hipercard para Rede',
+    isActive: true,
+    volume: 8412,
+    successRate: 87.2,
+    nodes: [
+      { id: 1, type: 'trigger', label: 'payment.init', config: {} },
+      { id: 2, type: 'condition', label: 'BIN check', config: { rule: 'bin.brand' } },
+      { id: 3, type: 'acquirer', label: 'Smart route', config: {} },
+    ],
+  },
+  {
+    id: 'flow_004',
+    name: 'Recurring Card-on-File',
+    description: 'Pagamentos de assinatura usando token armazenado',
+    isActive: false,
+    volume: 0,
+    successRate: 0,
+    nodes: [
+      { id: 1, type: 'trigger', label: 'recurring.attempt', config: {} },
+      { id: 2, type: 'action', label: 'Use token vault', config: {} },
+    ],
+  },
+];
+
+export const mockSmartSplitSuggestions = [
+  {
+    id: 'sgst_001',
+    merchantName: 'Marketplace Beleza Pro',
+    currentSplits: { master: 8, sublojistas: 92 },
+    suggested: { master: 12, sublojistas: 88 },
+    reason: 'Volume médio dos sub-lojistas é 18% superior ao baseline e suporta margem',
+    expectedRevenueLift: 24800,
+    confidence: 0.87,
+  },
+  {
+    id: 'sgst_002',
+    merchantName: 'Cestas Gourmet ME',
+    currentSplits: { master: 15, sublojistas: 85 },
+    suggested: { master: 10, sublojistas: 90 },
+    reason: 'Alto churn de sub-lojistas e margem competitiva inferior ao mercado',
+    expectedRevenueLift: -3400,
+    expectedRetention: 12,
+    confidence: 0.79,
+  },
+  {
+    id: 'sgst_003',
+    merchantName: 'Fashion Hub LTDA',
+    currentSplits: { master: 10, sublojistas: 90 },
+    suggested: { master: 10, sublojistas: 90, plus_processing_fee: 'sublojistas' },
+    reason: 'Recomendado mover charge_processing_fee para sub-lojistas (não impacta MDR)',
+    expectedRevenueLift: 8920,
+    confidence: 0.92,
+  },
+];
+
+export const mockABAllocations = [
+  {
+    id: 'ab_001',
+    name: '3DS Adaptativo (cartão)',
+    status: 'running',
+    startedAt: '2026-04-22',
+    variants: [
+      { id: 'A', label: 'Controle (3DS sempre)', volume: 8420, conversion: 84.2, mdr: 1.99, allocation: 50 },
+      { id: 'B', label: 'Tratamento (3DS adaptativo)', volume: 8392, conversion: 87.6, mdr: 2.04, allocation: 50 },
+    ],
+    significance: 0.96,
+    winner: 'B',
+    revenueLift: 18420,
+  },
+  {
+    id: 'ab_002',
+    name: 'PIX 5% off vs Boleto',
+    status: 'running',
+    startedAt: '2026-04-30',
+    variants: [
+      { id: 'A', label: 'Boleto como fallback', volume: 1240, conversion: 21.4, mdr: 0, allocation: 50 },
+      { id: 'B', label: 'PIX 5% off', volume: 1218, conversion: 38.2, mdr: 0.99, allocation: 50 },
+    ],
+    significance: 0.99,
+    winner: 'B',
+    revenueLift: 32180,
+  },
+  {
+    id: 'ab_003',
+    name: 'Adyen vs Cielo (high-ticket)',
+    status: 'paused',
+    startedAt: '2026-04-15',
+    variants: [
+      { id: 'A', label: 'Adyen 100%', volume: 412, conversion: 91.2, mdr: 2.49, allocation: 0 },
+      { id: 'B', label: 'Cielo 100%', volume: 388, conversion: 87.4, mdr: 1.99, allocation: 0 },
+    ],
+    significance: 0.84,
+    winner: null,
+    revenueLift: null,
+  },
+];
+
+export const mockShadowTests = [
+  { id: 1, name: 'Adyen Latam (sandbox)', status: 'running', requestsShadow: 12842, errorsShadow: 124, latencyDeltaMs: -45, divergenceRate: 0.024 },
+  { id: 2, name: 'New antifraud rule v2.3', status: 'running', requestsShadow: 8412, errorsShadow: 0, latencyDeltaMs: 12, divergenceRate: 0.068 },
+  { id: 3, name: 'PIX Express discount', status: 'completed', requestsShadow: 24180, errorsShadow: 18, latencyDeltaMs: 0, divergenceRate: 0.001 },
+];
+
+export const mockReconciliation = {
+  totalRecords: 184232,
+  reconciled: 182417,
+  divergent: 1620,
+  pending: 195,
+  rate: 99.0,
+  divergencesByType: [
+    { type: 'Valor divergente (centavos)', count: 412, totalAmount: 1248.30 },
+    { type: 'Adquirente sem extrato', count: 287, totalAmount: 84320.00 },
+    { type: 'Refund duplicado', count: 142, totalAmount: 12480.50 },
+    { type: 'MED não correspondente', count: 87, totalAmount: 4280.00 },
+    { type: 'Status divergente', count: 692, totalAmount: 134820.00 },
+  ],
+  byAcquirer: [
+    { acquirer: 'Cielo', expected: 412840, received: 412840, rate: 100 },
+    { acquirer: 'Adyen', expected: 284120, received: 284115, rate: 99.998 },
+    { acquirer: 'Rede', expected: 198320, received: 197890, rate: 99.78 },
+    { acquirer: 'Getnet', expected: 124180, received: 122340, rate: 98.52 },
+    { acquirer: 'Mercado Pago', expected: 98420, received: 98412, rate: 99.99 },
+  ],
+};
+
+export const mockFraudAnomalies = [
+  {
+    id: 1,
+    severity: 'critical',
+    type: 'velocity_spike',
+    title: 'Spike de velocidade detectado',
+    description: 'Cartão BIN 411111 registrou 47 tentativas em 8 minutos no merchant Loja XYZ',
+    detectedAt: '2026-05-09T13:22:00',
+    affectedTransactions: 47,
+    estimatedLoss: 18420,
+    score: 94,
+    status: 'open',
+  },
+  {
+    id: 2,
+    severity: 'high',
+    type: 'geo_anomaly',
+    title: 'Anomalia geográfica',
+    description: 'Padrão de transações de IPs em 14 países diferentes para mesmo CPF em 2h',
+    detectedAt: '2026-05-09T12:15:00',
+    affectedTransactions: 23,
+    estimatedLoss: 4280,
+    score: 87,
+    status: 'investigating',
+  },
+  {
+    id: 3,
+    severity: 'medium',
+    type: 'card_testing',
+    title: 'Card testing em massa',
+    description: 'Aumento de 340% em pequenos valores (R$ 1-5) com cartões diferentes',
+    detectedAt: '2026-05-09T10:42:00',
+    affectedTransactions: 184,
+    estimatedLoss: 920,
+    score: 72,
+    status: 'mitigated',
+  },
+  {
+    id: 4,
+    severity: 'medium',
+    type: 'chargeback_cluster',
+    title: 'Cluster de chargebacks',
+    description: '12 chargebacks no mesmo dia para merchant que historicamente tem 0-1/dia',
+    detectedAt: '2026-05-08T18:00:00',
+    affectedTransactions: 12,
+    estimatedLoss: 28940,
+    score: 68,
+    status: 'open',
+  },
+];
+
 export const mockMerchantCoverageMatrix = [
   {
     merchantId: 'mch_001',

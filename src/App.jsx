@@ -20,6 +20,24 @@ import AdminIntMultiMethodCockpit from './pages/AdminIntMultiMethodCockpit';
 import AdminIntCrossMethodRecovery from './pages/AdminIntCrossMethodRecovery';
 import AdminIntConnectionHealth from './pages/AdminIntConnectionHealth';
 import AdminIntMerchantCoverageMatrix from './pages/AdminIntMerchantCoverageMatrix';
+// B22 - Wave 2 (P1)
+import AdminIntOrchestrationStudio from './pages/AdminIntOrchestrationStudio';
+import AdminIntAntiArbitrage from './pages/AdminIntAntiArbitrage';
+import AdminIntSmartSplitSuggester from './pages/AdminIntSmartSplitSuggester';
+import AdminIntABVolumeAllocator from './pages/AdminIntABVolumeAllocator';
+import AdminIntShadowMode from './pages/AdminIntShadowMode';
+import AdminIntReconciliationHub from './pages/AdminIntReconciliationHub';
+import AdminIntFraudAnomalyDetector from './pages/AdminIntFraudAnomalyDetector';
+import AdminIntAuditTrailEnhanced from './pages/AdminIntAuditTrailEnhanced';
+import AdminIntTenantManagement from './pages/AdminIntTenantManagement';
+import AdminIntWebhookReplay from './pages/AdminIntWebhookReplay';
+import AdminIntSettlementForecasting from './pages/AdminIntSettlementForecasting';
+import AdminIntCryptoHub from './pages/AdminIntCryptoHub';
+// B22 - Admin Sub
+import MultiMethodCheckoutConfig from './pages/MultiMethodCheckoutConfig';
+import RecoveryLadderConfig from './pages/RecoveryLadderConfig';
+import SplitDesignerPage from './pages/SplitDesignerPage';
+import SplitTransparencyDashboard from './pages/SplitTransparencyDashboard';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -82,6 +100,24 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntCrossMethodRecovery" element={<LayoutWrapper currentPageName="AdminIntCrossMethodRecovery"><AdminIntCrossMethodRecovery /></LayoutWrapper>} />
       <Route path="/AdminIntConnectionHealth" element={<LayoutWrapper currentPageName="AdminIntConnectionHealth"><AdminIntConnectionHealth /></LayoutWrapper>} />
       <Route path="/AdminIntMerchantCoverageMatrix" element={<LayoutWrapper currentPageName="AdminIntMerchantCoverageMatrix"><AdminIntMerchantCoverageMatrix /></LayoutWrapper>} />
+      {/* B22 Wave 2 - Admin Interno P1 */}
+      <Route path="/AdminIntOrchestrationStudio" element={<LayoutWrapper currentPageName="AdminIntOrchestrationStudio"><AdminIntOrchestrationStudio /></LayoutWrapper>} />
+      <Route path="/AdminIntAntiArbitrage" element={<LayoutWrapper currentPageName="AdminIntAntiArbitrage"><AdminIntAntiArbitrage /></LayoutWrapper>} />
+      <Route path="/AdminIntSmartSplitSuggester" element={<LayoutWrapper currentPageName="AdminIntSmartSplitSuggester"><AdminIntSmartSplitSuggester /></LayoutWrapper>} />
+      <Route path="/AdminIntABVolumeAllocator" element={<LayoutWrapper currentPageName="AdminIntABVolumeAllocator"><AdminIntABVolumeAllocator /></LayoutWrapper>} />
+      <Route path="/AdminIntShadowMode" element={<LayoutWrapper currentPageName="AdminIntShadowMode"><AdminIntShadowMode /></LayoutWrapper>} />
+      <Route path="/AdminIntReconciliationHub" element={<LayoutWrapper currentPageName="AdminIntReconciliationHub"><AdminIntReconciliationHub /></LayoutWrapper>} />
+      <Route path="/AdminIntFraudAnomalyDetector" element={<LayoutWrapper currentPageName="AdminIntFraudAnomalyDetector"><AdminIntFraudAnomalyDetector /></LayoutWrapper>} />
+      <Route path="/AdminIntAuditTrailEnhanced" element={<LayoutWrapper currentPageName="AdminIntAuditTrailEnhanced"><AdminIntAuditTrailEnhanced /></LayoutWrapper>} />
+      <Route path="/AdminIntTenantManagement" element={<LayoutWrapper currentPageName="AdminIntTenantManagement"><AdminIntTenantManagement /></LayoutWrapper>} />
+      <Route path="/AdminIntWebhookReplay" element={<LayoutWrapper currentPageName="AdminIntWebhookReplay"><AdminIntWebhookReplay /></LayoutWrapper>} />
+      <Route path="/AdminIntSettlementForecasting" element={<LayoutWrapper currentPageName="AdminIntSettlementForecasting"><AdminIntSettlementForecasting /></LayoutWrapper>} />
+      <Route path="/AdminIntCryptoHub" element={<LayoutWrapper currentPageName="AdminIntCryptoHub"><AdminIntCryptoHub /></LayoutWrapper>} />
+      {/* B22 - Admin Sub */}
+      <Route path="/MultiMethodCheckoutConfig" element={<LayoutWrapper currentPageName="MultiMethodCheckoutConfig"><MultiMethodCheckoutConfig /></LayoutWrapper>} />
+      <Route path="/RecoveryLadderConfig" element={<LayoutWrapper currentPageName="RecoveryLadderConfig"><RecoveryLadderConfig /></LayoutWrapper>} />
+      <Route path="/SplitDesignerPage" element={<LayoutWrapper currentPageName="SplitDesignerPage"><SplitDesignerPage /></LayoutWrapper>} />
+      <Route path="/SplitTransparencyDashboard" element={<LayoutWrapper currentPageName="SplitTransparencyDashboard"><SplitTransparencyDashboard /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
