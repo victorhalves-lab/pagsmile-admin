@@ -1,0 +1,208 @@
+// Mock data for Mentor Projects (multi-tenant)
+
+export const PROJECT_STATUSES = {
+  active: { label: 'Ativo', color: 'bg-emerald-100 text-emerald-700' },
+  homologation: { label: 'Homologação', color: 'bg-blue-100 text-blue-700' },
+  paused: { label: 'Pausado', color: 'bg-amber-100 text-amber-700' },
+  archived: { label: 'Arquivado', color: 'bg-slate-100 text-slate-600' },
+};
+
+export const PROJECT_TYPES = {
+  acquiring: { label: 'Adquirência', color: 'bg-violet-100 text-violet-700', description: 'Cartões via adquirente parceiro' },
+  banking: { label: 'Banking', color: 'bg-blue-100 text-blue-700', description: 'Conta digital + Pix direto' },
+  hybrid: { label: 'Híbrido', color: 'bg-emerald-100 text-emerald-700', description: 'Adquirência + Banking integrados' },
+  marketplace: { label: 'Marketplace', color: 'bg-orange-100 text-orange-700', description: 'Split & sub-sellers' },
+};
+
+export const REGULATORY_REGIONS = {
+  br: { label: 'Brasil', flag: '🇧🇷' },
+  mx: { label: 'México', flag: '🇲🇽' },
+  ar: { label: 'Argentina', flag: '🇦🇷' },
+  co: { label: 'Colômbia', flag: '🇨🇴' },
+  cl: { label: 'Chile', flag: '🇨🇱' },
+  global: { label: 'Multi-país', flag: '🌎' },
+};
+
+const generateTPVEvolution = (base, growth = 0.02) => {
+  const arr = [];
+  let val = base * 0.6;
+  for (let i = 0; i < 24; i++) {
+    val = val * (1 + growth + (Math.random() - 0.5) * 0.05);
+    arr.push({ month: `M${i + 1}`, tpv: Math.round(val) });
+  }
+  return arr;
+};
+
+export const MOCK_PROJECTS = [
+  {
+    id: 'prj_001',
+    project_name: 'pagsmile_br_acquiring_v3',
+    trade: 'PagSmile Brasil · Cartões',
+    company_name: 'PagSmile Pagamentos S.A.',
+    project_type: 'acquiring',
+    status: 'active',
+    region: 'br',
+    started_at: '2021-03-15',
+    age_years: 5.2,
+    monthly_tpv: 1_850_000_000,
+    monthly_revenue: 24_500_000,
+    margin: 0.0132,
+    approval_rate: 92.4,
+    chargeback_rate: 0.34,
+    health_score: 92,
+    companies_count: 142,
+    merchants_count: 8456,
+    sla_min_approval: 88,
+    enabled_channels: ['cartao_credito', 'cartao_debito'],
+    enabled_acquirers: ['cielo', 'rede', 'getnet', 'stone'],
+    regulatory_programs: ['VAMP', 'BRAM', 'MEAP'],
+    keycloak: {
+      realm: 'pagsmile-br',
+      realm_base_url: 'https://auth.pagsmile.com/realms/pagsmile-br',
+      realm_client_id: 'pagsmile-br-app',
+      realm_client_secret: '••••••••••••',
+    },
+    storage_url_base: 'https://storage.pagsmile.com/br-acquiring/',
+    rt_spot_anticipation: { enabled: true, default_rate: 1.99, min_value: 500, max_value: 500_000, due_days: 1 },
+    settlement_restriction: 'mesma_titularidade',
+    kyc_aggregate: { complete: 87, pending: 10, expired: 3 },
+    tpv_evolution_24m: generateTPVEvolution(1_850_000_000, 0.025),
+    bottlenecks: [],
+  },
+  {
+    id: 'prj_002',
+    project_name: 'pagsmile_br_banking_pix',
+    trade: 'PagSmile Banking · Pix',
+    company_name: 'PagSmile Pagamentos S.A.',
+    project_type: 'banking',
+    status: 'active',
+    region: 'br',
+    started_at: '2022-08-01',
+    age_years: 3.8,
+    monthly_tpv: 920_000_000,
+    monthly_revenue: 8_200_000,
+    margin: 0.0089,
+    approval_rate: 99.1,
+    chargeback_rate: 0.02,
+    health_score: 89,
+    companies_count: 98,
+    merchants_count: 5240,
+    sla_min_approval: 97,
+    enabled_channels: ['pix_in', 'pix_out', 'pix_cobranca'],
+    enabled_acquirers: [],
+    regulatory_programs: [],
+    keycloak: {
+      realm: 'pagsmile-banking',
+      realm_base_url: 'https://auth.pagsmile.com/realms/pagsmile-banking',
+      realm_client_id: 'pagsmile-banking-app',
+      realm_client_secret: '••••••••••••',
+    },
+    storage_url_base: 'https://storage.pagsmile.com/br-banking/',
+    rt_spot_anticipation: { enabled: false },
+    settlement_restriction: 'flexivel',
+    kyc_aggregate: { complete: 91, pending: 7, expired: 2 },
+    tpv_evolution_24m: generateTPVEvolution(920_000_000, 0.04),
+    bottlenecks: [],
+  },
+  {
+    id: 'prj_003',
+    project_name: 'pagsmile_marketplace_hybrid',
+    trade: 'PagSmile Marketplaces',
+    company_name: 'PagSmile Marketplace Ltda.',
+    project_type: 'marketplace',
+    status: 'active',
+    region: 'br',
+    started_at: '2023-01-10',
+    age_years: 2.3,
+    monthly_tpv: 480_000_000,
+    monthly_revenue: 5_100_000,
+    margin: 0.0106,
+    approval_rate: 90.2,
+    chargeback_rate: 0.62,
+    health_score: 76,
+    companies_count: 24,
+    merchants_count: 12_400,
+    sla_min_approval: 88,
+    enabled_channels: ['cartao_credito', 'pix_in', 'split'],
+    enabled_acquirers: ['cielo', 'stone'],
+    regulatory_programs: ['VAMP'],
+    keycloak: {
+      realm: 'pagsmile-mkt',
+      realm_base_url: 'https://auth.pagsmile.com/realms/pagsmile-mkt',
+      realm_client_id: 'pagsmile-mkt-app',
+      realm_client_secret: '••••••••••••',
+    },
+    storage_url_base: 'https://storage.pagsmile.com/marketplace/',
+    rt_spot_anticipation: { enabled: true, default_rate: 2.49, min_value: 1000, max_value: 250_000, due_days: 1 },
+    settlement_restriction: 'mesma_titularidade',
+    kyc_aggregate: { complete: 78, pending: 18, expired: 4 },
+    tpv_evolution_24m: generateTPVEvolution(480_000_000, 0.06),
+    bottlenecks: [
+      { type: 'chargeback', severity: 'medium', message: 'CB ratio em 0,62% · próximo do limiar VAMP de 0,9%' },
+      { type: 'approval', severity: 'low', message: 'Aprovação 90,2% abaixo da meta de 92%' },
+    ],
+  },
+  {
+    id: 'prj_004',
+    project_name: 'pagsmile_mx_pilot',
+    trade: 'PagSmile México · Piloto',
+    company_name: 'PagSmile Latam Holdings',
+    project_type: 'hybrid',
+    status: 'homologation',
+    region: 'mx',
+    started_at: '2026-01-15',
+    age_years: 0.3,
+    monthly_tpv: 12_500_000,
+    monthly_revenue: 145_000,
+    margin: 0.0116,
+    approval_rate: 86.5,
+    chargeback_rate: 0.18,
+    health_score: 68,
+    companies_count: 4,
+    merchants_count: 38,
+    sla_min_approval: 85,
+    enabled_channels: ['cartao_credito', 'spei'],
+    enabled_acquirers: ['conekta'],
+    regulatory_programs: [],
+    keycloak: {
+      realm: 'pagsmile-mx',
+      realm_base_url: 'https://auth.pagsmile.com/realms/pagsmile-mx',
+      realm_client_id: 'pagsmile-mx-app',
+      realm_client_secret: '••••••••••••',
+    },
+    storage_url_base: 'https://storage.pagsmile.com/mx-pilot/',
+    rt_spot_anticipation: { enabled: false },
+    settlement_restriction: 'mesma_titularidade',
+    kyc_aggregate: { complete: 65, pending: 30, expired: 5 },
+    tpv_evolution_24m: generateTPVEvolution(12_500_000, 0.15).slice(-6),
+    bottlenecks: [
+      { type: 'volume', severity: 'low', message: 'Volume ainda em rampa · piloto MX' },
+    ],
+    homologation: {
+      steps: [
+        { name: 'Contrato comercial assinado', status: 'done' },
+        { name: 'Provisioning técnico (Keycloak + storage)', status: 'done' },
+        { name: 'Integração com adquirente Conekta', status: 'done' },
+        { name: 'Certificação PCI-DSS local', status: 'in_progress' },
+        { name: 'Aprovação regulatória CNBV', status: 'pending' },
+        { name: 'Go-live produção', status: 'pending' },
+      ],
+    },
+    provisioning: {
+      steps: [
+        { name: 'Realm Keycloak configurado', status: 'done' },
+        { name: 'Bucket storage criado', status: 'done' },
+        { name: 'Webhook endpoints registrados', status: 'done' },
+        { name: 'Smoke tests E2E', status: 'in_progress' },
+        { name: 'Carga inicial de dados', status: 'pending' },
+      ],
+    },
+  },
+];
+
+export const PROJECT_AUDIT_EVENTS = [
+  { id: 'aud_p1', date: '2026-05-08 14:32', user: 'admin@pagsmile.com', action: 'Antecipação spot atualizada', detail: 'Taxa padrão 1,89% → 1,99%', category: 'config' },
+  { id: 'aud_p2', date: '2026-05-05 10:11', user: 'compliance@pagsmile.com', action: 'Restrição de liquidação reforçada', detail: 'flexivel → mesma_titularidade', category: 'compliance' },
+  { id: 'aud_p3', date: '2026-04-28 09:45', user: 'admin@pagsmile.com', action: 'Adquirente adicionado', detail: 'Stone ativado no projeto', category: 'technical' },
+  { id: 'aud_p4', date: '2026-04-15 16:20', user: 'system', action: 'Programa regulatório ativado', detail: 'BRAM monitoring habilitado', category: 'compliance' },
+];
