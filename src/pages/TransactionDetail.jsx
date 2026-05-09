@@ -56,6 +56,9 @@ import StatusBadge from '@/components/common/StatusBadge';
 import RelatedTransactionsCard from '@/components/transactions/detail/RelatedTransactionsCard';
 import AntifraudExplainCard from '@/components/transactions/detail/AntifraudExplainCard';
 import CustomerJourneyCard from '@/components/transactions/detail/CustomerJourneyCard';
+import MentorSyncReconciliationCard from '@/components/mentor/transactions/detail/MentorSyncReconciliationCard';
+import MentorTechnicalEventsCard from '@/components/mentor/transactions/detail/MentorTechnicalEventsCard';
+import MentorReceiptCard from '@/components/mentor/transactions/detail/MentorReceiptCard';
 
 const TimelineEvent = ({ icon: Icon, iconColor, title, description, timestamp, isLast }) => (
   <div className="flex gap-3">
@@ -309,6 +312,15 @@ export default function TransactionDetail() {
       </div>
 
       <RelatedTransactionsCard transaction={transaction} />
+
+      {/* ====== Blocos Mentor (G.2) ====== */}
+      <MentorSyncReconciliationCard transaction={transaction} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <MentorTechnicalEventsCard />
+        </div>
+        <MentorReceiptCard transaction={transaction} />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column */}

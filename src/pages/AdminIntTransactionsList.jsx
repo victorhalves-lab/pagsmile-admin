@@ -19,6 +19,10 @@ import StatusBadge from '@/components/common/StatusBadge';
 import { mockTransactions } from '@/components/mockData/adminInternoMocks';
 import { cn } from '@/lib/utils';
 import TransactionDataTable from '@/components/transactions/TransactionDataTable';
+import MentorAdvancedFiltersDrawer from '@/components/mentor/transactions/MentorAdvancedFiltersDrawer';
+import MentorBulkActionsBar from '@/components/mentor/transactions/MentorBulkActionsBar';
+import MentorDerivedInsights from '@/components/mentor/transactions/MentorDerivedInsights';
+import MentorFraudClusters from '@/components/mentor/transactions/MentorFraudClusters';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 
@@ -76,6 +80,9 @@ export default function AdminIntTransactionsList() {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 25;
+  const [showAdvFilters, setShowAdvFilters] = useState(false);
+  const [showFraudClusters, setShowFraudClusters] = useState(false);
+  const [bulkSelected, setBulkSelected] = useState(0);
 
   const filteredTxs = mockTransactions.filter(tx => {
     const matchSearch = searchTerm === '' || 
@@ -292,10 +299,23 @@ export default function AdminIntTransactionsList() {
                   <X className="w-4 h-4 mr-1" /> Limpar
                 </Button>
               )}
+              <Button variant="outline" size="sm" className="border-violet-300 text-violet-700 hover:bg-violet-50" onClick={() => setShowAdvFilters(true)}>
+                <Sparkles className="w-4 h-4 mr-1" />Filtros Mentor
+              </Button>
+              <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-50" onClick={() => setShowFraudClusters((v) => !v)}>
+                <AlertTriangle className="w-4 h-4 mr-1" />{showFraudClusters ? 'Ocultar' : 'Ver'} clusters fraude
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setBulkSelected(bulkSelected > 0 ? 0 : 12)}>
+                {bulkSelected > 0 ? 'Limpar seleção' : 'Simular seleção (12)'}
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      <MentorDerivedInsights totalCount={filteredTxs.length} />
+      <MentorBulkActionsBar count={bulkSelected} onClear={() => setBulkSelected(0)} />
+      {showFraudClusters && <MentorFraudClusters />}
 
       {/* Tabela de Transações - Componente unificado com viewContext="internal" */}
       <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
@@ -326,6 +346,9 @@ export default function AdminIntTransactionsList() {
           />
         </CardContent>
       </Card>
+
+      {/* Mentor — Drawer de filtros avançados */}
+      <MentorAdvancedFiltersDrawer open={showAdvFilters} onOpenChange={setShowAdvFilters} />
     </div>
   );
 }
