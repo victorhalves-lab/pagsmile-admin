@@ -95,6 +95,7 @@ import AdminIntTransactionExportCenter from './pages/AdminIntTransactionExportCe
 // ====== Mentor — Wave H (Split) ======
 import SplitDetail360 from './pages/SplitDetail360';
 import SplitTerminalLinker from './pages/SplitTerminalLinker';
+import SplitEditFlow from './pages/SplitEditFlow';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -232,6 +233,7 @@ const AuthenticatedApp = () => {
       {/* ====== Mentor — Wave H (Split) ====== */}
       <Route path="/SplitDetail360" element={<LayoutWrapper currentPageName="SplitDetail360"><SplitDetail360 /></LayoutWrapper>} />
       <Route path="/SplitTerminalLinker" element={<LayoutWrapper currentPageName="SplitTerminalLinker"><SplitTerminalLinker /></LayoutWrapper>} />
+      <Route path="/SplitEditFlow" element={<LayoutWrapper currentPageName="SplitEditFlow"><SplitEditFlow /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
