@@ -18,6 +18,31 @@ import DevAppsMarketplace from './pages/DevAppsMarketplace';
 // Onboarding extras
 import SelectSegment from './pages/SelectSegment';
 
+// ====== Mentor (Admin Interno) ======
+import AdminIntSettlementChangeFlow from './pages/AdminIntSettlementChangeFlow';
+import AdminIntContractEffectsRegistry from './pages/AdminIntContractEffectsRegistry';
+import AdminIntMerchantGroups from './pages/AdminIntMerchantGroups';
+import AdminIntMerchantGroupDetail from './pages/AdminIntMerchantGroupDetail';
+import AdminIntMerchantGroupCreate from './pages/AdminIntMerchantGroupCreate';
+import AdminIntCompanies from './pages/AdminIntCompanies';
+import AdminIntCompanyDetail from './pages/AdminIntCompanyDetail';
+import AdminIntBlockageFlow from './pages/AdminIntBlockageFlow';
+import AdminIntUnblockFlow from './pages/AdminIntUnblockFlow';
+import AdminIntSuspensionFlow from './pages/AdminIntSuspensionFlow';
+import AdminIntBlockageReviewSchedule from './pages/AdminIntBlockageReviewSchedule';
+import AdminIntAcquirerSwitchFlow from './pages/AdminIntAcquirerSwitchFlow';
+import AdminIntMccChangePreCheck from './pages/AdminIntMccChangePreCheck';
+import AdminIntMerchantOnboardingPipeline from './pages/AdminIntMerchantOnboardingPipeline';
+import AdminIntMerchantOnboardingFunnelAnalytics from './pages/AdminIntMerchantOnboardingFunnelAnalytics';
+import AdminIntKycAnalysisQueue from './pages/AdminIntKycAnalysisQueue';
+
+// ====== Mentor (Admin Sub) ======
+import SubaccountSettlementChangeRequest from './pages/SubaccountSettlementChangeRequest';
+import SubaccountAnticipationRequest from './pages/SubaccountAnticipationRequest';
+import SubaccountKycReupload from './pages/SubaccountKycReupload';
+import SubaccountOnboardingProgress from './pages/SubaccountOnboardingProgress';
+import MerchantGroupConsolidatedView from './pages/MerchantGroupConsolidatedView';
+
 // B22 - Tuna Orchestration & Multi-Method Pages (Admin Interno)
 import AdminIntMultiMethodCockpit from './pages/AdminIntMultiMethodCockpit';
 import AdminIntCrossMethodRecovery from './pages/AdminIntCrossMethodRecovery';
@@ -94,6 +119,31 @@ const AuthenticatedApp = () => {
       ))}
       {/* Onboarding extras */}
       <Route path="/SelectSegment" element={<LayoutWrapper currentPageName="SelectSegment"><SelectSegment /></LayoutWrapper>} />
+
+      {/* ====== Mentor — Admin Interno ====== */}
+      <Route path="/AdminIntSettlementChangeFlow" element={<LayoutWrapper currentPageName="AdminIntSettlementChangeFlow"><AdminIntSettlementChangeFlow /></LayoutWrapper>} />
+      <Route path="/AdminIntContractEffectsRegistry" element={<LayoutWrapper currentPageName="AdminIntContractEffectsRegistry"><AdminIntContractEffectsRegistry /></LayoutWrapper>} />
+      <Route path="/AdminIntMerchantGroups" element={<LayoutWrapper currentPageName="AdminIntMerchantGroups"><AdminIntMerchantGroups /></LayoutWrapper>} />
+      <Route path="/AdminIntMerchantGroupDetail" element={<LayoutWrapper currentPageName="AdminIntMerchantGroupDetail"><AdminIntMerchantGroupDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntMerchantGroupCreate" element={<LayoutWrapper currentPageName="AdminIntMerchantGroupCreate"><AdminIntMerchantGroupCreate /></LayoutWrapper>} />
+      <Route path="/AdminIntCompanies" element={<LayoutWrapper currentPageName="AdminIntCompanies"><AdminIntCompanies /></LayoutWrapper>} />
+      <Route path="/AdminIntCompanyDetail" element={<LayoutWrapper currentPageName="AdminIntCompanyDetail"><AdminIntCompanyDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntBlockageFlow" element={<LayoutWrapper currentPageName="AdminIntBlockageFlow"><AdminIntBlockageFlow /></LayoutWrapper>} />
+      <Route path="/AdminIntUnblockFlow" element={<LayoutWrapper currentPageName="AdminIntUnblockFlow"><AdminIntUnblockFlow /></LayoutWrapper>} />
+      <Route path="/AdminIntSuspensionFlow" element={<LayoutWrapper currentPageName="AdminIntSuspensionFlow"><AdminIntSuspensionFlow /></LayoutWrapper>} />
+      <Route path="/AdminIntBlockageReviewSchedule" element={<LayoutWrapper currentPageName="AdminIntBlockageReviewSchedule"><AdminIntBlockageReviewSchedule /></LayoutWrapper>} />
+      <Route path="/AdminIntAcquirerSwitchFlow" element={<LayoutWrapper currentPageName="AdminIntAcquirerSwitchFlow"><AdminIntAcquirerSwitchFlow /></LayoutWrapper>} />
+      <Route path="/AdminIntMccChangePreCheck" element={<LayoutWrapper currentPageName="AdminIntMccChangePreCheck"><AdminIntMccChangePreCheck /></LayoutWrapper>} />
+      <Route path="/AdminIntMerchantOnboardingPipeline" element={<LayoutWrapper currentPageName="AdminIntMerchantOnboardingPipeline"><AdminIntMerchantOnboardingPipeline /></LayoutWrapper>} />
+      <Route path="/AdminIntMerchantOnboardingFunnelAnalytics" element={<LayoutWrapper currentPageName="AdminIntMerchantOnboardingFunnelAnalytics"><AdminIntMerchantOnboardingFunnelAnalytics /></LayoutWrapper>} />
+      <Route path="/AdminIntKycAnalysisQueue" element={<LayoutWrapper currentPageName="AdminIntKycAnalysisQueue"><AdminIntKycAnalysisQueue /></LayoutWrapper>} />
+
+      {/* ====== Mentor — Admin Sub ====== */}
+      <Route path="/SubaccountSettlementChangeRequest" element={<LayoutWrapper currentPageName="SubaccountSettlementChangeRequest"><SubaccountSettlementChangeRequest /></LayoutWrapper>} />
+      <Route path="/SubaccountAnticipationRequest" element={<LayoutWrapper currentPageName="SubaccountAnticipationRequest"><SubaccountAnticipationRequest /></LayoutWrapper>} />
+      <Route path="/SubaccountKycReupload" element={<LayoutWrapper currentPageName="SubaccountKycReupload"><SubaccountKycReupload /></LayoutWrapper>} />
+      <Route path="/SubaccountOnboardingProgress" element={<LayoutWrapper currentPageName="SubaccountOnboardingProgress"><SubaccountOnboardingProgress /></LayoutWrapper>} />
+      <Route path="/MerchantGroupConsolidatedView" element={<LayoutWrapper currentPageName="MerchantGroupConsolidatedView"><MerchantGroupConsolidatedView /></LayoutWrapper>} />
 
       {/* B16 - Developer Hub satellite pages */}
       <Route path="/DevStatusPage" element={<LayoutWrapper currentPageName="DevStatusPage"><DevStatusPage /></LayoutWrapper>} />

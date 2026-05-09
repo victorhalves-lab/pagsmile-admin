@@ -195,6 +195,12 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.dashboard'), page: 'SubaccountsDashboard' },
       { label: t('menu.subaccounts'), page: 'SubaccountsList' },
       { label: t('menu.onboarding'), page: 'SubaccountOnboarding' },
+      // Mentor — admin sub
+      { label: '🅼 Progresso do Onboarding', page: 'SubaccountOnboardingProgress' },
+      { label: '🅼 Documentos KYC', page: 'SubaccountKycReupload' },
+      { label: '🅼 Trocar Conta de Recebimento', page: 'SubaccountSettlementChangeRequest' },
+      { label: '🅼 Solicitar Antecipação', page: 'SubaccountAnticipationRequest' },
+      { label: '🅼 Visão Consolidada de Grupo', page: 'MerchantGroupConsolidatedView' },
     ]
   },
   {
@@ -328,6 +334,22 @@ const getAdminInternoMenuItems = (t) => [
       { label: t('menu_admin.groups'), page: 'AdminIntMerchantGroups' },
       { label: t('menu_admin.tags'), page: 'AdminIntMerchantTags' },
       { label: t('menu.reports'), page: 'AdminIntMerchantReports' },
+      // Mentor
+      { label: '🅼 Grupos de Lojistas', page: 'AdminIntMerchantGroups' },
+      { label: '🅼 Empresas Controladoras', page: 'AdminIntCompanies' },
+      { label: '🅼 Pipeline Onboarding', page: 'AdminIntMerchantOnboardingPipeline' },
+      { label: '🅼 Funnel Analytics', page: 'AdminIntMerchantOnboardingFunnelAnalytics' },
+    ]
+  },
+  {
+    id: 'mentor-ops',
+    label: '🅼 Mentor — Operações',
+    icon: Wallet,
+    page: 'AdminIntContractEffectsRegistry',
+    submenu: [
+      { label: 'Registry de Efeitos de Contrato', page: 'AdminIntContractEffectsRegistry' },
+      { label: 'Cronograma de Revisão de Bloqueios', page: 'AdminIntBlockageReviewSchedule' },
+      { label: 'Fila de Análise KYC', page: 'AdminIntKycAnalysisQueue' },
     ]
   },
   {
@@ -546,7 +568,16 @@ const adminInternoPages = [
   'AdminIntDisputeManager', 'AdminIntDisputeManagerSettings',
   'AdminIntIdentityOnboarder', 'AdminIntIdentityOnboarderSettings',
   // Agent Configuration Hub
-  'AdminIntAgentConfigHub'
+  'AdminIntAgentConfigHub',
+  // Mentor (Admin Interno)
+  'AdminIntSettlementChangeFlow', 'AdminIntContractEffectsRegistry',
+  'AdminIntMerchantGroupDetail', 'AdminIntMerchantGroupCreate',
+  'AdminIntCompanies', 'AdminIntCompanyDetail',
+  'AdminIntBlockageFlow', 'AdminIntUnblockFlow', 'AdminIntSuspensionFlow',
+  'AdminIntBlockageReviewSchedule',
+  'AdminIntAcquirerSwitchFlow', 'AdminIntMccChangePreCheck',
+  'AdminIntMerchantOnboardingPipeline', 'AdminIntMerchantOnboardingFunnelAnalytics',
+  'AdminIntKycAnalysisQueue',
 ];
 
 import { Sun, Moon } from 'lucide-react';

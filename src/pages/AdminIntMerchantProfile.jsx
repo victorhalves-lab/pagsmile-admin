@@ -31,12 +31,18 @@ import TabRecorrencia from '@/components/admin-interno/merchant-profile/tabs/Tab
 import TabClientUsers from '@/components/admin-interno/merchant-profile/tabs/TabClientUsers';
 import TabSubSellers from '@/components/admin-interno/merchant-profile/tabs/TabSubSellers';
 import TabPerformance from '@/components/admin-interno/merchant-profile/tabs/TabPerformance';
+// Mentor: novas abas
+import TabLiquidacao from '@/components/admin-interno/merchant-profile/tabs/TabLiquidacao';
+import TabBloqueiosSuspensoes from '@/components/admin-interno/merchant-profile/tabs/TabBloqueiosSuspensoes';
+import TabEfeitosContrato from '@/components/admin-interno/merchant-profile/tabs/TabEfeitosContrato';
+import TabCapacidadeTransacional from '@/components/admin-interno/merchant-profile/tabs/TabCapacidadeTransacional';
+import ContextualAlertsBanner from '@/components/admin-interno/merchant-profile/ContextualAlertsBanner';
 import {
   LayoutDashboard, BarChart3, FileText, Settings, Percent, CreditCard,
   KeyRound, ArrowLeftRight, Landmark, ArrowUpFromLine, TrendingUp,
   AlertTriangle, ShieldAlert, Banknote, FolderOpen, ShieldCheck,
   StickyNote, MessageSquare, ClipboardList, Users, Webhook, Split,
-  Repeat, UserCircle, Store
+  Repeat, UserCircle, Store, Wallet, Ban, Lock, Smartphone
 } from 'lucide-react';
 
 // Tab groups for organization and highlighting
@@ -55,8 +61,12 @@ const secondaryTabs = [
   { value: 'performance', label: 'Performance', icon: BarChart3 },
   { value: 'transacoes', label: 'Transações', icon: ArrowLeftRight },
   { value: 'financeiro', label: 'Financeiro', icon: Landmark },
+  { value: 'liquidacao', label: 'Liquidação', icon: Wallet, mentor: true },
+  { value: 'capacidade', label: 'Capacidade Transacional', icon: Smartphone, mentor: true },
   { value: 'saques', label: 'Saques', icon: ArrowUpFromLine },
   { value: 'risco', label: 'Risco', icon: AlertTriangle },
+  { value: 'bloqueios', label: 'Bloqueios e Suspensões', icon: Ban, mentor: true },
+  { value: 'efeitos', label: 'Efeitos de Contrato', icon: Lock, mentor: true },
   { value: 'chargebacks', label: 'Chargebacks', icon: ShieldAlert },
   { value: 'meds', label: 'MEDs', icon: Banknote },
 ];
@@ -100,6 +110,11 @@ const tabContentMap = {
   recorrencia: TabRecorrencia,
   clientusers: TabClientUsers,
   subsellers: TabSubSellers,
+  // Mentor — novas abas
+  liquidacao: TabLiquidacao,
+  bloqueios: TabBloqueiosSuspensoes,
+  efeitos: TabEfeitosContrato,
+  capacidade: TabCapacidadeTransacional,
 };
 
 function TabButton({ tab, activeTab }) {
@@ -109,15 +124,20 @@ function TabButton({ tab, activeTab }) {
     <TabsTrigger
       value={tab.value}
       className={cn(
-        "gap-1.5 text-xs px-3 py-2 rounded-lg transition-all duration-200 whitespace-nowrap",
+        "gap-1.5 text-xs px-3 py-2 rounded-lg transition-all duration-200 whitespace-nowrap relative",
         tab.highlight && !isActive && "font-semibold border border-[#2bc196]/30 bg-[#2bc196]/5 text-[#2bc196] hover:bg-[#2bc196]/10",
         tab.highlight && isActive && "font-bold bg-[#2bc196] text-white shadow-md shadow-[#2bc196]/25",
-        !tab.highlight && isActive && "font-semibold bg-slate-800 text-white dark:bg-white dark:text-slate-900",
-        !tab.highlight && !isActive && "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+        tab.mentor && !isActive && "font-semibold border border-purple-300/50 bg-purple-50/50 text-purple-700 hover:bg-purple-100",
+        tab.mentor && isActive && "font-bold bg-purple-600 text-white shadow-md shadow-purple-500/25",
+        !tab.highlight && !tab.mentor && isActive && "font-semibold bg-slate-800 text-white dark:bg-white dark:text-slate-900",
+        !tab.highlight && !tab.mentor && !isActive && "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
       )}
     >
       <Icon className="w-3.5 h-3.5" />
       {tab.label}
+      {tab.mentor && !isActive && (
+        <span className="text-[8px] font-black uppercase tracking-wide bg-purple-600 text-white px-1 rounded ml-0.5">M</span>
+      )}
     </TabsTrigger>
   );
 }
@@ -154,6 +174,9 @@ export default function AdminIntMerchantProfile() {
       />
 
       <MerchantHeader merchant={merchant} />
+
+      {/* Mentor F0157+: Banner de alertas contextuais */}
+      <ContextualAlertsBanner merchant={merchant} />
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         {/* Tab Navigation */}

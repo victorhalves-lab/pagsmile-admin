@@ -14,6 +14,9 @@ import MerchantTable from '@/components/admin-interno/merchants/MerchantTable';
 import MerchantBulkActions from '@/components/admin-interno/merchants/MerchantBulkActions';
 import MerchantSummary from '@/components/admin-interno/merchants/MerchantSummary';
 import MerchantPagination from '@/components/admin-interno/merchants/MerchantPagination';
+// Mentor — filtros avançados e visões salvas
+import AdvancedFiltersDrawer from '@/components/admin-interno/merchants/AdvancedFiltersDrawer';
+import SavedViewsManager from '@/components/admin-interno/merchants/SavedViewsManager';
 
 // Mock data
 const mockMerchants = [
@@ -179,6 +182,9 @@ export default function AdminIntMerchantsList() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <SavedViewsManager currentFilters={filters} onLoadView={setFilters} />
+          <AdvancedFiltersDrawer filters={filters} onApply={setFilters} />
 
           <Button variant="outline" size="icon">
             <Settings className="w-4 h-4" />
