@@ -47,17 +47,6 @@ export default function LandingPage() {
             {t('landing.login')}
           </Button>
 
-          {/* Identity Onboarder — caminho recomendado (conversacional) */}
-          <Link 
-            to={createPageUrl('OnboardingAgentChat')}
-            className="w-full py-5 px-6 text-base font-bold rounded-full bg-gradient-to-r from-[#2bc196] via-emerald-400 to-[#2bc196] text-white shadow-xl shadow-[#2bc196]/30 hover:shadow-[#2bc196]/50 transition-all duration-300 hover:-translate-y-1 flex items-center justify-center gap-2 relative overflow-hidden group"
-          >
-            <span className="absolute -top-1 -right-1 px-2 py-0.5 bg-yellow-400 text-yellow-900 text-[9px] font-black uppercase tracking-wider rounded-bl-lg rounded-tr-full">
-              ✨ Recomendado
-            </span>
-            <span className="relative z-10">🤖 Cadastro com IA — KYC em 15min</span>
-          </Link>
-
           <Button 
             asChild 
             size="lg" 
@@ -65,7 +54,7 @@ export default function LandingPage() {
             className="w-full py-6 text-base rounded-full border-2 border-slate-700/50 text-slate-300 hover:bg-slate-800/50 hover:border-slate-600 hover:text-white transition-all duration-300"
           >
             <Link to={createPageUrl('AccountCreationStep1')}>
-              {t('landing.create_account')} (formulário tradicional)
+              {t('landing.create_account')}
             </Link>
           </Button>
 
