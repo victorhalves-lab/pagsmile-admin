@@ -82,18 +82,13 @@ export default function AdminIntSplitsGovernance() {
           { label: 'Governança · Splits' },
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor · Wave H.7
-            </Badge>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => toast.success('Snapshot regulatório exportado para o e-mail do compliance')}
-            >
-              <Download className="w-3.5 h-3.5 mr-1" /> Snapshot regulatório
-            </Button>
-          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => toast.success('Snapshot regulatório exportado para o e-mail do compliance')}
+          >
+            <Download className="w-3.5 h-3.5 mr-1" /> Snapshot regulatório
+          </Button>
         }
       />
 

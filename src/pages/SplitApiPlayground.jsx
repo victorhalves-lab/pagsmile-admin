@@ -19,7 +19,7 @@ export default function SplitApiPlayground() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="API Playground & Webhook Inspector · Splits"
-        subtitle="Sandbox Mentor para testar endpoints e monitorar entrega de eventos split.*"
+        subtitle="Sandbox para testar endpoints e monitorar entrega de eventos split.*"
         icon={Code2}
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
@@ -27,14 +27,9 @@ export default function SplitApiPlayground() {
           { label: 'API & Webhooks' },
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor · Wave H.12
-            </Badge>
-            <Button size="sm" variant="outline">
-              <ExternalLink className="w-3.5 h-3.5 mr-1" /> Documentação completa
-            </Button>
-          </div>
+          <Button size="sm" variant="outline">
+            <ExternalLink className="w-3.5 h-3.5 mr-1" /> Documentação completa
+          </Button>
         }
       />
 

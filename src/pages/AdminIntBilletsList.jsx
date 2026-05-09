@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sparkles, FileText, Plus, Search, Download, Send, XCircle, ExternalLink, AlertTriangle } from 'lucide-react';
+import { FileText, Plus, Search, Download, Send, XCircle, ExternalLink, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { mockBillets, mockBilletsKPIs } from '@/components/mentor/mocks/billetsBackofficeMock';
@@ -64,7 +64,7 @@ export default function AdminIntBilletsList() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Boletos · Backoffice"
-        subtitle="Gestão Mentor de cobranças via boleto · PagSmile, BaaS e e-commerce"
+        subtitle="Gestão de cobranças via boleto · PagSmile, BaaS e e-commerce"
         icon={FileText}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
@@ -73,9 +73,6 @@ export default function AdminIntBilletsList() {
         ]}
         actions={
           <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor · Wave I.8
-            </Badge>
             <Link to={createPageUrl('AdminIntBilletLayouts')}>
               <Button variant="outline" size="sm"><FileText className="w-3.5 h-3.5 mr-1" /> Layouts</Button>
             </Link>

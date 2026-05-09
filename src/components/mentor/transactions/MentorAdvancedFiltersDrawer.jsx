@@ -12,7 +12,7 @@ export default function MentorAdvancedFiltersDrawer({ open, onOpenChange }) {
     <SideDrawer
       open={open}
       onOpenChange={onOpenChange}
-      title="Filtros Avançados Mentor"
+      title="Filtros Avançados"
       description="Filtros adicionais — NSU, ARN, códigos técnicos, retries, tempo de processamento, regras antifraude"
       icon={Filter}
       iconClassName="bg-violet-100 text-violet-600"

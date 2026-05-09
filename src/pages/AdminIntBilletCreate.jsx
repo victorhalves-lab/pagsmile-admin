@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sparkles, FileText, Plus, Lock, ShieldCheck } from 'lucide-react';
+import { FileText, Plus, Lock, ShieldCheck } from 'lucide-react';
 import { mockBilletLayouts } from '@/components/mentor/mocks/billetsBackofficeMock';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -38,7 +38,7 @@ export default function AdminIntBilletCreate() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Novo Boleto"
-        subtitle="Wizard Mentor para cadastro de boleto · pagador, financeiro, bancário"
+        subtitle="Wizard para cadastro de boleto · pagador, financeiro, bancário"
         icon={Plus}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
@@ -46,11 +46,6 @@ export default function AdminIntBilletCreate() {
           { label: 'Boletos', page: 'AdminIntBilletsList' },
           { label: 'Novo' },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave I.10
-          </Badge>
-        }
       />
 
       {/* Stepper */}

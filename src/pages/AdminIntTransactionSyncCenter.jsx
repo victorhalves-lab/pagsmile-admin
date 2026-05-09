@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { RefreshCw, Play, Sparkles, ArrowLeft, Activity, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
+import { RefreshCw, Play, ArrowLeft, Activity, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -44,16 +44,6 @@ export default function AdminIntTransactionSyncCenter() {
           </Button>
         }
       />
-
-      <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
-        <CardContent className="p-3 flex items-start gap-2 text-xs">
-          <Sparkles className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
-          <div className="text-violet-900 dark:text-violet-200">
-            <strong>Diferencial Mentor.</strong> Único centro do mercado com <strong>sincronização ativa on-demand</strong> contra APIs dos adquirentes.
-            Permite validar status real de transações sem aguardar próximo arquivo CNAB diário · ideal para troubleshoot urgente, recuperação pós-incidente e detecção de transações fantasmas.
-          </div>
-        </CardContent>
-      </Card>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card><CardContent className="p-3"><div className="flex items-center justify-between"><p className="text-[10px] uppercase text-slate-500 font-bold">Jobs concluídos</p><CheckCircle2 className="w-4 h-4 text-emerald-600" /></div><p className="text-2xl font-bold text-emerald-600 mt-0.5">{completed}</p></CardContent></Card>

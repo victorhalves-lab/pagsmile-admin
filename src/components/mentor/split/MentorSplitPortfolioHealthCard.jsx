@@ -32,9 +32,8 @@ export default function MentorSplitPortfolioHealthCard({ stats }) {
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-violet-600" />
             <h3 className="text-sm font-bold text-violet-700">
-              Mentor · Saúde da Carteira de Splits
+              Saúde da Carteira de Splits
             </h3>
-            <Badge className="bg-violet-100 text-violet-700 text-[9px]">inédito no mercado</Badge>
           </div>
           <Badge className={levelColor.badge}>{levelLabel}</Badge>
         </div>
@@ -101,7 +100,7 @@ export default function MentorSplitPortfolioHealthCard({ stats }) {
         </div>
 
         <p className="text-[10px] text-slate-500 italic text-center">
-          * Projeção via modelo Mentor com base em TPV histórico, sazonalidade da vertical e tendências por bandeira.
+          * Projeção com base em TPV histórico, sazonalidade da vertical e tendências por bandeira.
         </p>
       </CardContent>
     </Card>

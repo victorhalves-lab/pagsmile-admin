@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Activity, ArrowLeft, Sparkles, Download } from 'lucide-react';
+import { Activity, ArrowLeft, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -49,16 +49,6 @@ export default function AdminIntDriftMonitoring() {
           </Button>
         }
       />
-
-      <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
-        <CardContent className="p-3 flex items-start gap-2 text-xs">
-          <Sparkles className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
-          <div className="text-violet-900 dark:text-violet-200">
-            <strong>Diferencial Mentor.</strong> Único monitor do mercado que mede <strong>drift por componente tarifário</strong> (MDR base, spread, antecipação, sobretaxas) cruzando com transações reais.
-            Identifica vazamentos de receita causados por exceções não controladas, falhas de roteamento ou desvios não autorizados — com sugestão de IA para cada caso.
-          </div>
-        </CardContent>
-      </Card>
 
       <DriftKPIBar drifts={MOCK_DRIFT_DATA} />
 

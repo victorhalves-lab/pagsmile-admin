@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  Sparkles, FileText, Copy, Send, Download, XCircle, Edit, Clock, Building2, User, Banknote, CheckCircle2,
+  FileText, Copy, Send, Download, XCircle, Edit, Clock, Building2, User, Banknote, CheckCircle2,
 } from 'lucide-react';
 import { mockBilletDetail, mockBilletHistory } from '@/components/mentor/mocks/billetsBackofficeMock';
 import { toast } from 'sonner';
@@ -21,7 +21,7 @@ export default function AdminIntBilletDetail() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title={`Boleto ${b.our_number}`}
-        subtitle="Ficha completa Mentor · pagador, financeiro, configurações bancárias, histórico"
+        subtitle="Ficha completa · pagador, financeiro, configurações bancárias, histórico"
         icon={FileText}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
@@ -29,11 +29,6 @@ export default function AdminIntBilletDetail() {
           { label: 'Boletos', page: 'AdminIntBilletsList' },
           { label: b.our_number },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave I.9
-          </Badge>
-        }
       />
 
       {/* Header */}

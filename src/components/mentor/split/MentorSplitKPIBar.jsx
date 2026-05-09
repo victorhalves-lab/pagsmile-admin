@@ -74,7 +74,7 @@ export default function MentorSplitKPIBar({ rules = [] }) {
         <div className="flex items-center gap-2 mb-1">
           <Sparkles className="w-3.5 h-3.5 text-violet-600" />
           <p className="text-xs font-bold text-violet-700 dark:text-violet-300">
-            Mentor · KPIs Operacionais do Split
+            KPIs Operacionais do Split
           </p>
           <Link to={createPageUrl('SplitRiskOpportunityHub')} className="ml-auto">
             <Button size="sm" variant="outline" className="h-7 text-[11px] border-violet-300 text-violet-700 hover:bg-violet-50">

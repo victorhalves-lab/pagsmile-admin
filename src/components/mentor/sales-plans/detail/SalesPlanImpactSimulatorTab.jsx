@@ -44,7 +44,7 @@ export default function SalesPlanImpactSimulatorTab({ plan }) {
         <CardContent className="p-3 text-xs flex items-start gap-2">
           <Sparkles className="w-4 h-4 text-violet-700 mt-0.5" />
           <div>
-            <p className="font-bold text-violet-900 dark:text-violet-200">Diferencial Mentor: simulação retroativa real</p>
+            <p className="font-bold text-violet-900 dark:text-violet-200">Simulação retroativa real</p>
             <p className="text-violet-700 dark:text-violet-300 mt-0.5">
               Aplique mudanças hipotéticas e veja o impacto sobre <strong>transações reais</strong> dos últimos 30/60/90 dias.
               Estimativa probabilística considera elasticidade de churn por segmento.

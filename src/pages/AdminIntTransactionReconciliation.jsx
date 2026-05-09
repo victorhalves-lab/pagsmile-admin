@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FileCheck, Upload, Sparkles, ArrowLeft, RefreshCw } from 'lucide-react';
+import { FileCheck, Upload, ArrowLeft, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -48,16 +48,6 @@ export default function AdminIntTransactionReconciliation() {
           </div>
         }
       />
-
-      <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
-        <CardContent className="p-3 flex items-start gap-2 text-xs">
-          <Sparkles className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
-          <div className="text-violet-900 dark:text-violet-200">
-            <strong>Diferencial Mentor.</strong> Único hub do mercado que realiza <strong>conciliação cruzada visual</strong> entre dados PagSmile e arquivos CNAB dos adquirentes.
-            Detecta automaticamente: valores divergentes, status incompatíveis, transações fantasmas (em apenas um dos lados), datas de liquidação fora do prazo · com sugestões de IA para resolução em cada caso.
-          </div>
-        </CardContent>
-      </Card>
 
       <ReconciliationKPIBar files={RECONCILIATION_FILES} divergences={DIVERGENCES} />
 

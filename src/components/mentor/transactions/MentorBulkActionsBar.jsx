@@ -11,7 +11,6 @@ export default function MentorBulkActionsBar({ count = 0, onClear }) {
       <CardContent className="p-2 flex items-center gap-2 flex-wrap">
         <Sparkles className="w-4 h-4 text-violet-600" />
         <span className="text-xs font-bold text-violet-900 dark:text-violet-200">{count} selecionada(s)</span>
-        <span className="text-[9px] text-violet-700 dark:text-violet-300 px-1.5 py-0.5 bg-violet-200 rounded">ações Mentor</span>
         <div className="ml-auto flex flex-wrap gap-1.5">
           <Button size="sm" variant="outline" className="h-7 text-[11px]" onClick={() => toast.success(`${count} marcadas como revisadas pelo Risco`)}>
             <Shield className="w-3 h-3 mr-1" />Marcar revisada (Risco)

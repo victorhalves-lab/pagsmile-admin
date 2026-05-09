@@ -48,17 +48,6 @@ export default function AdminIntTransactionExportCenter() {
         }
       />
 
-      <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
-        <CardContent className="p-3 flex items-start gap-2 text-xs">
-          <Sparkles className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
-          <div className="text-violet-900 dark:text-violet-200">
-            <strong>Diferencial Mentor.</strong> Centro de exportação com <strong>governança PCI/LGPD nativa</strong> ·
-            mascaramento configurável (mínimo/padrão/alto) · destinos automatizados (download/email/SFTP/S3) ·
-            OTP + justificativa obrigatória · retenção 7 dias · trilha auditável centralizada · alerta automático ao Compliance em volumes &gt; 1M linhas.
-          </div>
-        </CardContent>
-      </Card>
-
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card><CardContent className="p-3"><div className="flex items-center justify-between"><p className="text-[10px] uppercase text-slate-500 font-bold">Prontas para download</p><FileText className="w-4 h-4 text-emerald-600" /></div><p className="text-2xl font-bold text-emerald-600 mt-0.5">{ready}</p></CardContent></Card>
         <Card><CardContent className="p-3"><div className="flex items-center justify-between"><p className="text-[10px] uppercase text-slate-500 font-bold">Processando agora</p><Download className="w-4 h-4 text-blue-600" /></div><p className="text-2xl font-bold text-blue-600 mt-0.5">{processing}</p></CardContent></Card>

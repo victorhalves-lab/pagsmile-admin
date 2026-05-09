@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sparkles, AlertTriangle, Trash2, Lock, Upload, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, Trash2, Lock, Upload, CheckCircle2 } from 'lucide-react';
 import { mockMassPurgePendingState } from '@/components/mentor/mocks/settlementGovernanceMock';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -76,11 +76,6 @@ export default function SettlementMassPurgePanel() {
           { label: 'Liquidações', page: 'AdminIntSettlements' },
           { label: 'Mass Purge' },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave I.5
-          </Badge>
-        }
       />
 
       <Card className="bg-red-50/40 border-red-300">

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, Download, CheckCircle2, Clock, XCircle, AlertCircle, Mail, HardDrive, Server, ShieldAlert, Plus } from 'lucide-react';
+import { Download, CheckCircle2, Clock, XCircle, AlertCircle, Mail, HardDrive, Server, ShieldAlert, Plus } from 'lucide-react';
 import { mockExportJobs, mockExportKPIs } from '@/components/mentor/mocks/exportJobsMock';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -43,21 +43,16 @@ export default function ExportJobCenter() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Export Job Center"
-        subtitle="Centro Mentor de exportações assíncronas · trilha auditável + retenção + Compliance"
+        subtitle="Centro de exportações assíncronas · trilha auditável + retenção + Compliance"
         icon={Download}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
           { label: 'Exportações' },
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor · Wave I.12
-            </Badge>
-            <Button size="sm" className="bg-violet-600 hover:bg-violet-700">
-              <Plus className="w-3.5 h-3.5 mr-1" /> Nova exportação
-            </Button>
-          </div>
+          <Button size="sm" className="bg-violet-600 hover:bg-violet-700">
+            <Plus className="w-3.5 h-3.5 mr-1" /> Nova exportação
+          </Button>
         }
       />
 

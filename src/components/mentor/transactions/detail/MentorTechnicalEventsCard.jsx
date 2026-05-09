@@ -17,7 +17,7 @@ export default function MentorTechnicalEventsCard() {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-base flex items-center gap-2">
-          <Cpu className="w-4 h-4 text-slate-600" />Eventos Técnicos (Mentor)
+          <Cpu className="w-4 h-4 text-slate-600" />Eventos Técnicos
           <Badge variant="outline" className="text-[9px] ml-auto">precisão de ms</Badge>
         </CardTitle>
       </CardHeader>

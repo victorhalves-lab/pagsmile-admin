@@ -102,7 +102,7 @@ export default function SplitEditFlow() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Editar Split"
-        subtitle="Fluxo Mentor com aviso prévio contratual + cutover programado"
+        subtitle="Fluxo com aviso prévio contratual + cutover programado"
         icon={Edit3}
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
@@ -110,11 +110,6 @@ export default function SplitEditFlow() {
           { label: 'Ficha 360', page: 'SplitDetail360' },
           { label: 'Editar' },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave H.4
-          </Badge>
-        }
       />
 
       <Card className="border-l-4 border-l-violet-500">

@@ -32,10 +32,6 @@ export default function MentorSplitHeaderCard({ split }) {
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-violet-600" />
-              <span className="text-[10px] font-bold uppercase text-violet-700">Mentor · Ficha 360</span>
-            </div>
             <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2 break-words">
               {split.split_name}
             </h2>

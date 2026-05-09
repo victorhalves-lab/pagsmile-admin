@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calculator, FileText } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 
@@ -15,7 +14,6 @@ export default function AnticipationFinancialBreakdown({ data }) {
         <CardTitle className="text-base flex items-center gap-2">
           <Calculator className="w-5 h-5 text-violet-600" />
           Decomposição Financeira Detalhada
-          <Badge className="bg-violet-100 text-violet-700 text-[10px]">F3400 Mentor</Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

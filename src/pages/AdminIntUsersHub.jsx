@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Users as UsersIcon, UserPlus, Sparkles } from 'lucide-react';
+import { Users as UsersIcon, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import PageHeader from '@/components/common/PageHeader';
@@ -70,16 +70,6 @@ export default function AdminIntUsersHub() {
           </Button>
         }
       />
-
-      <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
-        <CardContent className="p-3 flex items-start gap-2">
-          <Sparkles className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
-          <div className="text-xs text-violet-900 dark:text-violet-200">
-            <strong>Modelo RBAC + ABAC.</strong> 9 perfis pré-definidos cobrem 95% dos casos · permissões customizadas para exceções · MFA obrigatório para perfis críticos.
-            Toda alteração de perfil/permissão gera trilha auditável (SOC 2 CC6.3). Bloqueios automáticos após 5 tentativas falhas. Detecção de contas dormentes (30+ dias) e usuários sem MFA.
-          </div>
-        </CardContent>
-      </Card>
 
       <UsersKPIBar users={users} />
       <UsersFilters filters={filters} onChange={setFilters} />

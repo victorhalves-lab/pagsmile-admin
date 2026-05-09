@@ -84,7 +84,7 @@ export default function MentorSplitDerivedInsights({ healthScore, healthFactors,
       <CardHeader className="pb-3">
         <CardTitle className="text-sm flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-violet-600" />
-          Mentor · Insights & Otimizações
+          Insights & Otimizações
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">

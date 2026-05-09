@@ -46,7 +46,7 @@ export default function SplitRiskOpportunityHub() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Análise de Risco & Oportunidade · Splits"
-        subtitle="Diagnóstico Mentor automático com ações priorizadas para a carteira de splits"
+        subtitle="Diagnóstico automático com ações priorizadas para a carteira de splits"
         icon={Target}
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
@@ -54,18 +54,13 @@ export default function SplitRiskOpportunityHub() {
           { label: 'Risco & Oportunidade' },
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor · Wave H.6
-            </Badge>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => toast.success('Relatório executivo enviado para o seu e-mail')}
-            >
-              <Download className="w-3.5 h-3.5 mr-1" /> Relatório executivo
-            </Button>
-          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => toast.success('Relatório executivo enviado para o seu e-mail')}
+          >
+            <Download className="w-3.5 h-3.5 mr-1" /> Relatório executivo
+          </Button>
         }
       />
 

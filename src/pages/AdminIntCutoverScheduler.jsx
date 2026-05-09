@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Plus, ArrowLeft, Sparkles } from 'lucide-react';
+import { Calendar, Plus, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import PageHeader from '@/components/common/PageHeader';
@@ -56,16 +56,6 @@ export default function AdminIntCutoverScheduler() {
           </Button>
         }
       />
-
-      <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
-        <CardContent className="p-3 flex items-start gap-2 text-xs">
-          <Sparkles className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
-          <div className="text-violet-900 dark:text-violet-200">
-            <strong>Diferencial Mentor.</strong> Único calendário do mercado que cruza <strong>data de cutover × estabelecimentos afetados × programas regulatórios × dependências entre planos</strong>.
-            Detecta automaticamente sobreposições e sugere realocação para minimizar fadiga de comunicação.
-          </div>
-        </CardContent>
-      </Card>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card><CardContent className="p-3"><p className="text-[10px] uppercase text-slate-500 font-bold">Cutovers próximos</p><p className="text-2xl font-bold text-violet-600">{upcoming}</p></CardContent></Card>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Plus, Sparkles } from 'lucide-react';
+import { Lock, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import PageHeader from '@/components/common/PageHeader';
@@ -32,17 +32,6 @@ export default function AdminIntSupplierCredentials() {
           </Button>
         }
       />
-
-      <Card className="bg-gradient-to-r from-amber-50 to-red-50 dark:from-amber-900/20 dark:to-red-900/20 border-amber-200">
-        <CardContent className="p-3 flex items-start gap-2">
-          <Sparkles className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
-          <div className="text-xs text-amber-900 dark:text-amber-200">
-            <strong>Compliance SOC 2 + ISO 27001.</strong> Todas credenciais são armazenadas com criptografia AES-256 em repouso e TLS 1.3 em trânsito.
-            Revelação requer OTP + razão documentada. Cada acesso gera trilha auditável imutável visível pelo time de Segurança.
-            Renovações automáticas notificadas em D-90/60/30/7. Credenciais sem uso há 60+ dias são candidatas a revogação automática.
-          </div>
-        </CardContent>
-      </Card>
 
       <SupplierCredentialsKPIBar credentials={credentials} />
 

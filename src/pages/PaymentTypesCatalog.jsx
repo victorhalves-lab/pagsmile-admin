@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Layers, Search, Download, ExternalLink, AlertTriangle } from 'lucide-react';
+import { Layers, Search, Download, ExternalLink, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { mockPaymentTypes } from '@/components/mentor/mocks/settlementGovernanceMock';
@@ -44,7 +44,7 @@ export default function PaymentTypesCatalog() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Catálogo · Tipos de Pagamento"
-        subtitle="Configurações estruturais Mentor: prazos, métodos, contas contábeis, regras fiscais"
+        subtitle="Configurações estruturais: prazos, métodos, contas contábeis, regras fiscais"
         icon={Layers}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
@@ -53,14 +53,9 @@ export default function PaymentTypesCatalog() {
           { label: 'Tipos de Pagamento' },
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor · Wave I.7
-            </Badge>
-            <Button variant="outline" size="sm">
-              <Download className="w-3.5 h-3.5 mr-1" /> Exportar
-            </Button>
-          </div>
+          <Button variant="outline" size="sm">
+            <Download className="w-3.5 h-3.5 mr-1" /> Exportar
+          </Button>
         }
       />
 
@@ -167,7 +162,7 @@ export default function PaymentTypesCatalog() {
           <CardContent className="p-3 flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
             <div className="text-xs">
-              <p className="font-bold text-amber-900">Sugestão Mentor</p>
+              <p className="font-bold text-amber-900">Sugestão</p>
               <p className="text-amber-800">{lowActivity.length} tipo(s) ativos com baixa atividade ({lowActivity.map(t => t.name).join(', ')}) — candidatos a descontinuação para reduzir complexidade do portfólio.</p>
             </div>
           </CardContent>

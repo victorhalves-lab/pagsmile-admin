@@ -40,8 +40,7 @@ export default function MentorSyncReconciliationCard({ transaction }) {
         <div className="flex items-center justify-between">
           <CardTitle className="text-base flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-violet-600" />
-            Sincronização & Conciliação Mentor
-            <Badge className="text-[9px] bg-violet-200 text-violet-800">novo</Badge>
+            Sincronização & Conciliação
           </CardTitle>
           <Button size="sm" variant="outline" onClick={handleSync} disabled={syncing}>
             <RefreshCw className={`w-3.5 h-3.5 mr-1 ${syncing ? 'animate-spin' : ''}`} />

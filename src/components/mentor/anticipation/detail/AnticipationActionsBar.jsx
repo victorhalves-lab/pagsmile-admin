@@ -14,8 +14,8 @@ export default function AnticipationActionsBar({ data }) {
       <CardContent className="p-4">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700">Ações Mentor</Badge>
-            <span className="text-xs text-slate-500">Operações governadas com trilha auditável</span>
+            <span className="text-xs font-semibold text-slate-700">Ações</span>
+            <span className="text-xs text-slate-500">— Operações governadas com trilha auditável</span>
           </div>
           <div className="flex gap-2 flex-wrap">
             {isFailed && (

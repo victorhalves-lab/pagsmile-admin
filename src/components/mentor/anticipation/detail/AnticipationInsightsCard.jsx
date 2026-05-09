@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Sparkles, TrendingUp, AlertTriangle, Lightbulb } from 'lucide-react';
 
 const insights = [
@@ -11,12 +10,11 @@ const insights = [
 
 export default function AnticipationInsightsCard() {
   return (
-    <Card className="border-violet-200">
+    <Card>
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-violet-600" />
-          Insights Mentor
-          <Badge className="bg-violet-100 text-violet-700 text-[10px]">F3426–F3428</Badge>
+          Insights
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">

@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sparkles, Send, Upload, Lock, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Send, Upload, Lock, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { mockPaymentTypes } from '@/components/mentor/mocks/settlementGovernanceMock';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -55,7 +55,7 @@ export default function ManualSettlementCreator() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Liquidação Manual"
-        subtitle="Criar liquidação extraordinária Mentor · operação restrita com governança"
+        subtitle="Criar liquidação extraordinária · operação restrita com governança"
         icon={Send}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
@@ -63,11 +63,6 @@ export default function ManualSettlementCreator() {
           { label: 'Liquidações', page: 'AdminIntSettlements' },
           { label: 'Manual' },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave I.6
-          </Badge>
-        }
       />
 
       <Card className="bg-blue-50/30 border-blue-200">
@@ -198,7 +193,7 @@ export default function ManualSettlementCreator() {
           <Card className="border-violet-300 bg-violet-50/30 sticky top-4">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-violet-600" /> Resumo Mentor
+                <ShieldCheck className="w-4 h-4 text-violet-600" /> Resumo
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-xs">

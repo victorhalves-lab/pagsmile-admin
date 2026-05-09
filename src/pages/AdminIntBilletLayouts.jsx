@@ -3,7 +3,7 @@ import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sparkles, FileText, Eye, ExternalLink, Settings, AlertTriangle } from 'lucide-react';
+import { FileText, Eye, ExternalLink, AlertTriangle } from 'lucide-react';
 import { mockBilletLayouts } from '@/components/mentor/mocks/billetsBackofficeMock';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
@@ -37,7 +37,7 @@ export default function AdminIntBilletLayouts() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Catálogo · Layouts de Boleto"
-        subtitle="Configurações por banco e carteira · prévia visual e métricas Mentor"
+        subtitle="Configurações por banco e carteira · prévia visual e métricas"
         icon={FileText}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
@@ -45,11 +45,6 @@ export default function AdminIntBilletLayouts() {
           { label: 'Boletos', page: 'AdminIntBilletsList' },
           { label: 'Layouts' },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave I.11
-          </Badge>
-        }
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -175,7 +170,7 @@ export default function AdminIntBilletLayouts() {
           <CardContent className="p-3 flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
             <div className="text-xs">
-              <p className="font-bold text-amber-900">Sugestão Mentor</p>
+              <p className="font-bold text-amber-900">Sugestão</p>
               <p className="text-amber-800">{lowActivity.length} layout(s) ativos com baixa atividade — revisar parcerias com bancos pouco usados ({lowActivity.map(l => l.bank).join(', ')}).</p>
             </div>
           </CardContent>

@@ -18,7 +18,7 @@ export default function MentorDerivedInsights({ totalCount = 0 }) {
       <CardContent className="p-3">
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="w-4 h-4 text-violet-600" />
-          <p className="text-xs font-bold text-violet-900 dark:text-violet-200">Insights derivados Mentor sobre {totalCount.toLocaleString('pt-BR')} transações filtradas</p>
+          <p className="text-xs font-bold text-violet-900 dark:text-violet-200">Insights derivados sobre {totalCount.toLocaleString('pt-BR')} transações filtradas</p>
           <Badge className="text-[9px] bg-violet-200 text-violet-800 ml-auto">novo</Badge>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">

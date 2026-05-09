@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { GitCompare, Sparkles, Download, ArrowLeft } from 'lucide-react';
+import { GitCompare, Download, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import PageHeader from '@/components/common/PageHeader';
@@ -49,16 +49,6 @@ export default function AdminIntSalesPlanComparator() {
           </Button>
         }
       />
-
-      <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
-        <CardContent className="p-3 flex items-start gap-2 text-xs">
-          <Sparkles className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
-          <div className="text-violet-900 dark:text-violet-200">
-            <strong>Diferencial Mentor.</strong> Único hub do mercado com comparação <strong>multi-plano simultâneo</strong> incluindo
-            programas regulatórios, drift operacional, score de saúde e exceções ativas. Útil para auditorias internas, due diligence comercial e decisões de simplificação de portfólio.
-          </div>
-        </CardContent>
-      </Card>
 
       <PlanComparatorPicker selected={selectedIds} onChange={setSelectedIds} max={4} />
 

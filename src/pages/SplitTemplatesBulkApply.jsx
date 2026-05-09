@@ -82,18 +82,13 @@ export default function SplitTemplatesBulkApply() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Templates & Bulk Apply · Splits"
-        subtitle="Biblioteca de templates pré-aprovados + aplicação em massa com validação Mentor"
+        subtitle="Biblioteca de templates pré-aprovados + aplicação em massa com validação"
         icon={LayoutTemplate}
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
           { label: 'Splits', page: 'SplitManagement' },
           { label: 'Templates & Bulk' },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave H.8
-          </Badge>
-        }
       />
 
       {/* Filtros de templates */}
@@ -180,7 +175,7 @@ export default function SplitTemplatesBulkApply() {
               <span className="w-6 h-6 rounded-full bg-violet-600 text-white flex items-center justify-center text-xs font-black">
                 3
               </span>
-              Validação Mentor de rollout
+              Validação de rollout
             </p>
           </div>
           <MentorBulkRolloutValidator template={selectedTemplate} selectedMerchants={selectedMerchants} />

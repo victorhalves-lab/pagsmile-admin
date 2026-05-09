@@ -1,7 +1,6 @@
 import React from 'react';
 import PageHeader from '@/components/common/PageHeader';
-import { Sparkles } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Layers } from 'lucide-react';
 import { mockSplitDetail360 } from '@/components/mentor/mocks/splitMentorMock';
 import MentorSplitHeaderCard from '@/components/mentor/split/MentorSplitHeaderCard';
 import MentorSplitOwnerMerchantCards from '@/components/mentor/split/MentorSplitOwnerMerchantCards';
@@ -20,18 +19,13 @@ export default function SplitDetail360() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Ficha 360 do Split"
-        subtitle="Visão completa Mentor · configuração · beneficiários · terminais · métricas · histórico"
-        icon={Sparkles}
+        subtitle="Visão completa · configuração · beneficiários · terminais · métricas · histórico"
+        icon={Layers}
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
           { label: 'Splits', page: 'SplitManagement' },
           { label: 'Ficha 360' },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave H.1
-          </Badge>
-        }
       />
 
       <MentorSplitHeaderCard split={split} />

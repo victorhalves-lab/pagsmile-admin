@@ -15,7 +15,7 @@ export default function GovernanceAuditLog({ events = [] }) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm flex items-center gap-2">
-          <History className="w-4 h-4 text-violet-600" /> Trilha auditável Mentor · operações governadas
+          <History className="w-4 h-4 text-violet-600" /> Trilha auditável · operações governadas
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">

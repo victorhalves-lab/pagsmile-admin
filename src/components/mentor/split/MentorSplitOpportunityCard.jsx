@@ -98,7 +98,7 @@ export default function MentorSplitOpportunityCard({ split }) {
 
         {/* Diagnóstico */}
         <div className="bg-violet-50 border border-violet-200 rounded-lg p-2 text-xs">
-          <p className="text-[10px] uppercase font-bold text-violet-700 mb-1">Diagnóstico Mentor</p>
+          <p className="text-[10px] uppercase font-bold text-violet-700 mb-1">Diagnóstico</p>
           <p className="text-slate-700">{split.diagnosis}</p>
         </div>
 

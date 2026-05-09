@@ -1,8 +1,7 @@
 import React from 'react';
 import PageHeader from '@/components/common/PageHeader';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, FileText } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import {
   mockSettlementDetail,
   mockAggregatedTransactions,
@@ -30,7 +29,7 @@ export default function AdminIntSettlementDetail360() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title={`Settlement ${s.settlement_id}`}
-        subtitle="Ficha 360 da liquidação financeira · visão Mentor com decomposição, ações governadas e auditoria"
+        subtitle="Ficha 360 da liquidação financeira · decomposição, ações governadas e auditoria"
         icon={FileText}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
@@ -38,11 +37,6 @@ export default function AdminIntSettlementDetail360() {
           { label: 'Liquidações', page: 'AdminIntSettlements' },
           { label: s.settlement_id },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave I.1-I.3
-          </Badge>
-        }
       />
 
       <MentorSettlementHeaderCard settlement={s} />

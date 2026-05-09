@@ -43,7 +43,7 @@ export default function AdminIntSalesPlans() {
     <div className="space-y-4 pb-12">
       <PageHeader
         title="Planos de Venda"
-        subtitle="Hub central de planos comerciais Mentor · 9 endpoints · histórico versionado · simulação de impacto retroativo"
+        subtitle="Hub central de planos comerciais · 9 endpoints · histórico versionado · simulação de impacto retroativo"
         icon={FileText}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
@@ -106,16 +106,6 @@ export default function AdminIntSalesPlans() {
           </Card>
         </Link>
       </div>
-
-      <Card className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 border-violet-200">
-        <CardContent className="p-3 flex items-start gap-2">
-          <Sparkles className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
-          <div className="text-xs text-violet-900 dark:text-violet-200">
-            <strong>Diferencial Mentor.</strong> Histórico versionado com diff visual entre versões · simulação de impacto retroativo (90d) antes de aplicar mudanças ·
-            programas regulatórios (Visa VAMP, MC ECP, Elo, Hiper) integrados nativamente · clonagem inteligente para variações · cutover scheduler com comunicações automatizadas em D-30/D-15/D-7/D-1.
-          </div>
-        </CardContent>
-      </Card>
 
       <SalesPlansKPIBar plans={plans} />
       <SalesPlansLifecyclePipeline plans={plans} />

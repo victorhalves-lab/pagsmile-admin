@@ -20,7 +20,7 @@ export default function MentorSettlementHealthScore({ score, risks = [], suggest
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-violet-600" />
-            <p className="text-xs font-bold uppercase text-slate-700">Saúde Mentor</p>
+            <p className="text-xs font-bold uppercase text-slate-700">Saúde</p>
           </div>
           <p className={cn('text-3xl font-black tabular-nums', color)}>{score}<span className="text-base text-slate-400">/100</span></p>
         </div>

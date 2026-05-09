@@ -1,8 +1,7 @@
 import React from 'react';
 import PageHeader from '@/components/common/PageHeader';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import RecalculateFlow from '@/components/mentor/settlement/governance/RecalculateFlow';
 import ForcedStatusFlow from '@/components/mentor/settlement/governance/ForcedStatusFlow';
 import RollbackFlow from '@/components/mentor/settlement/governance/RollbackFlow';
@@ -17,7 +16,7 @@ export default function SettlementGovernanceCenter() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Governance Center · Settlements"
-        subtitle="Centro Mentor para operações governadas: recalcular, forçar status, reverter pagamentos"
+        subtitle="Centro de operações governadas: recalcular, forçar status, reverter pagamentos"
         icon={ShieldCheck}
         breadcrumbs={[
           { label: 'Admin Interno', page: 'AdminIntDashboard' },
@@ -25,11 +24,6 @@ export default function SettlementGovernanceCenter() {
           { label: 'Liquidações', page: 'AdminIntSettlements' },
           { label: 'Governance Center' },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave I.4
-          </Badge>
-        }
       />
 
       <Tabs defaultValue={initialTab} className="space-y-4">

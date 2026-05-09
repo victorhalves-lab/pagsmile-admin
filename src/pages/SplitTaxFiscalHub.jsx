@@ -21,7 +21,7 @@ export default function SplitTaxFiscalHub() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Tax & Fiscal Hub · Splits"
-        subtitle="Gestão Mentor de retenções tributárias, declarações e informes de rendimento"
+        subtitle="Gestão de retenções tributárias, declarações e informes de rendimento"
         icon={Receipt}
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
@@ -29,14 +29,9 @@ export default function SplitTaxFiscalHub() {
           { label: 'Tax & Fiscal' },
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor · Wave H.11
-            </Badge>
-            <Button size="sm" variant="outline" onClick={() => toast.success('Pacote fiscal completo gerado')}>
-              <Download className="w-3.5 h-3.5 mr-1" /> Pacote fiscal
-            </Button>
-          </div>
+          <Button size="sm" variant="outline" onClick={() => toast.success('Pacote fiscal completo gerado')}>
+            <Download className="w-3.5 h-3.5 mr-1" /> Pacote fiscal
+          </Button>
         }
       />
 

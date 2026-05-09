@@ -56,7 +56,7 @@ export default function SplitBeneficiaryHub() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Beneficiários · Hub 360"
-        subtitle="Visão consolidada Mentor de cada beneficiário com KYC, splits ativos e histórico"
+        subtitle="Visão consolidada de cada beneficiário com KYC, splits ativos e histórico"
         icon={Users}
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
@@ -64,14 +64,9 @@ export default function SplitBeneficiaryHub() {
           { label: 'Beneficiários' },
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor · Wave H.10
-            </Badge>
-            <Button size="sm" variant="outline" onClick={() => toast.success('Lista de beneficiários exportada')}>
-              <Download className="w-3.5 h-3.5 mr-1" /> Exportar
-            </Button>
-          </div>
+          <Button size="sm" variant="outline" onClick={() => toast.success('Lista de beneficiários exportada')}>
+            <Download className="w-3.5 h-3.5 mr-1" /> Exportar
+          </Button>
         }
       />
 

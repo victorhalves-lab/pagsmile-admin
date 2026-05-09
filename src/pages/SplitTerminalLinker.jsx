@@ -77,11 +77,6 @@ export default function SplitTerminalLinker() {
           { label: 'Ficha 360', page: 'SplitDetail360' },
           { label: 'Vincular terminais' },
         ]}
-        actions={
-          <Badge className="bg-violet-100 text-violet-700 gap-1">
-            <Sparkles className="w-3 h-3" /> Mentor · Wave H.3
-          </Badge>
-        }
       />
 
       {/* Split alvo */}

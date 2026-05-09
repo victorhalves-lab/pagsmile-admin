@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Copy, Sparkles, ExternalLink } from 'lucide-react';
+import { Copy, ExternalLink } from 'lucide-react';
 import { statusConfig } from '@/components/mentor/mocks/spotAnticipationMock';
 import { createPageUrl } from '@/components/utils';
 import { toast } from 'sonner';
@@ -19,7 +19,6 @@ export default function AnticipationHeaderCard({ data }) {
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Badge className="bg-violet-100 text-violet-700"><Sparkles className="w-3 h-3 mr-1" /> Mentor 360°</Badge>
               <Badge className={cfg.color}>{cfg.label}</Badge>
               {data.sub_status && <Badge variant="outline" className="text-red-700 border-red-200">{data.sub_status}</Badge>}
             </div>

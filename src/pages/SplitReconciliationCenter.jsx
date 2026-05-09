@@ -47,7 +47,7 @@ export default function SplitReconciliationCenter() {
     <div className="space-y-5 min-h-screen">
       <PageHeader
         title="Reconciliação · Splits"
-        subtitle="Conciliação automática Mentor entre splits configurados e splits executados"
+        subtitle="Conciliação automática entre splits configurados e splits executados"
         icon={GitCompare}
         breadcrumbs={[
           { label: 'Financeiro', page: 'FinancialOverview' },
@@ -55,14 +55,9 @@ export default function SplitReconciliationCenter() {
           { label: 'Reconciliação' },
         ]}
         actions={
-          <div className="flex items-center gap-2">
-            <Badge className="bg-violet-100 text-violet-700 gap-1">
-              <Sparkles className="w-3 h-3" /> Mentor · Wave H.9
-            </Badge>
-            <Button size="sm" variant="outline" onClick={() => toast.success('Relatório de divergências exportado')}>
-              <Download className="w-3.5 h-3.5 mr-1" /> Exportar divergências
-            </Button>
-          </div>
+          <Button size="sm" variant="outline" onClick={() => toast.success('Relatório de divergências exportado')}>
+            <Download className="w-3.5 h-3.5 mr-1" /> Exportar divergências
+          </Button>
         }
       />
 
