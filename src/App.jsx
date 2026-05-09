@@ -104,6 +104,18 @@ import SplitBeneficiaryHub from './pages/SplitBeneficiaryHub';
 import SplitTaxFiscalHub from './pages/SplitTaxFiscalHub';
 import SplitApiPlayground from './pages/SplitApiPlayground';
 
+// ====== Wave I (Settlements/Boletos Mentor) ======
+import AdminIntSettlementDetail360 from './pages/AdminIntSettlementDetail360';
+import SettlementGovernanceCenter from './pages/SettlementGovernanceCenter';
+import SettlementMassPurgePanel from './pages/SettlementMassPurgePanel';
+import ManualSettlementCreator from './pages/ManualSettlementCreator';
+import PaymentTypesCatalog from './pages/PaymentTypesCatalog';
+import AdminIntBilletsList from './pages/AdminIntBilletsList';
+import AdminIntBilletDetail from './pages/AdminIntBilletDetail';
+import AdminIntBilletCreate from './pages/AdminIntBilletCreate';
+import AdminIntBilletLayouts from './pages/AdminIntBilletLayouts';
+import ExportJobCenter from './pages/ExportJobCenter';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -248,6 +260,18 @@ const AuthenticatedApp = () => {
       <Route path="/SplitBeneficiaryHub" element={<LayoutWrapper currentPageName="SplitBeneficiaryHub"><SplitBeneficiaryHub /></LayoutWrapper>} />
       <Route path="/SplitTaxFiscalHub" element={<LayoutWrapper currentPageName="SplitTaxFiscalHub"><SplitTaxFiscalHub /></LayoutWrapper>} />
       <Route path="/SplitApiPlayground" element={<LayoutWrapper currentPageName="SplitApiPlayground"><SplitApiPlayground /></LayoutWrapper>} />
+
+      {/* ====== Wave I (Settlements/Boletos Mentor) ====== */}
+      <Route path="/AdminIntSettlementDetail360" element={<LayoutWrapper currentPageName="AdminIntSettlementDetail360"><AdminIntSettlementDetail360 /></LayoutWrapper>} />
+      <Route path="/SettlementGovernanceCenter" element={<LayoutWrapper currentPageName="SettlementGovernanceCenter"><SettlementGovernanceCenter /></LayoutWrapper>} />
+      <Route path="/SettlementMassPurgePanel" element={<LayoutWrapper currentPageName="SettlementMassPurgePanel"><SettlementMassPurgePanel /></LayoutWrapper>} />
+      <Route path="/ManualSettlementCreator" element={<LayoutWrapper currentPageName="ManualSettlementCreator"><ManualSettlementCreator /></LayoutWrapper>} />
+      <Route path="/PaymentTypesCatalog" element={<LayoutWrapper currentPageName="PaymentTypesCatalog"><PaymentTypesCatalog /></LayoutWrapper>} />
+      <Route path="/AdminIntBilletsList" element={<LayoutWrapper currentPageName="AdminIntBilletsList"><AdminIntBilletsList /></LayoutWrapper>} />
+      <Route path="/AdminIntBilletDetail" element={<LayoutWrapper currentPageName="AdminIntBilletDetail"><AdminIntBilletDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntBilletCreate" element={<LayoutWrapper currentPageName="AdminIntBilletCreate"><AdminIntBilletCreate /></LayoutWrapper>} />
+      <Route path="/AdminIntBilletLayouts" element={<LayoutWrapper currentPageName="AdminIntBilletLayouts"><AdminIntBilletLayouts /></LayoutWrapper>} />
+      <Route path="/ExportJobCenter" element={<LayoutWrapper currentPageName="ExportJobCenter"><ExportJobCenter /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -4,11 +4,11 @@ import { createPageUrl } from '@/components/utils';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calendar, Download, Play, Eye, MoreVertical, Lock, Unlock } from 'lucide-react';
+import { Calendar, Download, Play, Eye, MoreVertical, Lock, Unlock, Sparkles, ShieldCheck, Trash2, Send, FileText } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 
@@ -56,6 +56,32 @@ export default function AdminIntSettlements() {
             <PageHeader 
                 title="Liquidações"
                 breadcrumbs={[{ label: 'Financeiro' }, { label: 'Liquidações' }]}
+                actions={
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <Badge className="bg-violet-100 text-violet-700 gap-1">
+                            <Sparkles className="w-3 h-3" /> Mentor
+                        </Badge>
+                        <Link to={createPageUrl('PaymentTypesCatalog')}>
+                            <Button variant="outline" size="sm"><FileText className="w-4 h-4 mr-1" /> Tipos</Button>
+                        </Link>
+                        <Link to={createPageUrl('ManualSettlementCreator')}>
+                            <Button variant="outline" size="sm"><Send className="w-4 h-4 mr-1" /> Manual</Button>
+                        </Link>
+                        <Link to={createPageUrl('SettlementGovernanceCenter')}>
+                            <Button variant="outline" size="sm" className="border-violet-300 text-violet-700">
+                                <ShieldCheck className="w-4 h-4 mr-1" /> Governance
+                            </Button>
+                        </Link>
+                        <Link to={createPageUrl('SettlementMassPurgePanel')}>
+                            <Button variant="outline" size="sm" className="border-red-300 text-red-700">
+                                <Trash2 className="w-4 h-4 mr-1" /> Mass Purge
+                            </Button>
+                        </Link>
+                        <Link to={createPageUrl('ExportJobCenter')}>
+                            <Button variant="outline" size="sm"><Download className="w-4 h-4 mr-1" /> Export Center</Button>
+                        </Link>
+                    </div>
+                }
             />
 
             <Tabs value={tab} onValueChange={setTab}>
@@ -160,7 +186,11 @@ export default function AdminIntSettlements() {
                                                             <Button variant="ghost" size="sm"><MoreVertical className="w-4 h-4" /></Button>
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end">
-                                                            <DropdownMenuItem><Eye className="w-4 h-4 mr-2" /> Ver Detalhes</DropdownMenuItem>
+                                                            <DropdownMenuItem asChild>
+                                                                <Link to={createPageUrl('AdminIntSettlementDetail360')}>
+                                                                    <Eye className="w-4 h-4 mr-2" /> Ficha 360 (Mentor)
+                                                                </Link>
+                                                            </DropdownMenuItem>
                                                             {s.status === 'pending' && (
                                                                 <>
                                                                     <DropdownMenuItem onClick={() => toast.success('Liquidação executada!')}><Play className="w-4 h-4 mr-2" /> Executar</DropdownMenuItem>

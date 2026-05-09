@@ -165,10 +165,21 @@ export default function AdminIntPaymentAgenda() {
           { label: 'Agenda de Pagamentos', page: 'AdminIntPaymentAgenda' }
         ]}
         actions={
-          <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" /> Exportar
-            </Button>
+          <div className="flex gap-2 flex-wrap items-center">
+            <Badge className="bg-violet-100 text-violet-700 gap-1 mr-1">
+              <span className="text-[10px]">✨ Mentor</span>
+            </Badge>
+            <a href="/SettlementGovernanceCenter">
+              <Button variant="outline" size="sm" className="border-violet-300 text-violet-700">Governance Center</Button>
+            </a>
+            <a href="/AdminIntBilletsList">
+              <Button variant="outline" size="sm">Boletos</Button>
+            </a>
+            <a href="/ExportJobCenter">
+              <Button variant="outline">
+                <Download className="w-4 h-4 mr-2" /> Export Center
+              </Button>
+            </a>
           </div>
         }
       />
