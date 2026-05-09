@@ -51,6 +51,7 @@ import { cn } from '@/lib/utils';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
 
 import PageHeader from '@/components/common/PageHeader';
+import FeesAnalysisLinkBanner from '@/components/fees/v2/FeesAnalysisLinkBanner';
 
 export default function FeesAnalysis() {
   const [showValues, setShowValues] = useState(true);
@@ -186,6 +187,9 @@ export default function FeesAnalysis() {
           </div>
         }
       />
+
+      {/* B18: Banner conexão com /Fees */}
+      <FeesAnalysisLinkBanner />
 
       {/* Main Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

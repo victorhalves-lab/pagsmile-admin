@@ -54,6 +54,16 @@ import { cn } from '@/lib/utils';
 
 import PageHeader from '@/components/common/PageHeader';
 
+// B18 — Fees v2 (Pricing Workspace)
+import PricingTransparencyCard from '@/components/fees/v2/PricingTransparencyCard';
+import FeesOptimizerIA from '@/components/fees/v2/FeesOptimizerIA';
+import IndustryBenchmarksCard from '@/components/fees/v2/IndustryBenchmarksCard';
+import PricingTiersCard from '@/components/fees/v2/PricingTiersCard';
+import AcquirerRoutingCard from '@/components/fees/v2/AcquirerRoutingCard';
+import EffectiveRateCard from '@/components/fees/v2/EffectiveRateCard';
+import FeesAnomalyBanner from '@/components/fees/v2/FeesAnomalyBanner';
+import { Sparkles as SparklesIcon, Activity } from 'lucide-react';
+
 export default function Fees() {
   const [showValues, setShowValues] = useState(true);
   const [period, setPeriod] = useState('30d');
@@ -226,21 +236,36 @@ export default function Fees() {
         }
       />
 
-      {/* Tabs principais: Taxas vs Tarifas */}
+      {/* B18 — Anomaly banner + Effective Rate hero */}
+      <FeesAnomalyBanner />
+      <EffectiveRateCard />
+
+      {/* Tabs principais: Taxas vs Tarifas + Análise + Otimizer IA */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full max-w-md grid-cols-2 h-12">
-          <TabsTrigger value="taxas" className="text-base gap-2 data-[state=active]:bg-[#00D26A] data-[state=active]:text-white">
+        <TabsList className="grid w-full max-w-2xl grid-cols-4 h-12">
+          <TabsTrigger value="taxas" className="text-sm gap-1.5 data-[state=active]:bg-[#00D26A] data-[state=active]:text-white">
             <Percent className="w-4 h-4" />
             Taxas (MDR)
           </TabsTrigger>
-          <TabsTrigger value="tarifas" className="text-base gap-2 data-[state=active]:bg-[#00D26A] data-[state=active]:text-white">
+          <TabsTrigger value="tarifas" className="text-sm gap-1.5 data-[state=active]:bg-[#00D26A] data-[state=active]:text-white">
             <Receipt className="w-4 h-4" />
-            Tarifas (Fixas)
+            Tarifas
+          </TabsTrigger>
+          <TabsTrigger value="analise" className="text-sm gap-1.5 data-[state=active]:bg-[#00D26A] data-[state=active]:text-white">
+            <Activity className="w-4 h-4" />
+            Análise
+          </TabsTrigger>
+          <TabsTrigger value="otimizar" className="text-sm gap-1.5 data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+            <SparklesIcon className="w-4 h-4" />
+            Otimizar IA
           </TabsTrigger>
         </TabsList>
 
         {/* ==================== ABA TAXAS (MDR) ==================== */}
         <TabsContent value="taxas" className="space-y-6">
+
+          {/* B18: Pricing Transparency Decomposition */}
+          <PricingTransparencyCard />
           
           {/* Cards de Taxas por Modalidade */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -434,6 +459,11 @@ export default function Fees() {
               </div>
             </CardContent>
           </Card>
+
+          {/* B18: Pricing Tiers + Acquirer Routing + Industry Benchmarks */}
+          <PricingTiersCard />
+          <AcquirerRoutingCard />
+          <IndustryBenchmarksCard />
 
           {/* Simulador de Venda */}
           <Card className="border-2 border-[#00D26A]/20 bg-gradient-to-br from-[#00D26A]/5 to-white">
@@ -685,6 +715,32 @@ export default function Fees() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* ==================== ABA ANÁLISE (FeesAnalysis fundida) ==================== */}
+        <TabsContent value="analise" className="space-y-6">
+          <Card className="border-2 border-blue-200 bg-blue-50/40">
+            <CardContent className="p-4 flex items-center gap-3">
+              <Activity className="w-5 h-5 text-blue-600" />
+              <div className="flex-1">
+                <p className="text-sm font-bold text-blue-900">Análise Histórica de Tarifas</p>
+                <p className="text-[11px] text-blue-700">A análise completa mora em <strong>/FeesAnalysis</strong> — abra para ver charts, evolução e composição detalhada.</p>
+              </div>
+              <Button size="sm" variant="outline" className="border-blue-300" onClick={() => window.location.href = '/FeesAnalysis'}>
+                Abrir Análise Completa
+              </Button>
+            </CardContent>
+          </Card>
+
+          <EffectiveRateCard />
+          <IndustryBenchmarksCard />
+          <AcquirerRoutingCard />
+        </TabsContent>
+
+        {/* ==================== ABA OTIMIZAR IA ==================== */}
+        <TabsContent value="otimizar" className="space-y-6">
+          <FeesOptimizerIA />
+          <PricingTiersCard />
         </TabsContent>
       </Tabs>
     </div>

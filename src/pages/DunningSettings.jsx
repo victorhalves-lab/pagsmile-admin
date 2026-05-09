@@ -14,6 +14,7 @@ import SelectionButton from '@/components/ui/selection-button';
 import { toast } from 'sonner';
 
 import PageHeader from '@/components/common/PageHeader';
+import RecoveryAgentLinkBanner from '@/components/dunning/v2/RecoveryAgentLinkBanner';
 import RetryVisualEditor from '@/components/subscriptions/recurrence/RetryVisualEditor';
 import DunningTimelineViz from '@/components/subscriptions/dunning/DunningTimelineViz';
 import DunningCustomerPreview from '@/components/subscriptions/dunning/DunningCustomerPreview';
@@ -102,6 +103,7 @@ export default function DunningSettings() {
         </Card>
       )}
 
+      <RecoveryAgentLinkBanner />
       <DunningRiskAlert config={formData} />
       <DunningBenchmarkBar />
       <DunningTemplatesPicker onApply={applyTemplate} />

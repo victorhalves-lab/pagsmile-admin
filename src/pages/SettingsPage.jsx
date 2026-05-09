@@ -49,17 +49,35 @@ import {
   AlertDescription,
 } from '@/components/ui/alert';
 
+// B18 — Settings Workspace v2
+import SettingsSearchBar from '@/components/settings/v2/SettingsSearchBar';
+import SettingsHealthScore from '@/components/settings/v2/SettingsHealthScore';
+import HelenaSettingsRecommendations from '@/components/settings/v2/HelenaSettingsRecommendations';
+import PermissionsMatrixDrawer from '@/components/settings/v2/PermissionsMatrixDrawer';
+import IpAllowlistPanel from '@/components/settings/v2/IpAllowlistPanel';
+import SessionsManagementPanel from '@/components/settings/v2/SessionsManagementPanel';
+import SsoConfigPanel from '@/components/settings/v2/SsoConfigPanel';
+import AuditTrailDrawer from '@/components/settings/v2/AuditTrailDrawer';
+import ComplianceDashboard from '@/components/settings/v2/ComplianceDashboard';
+import FiscalSettingsPanel from '@/components/settings/v2/FiscalSettingsPanel';
+import { ShieldCheck, FileCheck, Building2 as Building2New, KeyRound } from 'lucide-react';
+
 export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState('account');
   const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [permissionsOpen, setPermissionsOpen] = useState(false);
+  const [auditOpen, setAuditOpen] = useState(false);
   const [inviteData, setInviteData] = useState({ email: '', name: '', role: 'viewer' });
 
   const sections = [
     { id: 'account', label: 'Dados da Conta', icon: Building2 },
     { id: 'users', label: 'Usuários e Permissões', icon: Users },
     { id: 'security', label: 'Segurança', icon: Shield },
+    { id: 'sso', label: 'SSO & Autenticação Avançada', icon: KeyRound, badge: 'Enterprise' },
     { id: 'bank', label: 'Contas Bancárias', icon: Landmark },
     { id: 'payments', label: 'Métodos de Pagamento', icon: CreditCard },
+    { id: 'fiscal', label: 'Fiscal & Tributário', icon: Building2New, badge: 'BR' },
+    { id: 'compliance', label: 'Compliance & LGPD', icon: ShieldCheck, badge: 'SOC 2' },
     { id: 'notifications', label: 'Notificações', icon: Bell },
     { id: 'preferences', label: 'Preferências', icon: Palette },
   ];
@@ -93,11 +111,27 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Configurações"
-        subtitle="Gerencie as configurações da sua conta"
+        subtitle="Settings Workspace · busca universal · health score · audit trail"
         breadcrumbs={[
           { label: 'Configurações', page: 'SettingsPage' }
         ]}
+        actions={
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setAuditOpen(true)}>
+              <History className="w-3.5 h-3.5 mr-1" /> Audit Trail
+            </Button>
+          </div>
+        }
       />
+
+      {/* Settings Workspace top: Search + Health Score + Helena */}
+      <div className="space-y-3">
+        <SettingsSearchBar onSelect={setActiveSection} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <SettingsHealthScore onAction={() => setActiveSection('security')} />
+          <HelenaSettingsRecommendations onSelect={setActiveSection} />
+        </div>
+      </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Sidebar */}
@@ -108,14 +142,24 @@ export default function SettingsPage() {
                 key={section.id}
                 onClick={() => setActiveSection(section.id)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  "w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                   activeSection === section.id
                     ? "bg-[#00D26A]/10 text-[#00D26A]"
                     : "text-gray-600 hover:bg-gray-50"
                 )}
               >
-                <section.icon className="w-5 h-5" />
-                {section.label}
+                <span className="flex items-center gap-3">
+                  <section.icon className="w-5 h-5" />
+                  {section.label}
+                </span>
+                {section.badge && (
+                  <Badge className={cn(
+                    "text-[9px] border-0 px-1.5",
+                    section.badge === 'Enterprise' && "bg-purple-100 text-purple-700",
+                    section.badge === 'BR' && "bg-amber-100 text-amber-700",
+                    section.badge === 'SOC 2' && "bg-emerald-100 text-emerald-700"
+                  )}>{section.badge}</Badge>
+                )}
               </button>
             ))}
           </div>
@@ -252,7 +296,12 @@ export default function SettingsPage() {
                 <Separator />
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Papéis (Roles)</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold">Papéis (Roles)</h3>
+                    <Button variant="outline" size="sm" onClick={() => setPermissionsOpen(true)}>
+                      <Shield className="w-3.5 h-3.5 mr-1" /> Matriz Granular RBAC
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {roles.map((role) => (
                       <div key={role.id} className="p-4 border border-gray-100 rounded-lg">
@@ -340,6 +389,17 @@ export default function SettingsPage() {
                       <Switch defaultChecked />
                     </div>
 
+                    <div className="flex items-center justify-between p-4 border border-purple-200 rounded-lg bg-purple-50/40">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">WebAuthn / Passkeys</p>
+                          <Badge className="bg-purple-100 text-purple-700 border-0 text-[9px]">Recomendado</Badge>
+                        </div>
+                        <p className="text-sm text-gray-500">Face ID, Touch ID, Windows Hello, YubiKey</p>
+                      </div>
+                      <Switch />
+                    </div>
+
                     <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg">
                       <div>
                         <p className="font-medium">Método de 2FA</p>
@@ -411,6 +471,12 @@ export default function SettingsPage() {
                     Ver Log de Auditoria
                   </Button>
                 </div>
+
+                <Separator />
+
+                {/* B18: IP Allowlist + Sessions Management */}
+                <IpAllowlistPanel />
+                <SessionsManagementPanel />
 
                 <Separator />
 
@@ -561,6 +627,18 @@ export default function SettingsPage() {
               </div>
             )}
 
+            {activeSection === 'sso' && (
+              <SsoConfigPanel />
+            )}
+
+            {activeSection === 'fiscal' && (
+              <FiscalSettingsPanel />
+            )}
+
+            {activeSection === 'compliance' && (
+              <ComplianceDashboard />
+            )}
+
             {activeSection === 'preferences' && (
               <div className="space-y-6">
                 <div>
@@ -699,6 +777,10 @@ export default function SettingsPage() {
           </div>
         </div>
       </SideDrawer>
+
+      {/* B18 Drawers */}
+      <PermissionsMatrixDrawer open={permissionsOpen} onOpenChange={setPermissionsOpen} />
+      <AuditTrailDrawer open={auditOpen} onOpenChange={setAuditOpen} />
     </div>
   );
 }
