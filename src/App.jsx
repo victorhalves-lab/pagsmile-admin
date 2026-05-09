@@ -15,6 +15,9 @@ import DevSandbox from './pages/DevSandbox';
 import DevDocs from './pages/DevDocs';
 import DevAppsMarketplace from './pages/DevAppsMarketplace';
 
+// Onboarding extras
+import SelectSegment from './pages/SelectSegment';
+
 // B22 - Tuna Orchestration & Multi-Method Pages (Admin Interno)
 import AdminIntMultiMethodCockpit from './pages/AdminIntMultiMethodCockpit';
 import AdminIntCrossMethodRecovery from './pages/AdminIntCrossMethodRecovery';
@@ -89,6 +92,9 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      {/* Onboarding extras */}
+      <Route path="/SelectSegment" element={<LayoutWrapper currentPageName="SelectSegment"><SelectSegment /></LayoutWrapper>} />
+
       {/* B16 - Developer Hub satellite pages */}
       <Route path="/DevStatusPage" element={<LayoutWrapper currentPageName="DevStatusPage"><DevStatusPage /></LayoutWrapper>} />
       <Route path="/DevChangelog" element={<LayoutWrapper currentPageName="DevChangelog"><DevChangelog /></LayoutWrapper>} />

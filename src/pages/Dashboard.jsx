@@ -50,6 +50,7 @@ import ProfileSwitcher, { useProfile } from '@/components/dashboard/ProfileSwitc
 import AlertsPanelEnhanced from '@/components/dashboard/AlertsPanelEnhanced';
 import OnboardingTour from '@/components/common/OnboardingTour';
 import ScheduledReportsModal from '@/components/common/ScheduledReportsModal';
+import QicCallToActionBanner from '@/components/dashboard/QicCallToActionBanner';
 
 // Container animado padrão
 const AnimatedSection = ({ children, delay = 0, className }) => (
@@ -122,6 +123,11 @@ export default function Dashboard() {
           </div>
         }
       />
+
+      {/* ZONA QIC — Cadastro de compliance pendente (banner em destaque) */}
+      <AnimatedSection>
+        <QicCallToActionBanner />
+      </AnimatedSection>
 
       {/* ZONA 0 — Alertas críticos */}
       {showSection('alerts') && (

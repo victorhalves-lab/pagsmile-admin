@@ -51,7 +51,7 @@ export default function AccountCreationStep1() {
   const handleVerify = () => {
     // Simulação - qualquer código funciona
     localStorage.setItem('onboarding_user', JSON.stringify(formData));
-    navigate(createPageUrl('PlanSelection'));
+    navigate(createPageUrl('SelectSegment'));
   };
 
   return (
