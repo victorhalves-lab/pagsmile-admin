@@ -6,25 +6,27 @@ import {
   Plus, 
   Eye, 
   MoreHorizontal,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  RefreshCw,
   Copy,
   Trash2,
   Play,
-  Pause
+  Pause,
+  Activity,
+  RefreshCw,
+  Zap,
+  Code as CodeIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import SideDrawer from '@/components/common/SideDrawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Progress } from '@/components/ui/progress';
@@ -36,28 +38,27 @@ import { toast } from 'sonner';
 import PageHeader from '@/components/common/PageHeader';
 import DataTable from '@/components/common/DataTable';
 import StatusBadge from '@/components/common/StatusBadge';
-
-const availableEvents = [
-  { id: 'transaction.approved', label: 'Transação Aprovada' },
-  { id: 'transaction.declined', label: 'Transação Recusada' },
-  { id: 'transaction.refunded', label: 'Transação Estornada' },
-  { id: 'chargeback.received', label: 'Chargeback Recebido' },
-  { id: 'chargeback.won', label: 'Chargeback Vencido' },
-  { id: 'chargeback.lost', label: 'Chargeback Perdido' },
-  { id: 'subscription.created', label: 'Assinatura Criada' },
-  { id: 'subscription.cancelled', label: 'Assinatura Cancelada' },
-  { id: 'subscription.payment_failed', label: 'Pagamento de Assinatura Falhou' },
-  { id: 'pix.received', label: 'Pix Recebido' },
-  { id: 'withdrawal.completed', label: 'Saque Concluído' },
-];
+import EventCatalogPicker from '@/components/integrations/webhooks/EventCatalogPicker';
+import WebhookLogsDrawer from '@/components/integrations/webhooks/WebhookLogsDrawer';
+import TestWebhookDialog from '@/components/integrations/webhooks/TestWebhookDialog';
+import WebhookHealthBadge from '@/components/integrations/webhooks/WebhookHealthBadge';
 
 export default function Webhooks() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newWebhook, setNewWebhook] = useState({
     name: '',
     url: '',
+    description: '',
     events: [],
+    tags: '',
+    auth_method: 'signature',
+    custom_headers: '',
+    retry_policy: 'exponential_5x',
+    filter_rules: '',
   });
+  const [logsOpen, setLogsOpen] = useState(false);
+  const [testOpen, setTestOpen] = useState(false);
+  const [activeWebhook, setActiveWebhook] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -76,19 +77,10 @@ export default function Webhooks() {
     onSuccess: () => {
       queryClient.invalidateQueries(['webhooks']);
       setIsCreateOpen(false);
-      setNewWebhook({ name: '', url: '', events: [] });
+      setNewWebhook({ name: '', url: '', description: '', events: [], tags: '', auth_method: 'signature', custom_headers: '', retry_policy: 'exponential_5x', filter_rules: '' });
       toast.success('Webhook criado com sucesso!');
     }
   });
-
-  const toggleEvent = (eventId) => {
-    setNewWebhook(prev => ({
-      ...prev,
-      events: prev.events.includes(eventId)
-        ? prev.events.filter(e => e !== eventId)
-        : [...prev.events, eventId]
-    }));
-  };
 
   const columns = [
     {
@@ -107,9 +99,12 @@ export default function Webhooks() {
               row.status === 'failing' ? 'text-red-600' : 'text-gray-400'
             )} />
           </div>
-          <div>
-            <p className="font-medium text-gray-900 text-sm">{value}</p>
-            <p className="text-xs text-gray-500 truncate max-w-[200px]">{row.url}</p>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <p className="font-medium text-gray-900 dark:text-slate-100 text-sm truncate">{value}</p>
+              <WebhookHealthBadge successRate={row.success_rate || 100} />
+            </div>
+            <p className="text-xs text-gray-500 truncate max-w-[280px]">{row.url}</p>
           </div>
         </div>
       )
@@ -160,7 +155,7 @@ export default function Webhooks() {
       key: 'last_sent_at',
       label: 'Último Envio',
       render: (value) => value ? (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-gray-600 dark:text-slate-400">
           {format(new Date(value), 'dd/MM HH:mm', { locale: ptBR })}
         </span>
       ) : 'Nunca'
@@ -176,21 +171,26 @@ export default function Webhooks() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Eye className="w-4 h-4 mr-2" />
-              Ver detalhes
+            <DropdownMenuItem onClick={() => { setActiveWebhook(row); setLogsOpen(true); }}>
+              <Activity className="w-4 h-4 mr-2" />
+              Ver logs & detalhes
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Play className="w-4 h-4 mr-2" />
-              Testar
+            <DropdownMenuItem onClick={() => { setActiveWebhook(row); setTestOpen(true); }}>
+              <Zap className="w-4 h-4 mr-2" />
+              Testar evento
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => toast.success('Replay 24h iniciado')}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Replay últimas 24h
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => {
-              navigator.clipboard.writeText(row.secret);
+              navigator.clipboard.writeText(row.secret || '');
               toast.success('Secret copiado!');
             }}>
               <Copy className="w-4 h-4 mr-2" />
               Copiar Secret
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem>
               {row.status === 'active' ? (
                 <>
@@ -216,33 +216,62 @@ export default function Webhooks() {
 
   const handleCreate = () => {
     if (!newWebhook.name || !newWebhook.url || newWebhook.events.length === 0) {
-      toast.error('Preencha todos os campos obrigatórios');
+      toast.error('Nome, URL e ao menos 1 evento são obrigatórios');
       return;
     }
     createMutation.mutate(newWebhook);
   };
 
+  const totalDeliveries = webhooks.reduce((s, w) => s + (w.total_sent || 0), 0);
+  const totalFailed = webhooks.reduce((s, w) => s + (w.total_failed || 0), 0);
+  const avgSuccess = webhooks.length > 0 ? Math.round(webhooks.reduce((s, w) => s + (w.success_rate || 100), 0) / webhooks.length) : 100;
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Webhooks"
-        subtitle="Configure notificações para seus sistemas"
+        subtitle="Configure notificações HTTP em tempo real para seus sistemas"
         breadcrumbs={[
           { label: 'Integrações', page: 'Integrations' },
           { label: 'Webhooks', page: 'Webhooks' }
         ]}
         actions={
-          <Button 
-            className="bg-[#00D26A] hover:bg-[#00A854]"
-            onClick={() => setIsCreateOpen(true)}
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Webhook
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => toast.info('Exemplos de código em 6 linguagens em breve')}>
+              <CodeIcon className="w-4 h-4 mr-1" /> Code samples
+            </Button>
+            <Button 
+              className="bg-[#2bc196] hover:bg-[#239b7a]"
+              onClick={() => setIsCreateOpen(true)}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Novo Webhook
+            </Button>
+          </div>
         }
       />
 
-      {/* Info Card */}
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="rounded-xl border bg-white dark:bg-slate-900 p-4">
+          <p className="text-[10px] text-slate-500 uppercase tracking-wide">Endpoints Ativos</p>
+          <p className="text-2xl font-bold mt-1">{webhooks.filter(w => w.status === 'active').length}</p>
+        </div>
+        <div className="rounded-xl border bg-white dark:bg-slate-900 p-4">
+          <p className="text-[10px] text-slate-500 uppercase tracking-wide">Entregas (24h)</p>
+          <p className="text-2xl font-bold mt-1">{totalDeliveries.toLocaleString('pt-BR')}</p>
+        </div>
+        <div className="rounded-xl border bg-white dark:bg-slate-900 p-4">
+          <p className="text-[10px] text-slate-500 uppercase tracking-wide">Taxa de Sucesso</p>
+          <p className={cn('text-2xl font-bold mt-1', avgSuccess >= 95 ? 'text-emerald-600' : avgSuccess >= 80 ? 'text-amber-600' : 'text-red-600')}>{avgSuccess}%</p>
+        </div>
+        <div className="rounded-xl border bg-white dark:bg-slate-900 p-4">
+          <p className="text-[10px] text-slate-500 uppercase tracking-wide">Falhas (24h)</p>
+          <p className="text-2xl font-bold mt-1 text-red-600">{totalFailed}</p>
+        </div>
+      </div>
+
+      {/* Info Card - kept verbatim */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
         <div className="flex items-start gap-3">
           <Webhook className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -271,20 +300,21 @@ export default function Webhooks() {
         emptyMessage="Nenhum webhook configurado"
       />
 
-      {/* Create Side Drawer */}
+      {/* Create Side Drawer - enriched */}
       <SideDrawer
         open={isCreateOpen}
         onOpenChange={setIsCreateOpen}
         title="Novo Webhook"
-        description="Configure uma URL para receber notificações de eventos"
+        description="Configure URL, eventos e políticas avançadas"
         icon={Webhook}
+        size="lg"
         footer={
           <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
               Cancelar
             </Button>
             <Button 
-              className="bg-[#00D26A] hover:bg-[#00A854]"
+              className="bg-[#2bc196] hover:bg-[#239b7a]"
               onClick={handleCreate}
               disabled={createMutation.isPending}
             >
@@ -293,47 +323,123 @@ export default function Webhooks() {
           </div>
         }
       >
-        <div className="space-y-4">
-          <div>
-            <Label>Nome *</Label>
-            <Input
-              placeholder="Ex: Meu Sistema"
-              value={newWebhook.name}
-              onChange={(e) => setNewWebhook({ ...newWebhook, name: e.target.value })}
-            />
-          </div>
+        <Tabs defaultValue="basic" className="space-y-4">
+          <TabsList className="w-full grid grid-cols-3 h-9">
+            <TabsTrigger value="basic" className="text-xs">Básico</TabsTrigger>
+            <TabsTrigger value="events" className="text-xs">Eventos</TabsTrigger>
+            <TabsTrigger value="advanced" className="text-xs">Avançado</TabsTrigger>
+          </TabsList>
 
-          <div>
-            <Label>URL de Destino *</Label>
-            <Input
-              placeholder="https://seu-sistema.com/webhook"
-              value={newWebhook.url}
-              onChange={(e) => setNewWebhook({ ...newWebhook, url: e.target.value })}
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Deve ser uma URL HTTPS acessível publicamente
-            </p>
-          </div>
-
-          <div>
-            <Label className="mb-3 block">Eventos para Notificar *</Label>
-            <div className="grid grid-cols-1 gap-2">
-              {availableEvents.map((event) => (
-                <div key={event.id} className="flex items-center gap-2">
-                  <Checkbox
-                    id={event.id}
-                    checked={newWebhook.events.includes(event.id)}
-                    onCheckedChange={() => toggleEvent(event.id)}
-                  />
-                  <label htmlFor={event.id} className="text-sm cursor-pointer">
-                    {event.label}
-                  </label>
-                </div>
-              ))}
+          <TabsContent value="basic" className="space-y-4">
+            <div>
+              <Label>Nome *</Label>
+              <Input
+                placeholder="Ex: CRM Sync"
+                value={newWebhook.name}
+                onChange={(e) => setNewWebhook({ ...newWebhook, name: e.target.value })}
+              />
             </div>
-          </div>
-        </div>
+
+            <div>
+              <Label>URL de Destino *</Label>
+              <Input
+                placeholder="https://seu-sistema.com/webhook"
+                value={newWebhook.url}
+                onChange={(e) => setNewWebhook({ ...newWebhook, url: e.target.value })}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Deve ser uma URL HTTPS acessível publicamente
+              </p>
+            </div>
+
+            <div>
+              <Label>Descrição (opcional)</Label>
+              <Textarea
+                placeholder="Para que serve este webhook?"
+                value={newWebhook.description}
+                onChange={(e) => setNewWebhook({ ...newWebhook, description: e.target.value })}
+                className="min-h-[60px]"
+              />
+            </div>
+
+            <div>
+              <Label className="text-xs">Tags (opcional)</Label>
+              <Input
+                placeholder="crm, billing, marketing"
+                value={newWebhook.tags}
+                onChange={(e) => setNewWebhook({ ...newWebhook, tags: e.target.value })}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="events">
+            <Label className="mb-2 block">Eventos para Notificar *</Label>
+            <EventCatalogPicker
+              selected={newWebhook.events}
+              onChange={(events) => setNewWebhook({ ...newWebhook, events })}
+            />
+          </TabsContent>
+
+          <TabsContent value="advanced" className="space-y-4">
+            <div>
+              <Label className="text-xs">Filtros Condicionais (opcional)</Label>
+              <Input
+                placeholder="Ex: amount > 1000 AND currency = BRL"
+                value={newWebhook.filter_rules}
+                onChange={(e) => setNewWebhook({ ...newWebhook, filter_rules: e.target.value })}
+              />
+              <p className="text-xs text-gray-500 mt-1">Só notifica eventos que matcham esta condição</p>
+            </div>
+
+            <div>
+              <Label className="text-xs">Política de Retry</Label>
+              <select
+                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                value={newWebhook.retry_policy}
+                onChange={(e) => setNewWebhook({ ...newWebhook, retry_policy: e.target.value })}
+              >
+                <option value="exponential_5x">Exponential backoff · 5 tentativas (recomendado)</option>
+                <option value="linear_3x">Linear · 3 tentativas</option>
+                <option value="aggressive_10x">Agressivo · 10 tentativas</option>
+                <option value="only_5xx">Só fazer retry em erros 5xx</option>
+                <option value="none">Sem retry</option>
+              </select>
+            </div>
+
+            <div>
+              <Label className="text-xs">Auth Method</Label>
+              <select
+                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                value={newWebhook.auth_method}
+                onChange={(e) => setNewWebhook({ ...newWebhook, auth_method: e.target.value })}
+              >
+                <option value="signature">HMAC Signature (padrão)</option>
+                <option value="bearer">Bearer Token</option>
+                <option value="basic">Basic Auth</option>
+                <option value="mtls">mTLS / Client Certificate</option>
+              </select>
+            </div>
+
+            <div>
+              <Label className="text-xs">Custom Headers (opcional, JSON)</Label>
+              <Textarea
+                placeholder='{"X-Custom-Header": "value"}'
+                value={newWebhook.custom_headers}
+                onChange={(e) => setNewWebhook({ ...newWebhook, custom_headers: e.target.value })}
+                className="min-h-[60px] font-mono text-xs"
+              />
+            </div>
+
+            <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800">
+              💡 <strong>Templates prontos:</strong> Slack · Discord · Teams · Email · PagerDuty
+            </div>
+          </TabsContent>
+        </Tabs>
       </SideDrawer>
+
+      {/* Drawers / Dialogs */}
+      <WebhookLogsDrawer open={logsOpen} onOpenChange={setLogsOpen} webhook={activeWebhook} />
+      <TestWebhookDialog open={testOpen} onOpenChange={setTestOpen} webhook={activeWebhook} />
     </div>
   );
 }

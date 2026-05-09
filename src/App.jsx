@@ -8,6 +8,13 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
+// B16 - Developer Hub satellite pages
+import DevStatusPage from './pages/DevStatusPage';
+import DevChangelog from './pages/DevChangelog';
+import DevSandbox from './pages/DevSandbox';
+import DevDocs from './pages/DevDocs';
+import DevAppsMarketplace from './pages/DevAppsMarketplace';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -58,6 +65,12 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      {/* B16 - Developer Hub satellite pages */}
+      <Route path="/DevStatusPage" element={<LayoutWrapper currentPageName="DevStatusPage"><DevStatusPage /></LayoutWrapper>} />
+      <Route path="/DevChangelog" element={<LayoutWrapper currentPageName="DevChangelog"><DevChangelog /></LayoutWrapper>} />
+      <Route path="/DevSandbox" element={<LayoutWrapper currentPageName="DevSandbox"><DevSandbox /></LayoutWrapper>} />
+      <Route path="/DevDocs" element={<LayoutWrapper currentPageName="DevDocs"><DevDocs /></LayoutWrapper>} />
+      <Route path="/DevAppsMarketplace" element={<LayoutWrapper currentPageName="DevAppsMarketplace"><DevAppsMarketplace /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
