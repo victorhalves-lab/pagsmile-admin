@@ -315,6 +315,7 @@ const getAdminInternoMenuItems = (t) => [
       { label: 'Gestão Comerciantes & Subcontas', page: 'AdminIntMerchantsOverview' },
       { label: t('menu.dashboard'), page: 'AdminIntMerchants' },
       { label: t('menu_admin.merchant_list'), page: 'AdminIntMerchantsList' },
+      { label: '✨ Coverage Matrix (Split)', page: 'AdminIntMerchantCoverageMatrix' },
       { label: t('menu_admin.profile_360'), page: 'AdminIntMerchantProfile' },
       { label: t('menu.subaccounts'), page: 'AdminIntSubaccounts' },
       { label: t('menu_admin.limit_requests'), page: 'AdminIntLimitRequests' },
@@ -332,6 +333,9 @@ const getAdminInternoMenuItems = (t) => [
       { label: t('menu.dashboard'), page: 'AdminIntTransactionsDashboard' },
       { label: t('menu_admin.transaction_list'), page: 'AdminIntTransactionsList' },
       { label: t('menu_admin.orchestration'), page: 'AdminIntOrchestration' },
+      { label: '✨ Multi-Method Cockpit', page: 'AdminIntMultiMethodCockpit' },
+      { label: '✨ Cross-Method Recovery', page: 'AdminIntCrossMethodRecovery' },
+      { label: '✨ Connection Health', page: 'AdminIntConnectionHealth' },
       { label: t('menu_admin.bin_analysis'), page: 'AdminIntBINAnalysis' },
       { label: t('menu_admin.retry_intelligence'), page: 'AdminIntRetryIntelligence' },
       { label: t('menu_admin.batch_processing'), page: 'AdminIntBatchProcessing' },
@@ -498,6 +502,8 @@ const internetBankingPages = [
 // Admin Interno pages
 const adminInternoPages = [
   'AdminIntDashboard',
+  // B22 - Tuna Orchestration & Multi-Method
+  'AdminIntMultiMethodCockpit', 'AdminIntCrossMethodRecovery', 'AdminIntConnectionHealth', 'AdminIntMerchantCoverageMatrix',
   'AdminIntMerchantsOverview',
   'AdminIntSubaccountFullDetail',
   'AdminIntSubaccountTransactions',

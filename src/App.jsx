@@ -15,6 +15,12 @@ import DevSandbox from './pages/DevSandbox';
 import DevDocs from './pages/DevDocs';
 import DevAppsMarketplace from './pages/DevAppsMarketplace';
 
+// B22 - Tuna Orchestration & Multi-Method Pages (Admin Interno)
+import AdminIntMultiMethodCockpit from './pages/AdminIntMultiMethodCockpit';
+import AdminIntCrossMethodRecovery from './pages/AdminIntCrossMethodRecovery';
+import AdminIntConnectionHealth from './pages/AdminIntConnectionHealth';
+import AdminIntMerchantCoverageMatrix from './pages/AdminIntMerchantCoverageMatrix';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -71,6 +77,11 @@ const AuthenticatedApp = () => {
       <Route path="/DevSandbox" element={<LayoutWrapper currentPageName="DevSandbox"><DevSandbox /></LayoutWrapper>} />
       <Route path="/DevDocs" element={<LayoutWrapper currentPageName="DevDocs"><DevDocs /></LayoutWrapper>} />
       <Route path="/DevAppsMarketplace" element={<LayoutWrapper currentPageName="DevAppsMarketplace"><DevAppsMarketplace /></LayoutWrapper>} />
+      {/* B22 - Tuna Orchestration & Multi-Method (Admin Interno) */}
+      <Route path="/AdminIntMultiMethodCockpit" element={<LayoutWrapper currentPageName="AdminIntMultiMethodCockpit"><AdminIntMultiMethodCockpit /></LayoutWrapper>} />
+      <Route path="/AdminIntCrossMethodRecovery" element={<LayoutWrapper currentPageName="AdminIntCrossMethodRecovery"><AdminIntCrossMethodRecovery /></LayoutWrapper>} />
+      <Route path="/AdminIntConnectionHealth" element={<LayoutWrapper currentPageName="AdminIntConnectionHealth"><AdminIntConnectionHealth /></LayoutWrapper>} />
+      <Route path="/AdminIntMerchantCoverageMatrix" element={<LayoutWrapper currentPageName="AdminIntMerchantCoverageMatrix"><AdminIntMerchantCoverageMatrix /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
