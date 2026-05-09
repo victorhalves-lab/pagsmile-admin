@@ -32,8 +32,6 @@ import AdminIntContractEffectsRegistry from './pages/AdminIntContractEffectsRegi
 import AdminIntMerchantGroups from './pages/AdminIntMerchantGroups';
 import AdminIntMerchantGroupDetail from './pages/AdminIntMerchantGroupDetail';
 import AdminIntMerchantGroupCreate from './pages/AdminIntMerchantGroupCreate';
-import AdminIntCompanies from './pages/AdminIntCompanies';
-import AdminIntCompanyDetail from './pages/AdminIntCompanyDetail';
 import AdminIntBlockageFlow from './pages/AdminIntBlockageFlow';
 import AdminIntUnblockFlow from './pages/AdminIntUnblockFlow';
 import AdminIntSuspensionFlow from './pages/AdminIntSuspensionFlow';
@@ -74,6 +72,15 @@ import MultiMethodCheckoutConfig from './pages/MultiMethodCheckoutConfig';
 import RecoveryLadderConfig from './pages/RecoveryLadderConfig';
 import SplitDesignerPage from './pages/SplitDesignerPage';
 import SplitTransparencyDashboard from './pages/SplitTransparencyDashboard';
+
+// ====== Mentor — Wave B/C/D (Empresas / Representantes / Projetos) ======
+import AdminIntCompanies from './pages/AdminIntCompanies';
+import AdminIntCompanyDetail from './pages/AdminIntCompanyDetail';
+import AdminIntSalesReps from './pages/AdminIntSalesReps';
+import AdminIntSalesRepDetail from './pages/AdminIntSalesRepDetail';
+import AdminIntProjects from './pages/AdminIntProjects';
+import AdminIntProjectDetail from './pages/AdminIntProjectDetail';
+import AdminIntProjectsConsolidatedDashboard from './pages/AdminIntProjectsConsolidatedDashboard';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -142,8 +149,6 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntMerchantGroups" element={<LayoutWrapper currentPageName="AdminIntMerchantGroups"><AdminIntMerchantGroups /></LayoutWrapper>} />
       <Route path="/AdminIntMerchantGroupDetail" element={<LayoutWrapper currentPageName="AdminIntMerchantGroupDetail"><AdminIntMerchantGroupDetail /></LayoutWrapper>} />
       <Route path="/AdminIntMerchantGroupCreate" element={<LayoutWrapper currentPageName="AdminIntMerchantGroupCreate"><AdminIntMerchantGroupCreate /></LayoutWrapper>} />
-      <Route path="/AdminIntCompanies" element={<LayoutWrapper currentPageName="AdminIntCompanies"><AdminIntCompanies /></LayoutWrapper>} />
-      <Route path="/AdminIntCompanyDetail" element={<LayoutWrapper currentPageName="AdminIntCompanyDetail"><AdminIntCompanyDetail /></LayoutWrapper>} />
       <Route path="/AdminIntBlockageFlow" element={<LayoutWrapper currentPageName="AdminIntBlockageFlow"><AdminIntBlockageFlow /></LayoutWrapper>} />
       <Route path="/AdminIntUnblockFlow" element={<LayoutWrapper currentPageName="AdminIntUnblockFlow"><AdminIntUnblockFlow /></LayoutWrapper>} />
       <Route path="/AdminIntSuspensionFlow" element={<LayoutWrapper currentPageName="AdminIntSuspensionFlow"><AdminIntSuspensionFlow /></LayoutWrapper>} />
@@ -190,6 +195,16 @@ const AuthenticatedApp = () => {
       <Route path="/RecoveryLadderConfig" element={<LayoutWrapper currentPageName="RecoveryLadderConfig"><RecoveryLadderConfig /></LayoutWrapper>} />
       <Route path="/SplitDesignerPage" element={<LayoutWrapper currentPageName="SplitDesignerPage"><SplitDesignerPage /></LayoutWrapper>} />
       <Route path="/SplitTransparencyDashboard" element={<LayoutWrapper currentPageName="SplitTransparencyDashboard"><SplitTransparencyDashboard /></LayoutWrapper>} />
+
+      {/* ====== Mentor: Empresas / Representantes / Projetos ====== */}
+      <Route path="/AdminIntCompanies" element={<LayoutWrapper currentPageName="AdminIntCompanies"><AdminIntCompanies /></LayoutWrapper>} />
+      <Route path="/AdminIntCompanyDetail" element={<LayoutWrapper currentPageName="AdminIntCompanyDetail"><AdminIntCompanyDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntSalesReps" element={<LayoutWrapper currentPageName="AdminIntSalesReps"><AdminIntSalesReps /></LayoutWrapper>} />
+      <Route path="/AdminIntSalesRepDetail" element={<LayoutWrapper currentPageName="AdminIntSalesRepDetail"><AdminIntSalesRepDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntProjects" element={<LayoutWrapper currentPageName="AdminIntProjects"><AdminIntProjects /></LayoutWrapper>} />
+      <Route path="/AdminIntProjectDetail" element={<LayoutWrapper currentPageName="AdminIntProjectDetail"><AdminIntProjectDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntProjectsConsolidatedDashboard" element={<LayoutWrapper currentPageName="AdminIntProjectsConsolidatedDashboard"><AdminIntProjectsConsolidatedDashboard /></LayoutWrapper>} />
+
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

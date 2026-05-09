@@ -333,9 +333,20 @@ const getAdminInternoMenuItems = (t) => [
       { label: t('menu_admin.groups'), page: 'AdminIntMerchantGroups' },
       { label: t('menu_admin.tags'), page: 'AdminIntMerchantTags' },
       { label: t('menu.reports'), page: 'AdminIntMerchantReports' },
-      { label: 'Empresas Controladoras', page: 'AdminIntCompanies' },
       { label: 'Pipeline de Onboarding', page: 'AdminIntMerchantOnboardingPipeline' },
       { label: 'Funnel Analytics', page: 'AdminIntMerchantOnboardingFunnelAnalytics' },
+    ]
+  },
+  {
+    id: 'estrutura',
+    label: 'Estrutura',
+    icon: Building2,
+    page: 'AdminIntCompanies',
+    submenu: [
+      { label: '🏢 Empresas Controladoras', page: 'AdminIntCompanies' },
+      { label: '👥 Representantes Comerciais', page: 'AdminIntSalesReps' },
+      { label: '🏗 Projetos (Multi-tenant)', page: 'AdminIntProjects' },
+      { label: '📊 Dashboard Consolidado', page: 'AdminIntProjectsConsolidatedDashboard' },
     ]
   },
   {
@@ -590,12 +601,17 @@ const adminInternoPages = [
   'AdminIntAcquirerSwitchFlow', 'AdminIntMccChangePreCheck',
   'AdminIntMerchantOnboardingPipeline', 'AdminIntMerchantOnboardingFunnelAnalytics',
   'AdminIntKycAnalysisQueue',
+  // Mentor — Empresas / Representantes / Projetos
+  'AdminIntCompanies', 'AdminIntCompanyDetail',
+  'AdminIntSalesReps', 'AdminIntSalesRepDetail',
+  'AdminIntProjects', 'AdminIntProjectDetail', 'AdminIntProjectsConsolidatedDashboard',
 ];
 
 import { Sun, Moon } from 'lucide-react';
 import { getLogoUrlByTheme } from '@/components/utils/branding';
 import CommandPalette from '@/components/common/CommandPalette';
 import DemoModeBanner from '@/components/common/DemoModeBanner';
+import ProjectSwitcher from '@/components/mentor/projects/ProjectSwitcher';
 // DIAWidget removed as it is now integrated into the header panel
 
 export default function Layout({ children, currentPageName }) {
@@ -1115,6 +1131,9 @@ export default function Layout({ children, currentPageName }) {
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-purple-600" />
                   <span className="font-semibold text-slate-700 dark:text-slate-200">Admin Interno</span>
+                  <div className="ml-3 hidden md:block">
+                    <ProjectSwitcher />
+                  </div>
                 </div>
               )}
             </div>
