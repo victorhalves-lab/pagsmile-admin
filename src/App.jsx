@@ -18,6 +18,9 @@ import DevAppsMarketplace from './pages/DevAppsMarketplace';
 // Onboarding extras
 import SelectSegment from './pages/SelectSegment';
 
+// Mentor Roadmap (análise de implementação front-end)
+import AdminIntMentorRoadmap from './pages/AdminIntMentorRoadmap';
+
 // B22 - Tuna Orchestration & Multi-Method Pages (Admin Interno)
 import AdminIntMultiMethodCockpit from './pages/AdminIntMultiMethodCockpit';
 import AdminIntCrossMethodRecovery from './pages/AdminIntCrossMethodRecovery';
@@ -94,6 +97,9 @@ const AuthenticatedApp = () => {
       ))}
       {/* Onboarding extras */}
       <Route path="/SelectSegment" element={<LayoutWrapper currentPageName="SelectSegment"><SelectSegment /></LayoutWrapper>} />
+
+      {/* Mentor Roadmap */}
+      <Route path="/AdminIntMentorRoadmap" element={<LayoutWrapper currentPageName="AdminIntMentorRoadmap"><AdminIntMentorRoadmap /></LayoutWrapper>} />
 
       {/* B16 - Developer Hub satellite pages */}
       <Route path="/DevStatusPage" element={<LayoutWrapper currentPageName="DevStatusPage"><DevStatusPage /></LayoutWrapper>} />
