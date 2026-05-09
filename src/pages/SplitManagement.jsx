@@ -7,6 +7,10 @@ import SplitFlowDiagram from '@/components/financial/v2/SplitFlowDiagram';
 import SplitSimulator from '@/components/financial/v2/SplitSimulator';
 import SplitTemplatesPicker from '@/components/financial/v2/SplitTemplatesPicker';
 import RuleConditionsBuilder from '@/components/financial/v2/RuleConditionsBuilder';
+import MentorSplitTypeSelector from '@/components/mentor/split/MentorSplitTypeSelector';
+import MentorScaledSplitBuilder from '@/components/mentor/split/MentorScaledSplitBuilder';
+import MentorConditionalSplitBuilder from '@/components/mentor/split/MentorConditionalSplitBuilder';
+import MentorSplitVigencyFields from '@/components/mentor/split/MentorSplitVigencyFields';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -63,7 +67,16 @@ export default function SplitManagement() {
     chargeback_liable: 'seller',
     is_default: false,
     recipients: [{ name: '', subaccount_id: '', type: 'percentage', value: 0 }],
-    conditions: []
+    conditions: [],
+    // Mentor extras
+    scaled_tiers: [],
+    conditional_config: {},
+    mentor_lifecycle: {
+      vigency_start: '',
+      vigency_end: '',
+      lifecycle_status: 'active',
+      charge_processing_fee: 'liquid',
+    },
   });
 
   const { data: rules = [], isLoading } = useQuery({
@@ -389,31 +402,22 @@ export default function SplitManagement() {
           <div className="space-y-6 py-4">
             {/* Basic Info */}
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Nome da Regra *</Label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="Ex: Split Marketplace"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Tipo de Split</Label>
-                  <Select
-                    value={formData.split_type}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, split_type: value }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="percentage">Percentual</SelectItem>
-                      <SelectItem value="fixed">Valor Fixo</SelectItem>
-                      <SelectItem value="mixed">Misto</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="space-y-2">
+                <Label>Nome da Regra *</Label>
+                <Input
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Ex: Split Marketplace"
+                />
+              </div>
+
+              {/* Mentor: Seletor visual de tipo (4 tipos) */}
+              <div className="space-y-2">
+                <Label>Tipo de Regra</Label>
+                <MentorSplitTypeSelector
+                  value={formData.split_type}
+                  onChange={(v) => setFormData(prev => ({ ...prev, split_type: v }))}
+                />
               </div>
 
               <div className="space-y-2">
@@ -426,6 +430,26 @@ export default function SplitManagement() {
                 />
               </div>
             </div>
+
+            {/* Mentor: builders condicionais por tipo */}
+            {formData.split_type === 'scaled' && (
+              <MentorScaledSplitBuilder
+                tiers={formData.scaled_tiers}
+                onChange={(tiers) => setFormData(prev => ({ ...prev, scaled_tiers: tiers }))}
+              />
+            )}
+            {formData.split_type === 'conditional' && (
+              <MentorConditionalSplitBuilder
+                value={formData.conditional_config}
+                onChange={(config) => setFormData(prev => ({ ...prev, conditional_config: config }))}
+              />
+            )}
+
+            {/* Mentor: vigência + status + bruto/líquido */}
+            <MentorSplitVigencyFields
+              value={formData.mentor_lifecycle}
+              onChange={(lc) => setFormData(prev => ({ ...prev, mentor_lifecycle: lc }))}
+            />
 
             {/* Recipients */}
             <div className="space-y-3">
