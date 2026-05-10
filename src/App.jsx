@@ -162,6 +162,7 @@ import MyCommunicationsCenter from './pages/MyCommunicationsCenter';
 
 // ====== Compliance Onboarding (replicado do app pagsmile-onboarding) ======
 import AdminIntComplianceDashboard from './pages/AdminIntComplianceDashboard';
+import AdminIntComplianceLinks from './pages/AdminIntComplianceLinks';
 
 // ====== Entrega 10 — Operacional Self-Service (Admin Sub) ======
 import MyLimitRequest from './pages/MyLimitRequest';
@@ -378,6 +379,7 @@ const AuthenticatedApp = () => {
 
       {/* ====== Compliance Onboarding (replicado do app pagsmile-onboarding) ====== */}
       <Route path="/AdminIntComplianceDashboard" element={<LayoutWrapper currentPageName="AdminIntComplianceDashboard"><AdminIntComplianceDashboard /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceLinks" element={<LayoutWrapper currentPageName="AdminIntComplianceLinks"><AdminIntComplianceLinks /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
