@@ -314,9 +314,16 @@ export default function CheckoutBuilder() {
               <Redo2 className="w-4 h-4" />
             </Button>
             <div className="h-6 w-px bg-gray-200 mx-1" />
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const id = checkoutId || 'demo';
+                window.open(`/CheckoutPreview?id=${id}`, '_blank');
+              }}
+            >
               <Eye className="w-4 h-4 mr-2" />
-              Preview
+              Ver como cliente
             </Button>
             <Button size="sm" onClick={handleSave} disabled={isSaving || !isDirty} className="bg-[#2bc196] hover:bg-[#25a880]">
               <Save className="w-4 h-4 mr-2" />

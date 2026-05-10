@@ -75,7 +75,12 @@ export default function CheckoutCardEnhanced({ checkout, selected, onToggleSelec
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-52">
-              <DropdownMenuItem><Eye className="w-4 h-4 mr-2" /> Visualizar</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => window.open(`/CheckoutPreview?id=${checkout.id}`, '_blank')}>
+                <Eye className="w-4 h-4 mr-2" /> Ver como cliente
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => window.open(`/CheckoutPreview?id=${checkout.id}&public=1`, '_blank')}>
+                <ExternalLink className="w-4 h-4 mr-2" /> Abrir link público
+              </DropdownMenuItem>
               <DropdownMenuItem><Pencil className="w-4 h-4 mr-2" /> Editar</DropdownMenuItem>
               <DropdownMenuItem onClick={() => toast.success('Checkout duplicado')}>
                 <CopyIcon className="w-4 h-4 mr-2" /> Duplicar
