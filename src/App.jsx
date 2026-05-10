@@ -18,6 +18,9 @@ import DevAppsMarketplace from './pages/DevAppsMarketplace';
 // Onboarding extras
 import SelectSegment from './pages/SelectSegment';
 
+// Telemarketing (MOTO Sale)
+import TelemarketingSale from './pages/TelemarketingSale';
+
 // Recon Agents Cockpit
 import AdminIntReconAgentsCockpit from './pages/AdminIntReconAgentsCockpit';
 import AdminIntReconInbox from './pages/AdminIntReconInbox';
@@ -256,6 +259,9 @@ const AuthenticatedApp = () => {
       ))}
       {/* Onboarding extras */}
       <Route path="/SelectSegment" element={<LayoutWrapper currentPageName="SelectSegment"><SelectSegment /></LayoutWrapper>} />
+
+      {/* Telemarketing (MOTO Sale) */}
+      <Route path="/TelemarketingSale" element={<LayoutWrapper currentPageName="TelemarketingSale"><TelemarketingSale /></LayoutWrapper>} />
 
       {/* Recon Agents Cockpit */}
       <Route path="/AdminIntReconAgentsCockpit" element={<LayoutWrapper currentPageName="AdminIntReconAgentsCockpit"><AdminIntReconAgentsCockpit /></LayoutWrapper>} />
