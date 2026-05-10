@@ -401,6 +401,8 @@ const getAdminInternoMenuItems = (t) => [
     page: 'AdminIntFinancialDashboard',
     submenu: [
       { label: t('menu.dashboard'), page: 'AdminIntFinancialDashboard' },
+      { label: '✨ Receivables Ledger', page: 'AdminIntReceivablesLedger' },
+      { label: '✨ Ajustes Manuais', page: 'AdminIntManualAdjustments' },
       { label: '✨ Reconciliation Hub', page: 'AdminIntReconciliationHub' },
       { label: '✨ Settlement Forecasting', page: 'AdminIntSettlementForecasting' },
       { label: t('menu_admin.financial_results'), page: 'AdminIntFinancialResults' },
@@ -573,7 +575,7 @@ const adminInternoPages = [
   'AdminIntSubaccountDetail', 'AdminIntKYCQueue', 'AdminIntKycAnalysis',
   'AdminIntMerchants', 'AdminIntMerchantProfile', 'AdminIntSubaccounts', 'AdminIntMerchantsList', 'AdminIntNewMerchant', 'AdminIntMerchantGroups', 'AdminIntMerchantTags', 'AdminIntMerchantReports', 'AdminIntLimitRequests',
   'AdminIntTransactions', 'AdminIntSettlement', 'AdminIntReconciliation', 'AdminIntAnticipation', 'AdminIntTransactionsDashboard', 'AdminIntTransactionsList', 'AdminIntTransactionDetail', 'AdminIntBatchProcessing', 'AdminIntTransactionReports', 'AdminIntOrchestration', 'AdminIntBINAnalysis', 'AdminIntRetryIntelligence',
-  'AdminIntFinancialDashboard', 'AdminIntFinancialResults', 'AdminIntClientProfitability', 'AdminIntClientSplitDetail', 'AdminIntSettlements', 'AdminIntWithdrawals', 'AdminIntAnticipations', 'AdminIntStatements', 'AdminIntBalanceManagement', 'AdminIntConciliation', 'AdminIntPaymentAgenda',
+  'AdminIntFinancialDashboard', 'AdminIntFinancialResults', 'AdminIntClientProfitability', 'AdminIntClientSplitDetail', 'AdminIntSettlements', 'AdminIntWithdrawals', 'AdminIntAnticipations', 'AdminIntStatements', 'AdminIntBalanceManagement', 'AdminIntConciliation', 'AdminIntPaymentAgenda', 'AdminIntReceivablesLedger', 'AdminIntManualAdjustments',
   'AdminIntRiskDashboard', 'AdminIntFraudMonitoring', 'AdminIntChargebacksList', 'AdminIntMEDsList', 'AdminIntRiskRules', 'AdminIntControlLists', 'AdminIntRiskAlerts', 'AdminIntCompliance',
   'AdminIntSettings', 'AdminIntUsers', 'AdminIntProfiles', 'AdminIntGlobalRates', 'AdminIntRiskParams', 'AdminIntIntegrations', 'AdminIntTemplates', 'AdminIntSystemLogs',
   'AdminIntReportsHub', 'AdminIntReportsOperational', 'AdminIntReportsFinancial', 'AdminIntReportsRisk', 'AdminIntReportsCustom', 'AdminIntAnalytics',

@@ -3,7 +3,9 @@ import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { TrendingUp, TrendingDown, AlertTriangle, Calendar, DollarSign, Wallet, ArrowUpFromLine, Clock, Target, ArrowRight } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, Calendar, DollarSign, Wallet, ArrowUpFromLine, Clock, Target, ArrowRight, Receipt, Sparkles } from 'lucide-react';
+import { ADJUSTMENTS_KPIS, TOP_REASONS_PARETO, formatCurrency as fmtAdj } from '@/components/financial/adjustments/mocks/manualAdjustmentsMock';
+import { RECEIVABLES_KPIS } from '@/components/financial/receivables/mocks/receivablesLedgerMock';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -234,6 +236,97 @@ export default function AdminIntFinancialDashboard() {
                                 >
                                     <alert.icon className="w-4 h-4 flex-shrink-0" />
                                     <span className="text-sm">{alert.message}</span>
+                                </div>
+                            ))}
+                            {ADJUSTMENTS_KPIS.pending_approval > 0 && (
+                                <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-50 text-amber-700">
+                                    <Sparkles className="w-4 h-4 flex-shrink-0" />
+                                    <span className="text-sm flex-1">{ADJUSTMENTS_KPIS.pending_approval} ajustes manuais aguardando aprovação L2</span>
+                                    <Button size="sm" variant="outline" asChild>
+                                        <Link to={createPageUrl('AdminIntManualAdjustments')}>Revisar</Link>
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Receivables + Manual Adjustments overview */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Receivables snapshot */}
+                <Card className="border-violet-200">
+                    <CardHeader className="pb-2">
+                        <div className="flex items-center justify-between">
+                            <CardTitle className="text-base flex items-center gap-2">
+                                <Receipt className="w-4 h-4 text-violet-600" /> Receivables Ledger
+                            </CardTitle>
+                            <Button size="sm" variant="outline" asChild>
+                                <Link to={createPageUrl('AdminIntReceivablesLedger')}>
+                                    Abrir hub <ArrowRight className="w-3 h-3 ml-1" />
+                                </Link>
+                            </Button>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                        <div className="grid grid-cols-3 gap-2 text-center">
+                            <div className="bg-blue-50 rounded p-2">
+                                <p className="text-[10px] uppercase font-bold text-slate-500">A receber</p>
+                                <p className="text-sm font-bold text-blue-700">{formatCurrencyShort(RECEIVABLES_KPIS.pending)}</p>
+                            </div>
+                            <div className="bg-red-50 rounded p-2">
+                                <p className="text-[10px] uppercase font-bold text-slate-500">Em chargeback</p>
+                                <p className="text-sm font-bold text-red-700">{formatCurrencyShort(RECEIVABLES_KPIS.in_chargeback)}</p>
+                            </div>
+                            <div className="bg-amber-50 rounded p-2">
+                                <p className="text-[10px] uppercase font-bold text-slate-500">Bloqueados</p>
+                                <p className="text-sm font-bold text-amber-700">{formatCurrencyShort(RECEIVABLES_KPIS.blocked)}</p>
+                            </div>
+                        </div>
+                        {(RECEIVABLES_KPIS.cerc_divergences > 0 || RECEIVABLES_KPIS.cerc_pending > 0) && (
+                            <div className="bg-orange-50 border border-orange-200 rounded p-2 text-[11px] text-orange-900 flex items-center gap-1.5">
+                                <AlertTriangle className="w-3 h-3" />
+                                <span>{RECEIVABLES_KPIS.cerc_divergences} divergências CERC + {RECEIVABLES_KPIS.cerc_pending} pendentes registro</span>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+
+                {/* Manual Adjustments snapshot */}
+                <Card className="border-violet-200">
+                    <CardHeader className="pb-2">
+                        <div className="flex items-center justify-between">
+                            <CardTitle className="text-base flex items-center gap-2">
+                                <Sparkles className="w-4 h-4 text-violet-600" /> Ajustes Manuais (mês)
+                            </CardTitle>
+                            <Button size="sm" variant="outline" asChild>
+                                <Link to={createPageUrl('AdminIntManualAdjustments')}>
+                                    Abrir hub <ArrowRight className="w-3 h-3 ml-1" />
+                                </Link>
+                            </Button>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                        <div className="grid grid-cols-3 gap-2 text-center">
+                            <div className="bg-emerald-50 rounded p-2">
+                                <p className="text-[10px] uppercase font-bold text-slate-500">Créditos</p>
+                                <p className="text-sm font-bold text-emerald-700">+{formatCurrencyShort(ADJUSTMENTS_KPIS.total_credit)}</p>
+                            </div>
+                            <div className="bg-red-50 rounded p-2">
+                                <p className="text-[10px] uppercase font-bold text-slate-500">Débitos</p>
+                                <p className="text-sm font-bold text-red-700">−{formatCurrencyShort(ADJUSTMENTS_KPIS.total_debit)}</p>
+                            </div>
+                            <div className="bg-violet-50 rounded p-2">
+                                <p className="text-[10px] uppercase font-bold text-slate-500">Pendentes</p>
+                                <p className="text-sm font-bold text-violet-700">{ADJUSTMENTS_KPIS.pending_approval}</p>
+                            </div>
+                        </div>
+                        <div className="space-y-1 text-xs">
+                            <p className="text-[10px] uppercase font-bold text-slate-500">Top motivos</p>
+                            {TOP_REASONS_PARETO.slice(0, 3).map((r) => (
+                                <div key={r.reason} className="flex items-center justify-between border-b last:border-0 py-1">
+                                    <span className="truncate flex-1">{r.label}</span>
+                                    <span className="font-bold ml-2">{fmtAdj(r.value)}</span>
                                 </div>
                             ))}
                         </div>

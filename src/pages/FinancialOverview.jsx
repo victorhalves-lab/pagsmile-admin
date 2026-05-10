@@ -12,6 +12,7 @@ import TopMoversCard from '@/components/financial/v2/TopMoversCard';
 import FinancialAnomaliesCard from '@/components/financial/v2/FinancialAnomaliesCard';
 import PayoutsTimeline from '@/components/financial/v2/PayoutsTimeline';
 import UnsettledFundsExplainer from '@/components/financial/v2/UnsettledFundsExplainer';
+import MerchantAdjustmentsPanel from '@/components/financial/adjustments/MerchantAdjustmentsPanel';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -233,6 +234,9 @@ export default function FinancialOverview() {
         <TopMoversCard entries={entries} />
         <PayoutsTimeline withdrawals={withdrawals} anticipations={[]} />
       </div>
+
+      {/* Painel de ajustes manuais aplicados pela equipe interna - transparência total */}
+      <MerchantAdjustmentsPanel limit={10} />
 
       {/* Quick Links */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">

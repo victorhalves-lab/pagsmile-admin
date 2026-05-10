@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Download, Eye, FileText, ChevronRight, AlertTriangle, Clock } from 'lucide-react';
+import { Download, Eye, FileText, ChevronRight, AlertTriangle, Clock, Receipt } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -200,6 +200,7 @@ export default function AdminIntChargebacksList() {
                                     <th className="text-right py-2 px-3 text-[var(--color-text-tertiary)]">Valor</th>
                                     <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Bandeira</th>
                                     <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Motivo</th>
+                                    <th className="text-center py-2 px-3 text-[var(--color-text-tertiary)]">Recebíveis impactados</th>
                                     <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Prazo</th>
                                     <th className="text-left py-2 px-3 text-[var(--color-text-tertiary)]">Status</th>
                                     <th className="text-center py-2 px-3 text-[var(--color-text-tertiary)]">Ações</th>
@@ -217,6 +218,12 @@ export default function AdminIntChargebacksList() {
                                         <td className="py-3 px-3 text-right font-medium text-[var(--color-text-primary)]">{formatCurrency(cb.amount)}</td>
                                         <td className="py-3 px-3 text-[var(--color-text-secondary)]">{cb.brand}</td>
                                         <td className="py-3 px-3 text-[var(--color-text-secondary)]">{cb.reason}</td>
+                                        <td className="py-3 px-3 text-center">
+                                            <Link to={`${createPageUrl('AdminIntReceivablesLedger')}?chargeback=${cb.id}`} className="inline-flex items-center gap-1 text-violet-600 hover:underline text-xs">
+                                                <Receipt className="w-3 h-3" />
+                                                {cb.status === 'open' || cb.status === 'in_defense' ? '1 bloqueado' : 'Ver impacto'}
+                                            </Link>
+                                        </td>
                                         <td className="py-3 px-3">
                                             {cb.deadline !== '-' ? (
                                                 <span className={cn("flex items-center gap-1", cb.urgent && 'text-[var(--color-error)] font-medium')}>

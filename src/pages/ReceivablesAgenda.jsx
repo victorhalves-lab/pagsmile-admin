@@ -37,8 +37,14 @@ import {
   CheckCircle2,
   Lock,
   BarChart3,
-  Download
+  Download,
+  Send,
+  ShieldAlert,
+  AlertTriangle,
+  FileText
 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { format, differenceInDays, addDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -135,24 +141,54 @@ export default function ReceivablesAgenda() {
       }));
   }, [filteredReceivables]);
 
+  // Mock: cessões simuladas (recebíveis cedidos a terceiros)
+  const cededReceivables = filteredReceivables.slice(0, 8).map((r, i) => ({
+    ...r,
+    cession_to: ['Banco XYZ', 'FIDC Master', 'Banco Inter'][i % 3],
+    cession_date: format(addDays(today, -i), 'yyyy-MM-dd'),
+    cession_value: r.net_amount,
+  }));
+
+  // Mock: recebíveis em chargeback (bloqueados)
+  const inChargebackReceivables = receivables.filter(r => r.status === 'blocked').slice(0, 5);
+  const inChargebackTotal = inChargebackReceivables.reduce((s, r) => s + (r.net_amount || 0), 0);
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Agenda de Recebíveis"
-        subtitle="Visualize seus recebíveis futuros e solicite antecipação"
+        subtitle="Visualize seus recebíveis futuros, cessões e bloqueios"
         breadcrumbs={[
           { label: 'Financeiro', href: 'Financial' },
           { label: 'Agenda de Recebíveis' }
         ]}
         actions={
-          <Button className="bg-purple-600 hover:bg-purple-700" asChild>
-            <Link to={createPageUrl('Anticipation')}>
-              <Zap className="w-4 h-4 mr-2" />
-              Antecipar
-            </Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => toast.success('Relatório fiscal gerado · formato Receita Federal')}>
+              <FileText className="w-4 h-4 mr-2" />
+              Relatório fiscal
+            </Button>
+            <Button className="bg-purple-600 hover:bg-purple-700" asChild>
+              <Link to={createPageUrl('Anticipation')}>
+                <Zap className="w-4 h-4 mr-2" />
+                Antecipar
+              </Link>
+            </Button>
+          </div>
         }
       />
+
+      {inChargebackTotal > 0 && (
+        <Card className="border-red-200 bg-red-50/40">
+          <CardContent className="p-3 flex items-center gap-2 text-xs">
+            <AlertTriangle className="w-4 h-4 text-red-600" />
+            <span><strong>{formatCurrency(inChargebackTotal)} em recebíveis bloqueados há mais de 7 dias</strong> — aguardando resolução de disputa</span>
+            <Button variant="link" size="sm" className="text-red-600 ml-auto" asChild>
+              <Link to={createPageUrl('Chargebacks')}>Ver disputas →</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -257,6 +293,18 @@ export default function ReceivablesAgenda() {
         </CardContent>
       </Card>
 
+      {/* Tabs principais */}
+      <Tabs defaultValue="agenda" className="w-full">
+        <TabsList className="bg-white border p-1 h-auto flex flex-wrap gap-1">
+          <TabsTrigger value="agenda" className="text-xs gap-1.5"><Calendar className="w-3.5 h-3.5" />Agenda</TabsTrigger>
+          <TabsTrigger value="cessions" className="text-xs gap-1.5"><Send className="w-3.5 h-3.5" />Cessões e ônus (CERC)</TabsTrigger>
+          <TabsTrigger value="chargebacks" className="text-xs gap-1.5">
+            <ShieldAlert className="w-3.5 h-3.5" />Em chargeback
+            {inChargebackReceivables.length > 0 && <Badge className="bg-red-500 text-white h-4 ml-1 text-[9px]">{inChargebackReceivables.length}</Badge>}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="agenda" className="mt-4 space-y-6">
       {/* v2: Receivables heatmap */}
       <ReceivablesHeatmap receivables={filteredReceivables} />
 
@@ -393,6 +441,106 @@ export default function ReceivablesAgenda() {
           )}
         </CardContent>
       </Card>
+        </TabsContent>
+
+        {/* CESSÕES */}
+        <TabsContent value="cessions" className="mt-4 space-y-4">
+          <Card className="bg-violet-50 border-violet-200">
+            <CardContent className="p-3 text-xs flex items-start gap-2">
+              <Send className="w-4 h-4 text-violet-700 mt-0.5" />
+              <div>
+                <p className="font-bold text-violet-900">Recebíveis cedidos a terceiros (CERC)</p>
+                <p className="text-violet-700 mt-0.5">
+                  Estes recebíveis foram cedidos como garantia ou venda definitiva. Você não pode antecipar nem solicitar saque sobre eles até a liquidação na contraparte.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-slate-50">
+                    <TableHead>Data Cessão</TableHead>
+                    <TableHead>Cessionário</TableHead>
+                    <TableHead>ID Recebível</TableHead>
+                    <TableHead>Vencimento</TableHead>
+                    <TableHead className="text-right">Valor cedido</TableHead>
+                    <TableHead>Status CERC</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {cededReceivables.map((r) => (
+                    <TableRow key={r.id}>
+                      <TableCell className="text-xs">{format(new Date(r.cession_date), 'dd/MM/yyyy')}</TableCell>
+                      <TableCell><Badge className="bg-violet-100 text-violet-700">{r.cession_to}</Badge></TableCell>
+                      <TableCell className="font-mono text-[10px]">{r.id?.slice(0, 16)}</TableCell>
+                      <TableCell className="text-xs">{format(new Date(r.settlement_date), 'dd/MM/yyyy')}</TableCell>
+                      <TableCell className="text-right font-bold">{formatCurrency(r.cession_value)}</TableCell>
+                      <TableCell><Badge className="bg-emerald-100 text-emerald-700 text-[10px]">Registrado</Badge></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* CHARGEBACKS */}
+        <TabsContent value="chargebacks" className="mt-4 space-y-4">
+          <Card className="bg-red-50 border-red-200">
+            <CardContent className="p-3 text-xs flex items-start gap-2">
+              <ShieldAlert className="w-4 h-4 text-red-700 mt-0.5" />
+              <div>
+                <p className="font-bold text-red-900">Recebíveis bloqueados por disputa</p>
+                <p className="text-red-700 mt-0.5">
+                  Total: <strong>{formatCurrency(inChargebackTotal)}</strong> em {inChargebackReceivables.length} recebíveis.
+                  Estes valores serão liberados após resolução das disputas associadas.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-0">
+              {inChargebackReceivables.length > 0 ? (
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-slate-50">
+                      <TableHead>Recebível</TableHead>
+                      <TableHead>Vencimento original</TableHead>
+                      <TableHead>Disputa</TableHead>
+                      <TableHead className="text-right">Valor bloqueado</TableHead>
+                      <TableHead>Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {inChargebackReceivables.map((r) => (
+                      <TableRow key={r.id}>
+                        <TableCell className="font-mono text-[10px]">{r.id?.slice(0, 16)}</TableCell>
+                        <TableCell className="text-xs">{format(new Date(r.settlement_date), 'dd/MM/yyyy')}</TableCell>
+                        <TableCell>
+                          <Link to={createPageUrl('Chargebacks')} className="text-violet-600 hover:underline text-[11px]">
+                            cb_{r.id?.slice(-6)}
+                          </Link>
+                        </TableCell>
+                        <TableCell className="text-right font-bold text-red-700">{formatCurrency(r.net_amount)}</TableCell>
+                        <TableCell><Badge className="bg-red-100 text-red-700 text-[10px]">Bloqueado</Badge></TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              ) : (
+                <div className="p-8 text-center text-sm text-slate-500">
+                  <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
+                  Nenhum recebível em chargeback no momento
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

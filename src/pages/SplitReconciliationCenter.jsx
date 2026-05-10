@@ -5,7 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, Search, Download, Filter, GitCompare } from 'lucide-react';
+import { Sparkles, Search, Download, Filter, GitCompare, Wallet } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/components/utils';
 import {
   mockReconciliationKPIs,
   mockReconciliationFiles,
@@ -55,9 +57,16 @@ export default function SplitReconciliationCenter() {
           { label: 'Reconciliação' },
         ]}
         actions={
-          <Button size="sm" variant="outline" onClick={() => toast.success('Relatório de divergências exportado')}>
-            <Download className="w-3.5 h-3.5 mr-1" /> Exportar divergências
-          </Button>
+          <div className="flex gap-2">
+            <Link to={createPageUrl('AdminIntManualAdjustments')}>
+              <Button size="sm" variant="outline">
+                <Wallet className="w-3.5 h-3.5 mr-1" /> Criar ajuste corretivo
+              </Button>
+            </Link>
+            <Button size="sm" variant="outline" onClick={() => toast.success('Relatório de divergências exportado')}>
+              <Download className="w-3.5 h-3.5 mr-1" /> Exportar divergências
+            </Button>
+          </div>
         }
       />
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Receipt, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import PageHeader from '@/components/common/PageHeader';
 import { createPageUrl } from '@/components/utils';
@@ -30,11 +30,19 @@ export default function AdminIntAnticipationDetail360() {
           { label: data.id }
         ]}
         actions={
-          <Link to={createPageUrl('AdminIntAnticipations')}>
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            <Link to={`${createPageUrl('AdminIntReceivablesLedger')}?anticipation=${data.id}`}>
+              <Button variant="outline" size="sm">
+                <Receipt className="w-4 h-4 mr-1" /> Ver no Ledger Central
+                <ExternalLink className="w-3 h-3 ml-1" />
+              </Button>
+            </Link>
+            <Link to={createPageUrl('AdminIntAnticipations')}>
+              <Button variant="outline" size="sm">
+                <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
+              </Button>
+            </Link>
+          </div>
         }
       />
 

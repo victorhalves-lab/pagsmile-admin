@@ -36,13 +36,15 @@ import TabLiquidacao from '@/components/admin-interno/merchant-profile/tabs/TabL
 import TabBloqueiosSuspensoes from '@/components/admin-interno/merchant-profile/tabs/TabBloqueiosSuspensoes';
 import TabEfeitosContrato from '@/components/admin-interno/merchant-profile/tabs/TabEfeitosContrato';
 import TabCapacidadeTransacional from '@/components/admin-interno/merchant-profile/tabs/TabCapacidadeTransacional';
+import TabRecebiveis from '@/components/admin-interno/merchant-profile/tabs/TabRecebiveis';
+import TabAjustesManuais from '@/components/admin-interno/merchant-profile/tabs/TabAjustesManuais';
 import ContextualAlertsBanner from '@/components/admin-interno/merchant-profile/ContextualAlertsBanner';
 import {
   LayoutDashboard, BarChart3, FileText, Settings, Percent, CreditCard,
   KeyRound, ArrowLeftRight, Landmark, ArrowUpFromLine, TrendingUp,
   AlertTriangle, ShieldAlert, Banknote, FolderOpen, ShieldCheck,
   StickyNote, MessageSquare, ClipboardList, Users, Webhook, Split,
-  Repeat, UserCircle, Store, Wallet, Ban, Lock, Smartphone
+  Repeat, UserCircle, Store, Wallet, Ban, Lock, Smartphone, Receipt, Sparkles
 } from 'lucide-react';
 
 // Tab groups for organization and highlighting
@@ -60,7 +62,9 @@ const primaryTabs = [
 const secondaryTabs = [
   { value: 'performance', label: 'Performance', icon: BarChart3 },
   { value: 'transacoes', label: 'Transações', icon: ArrowLeftRight },
+  { value: 'recebiveis', label: 'Recebíveis', icon: Receipt, highlight: true },
   { value: 'financeiro', label: 'Financeiro', icon: Landmark },
+  { value: 'ajustes', label: 'Ajustes Manuais', icon: Sparkles, highlight: true },
   { value: 'liquidacao', label: 'Liquidação', icon: Wallet },
   { value: 'capacidade', label: 'Capacidade Transacional', icon: Smartphone },
   { value: 'saques', label: 'Saques', icon: ArrowUpFromLine },
@@ -115,6 +119,8 @@ const tabContentMap = {
   bloqueios: TabBloqueiosSuspensoes,
   efeitos: TabEfeitosContrato,
   capacidade: TabCapacidadeTransacional,
+  recebiveis: TabRecebiveis,
+  ajustes: TabAjustesManuais,
 };
 
 function TabButton({ tab, activeTab }) {

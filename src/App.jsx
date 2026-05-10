@@ -121,6 +121,10 @@ import AdminIntAnticipationDetail360 from './pages/AdminIntAnticipationDetail360
 import AdminIntAnticipationGovernanceCenter from './pages/AdminIntAnticipationGovernanceCenter';
 import AdminIntRegistradoraHub from './pages/AdminIntRegistradoraHub';
 
+// ====== Wave K (Recebíveis + Ajustes Manuais — Entrega 6 Parte 2) ======
+import AdminIntReceivablesLedger from './pages/AdminIntReceivablesLedger';
+import AdminIntManualAdjustments from './pages/AdminIntManualAdjustments';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -282,6 +286,10 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntAnticipationDetail360" element={<LayoutWrapper currentPageName="AdminIntAnticipationDetail360"><AdminIntAnticipationDetail360 /></LayoutWrapper>} />
       <Route path="/AdminIntAnticipationGovernanceCenter" element={<LayoutWrapper currentPageName="AdminIntAnticipationGovernanceCenter"><AdminIntAnticipationGovernanceCenter /></LayoutWrapper>} />
       <Route path="/AdminIntRegistradoraHub" element={<LayoutWrapper currentPageName="AdminIntRegistradoraHub"><AdminIntRegistradoraHub /></LayoutWrapper>} />
+
+      {/* ====== Wave K (Recebíveis + Ajustes Manuais) ====== */}
+      <Route path="/AdminIntReceivablesLedger" element={<LayoutWrapper currentPageName="AdminIntReceivablesLedger"><AdminIntReceivablesLedger /></LayoutWrapper>} />
+      <Route path="/AdminIntManualAdjustments" element={<LayoutWrapper currentPageName="AdminIntManualAdjustments"><AdminIntManualAdjustments /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
