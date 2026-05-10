@@ -24,6 +24,7 @@ import CouponListKpiBar from '@/components/coupons/list/CouponListKpiBar';
 import CouponListFilters from '@/components/coupons/list/CouponListFilters';
 import CouponListBulkBar from '@/components/coupons/list/CouponListBulkBar';
 import CouponCompareModal from '@/components/coupons/list/CouponCompareModal';
+import QuickCreateCouponDrawer from '@/components/coupons/QuickCreateCouponDrawer';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -49,6 +50,7 @@ export default function CouponList() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [page, setPage] = useState(1);
   const [compareOpen, setCompareOpen] = useState(false);
+  const [quickCreateOpen, setQuickCreateOpen] = useState(false);
 
   const filtered = useMemo(() => {
     let list = [...mockCoupons];
@@ -169,11 +171,9 @@ export default function CouponList() {
             <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-1.5" /> Exportar CSV
             </Button>
-            <Link to={createPageUrl('CouponForm')}>
-              <Button size="sm" className="bg-[#2bc196] hover:bg-[#239b7a]">
-                <Plus className="w-4 h-4 mr-1.5" /> Criar cupom
-              </Button>
-            </Link>
+            <Button size="sm" className="bg-[#2bc196] hover:bg-[#239b7a]" onClick={() => setQuickCreateOpen(true)}>
+              <Plus className="w-4 h-4 mr-1.5" /> Criar cupom
+            </Button>
           </div>
         }
       />
@@ -445,6 +445,12 @@ export default function CouponList() {
         open={compareOpen}
         onOpenChange={setCompareOpen}
         coupons={compareCoupons}
+      />
+
+      {/* Quick Create Drawer */}
+      <QuickCreateCouponDrawer
+        open={quickCreateOpen}
+        onOpenChange={setQuickCreateOpen}
       />
     </div>
   );

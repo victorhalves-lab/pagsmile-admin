@@ -46,6 +46,7 @@ import LastPurchaseCell from '@/components/customers/v2/LastPurchaseCell';
 import CustomerHoverCard from '@/components/customers/v2/CustomerHoverCard';
 import CustomersAdvancedFilters from '@/components/customers/v2/CustomersAdvancedFilters';
 import CustomerDetailDrawer from '@/components/customers/v2/CustomerDetailDrawer';
+import QuickCreateCustomerDrawer from '@/components/customers/v2/QuickCreateCustomerDrawer';
 import { toast } from 'sonner';
 
 export default function Customers() {
@@ -54,6 +55,7 @@ export default function Customers() {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [drawerCustomer, setDrawerCustomer] = useState(null);
+  const [createOpen, setCreateOpen] = useState(false);
   const [filters, setFilters] = useState({
     segment: 'all',
     state: 'all',
@@ -280,7 +282,7 @@ export default function Customers() {
               <Download className="w-4 h-4 mr-2" />
               Export
             </Button>
-            <Button className="bg-[#2bc196] hover:bg-[#239b7a]" onClick={() => toast.info('Função em breve')}>
+            <Button className="bg-[#2bc196] hover:bg-[#239b7a]" onClick={() => setCreateOpen(true)}>
               <UserPlus className="w-4 h-4 mr-2" /> Novo Cliente
             </Button>
           </div>
@@ -391,6 +393,12 @@ export default function Customers() {
         open={!!drawerCustomer}
         onClose={() => setDrawerCustomer(null)}
         onNavigate={setDrawerCustomer}
+      />
+
+      {/* Quick Create Drawer */}
+      <QuickCreateCustomerDrawer
+        open={createOpen}
+        onOpenChange={setCreateOpen}
       />
     </div>
   );
