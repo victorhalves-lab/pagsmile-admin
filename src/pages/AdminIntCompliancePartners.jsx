@@ -55,7 +55,7 @@ export default function AdminIntCompliancePartners() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((p) => {
-            const typeCfg = PARTNER_TYPE_CONFIG[p.type] || { label: p.type, icon: '🏢' };
+            const typeCfg = PARTNER_TYPE_CONFIG[p.type] || { label: p.type, icon: '🏢', color: 'slate' };
             return (
               <button
                 key={p.id}
@@ -71,22 +71,10 @@ export default function AdminIntCompliancePartners() {
                 <p className="font-bold text-sm text-slate-900 dark:text-white">{p.name}</p>
                 <p className="text-[11px] text-slate-500 mt-0.5">{typeCfg.label}</p>
                 <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 text-xs">
-                  <div>
-                    <p className="text-[10px] text-slate-500 uppercase">Active</p>
-                    <p className="font-bold">{p.active_assignments || 0}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-slate-500 uppercase">Total</p>
-                    <p className="font-bold">{p.total_assignments || 0}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-slate-500 uppercase">SLA</p>
-                    <p className="font-bold">{p.sla_response_hours}h</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-slate-500 uppercase">Conclusão</p>
-                    <p className="font-bold text-emerald-600">{p.completion_rate}%</p>
-                  </div>
+                  <div><p className="text-[10px] text-slate-500 uppercase">Active</p><p className="font-bold">{p.active_assignments || 0}</p></div>
+                  <div><p className="text-[10px] text-slate-500 uppercase">Total</p><p className="font-bold">{p.total_assignments || 0}</p></div>
+                  <div><p className="text-[10px] text-slate-500 uppercase">SLA</p><p className="font-bold">{p.sla_response_hours}h</p></div>
+                  <div><p className="text-[10px] text-slate-500 uppercase">Conclusão</p><p className="font-bold text-emerald-600">{p.completion_rate}%</p></div>
                 </div>
               </button>
             );

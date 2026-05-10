@@ -7,11 +7,11 @@ import PageHeader from '@/components/common/PageHeader';
 import V4KpiCard from '@/components/admin-interno/compliance/v4/V4KpiCard';
 
 const mockTemplates = [
-  { id: 't_001', name: 'Pré-KYC Banco Topázio', target_partner: 'Banco Topázio', model: 'v4_pix_merchant', fields: 47, format: 'XLSX', is_active: true, version: '2.1', last_used: '2026-05-09', total_exports: 89 },
-  { id: 't_002', name: 'Pré-KYC Banco BS2', target_partner: 'Banco BS2', model: 'v4_pix_merchant', fields: 42, format: 'XLSX', is_active: true, version: '1.4', last_used: '2026-05-08', total_exports: 56 },
-  { id: 't_003', name: 'Compliance Externo KPMG', target_partner: 'KPMG Compliance', model: 'v4_card', fields: 86, format: 'PDF', is_active: true, version: '3.0', last_used: '2026-05-09', total_exports: 142 },
-  { id: 't_004', name: 'BACEN Reporting', target_partner: 'BACEN', model: 'all', fields: 124, format: 'XLSX + JSON', is_active: true, version: '4.2', last_used: '2026-05-01', total_exports: 12 },
-  { id: 't_005', name: 'COAF Automated', target_partner: 'COAF', model: 'all', fields: 98, format: 'XML', is_active: false, version: '1.0', last_used: null, total_exports: 0 },
+  { id: 't_001', name: 'Pré-KYC Banco Topázio', target_partner: 'Banco Topázio', model: 'v4_pix_merchant', fields: 47, format: 'XLSX', is_active: true, version: '2.1', total_exports: 89 },
+  { id: 't_002', name: 'Pré-KYC Banco BS2', target_partner: 'Banco BS2', model: 'v4_pix_merchant', fields: 42, format: 'XLSX', is_active: true, version: '1.4', total_exports: 56 },
+  { id: 't_003', name: 'Compliance Externo KPMG', target_partner: 'KPMG Compliance', model: 'v4_card', fields: 86, format: 'PDF', is_active: true, version: '3.0', total_exports: 142 },
+  { id: 't_004', name: 'BACEN Reporting', target_partner: 'BACEN', model: 'all', fields: 124, format: 'XLSX + JSON', is_active: true, version: '4.2', total_exports: 12 },
+  { id: 't_005', name: 'COAF Automated', target_partner: 'COAF', model: 'all', fields: 98, format: 'XML', is_active: false, version: '1.0', total_exports: 0 },
 ];
 
 const mockFieldMapping = [
@@ -84,7 +84,6 @@ export default function AdminIntComplianceKYCTemplate() {
           <div className="bg-white dark:bg-[#003459] rounded-2xl border border-slate-100 dark:border-[#004D73] p-5">
             <p className="text-sm text-slate-500 mb-4">
               Mapeamento de campos do PagSmile → campos esperados pelos parceiros.
-              Cada template usa um subset destes mapeamentos.
             </p>
             <div className="space-y-2">
               {mockFieldMapping.map((m, i) => (

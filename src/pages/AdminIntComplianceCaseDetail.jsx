@@ -25,7 +25,7 @@ export default function AdminIntComplianceCaseDetail() {
   const [activeTab, setActiveTab] = useState('overview');
 
   const caso = useMemo(() => mockAllCases.find((c) => c.id === caseId) || mockAllCases[0], [caseId]);
-  const helena = mockHelenaAnalyses?.[0];
+  const helena = mockHelenaAnalyses[0];
   const docs = mockDocuments.filter((d) => d.onboarding_case_id === caso?.case_id || d.onboarding_case_id === caso?.id);
 
   if (!caso) return <div className="p-12 text-center">Caso não encontrado</div>;
@@ -145,7 +145,7 @@ export default function AdminIntComplianceCaseDetail() {
             <h3 className="font-bold mb-3">Respostas do Questionário V4</h3>
             <p className="text-sm text-slate-500">Modelo: {caso.modelo_compliance} · {caso.total_steps || '—'} etapas</p>
             <div className="mt-4 grid grid-cols-2 gap-4 text-xs">
-              {Object.entries(caso.questionnaire_data || { 'Setor de atuação': caso.segmento, 'Tempo de empresa': '8 anos', 'Volume mensal declarado': 'R$ 500k - R$ 1M', 'Ticket médio': 'R$ 200', '% transações cartão': '85%', '% PIX': '15%' }).map(([k, v]) => (
+              {Object.entries({ 'Setor': caso.segmento, 'Tempo de empresa': '8 anos', 'Volume mensal': 'R$ 500k - R$ 1M', 'Ticket médio': 'R$ 200', '% Cartão': '85%', '% PIX': '15%' }).map(([k, v]) => (
                 <div key={k} className="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-1.5">
                   <span className="text-slate-500">{k}</span>
                   <span className="font-semibold text-slate-700 dark:text-slate-200">{String(v)}</span>
@@ -168,20 +168,6 @@ export default function AdminIntComplianceCaseDetail() {
               <Badge className="ml-auto bg-violet-100 text-violet-700 border-0">{helena?.decision_recommendation}</Badge>
             </div>
             <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">{helena?.narrative_summary}</p>
-            {helena?.red_flags?.length > 0 && (
-              <div className="mt-4 space-y-2">
-                <p className="text-xs font-bold text-slate-500 uppercase">Red Flags Detectados</p>
-                {helena.red_flags.map((rf, i) => (
-                  <div key={i} className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 border border-red-200 dark:border-red-800">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge className="bg-red-100 text-red-700 border-0 text-[10px]">{rf.severity}</Badge>
-                      <span className="text-sm font-bold text-red-900 dark:text-red-300">{rf.title}</span>
-                    </div>
-                    <p className="text-xs text-red-700 dark:text-red-400">{rf.description}</p>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </TabsContent>
 
@@ -193,9 +179,7 @@ export default function AdminIntComplianceCaseDetail() {
                 <p className="text-5xl font-black text-slate-900 dark:text-white">{caso.risk_score || '—'}</p>
               </div>
               {caso.risk_band && <RiskBandBadge band={caso.risk_band} score={caso.risk_score} />}
-              <Badge variant="outline" className="ml-auto">{caso.modelo_compliance}</Badge>
             </div>
-
             <p className="text-xs font-bold text-slate-500 uppercase mb-3">Decomposição por Dimensão</p>
             <div className="space-y-2">
               {[
@@ -243,9 +227,9 @@ export default function AdminIntComplianceCaseDetail() {
             <h3 className="font-bold mb-4">UBOs e Sócios Relevantes</h3>
             <div className="space-y-2">
               {[
-                { name: 'Pedro Almeida Silva', cpf: '111.222.333-44', role: 'Sócio Majoritário', percent: 51, is_pep: false, is_sanctioned: false, score: 88 },
-                { name: 'Ana Paula Costa', cpf: '222.333.444-55', role: 'Sócia', percent: 30, is_pep: false, is_sanctioned: false, score: 92 },
-                { name: 'Roberto Santos', cpf: '333.444.555-66', role: 'Sócio', percent: 19, is_pep: true, is_sanctioned: false, score: 65 },
+                { name: 'Pedro Almeida Silva', cpf: '111.222.333-44', role: 'Sócio Majoritário', percent: 51, is_pep: false, score: 88 },
+                { name: 'Ana Paula Costa', cpf: '222.333.444-55', role: 'Sócia', percent: 30, is_pep: false, score: 92 },
+                { name: 'Roberto Santos', cpf: '333.444.555-66', role: 'Sócio', percent: 19, is_pep: true, score: 65 },
               ].map((u, i) => (
                 <div key={i} className="flex items-center gap-3 p-3 rounded-lg border border-slate-100 dark:border-slate-700">
                   <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center">
@@ -256,7 +240,6 @@ export default function AdminIntComplianceCaseDetail() {
                     <p className="text-[11px] text-slate-500 font-mono">{u.cpf} · {u.role} · {u.percent}%</p>
                   </div>
                   {u.is_pep && <Badge className="bg-amber-100 text-amber-700 border-0 text-[10px]">PEP</Badge>}
-                  {u.is_sanctioned && <Badge className="bg-red-100 text-red-700 border-0 text-[10px]">SANCIONADO</Badge>}
                   <span className="font-bold text-sm">{u.score}</span>
                 </div>
               ))}
