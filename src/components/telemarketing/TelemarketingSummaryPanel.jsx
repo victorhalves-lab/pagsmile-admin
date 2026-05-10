@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { User, ShoppingCart, CreditCard, FileCheck, Phone } from 'lucide-react';
+import { User, ShoppingCart, CreditCard, ShoppingBag } from 'lucide-react';
 
 const formatBRL = (v) => (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -14,7 +13,7 @@ export default function TelemarketingSummaryPanel({ sale, currentStep }) {
     <Card className="sticky top-4 shadow-md">
       <CardHeader className="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-t-xl">
         <CardTitle className="text-sm flex items-center gap-2">
-          <Phone className="w-4 h-4" /> Resumo da Venda
+          <ShoppingBag className="w-4 h-4" /> Resumo da Venda
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 space-y-4 text-sm">
@@ -98,9 +97,6 @@ export default function TelemarketingSummaryPanel({ sale, currentStep }) {
           </div>
         </div>
 
-        <Badge variant="outline" className="w-full justify-center bg-amber-50 border-amber-200 text-amber-800">
-          <FileCheck className="w-3 h-3 mr-1" /> Transação MOTO
-        </Badge>
       </CardContent>
     </Card>
   );

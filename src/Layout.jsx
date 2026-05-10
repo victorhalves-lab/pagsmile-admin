@@ -85,7 +85,7 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.all_transactions'), page: 'Transactions' },
       { label: t('menu.card'), page: 'CardTransactions' },
       { label: t('menu.pix'), page: 'PixTransactions' },
-      { label: '📞 Venda por Telefone (MOTO)', page: 'TelemarketingSale' },
+      { label: '🛍️ Venda Manual', page: 'TelemarketingSale' },
       { label: t('menu.decline_analysis'), page: 'DeclineAnalysis' },
     ]
   },

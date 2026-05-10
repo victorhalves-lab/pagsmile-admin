@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { CheckCircle2, ArrowLeft, Loader2, Receipt, Mail, MessageCircle, RotateCcw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const formatBRL = (v) => (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-export default function StepReviewAndCharge({ sale, onBack, onReset }) {
+export default function StepReviewAndCharge({ sale, updateSale, onBack, onReset }) {
   const [processing, setProcessing] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -67,14 +69,11 @@ export default function StepReviewAndCharge({ sale, onBack, onReset }) {
             description: it.sku,
           })),
           metadata: {
-            channel: 'telemarketing_moto',
+            channel: 'manual_sale',
             parent_sale_id: parentSaleId,
             split_index: i + 1,
             split_total: sale.payments.length,
-            consent_recorded: sale.consent_recorded,
-            risk_score: sale.risk_score,
             operator_notes: sale.operator_notes,
-            fraud_checks: sale.fraud_checks,
           },
         });
         txns.push(tx);
@@ -134,8 +133,8 @@ export default function StepReviewAndCharge({ sale, onBack, onReset }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Etapa 5 · Revisão e Cobrança</CardTitle>
-        <p className="text-xs text-slate-500">Revise tudo com o cliente antes de processar.</p>
+        <CardTitle className="text-base">Etapa 4 · Fechar venda</CardTitle>
+        <p className="text-xs text-slate-500">Revise os dados e processe o pagamento.</p>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="border rounded-lg p-4 space-y-3 bg-slate-50">
@@ -175,6 +174,16 @@ export default function StepReviewAndCharge({ sale, onBack, onReset }) {
             <span>Total</span>
             <span className="text-[#2bc196] font-mono">{formatBRL(sale.total)}</span>
           </div>
+        </div>
+
+        <div>
+          <Label className="text-xs">Observações (opcional)</Label>
+          <Textarea
+            value={sale.operator_notes || ''}
+            onChange={(e) => updateSale({ operator_notes: e.target.value })}
+            placeholder="Ex.: Cliente solicitou entrega expressa…"
+            rows={2}
+          />
         </div>
 
         {error && (
