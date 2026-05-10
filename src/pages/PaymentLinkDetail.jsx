@@ -105,10 +105,19 @@ export default function PaymentLinkDetail() {
           { label: link.name },
         ]}
         actions={
-          <Button variant="outline" onClick={() => navigate(createPageUrl('PaymentLinks'))}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => window.open(`/PaymentLinkPublicView?id=${link.id}`, '_blank')}
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              Ver como cliente
+            </Button>
+            <Button variant="outline" onClick={() => navigate(createPageUrl('PaymentLinks'))}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar
+            </Button>
+          </div>
         }
       />
 

@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import {
-  Monitor, Tablet, Smartphone, X, ExternalLink, Eye, Copy, ShoppingCart,
+  Monitor, Tablet, Smartphone, X, ExternalLink, Eye, Copy, Link2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -15,16 +15,16 @@ const previewModes = {
   mobile: { w: 390, label: 'Mobile', icon: Smartphone },
 };
 
-export default function CheckoutPreview() {
+export default function PaymentLinkPublicView() {
   const params = new URLSearchParams(window.location.search);
-  const checkoutId = params.get('id');
+  const linkId = params.get('id');
   const isPublic = params.get('public') === '1';
   const [device, setDevice] = useState('desktop');
 
-  const { data: checkout, isLoading } = useQuery({
-    queryKey: ['checkout-preview', checkoutId],
-    queryFn: () => base44.entities.CheckoutConfig.get(checkoutId),
-    enabled: !!checkoutId && checkoutId !== 'demo',
+  const { data: link, isLoading } = useQuery({
+    queryKey: ['payment-link-public', linkId],
+    queryFn: () => base44.entities.PaymentLink.get(linkId),
+    enabled: !!linkId,
   });
 
   if (isLoading) {
@@ -35,40 +35,39 @@ export default function CheckoutPreview() {
     );
   }
 
-  const config = checkout || {
-    name: 'Checkout Demo',
-    branding: { colors: { primary: '#2bc196' }, logo_url: '' },
-    payment_methods: {
-      card: { enabled: true, max_installments: 12, interest_free_installments: 3 },
-      pix: { enabled: true, discount_percentage: 5 },
-    },
+  // Fallback se link não existir (demo)
+  const data = link || {
+    name: 'Produto Demo',
+    description: 'Este é um link de pagamento de demonstração',
+    amount: 199.90,
+    brand_color: '#2bc196',
+    payment_methods: ['card', 'pix'],
+    max_installments: 12,
+    interest_free_installments: 3,
+    pix_discount_percentage: 5,
   };
 
-  // Build payment methods array from config object
-  const methods = [];
-  if (config?.payment_methods?.card?.enabled !== false) methods.push('card');
-  if (config?.payment_methods?.pix?.enabled !== false) methods.push('pix');
-
   const shellProps = {
-    brandColor: config?.branding?.colors?.primary || '#2bc196',
-    logoUrl: config?.branding?.logo_url,
-    productName: 'Produto Demo',
-    productDescription: 'Esta é uma demonstração de como seu checkout aparecerá para o cliente.',
-    amount: 199.90,
-    paymentMethods: methods,
-    maxInstallments: config?.payment_methods?.card?.max_installments || 12,
-    interestFreeInstallments: config?.payment_methods?.card?.interest_free_installments || 3,
-    pixDiscountPercentage: config?.payment_methods?.pix?.discount_percentage || 0,
-    successMessage: config?.experience?.success_page?.message,
+    brandColor: data.brand_color || '#2bc196',
+    logoUrl: data.logo_url,
+    productName: data.name,
+    productDescription: data.description,
+    productImage: data.main_image_url,
+    amount: data.amount || data.value || 0,
+    paymentMethods: data.payment_methods || ['card', 'pix'],
+    maxInstallments: data.max_installments || 12,
+    interestFreeInstallments: data.interest_free_installments || 3,
+    pixDiscountPercentage: data.pix_discount_percentage || 0,
+    successMessage: data.success_message,
   };
 
   const copyShareUrl = () => {
-    const url = `${window.location.origin}/CheckoutPreview?id=${checkoutId}&public=1`;
+    const url = `${window.location.origin}/PaymentLinkPublicView?id=${linkId}&public=1`;
     navigator.clipboard.writeText(url);
     toast.success('Link copiado!');
   };
 
-  /* MODO PÚBLICO: full-screen */
+  /* MODO PÚBLICO: full-screen, sem toolbar */
   if (isPublic) {
     return (
       <div className="min-h-screen bg-slate-100">
@@ -81,18 +80,18 @@ export default function CheckoutPreview() {
     );
   }
 
-  /* MODO INTERNO: com toolbar */
+  /* MODO INTERNO: com toolbar + device toggle */
   return (
     <div className="min-h-screen bg-slate-100">
       <div className="sticky top-0 z-40 bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-[#2bc196]/10 flex items-center justify-center flex-shrink-0">
-              <ShoppingCart className="w-4 h-4 text-[#2bc196]" />
+            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+              <Link2 className="w-4 h-4 text-blue-600" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold truncate">Preview do Checkout — Como o cliente verá</p>
-              <p className="text-[10px] text-slate-500 truncate">{config.name}</p>
+              <p className="text-sm font-semibold truncate">Preview do Link — Como o cliente verá</p>
+              <p className="text-[10px] text-slate-500 truncate">{data.name}</p>
             </div>
           </div>
 
@@ -122,7 +121,7 @@ export default function CheckoutPreview() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => window.open(`/CheckoutPreview?id=${checkoutId}&public=1`, '_blank')}
+              onClick={() => window.open(`/PaymentLinkPublicView?id=${linkId}&public=1`, '_blank')}
             >
               <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Abrir público
             </Button>

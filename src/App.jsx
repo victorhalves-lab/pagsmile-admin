@@ -210,6 +210,7 @@ import ComplianceDocOnly from './pages/ComplianceDocOnly';
 // ====== PIX Open Finance (PIX Automático / Biometria / Hub) ======
 import PixMandateHealth from './pages/PixMandateHealth';
 import CheckoutPreview from './pages/CheckoutPreview';
+import PaymentLinkPublicView from './pages/PaymentLinkPublicView';
 import PixBiometricInsights from './pages/PixBiometricInsights';
 import OpenFinanceHub from './pages/OpenFinanceHub';
 import AdminIntOpenFinanceLiveMap from './pages/AdminIntOpenFinanceLiveMap';
@@ -443,6 +444,7 @@ const AuthenticatedApp = () => {
 
       {/* ====== Checkout Preview (público + autenticado, sem layout admin) ====== */}
       <Route path="/CheckoutPreview" element={<CheckoutPreview />} />
+      <Route path="/PaymentLinkPublicView" element={<PaymentLinkPublicView />} />
 
       {/* ====== PIX Open Finance (Automático / Biometria / Hub / Live Map) ====== */}
       <Route path="/PixMandateHealth" element={<LayoutWrapper currentPageName="PixMandateHealth"><PixMandateHealth /></LayoutWrapper>} />

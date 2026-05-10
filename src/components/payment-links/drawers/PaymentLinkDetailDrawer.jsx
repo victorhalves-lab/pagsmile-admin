@@ -75,6 +75,13 @@ export default function PaymentLinkDetailDrawer({ link, allRows = [], open, onCl
             </Button>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open(`/PaymentLinkPublicView?id=${link.id}`, '_blank')}
+            >
+              <Eye className="w-3.5 h-3.5 mr-1" /> Ver como cliente
+            </Button>
             <Button variant="outline" size="sm" onClick={() => onEdit?.(link)}>
               <Edit className="w-3.5 h-3.5 mr-1" /> Editar
             </Button>
