@@ -51,6 +51,7 @@ import AlertsPanelEnhanced from '@/components/dashboard/AlertsPanelEnhanced';
 import OnboardingTour from '@/components/common/OnboardingTour';
 import ScheduledReportsModal from '@/components/common/ScheduledReportsModal';
 import QicCallToActionBanner from '@/components/dashboard/QicCallToActionBanner';
+import RegulatoryCommitmentsCard from '@/components/dashboard/RegulatoryCommitmentsCard';
 
 // Container animado padrão
 const AnimatedSection = ({ children, delay = 0, className }) => (
@@ -148,6 +149,8 @@ export default function Dashboard() {
               <ReceivablesBreakdown />
             </div>
           </div>
+          {/* Card regulatório de compromissos sobre URs (Mentor Entrega 6 P3) */}
+          <RegulatoryCommitmentsCard />
         </AnimatedSection>
       )}
 

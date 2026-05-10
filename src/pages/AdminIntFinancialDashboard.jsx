@@ -3,20 +3,16 @@ import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { TrendingUp, TrendingDown, AlertTriangle, Calendar, DollarSign, Wallet, ArrowUpFromLine, Clock, Target, ArrowRight, Receipt, Sparkles } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, Calendar, DollarSign, Wallet, ArrowUpFromLine, Clock, Target, ArrowRight, Receipt, Sparkles, Shield, ShieldCheck, FileCode, Scale, Lock } from 'lucide-react';
 import { ADJUSTMENTS_KPIS, TOP_REASONS_PARETO, formatCurrency as fmtAdj } from '@/components/financial/adjustments/mocks/manualAdjustmentsMock';
 import { RECEIVABLES_KPIS } from '@/components/financial/receivables/mocks/receivablesLedgerMock';
+import { UR_KPIS, EFFECTS_KPIS, CERC_KPIS, formatCurrencyShort } from '@/components/regulatory/mocks/urMock';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
-const formatCurrencyShort = (v) => {
-    if (v >= 1000000) return `R$ ${(v / 1000000).toFixed(1)} M`;
-    if (v >= 1000) return `R$ ${(v / 1000).toFixed(0)} K`;
-    return formatCurrency(v);
-};
 
 const tpvData = [
     { month: 'Ago', value: 8500000 },
@@ -292,7 +288,7 @@ export default function AdminIntFinancialDashboard() {
                     </CardContent>
                 </Card>
 
-                {/* Manual Adjustments snapshot */}
+                {/* Manual Adjustments snapshot — keep first */}
                 <Card className="border-violet-200">
                     <CardHeader className="pb-2">
                         <div className="flex items-center justify-between">
@@ -332,6 +328,149 @@ export default function AdminIntFinancialDashboard() {
                         </div>
                     </CardContent>
                 </Card>
+            </div>
+
+            {/* Regulatory Mentor cards (Wave Mentor Entrega 6 P3) */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card className="border-violet-200 bg-gradient-to-br from-violet-50 to-white">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Shield className="w-4 h-4 text-violet-600" /> Saúde Regulatória CERC
+                    </CardTitle>
+                    <Button size="sm" variant="outline" asChild>
+                      <Link to={createPageUrl('AdminIntCERCConciliationHub')}>
+                        Hub CERC <ArrowRight className="w-3 h-3 ml-1" />
+                      </Link>
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2 text-center">
+                    <div className="bg-emerald-50 rounded p-2">
+                      <p className="text-[10px] uppercase font-bold text-slate-500">Concordância</p>
+                      <p className="text-lg font-bold text-emerald-700">{CERC_KPIS.avg_concordance_rate}%</p>
+                    </div>
+                    <div className="bg-red-50 rounded p-2">
+                      <p className="text-[10px] uppercase font-bold text-slate-500">Críticas</p>
+                      <p className="text-lg font-bold text-red-700">{CERC_KPIS.divergences_critical}</p>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-slate-500">
+                    {CERC_KPIS.pending_treatment} divergências pendentes · SLA médio {CERC_KPIS.avg_sla_hours}h
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-violet-200 bg-gradient-to-br from-violet-50 to-white">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Receipt className="w-4 h-4 text-violet-600" /> Unidades de Recebíveis (UR)
+                    </CardTitle>
+                    <Button size="sm" variant="outline" asChild>
+                      <Link to={`${createPageUrl('AdminIntReceivablesLedger')}?tab=ur_regulatory`}>
+                        Visão UR <ArrowRight className="w-3 h-3 ml-1" />
+                      </Link>
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="bg-blue-50 rounded p-2">
+                      <p className="text-[10px] uppercase font-bold text-slate-500">Total URs</p>
+                      <p className="text-sm font-bold text-blue-700">{UR_KPIS.total_count.toLocaleString('pt-BR')}</p>
+                    </div>
+                    <div className="bg-emerald-50 rounded p-2">
+                      <p className="text-[10px] uppercase font-bold text-slate-500">Disponível</p>
+                      <p className="text-sm font-bold text-emerald-700">{formatCurrencyShort(UR_KPIS.total_available)}</p>
+                    </div>
+                    <div className="bg-amber-50 rounded p-2">
+                      <p className="text-[10px] uppercase font-bold text-slate-500">Comprom.</p>
+                      <p className="text-sm font-bold text-amber-700">{formatCurrencyShort(UR_KPIS.total_committed)}</p>
+                    </div>
+                  </div>
+                  {(UR_KPIS.registration_pending + UR_KPIS.registration_failed) > 0 && (
+                    <div className="bg-orange-50 border border-orange-200 rounded p-2 text-[11px] text-orange-900 flex items-center gap-1.5">
+                      <AlertTriangle className="w-3 h-3" />
+                      <span>{UR_KPIS.registration_pending} pendentes + {UR_KPIS.registration_failed} falhas de registro</span>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card className="border-violet-200 bg-gradient-to-br from-violet-50 to-white">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Scale className="w-4 h-4 text-red-600" /> Bloqueios Judiciais
+                    </CardTitle>
+                    <Button size="sm" variant="outline" asChild>
+                      <Link to={createPageUrl('AdminIntJudicialBlockages')}>
+                        Hub Jurídico <ArrowRight className="w-3 h-3 ml-1" />
+                      </Link>
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2 text-center">
+                    <div className="bg-red-50 rounded p-2">
+                      <p className="text-[10px] uppercase font-bold text-slate-500">Ativos</p>
+                      <p className="text-lg font-bold text-red-700">{EFFECTS_KPIS.judicial_lien_count + EFFECTS_KPIS.attachment_count}</p>
+                    </div>
+                    <div className="bg-orange-50 rounded p-2">
+                      <p className="text-[10px] uppercase font-bold text-slate-500">Penhoras</p>
+                      <p className="text-lg font-bold text-orange-700">{EFFECTS_KPIS.attachment_count}</p>
+                    </div>
+                  </div>
+                  {EFFECTS_KPIS.with_conflict_count > 0 && (
+                    <div className="bg-amber-50 border border-amber-200 rounded p-2 text-[11px] text-amber-900 flex items-center gap-1.5">
+                      <AlertTriangle className="w-3 h-3" />
+                      <span>{EFFECTS_KPIS.with_conflict_count} conflitos entre efeitos — escalar Jurídico</span>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="border-violet-200">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <FileCode className="w-4 h-4 text-violet-600" /> Arquivos CERC
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex items-center justify-between">
+                  <div>
+                    <p className="text-2xl font-black">{CERC_KPIS.files_exchanged_30d}</p>
+                    <p className="text-xs text-slate-500">trocados nos últimos 30 dias</p>
+                  </div>
+                  <Button size="sm" variant="outline" asChild>
+                    <Link to={createPageUrl('AdminIntCERCFileViewer')}>
+                      Visualizador <ArrowRight className="w-3 h-3 ml-1" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="border-violet-200">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-violet-600" /> Efeitos de Contrato
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex items-center justify-between">
+                  <div>
+                    <p className="text-2xl font-black">{EFFECTS_KPIS.total_count.toLocaleString('pt-BR')}</p>
+                    <p className="text-xs text-slate-500">{formatCurrencyShort(EFFECTS_KPIS.total_value_affected)} afetados</p>
+                  </div>
+                  <Button size="sm" variant="outline" asChild>
+                    <Link to={createPageUrl('AdminIntContractEffectsRegistry')}>
+                      Hub <ArrowRight className="w-3 h-3 ml-1" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
         </div>
     );

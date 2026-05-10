@@ -38,13 +38,16 @@ import TabEfeitosContrato from '@/components/admin-interno/merchant-profile/tabs
 import TabCapacidadeTransacional from '@/components/admin-interno/merchant-profile/tabs/TabCapacidadeTransacional';
 import TabRecebiveis from '@/components/admin-interno/merchant-profile/tabs/TabRecebiveis';
 import TabAjustesManuais from '@/components/admin-interno/merchant-profile/tabs/TabAjustesManuais';
+import TabUR from '@/components/admin-interno/merchant-profile/tabs/TabUR';
+import TabEfeitosRegulatorios from '@/components/admin-interno/merchant-profile/tabs/TabEfeitosRegulatorios';
+import TabConformidadeRegulatoria from '@/components/admin-interno/merchant-profile/tabs/TabConformidadeRegulatoria';
 import ContextualAlertsBanner from '@/components/admin-interno/merchant-profile/ContextualAlertsBanner';
 import {
   LayoutDashboard, BarChart3, FileText, Settings, Percent, CreditCard,
   KeyRound, ArrowLeftRight, Landmark, ArrowUpFromLine, TrendingUp,
   AlertTriangle, ShieldAlert, Banknote, FolderOpen, ShieldCheck,
   StickyNote, MessageSquare, ClipboardList, Users, Webhook, Split,
-  Repeat, UserCircle, Store, Wallet, Ban, Lock, Smartphone, Receipt, Sparkles
+  Repeat, UserCircle, Store, Wallet, Ban, Lock, Smartphone, Receipt, Sparkles, Shield
 } from 'lucide-react';
 
 // Tab groups for organization and highlighting
@@ -63,6 +66,9 @@ const secondaryTabs = [
   { value: 'performance', label: 'Performance', icon: BarChart3 },
   { value: 'transacoes', label: 'Transações', icon: ArrowLeftRight },
   { value: 'recebiveis', label: 'Recebíveis', icon: Receipt, highlight: true },
+  { value: 'ur_regulatorio', label: 'URs (Regulatório)', icon: Shield, highlight: true },
+  { value: 'efeitos_regulatorios', label: 'Efeitos Regulatórios', icon: Lock, highlight: true },
+  { value: 'conformidade', label: 'Conformidade', icon: ShieldCheck, highlight: true },
   { value: 'financeiro', label: 'Financeiro', icon: Landmark },
   { value: 'ajustes', label: 'Ajustes Manuais', icon: Sparkles, highlight: true },
   { value: 'liquidacao', label: 'Liquidação', icon: Wallet },
@@ -121,6 +127,9 @@ const tabContentMap = {
   capacidade: TabCapacidadeTransacional,
   recebiveis: TabRecebiveis,
   ajustes: TabAjustesManuais,
+  ur_regulatorio: TabUR,
+  efeitos_regulatorios: TabEfeitosRegulatorios,
+  conformidade: TabConformidadeRegulatoria,
 };
 
 function TabButton({ tab, activeTab }) {

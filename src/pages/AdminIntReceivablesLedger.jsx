@@ -4,7 +4,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Receipt, Download, RefreshCw, Database, AlertTriangle, BarChart3, ListFilter, Building2, Sparkles } from 'lucide-react';
+import { Receipt, Download, RefreshCw, Database, AlertTriangle, BarChart3, ListFilter, Building2, Sparkles, Shield, Scale } from 'lucide-react';
+import URKpiBar from '@/components/regulatory/ur/URKpiBar.jsx';
+import URFilters from '@/components/regulatory/ur/URFilters.jsx';
+import URTable from '@/components/regulatory/ur/URTable.jsx';
+import URBulkBar from '@/components/regulatory/ur/URBulkBar.jsx';
+import URAnomaliesPanel from '@/components/regulatory/ur/URAnomaliesPanel.jsx';
+import { MOCK_URS, UR_KPIS } from '@/components/regulatory/mocks/urMock';
+import { createPageUrl } from '@/components/utils';
 import ReceivablesKpiBar from '@/components/financial/receivables/ReceivablesKpiBar.jsx';
 import ReceivablesAdvancedFilters from '@/components/financial/receivables/ReceivablesAdvancedFilters.jsx';
 import ReceivablesTable from '@/components/financial/receivables/ReceivablesTable.jsx';
@@ -19,6 +26,41 @@ const DEFAULT_FILTERS = { search: '', status: 'all', brand: 'all', cerc_status: 
 export default function AdminIntReceivablesLedger() {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [selected, setSelected] = useState([]);
+  const [urFilters, setUrFilters] = useState({ search: '', registrar: 'all', status: 'all', arrangement: 'all', brand: 'all', acquirer: 'all', registration_status: 'all', quickFilter: null });
+  const [urSelected, setUrSelected] = useState([]);
+
+  const urFiltered = useMemo(() => {
+    return MOCK_URS.filter((u) => {
+      if (urFilters.registrar !== 'all' && u.registrar !== urFilters.registrar) return false;
+      if (urFilters.status !== 'all' && u.status !== urFilters.status) return false;
+      if (urFilters.arrangement !== 'all' && u.arrangement !== urFilters.arrangement) return false;
+      if (urFilters.brand !== 'all' && u.brand !== urFilters.brand) return false;
+      if (urFilters.acquirer !== 'all' && u.acquirer !== urFilters.acquirer) return false;
+      if (urFilters.registration_status !== 'all' && u.registration_status !== urFilters.registration_status) return false;
+      if (urFilters.quickFilter === 'with_judicial' && !u.has_judicial_lien) return false;
+      if (urFilters.quickFilter === 'with_assignment' && !u.has_assignment) return false;
+      if (urFilters.quickFilter === 'reg_failed' && u.registration_status !== 'failed') return false;
+      if (urFilters.quickFilter === 'with_divergence' && u.cerc_conciliation_status !== 'divergence') return false;
+      if (urFilters.search) {
+        const q = urFilters.search.toLowerCase();
+        return u.id.toLowerCase().includes(q) || u.registrar_id.toLowerCase().includes(q) ||
+          u.merchant.name.toLowerCase().includes(q) || u.merchant.cnpj.includes(q) ||
+          u.nsu.includes(q) || u.arn.toLowerCase().includes(q);
+      }
+      return true;
+    });
+  }, [urFilters]);
+
+  const urQuickFilters = [
+    { key: 'with_judicial', label: 'Com bloqueio judicial', count: MOCK_URS.filter((u) => u.has_judicial_lien).length, icon: Scale },
+    { key: 'with_assignment', label: 'Cedidas a terceiros', count: MOCK_URS.filter((u) => u.has_assignment).length },
+    { key: 'reg_failed', label: 'Falha registro', count: MOCK_URS.filter((u) => u.registration_status === 'failed').length },
+    { key: 'with_divergence', label: 'Divergência CERC', count: MOCK_URS.filter((u) => u.cerc_conciliation_status === 'divergence').length },
+  ];
+
+  const handleUrToggle = (id) => setUrSelected((p) => p.includes(id) ? p.filter((x) => x !== id) : [...p, id]);
+  const handleUrToggleAll = () => setUrSelected(urSelected.length === urFiltered.length ? [] : urFiltered.map((u) => u.id));
+  const urTotalSelectedValue = urFiltered.filter((u) => urSelected.includes(u.id)).reduce((s, u) => s + u.available_value, 0);
 
   const filtered = useMemo(() => {
     return MOCK_RECEIVABLES.filter(r => {
@@ -105,6 +147,7 @@ export default function AdminIntReceivablesLedger() {
           <TabsTrigger value="by_merchant" className="text-xs gap-1.5"><Building2 className="w-3.5 h-3.5" />Por lojista</TabsTrigger>
           <TabsTrigger value="cerc" className="text-xs gap-1.5"><Database className="w-3.5 h-3.5" />Conciliação CERC</TabsTrigger>
           <TabsTrigger value="anomalies" className="text-xs gap-1.5"><AlertTriangle className="w-3.5 h-3.5" />Health & Anomalias</TabsTrigger>
+          <TabsTrigger value="ur_regulatory" className="text-xs gap-1.5"><Shield className="w-3.5 h-3.5" />Visão UR Regulatória</TabsTrigger>
         </TabsList>
 
         {/* VISÃO GERAL */}
@@ -270,6 +313,34 @@ export default function AdminIntReceivablesLedger() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* VISÃO UR REGULATÓRIA — Mentor F3586-F3658 */}
+        <TabsContent value="ur_regulatory" className="mt-4 space-y-4">
+          <Card className="bg-gradient-to-r from-violet-50 to-pink-50 border-violet-200">
+            <CardContent className="p-3 flex items-start gap-2 text-xs text-violet-900">
+              <Shield className="w-4 h-4 mt-0.5 shrink-0" />
+              <div>
+                <strong>Visão regulatória de Unidades de Recebíveis (UR)</strong> — conceito definido pela Resolução CMN 4.734/2019.
+                Cada combinação lojista × bandeira × adquirente × vencimento × arranjo gera uma UR registrada nas registradoras (CERC/CIP/B3/TAG).
+              </div>
+            </CardContent>
+          </Card>
+
+          <URBulkBar count={urSelected.length} totalValue={urTotalSelectedValue} onClear={() => setUrSelected([])} />
+          <URKpiBar kpis={UR_KPIS} />
+          <URFilters filters={urFilters} onChange={setUrFilters} quickFilters={urQuickFilters} onQuickFilter={(k) => setUrFilters({ ...urFilters, quickFilter: urFilters.quickFilter === k ? null : k })} />
+          <p className="text-xs text-slate-500">{urFiltered.length} URs encontradas · {Object.keys(MOCK_URS.reduce((acc, u) => ({ ...acc, [u.merchant.id]: 1 }), {})).length} lojistas distintos</p>
+          <URTable
+            items={urFiltered.slice(0, 50)}
+            selected={urSelected}
+            onToggle={handleUrToggle}
+            onToggleAll={handleUrToggleAll}
+            onViewDetail={(ur) => window.location.href = `${createPageUrl('AdminIntURDetail360')}?id=${ur.id}`}
+            onReprocess={(ur) => toast.success(`Reprocessamento de ${ur.id} iniciado`)}
+          />
+
+          <URAnomaliesPanel />
         </TabsContent>
       </Tabs>
     </div>

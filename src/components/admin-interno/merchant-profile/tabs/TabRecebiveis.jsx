@@ -1,13 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Receipt, ExternalLink, Download, Lock, AlertTriangle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Receipt, ExternalLink, Download, Lock, AlertTriangle, Shield, Scale } from 'lucide-react';
 import { createPageUrl } from '@/components/utils';
 import { MOCK_RECEIVABLES, RECEIVABLE_STATUS, formatCurrency } from '@/components/financial/receivables/mocks/receivablesLedgerMock';
 import ReceivablesTable from '@/components/financial/receivables/ReceivablesTable.jsx';
 import ReceivablesTimelineChart from '@/components/financial/receivables/ReceivablesTimelineChart.jsx';
+import { MOCK_URS, MOCK_EFFECTS, formatCurrencyShort } from '@/components/regulatory/mocks/urMock';
 import { toast } from 'sonner';
 
 export default function TabRecebiveis({ merchant }) {
@@ -78,6 +80,21 @@ export default function TabRecebiveis({ merchant }) {
           </CardContent>
         </Card>
       )}
+
+      {/* Cross-link para visão UR regulatória */}
+      <Card className="bg-gradient-to-r from-violet-50 to-pink-50 border-violet-200">
+        <CardContent className="p-3 flex items-center justify-between gap-2">
+          <div className="flex items-start gap-2">
+            <Shield className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
+            <div className="text-xs text-violet-900">
+              <strong>Visão regulatória UR disponível</strong> — veja as Unidades de Recebíveis registradas oficialmente nas registradoras (CERC/CIP/B3/TAG) com hierarquia de efeitos.
+            </div>
+          </div>
+          <Link to={`${createPageUrl('AdminIntMerchantProfile')}?id=${merchant.id}&tab=ur_regulatorio`}>
+            <Button size="sm" variant="outline">Ver URs regulatórias</Button>
+          </Link>
+        </CardContent>
+      </Card>
 
       {/* Timeline */}
       <ReceivablesTimelineChart />

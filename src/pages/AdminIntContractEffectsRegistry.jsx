@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-  Lock, Scale, Search, Plus, ExternalLink, Calendar, FileText, Building2, AlertTriangle,
+  Lock, Scale, Search, Plus, ExternalLink, Calendar, FileText, Building2, AlertTriangle, Shield, Database, Sparkles,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import EffectsKpiBar from '@/components/regulatory/effects/EffectsKpiBar.jsx';
+import EffectsFilters from '@/components/regulatory/effects/EffectsFilters.jsx';
+import EffectsTable from '@/components/regulatory/effects/EffectsTable.jsx';
+import EffectsConcentrationCard from '@/components/regulatory/effects/EffectsConcentrationCard.jsx';
+import EffectsConflictsCard from '@/components/regulatory/effects/EffectsConflictsCard.jsx';
+import { MOCK_EFFECTS, EFFECTS_KPIS } from '@/components/regulatory/mocks/urMock';
+import { toast } from 'sonner';
 
 /**
  * Mentor F0224–F0227 — Registry central de cessões CIP/B3 e gravames judiciais.
@@ -32,6 +40,24 @@ export default function AdminIntContractEffectsRegistry() {
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [registryFilter, setRegistryFilter] = useState('all');
+  const [regFilters, setRegFilters] = useState({ search: '', type: 'all', status: 'all', registrar: 'all' });
+
+  const regFiltered = useMemo(() => {
+    return MOCK_EFFECTS.filter((e) => {
+      if (regFilters.type !== 'all' && e.type !== regFilters.type) return false;
+      if (regFilters.status !== 'all' && e.status !== regFilters.status) return false;
+      if (regFilters.registrar !== 'all' && e.registrar !== regFilters.registrar) return false;
+      if (regFilters.search) {
+        const q = regFilters.search.toLowerCase();
+        return e.id.toLowerCase().includes(q) ||
+          e.ur_id.toLowerCase().includes(q) ||
+          e.counterparty?.name?.toLowerCase().includes(q) ||
+          (e.process_ref || '').includes(q) ||
+          (e.contract_ref || '').toLowerCase().includes(q);
+      }
+      return true;
+    });
+  }, [regFilters]);
 
   const filtered = mockEffects.filter((e) => {
     if (search && !`${e.merchant_name} ${e.counterparty} ${e.id}`.toLowerCase().includes(search.toLowerCase())) return false;
@@ -61,6 +87,14 @@ export default function AdminIntContractEffectsRegistry() {
         }
       />
 
+      <Tabs defaultValue="legacy" className="w-full">
+        <TabsList className="bg-white dark:bg-slate-900 border p-1 h-auto flex flex-wrap gap-1">
+          <TabsTrigger value="legacy" className="text-xs gap-1.5"><Lock className="w-3.5 h-3.5" />Cessões & Gravames (visão atual)</TabsTrigger>
+          <TabsTrigger value="regulatory" className="text-xs gap-1.5"><Shield className="w-3.5 h-3.5" />Visão Regulatória Mentor</TabsTrigger>
+          <TabsTrigger value="concentration" className="text-xs gap-1.5"><Sparkles className="w-3.5 h-3.5" />Concentração & Conflitos</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="legacy" className="mt-4 space-y-6">
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <Card className="p-4">
@@ -166,6 +200,35 @@ export default function AdminIntContractEffectsRegistry() {
       {filtered.length === 0 && (
         <Card><CardContent className="p-10 text-center text-slate-500"><AlertTriangle className="w-8 h-8 mx-auto mb-2" />Nenhum efeito encontrado</CardContent></Card>
       )}
+        </TabsContent>
+
+        <TabsContent value="regulatory" className="mt-4 space-y-4">
+          <Card className="bg-gradient-to-r from-violet-50 to-pink-50 border-violet-200">
+            <CardContent className="p-3 flex items-start gap-2 text-xs text-violet-900">
+              <Shield className="w-4 h-4 mt-0.5 shrink-0" />
+              <div>
+                <strong>Visão regulatória completa</strong> — todos os efeitos de contrato registrados nas registradoras (CERC/CIP/B3/TAG):
+                cessões fiduciárias, cessões de crédito, oneraçãos judiciais, penhoras, travas voluntárias e antecipações registradas.
+              </div>
+            </CardContent>
+          </Card>
+          <EffectsKpiBar kpis={EFFECTS_KPIS} />
+          <EffectsFilters filters={regFilters} onChange={setRegFilters} />
+          <p className="text-xs text-slate-500">{regFiltered.length} efeitos encontrados</p>
+          <EffectsTable
+            items={regFiltered.slice(0, 50)}
+            onViewDetail={(eff) => window.location.href = `${createPageUrl('AdminIntContractEffectDetail360')}?id=${eff.id}`}
+            onReprocess={(eff) => toast.success(`Reprocessamento de ${eff.id} iniciado`)}
+          />
+        </TabsContent>
+
+        <TabsContent value="concentration" className="mt-4 space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <EffectsConcentrationCard effects={MOCK_EFFECTS} />
+            <EffectsConflictsCard effects={MOCK_EFFECTS} />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

@@ -125,6 +125,15 @@ import AdminIntRegistradoraHub from './pages/AdminIntRegistradoraHub';
 import AdminIntReceivablesLedger from './pages/AdminIntReceivablesLedger';
 import AdminIntManualAdjustments from './pages/AdminIntManualAdjustments';
 
+// ====== Wave Mentor Entrega 6 Parte 3 (Registradoras + Efeitos de Contrato + CERC) ======
+import AdminIntURDetail360 from './pages/AdminIntURDetail360';
+import AdminIntContractEffectDetail360 from './pages/AdminIntContractEffectDetail360';
+import AdminIntCERCConciliationHub from './pages/AdminIntCERCConciliationHub';
+import AdminIntCERCFileViewer from './pages/AdminIntCERCFileViewer';
+import AdminIntJudicialBlockages from './pages/AdminIntJudicialBlockages';
+import MyReceivablesUnits from './pages/MyReceivablesUnits';
+import MyContractEffects from './pages/MyContractEffects';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -290,6 +299,15 @@ const AuthenticatedApp = () => {
       {/* ====== Wave K (Recebíveis + Ajustes Manuais) ====== */}
       <Route path="/AdminIntReceivablesLedger" element={<LayoutWrapper currentPageName="AdminIntReceivablesLedger"><AdminIntReceivablesLedger /></LayoutWrapper>} />
       <Route path="/AdminIntManualAdjustments" element={<LayoutWrapper currentPageName="AdminIntManualAdjustments"><AdminIntManualAdjustments /></LayoutWrapper>} />
+
+      {/* ====== Wave Mentor Entrega 6 Parte 3 (Registradoras + Efeitos de Contrato + CERC) ====== */}
+      <Route path="/AdminIntURDetail360" element={<LayoutWrapper currentPageName="AdminIntURDetail360"><AdminIntURDetail360 /></LayoutWrapper>} />
+      <Route path="/AdminIntContractEffectDetail360" element={<LayoutWrapper currentPageName="AdminIntContractEffectDetail360"><AdminIntContractEffectDetail360 /></LayoutWrapper>} />
+      <Route path="/AdminIntCERCConciliationHub" element={<LayoutWrapper currentPageName="AdminIntCERCConciliationHub"><AdminIntCERCConciliationHub /></LayoutWrapper>} />
+      <Route path="/AdminIntCERCFileViewer" element={<LayoutWrapper currentPageName="AdminIntCERCFileViewer"><AdminIntCERCFileViewer /></LayoutWrapper>} />
+      <Route path="/AdminIntJudicialBlockages" element={<LayoutWrapper currentPageName="AdminIntJudicialBlockages"><AdminIntJudicialBlockages /></LayoutWrapper>} />
+      <Route path="/MyReceivablesUnits" element={<LayoutWrapper currentPageName="MyReceivablesUnits"><MyReceivablesUnits /></LayoutWrapper>} />
+      <Route path="/MyContractEffects" element={<LayoutWrapper currentPageName="MyContractEffects"><MyContractEffects /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
