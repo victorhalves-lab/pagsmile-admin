@@ -153,6 +153,13 @@ import MyComplianceCenter from './pages/MyComplianceCenter';
 import MyBlockagesCenter from './pages/MyBlockagesCenter';
 import MyDriftAlerts from './pages/MyDriftAlerts';
 
+// ====== Entrega 9 — Diferencial Competitivo (Admin Sub) ======
+import MyOrchestrationView from './pages/MyOrchestrationView';
+import MyPricingTransparency from './pages/MyPricingTransparency';
+import MyReconciliationCenter from './pages/MyReconciliationCenter';
+import MyCheckupCenter from './pages/MyCheckupCenter';
+import MyCommunicationsCenter from './pages/MyCommunicationsCenter';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -346,6 +353,13 @@ const AuthenticatedApp = () => {
       <Route path="/MyComplianceCenter" element={<LayoutWrapper currentPageName="MyComplianceCenter"><MyComplianceCenter /></LayoutWrapper>} />
       <Route path="/MyBlockagesCenter" element={<LayoutWrapper currentPageName="MyBlockagesCenter"><MyBlockagesCenter /></LayoutWrapper>} />
       <Route path="/MyDriftAlerts" element={<LayoutWrapper currentPageName="MyDriftAlerts"><MyDriftAlerts /></LayoutWrapper>} />
+
+      {/* ====== Entrega 9 — Diferencial Competitivo ====== */}
+      <Route path="/MyOrchestrationView" element={<LayoutWrapper currentPageName="MyOrchestrationView"><MyOrchestrationView /></LayoutWrapper>} />
+      <Route path="/MyPricingTransparency" element={<LayoutWrapper currentPageName="MyPricingTransparency"><MyPricingTransparency /></LayoutWrapper>} />
+      <Route path="/MyReconciliationCenter" element={<LayoutWrapper currentPageName="MyReconciliationCenter"><MyReconciliationCenter /></LayoutWrapper>} />
+      <Route path="/MyCheckupCenter" element={<LayoutWrapper currentPageName="MyCheckupCenter"><MyCheckupCenter /></LayoutWrapper>} />
+      <Route path="/MyCommunicationsCenter" element={<LayoutWrapper currentPageName="MyCommunicationsCenter"><MyCommunicationsCenter /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
