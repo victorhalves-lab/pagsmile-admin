@@ -194,6 +194,10 @@ import MySubsellerInvite from './pages/MySubsellerInvite';
 import MyComplianceLinks from './pages/MyComplianceLinks';
 import MySubsellerDocsResend from './pages/MySubsellerDocsResend';
 
+// ====== Onda 5 — Páginas Públicas White-Label (subsellers) ======
+import SubsellerQuestionnaire from './pages/SubsellerQuestionnaire';
+import ComplianceDocOnly from './pages/ComplianceDocOnly';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -407,6 +411,10 @@ const AuthenticatedApp = () => {
       <Route path="/MySubsellerInvite" element={<LayoutWrapper currentPageName="MySubsellerInvite"><MySubsellerInvite /></LayoutWrapper>} />
       <Route path="/MyComplianceLinks" element={<LayoutWrapper currentPageName="MyComplianceLinks"><MyComplianceLinks /></LayoutWrapper>} />
       <Route path="/MySubsellerDocsResend" element={<LayoutWrapper currentPageName="MySubsellerDocsResend"><MySubsellerDocsResend /></LayoutWrapper>} />
+
+      {/* ====== Onda 5 — Páginas Públicas White-Label (sem layout wrapper) ====== */}
+      <Route path="/SubsellerQuestionnaire" element={<SubsellerQuestionnaire />} />
+      <Route path="/ComplianceDocOnly" element={<ComplianceDocOnly />} />
 
       {/* ====== Compliance Onboarding (replicado do app pagsmile-onboarding) ====== */}
       <Route path="/AdminIntComplianceDashboard" element={<LayoutWrapper currentPageName="AdminIntComplianceDashboard"><AdminIntComplianceDashboard /></LayoutWrapper>} />

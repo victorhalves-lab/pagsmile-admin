@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { createPageUrl } from '@/components/utils';
@@ -20,10 +20,25 @@ import CodeInput from '@/components/onboarding/v2/CodeInput';
 import HelpFloater from '@/components/onboarding/v2/HelpFloater';
 import ShareInviteButton from '@/components/onboarding/v2/ShareInviteButton';
 import SocialLoginButtons from '@/components/onboarding/v2/SocialLoginButtons';
+import { getBrandingFromUrl } from '@/components/white-label/mockWhiteLabelMerchants';
 
 export default function AccountCreationStep1() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // White-label: detecta se é onboarding de subseller via querystring
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const isSubseller = urlParams?.get('type') === 'subseller';
+  const subsellerKind = urlParams?.get('kind') === 'pf' ? 'pf' : 'pj';
+  const branding = isSubseller ? getBrandingFromUrl() : null;
+
+  // Se é subseller, redireciona para o questionário simplificado V4
+  useEffect(() => {
+    if (isSubseller && typeof window !== 'undefined') {
+      const merchantId = urlParams.get('merchant_id') || urlParams.get('merchant') || '';
+      navigate(`/SubsellerQuestionnaire?kind=${subsellerKind}&merchant_id=${merchantId}`, { replace: true });
+    }
+  }, [isSubseller, subsellerKind, navigate, urlParams]);
   const [formData, setFormData] = useState({
     fullName: '',
     cpf: '',
