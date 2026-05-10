@@ -8,11 +8,11 @@ import { BUSINESS_SEGMENTS } from '@/components/onboarding/v2/BusinessSegmentSel
 
 /**
  * Banner destacado dentro da área logada para clientes que ainda não
- * completaram o QIC (Questionário de Identificação de Cliente).
+ * completaram o KYC/KYB (Know Your Customer / Know Your Business).
  *
  * Oferece 2 caminhos:
- *  - 🤖 QIC com IA (OnboardingAgentChat) — guiado, conversacional, ~15 min
- *  - 📋 QIC Tradicional (ComplianceFullKYC) — formulário oficial baseado na doc v4.0
+ *  - 🤖 KYC/KYB com IA (OnboardingAgentChat) — guiado, conversacional, ~15 min
+ *  - 📋 KYC/KYB Tradicional (ComplianceFullKYC) — formulário oficial baseado na doc v4.0
  *
  * Só é mostrado se localStorage('compliance_completed') !== 'true'.
  */
@@ -47,14 +47,14 @@ export default function QicCallToActionBanner() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-xl lg:text-2xl font-black text-slate-900 dark:text-white">
-                Complete seu QIC para começar a operar
+                Complete seu KYC/KYB para começar a operar
               </h2>
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-black uppercase tracking-wider">
                 Obrigatório
               </span>
             </div>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-              O Questionário de Identificação de Cliente (KYC/KYB) é exigido pela Circular BCB 3.978/2020.
+              O processo de KYC/KYB (Know Your Customer / Know Your Business) é exigido pela Circular BCB 3.978/2020.
               Sem ele você não pode processar pagamentos.
               {segment && (
                 <> Adaptado para o segmento <strong className="text-[#2bc196]">{segment.label}</strong>.</>
@@ -78,7 +78,7 @@ export default function QicCallToActionBanner() {
                 <Bot className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
-                <p className="font-bold text-base text-slate-900">QIC com IA</p>
+                <p className="font-bold text-base text-slate-900">KYC/KYB com IA</p>
                 <p className="text-xs text-slate-500">Conversacional, guiado, mais rápido</p>
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function QicCallToActionBanner() {
                 <FileText className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
-                <p className="font-bold text-base text-slate-900 dark:text-white">QIC Tradicional</p>
+                <p className="font-bold text-base text-slate-900 dark:text-white">KYC/KYB Tradicional</p>
                 <p className="text-xs text-slate-500">Formulário oficial completo</p>
               </div>
             </div>
