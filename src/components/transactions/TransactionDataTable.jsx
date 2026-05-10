@@ -70,6 +70,7 @@ import ValuesCellMerchant from './cells/ValuesCellMerchant';
 import ValuesCellInternal from './cells/ValuesCellInternal';
 import FeesCellMerchant from './cells/FeesCellMerchant';
 import FeesCellInternal from './cells/FeesCellInternal';
+import PixFlowBadge from './pix/PixFlowBadge';
 
 const DEFAULT_COLUMNS = [
   { key: 'transaction_id', label: 'ID', visible: true, sortable: true },
@@ -120,8 +121,10 @@ const PIX_COLUMNS = [
   { key: 'values_block', label: 'Valores', visible: true, sortable: false },
   { key: 'fees_block', label: 'Comissões e Taxas', visible: true, sortable: false },
   { key: 'pix_transaction_type', label: 'Tipo PIX', visible: false, sortable: true },
+  { key: 'pix_flow', label: 'Fluxo PIX', visible: true, sortable: true },
   { key: 'e2eid', label: 'E2EID', visible: false },
   { key: 'pix_type', label: 'Tipo Cobrança', visible: false },
+  { key: 'pix_journey_ms', label: 'Jornada', visible: false, sortable: true },
   { key: 'payment_time', label: 'Tempo Pgto', visible: false },
 ];
 
@@ -371,9 +374,14 @@ export default function TransactionDataTable({
         return (
           <div className="space-y-1 min-w-[140px]">
             <StatusBadge status={row.status} />
-            <p className="text-xs text-gray-500">
-              {row.type === 'pix' ? 'PIX' : row.card_brand ? `Cartão · ${row.card_brand}` : 'Cartão'}
-            </p>
+            <div className="flex items-center gap-1 flex-wrap">
+              <p className="text-xs text-gray-500">
+                {(row.method === 'pix' || row.type === 'pix') ? 'PIX' : row.card_brand ? `Cartão · ${row.card_brand}` : 'Cartão'}
+              </p>
+              {(row.method === 'pix' || row.type === 'pix') && (
+                <PixFlowBadge flow={row.pix_flow || 'manual'} size="xs" />
+              )}
+            </div>
             {row.status === 'refused' && row.refusal_reason && (
               <p className="text-[10px] text-red-600 truncate max-w-[140px]" title={row.refusal_reason}>
                 {row.refusal_reason}
@@ -381,6 +389,21 @@ export default function TransactionDataTable({
             )}
           </div>
         );
+
+      case 'pix_flow':
+        if (row.method !== 'pix' && row.type !== 'pix') return '-';
+        return <PixFlowBadge flow={row.pix_flow || 'manual'} />;
+
+      case 'pix_journey_ms':
+        if (!row.pix_journey_ms) return '-';
+        const ms = row.pix_journey_ms;
+        if (ms < 30000) {
+          return <span className="text-emerald-700 font-medium text-xs">⚡ {(ms / 1000).toFixed(1)}s</span>;
+        }
+        if (ms < 120000) {
+          return <span className="text-amber-700 font-medium text-xs">{(ms / 1000).toFixed(0)}s</span>;
+        }
+        return <span className="text-rose-700 font-medium text-xs">{(ms / 60000).toFixed(1)}min</span>;
 
       case 'dates_block':
         return <DatesCell row={row} />;

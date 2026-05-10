@@ -25,6 +25,7 @@ import DeclineAnalysis from '@/components/dashboard/DeclineAnalysis';
 import ComparativeMetrics from '@/components/dashboard/ComparativeMetrics';
 import ConversionMetricsCards from '@/components/dashboard/ConversionMetricsCards';
 import PixFlowCards from '@/components/dashboard/PixFlowCards';
+import PixUpliftCard from '@/components/dashboard/PixUpliftCard';
 
 // Tier 1
 import CriticalAlertsBanner from '@/components/dashboard/CriticalAlertsBanner';
@@ -270,6 +271,7 @@ export default function Dashboard() {
         </TabsContent>
 
         <TabsContent value="pix" className="space-y-4">
+          <PixUpliftCard />
           <PixFlowCards transactions={transactions} />
           <PixPerformanceMetrics transactions={transactions} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

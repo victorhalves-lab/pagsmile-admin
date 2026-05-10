@@ -55,6 +55,7 @@ import TransactionMassActions from './TransactionMassActions';
 import TransactionDataTable from './TransactionDataTable';
 import PixOpsLiveCard from './pix/PixOpsLiveCard';
 import PixOutLiquidityCard from './pix/PixOutLiquidityCard';
+import { PIX_FLOWS, getPixFlowConfig } from './pix/pixFlowConfig';
 
 export default function PixTransactionsView() {
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ export default function PixTransactionsView() {
   const [pageSize, setPageSize] = useState(25);
   const [activeSubTab, setActiveSubTab] = useState('all');
   const [pixTypeFilter, setPixTypeFilter] = useState('all'); // 'all', 'in', 'out'
+  const [pixFlowFilter, setPixFlowFilter] = useState('all'); // 'all' | 'manual' | 'automatic' | 'biometric' | 'scheduled'
   const [showNewQRDialog, setShowNewQRDialog] = useState(false);
   const [showRefundDialog, setShowRefundDialog] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -188,8 +190,23 @@ export default function PixTransactionsView() {
       result = result.filter(tx => tx.pix_transaction_type === 'out');
     }
 
+    // PIX Flow filtering
+    if (pixFlowFilter !== 'all') {
+      result = result.filter(tx => (tx.pix_flow || 'manual') === pixFlowFilter);
+    }
+
     return result;
-  }, [transactions, filters, activeSubTab, pixTypeFilter]);
+  }, [transactions, filters, activeSubTab, pixTypeFilter, pixFlowFilter]);
+
+  // Counts por flow
+  const flowCounts = useMemo(() => {
+    const counts = { manual: 0, automatic: 0, biometric: 0, scheduled: 0 };
+    transactions.forEach(tx => {
+      const f = tx.pix_flow || 'manual';
+      if (counts[f] !== undefined) counts[f]++;
+    });
+    return counts;
+  }, [transactions]);
 
   const paginatedTransactions = useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -379,6 +396,47 @@ export default function PixTransactionsView() {
           <Plus className="w-4 h-4 mr-2" />
           Gerar Novo QR Pix
         </Button>
+      </div>
+
+      {/* PIX Flow Filter (Manual / Automatic / Biometric / Scheduled) */}
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-slate-600">Fluxo:</span>
+          <div className="flex gap-1 bg-slate-100 p-1 rounded-lg flex-wrap">
+            <Button
+              variant={pixFlowFilter === 'all' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setPixFlowFilter('all')}
+              className={cn('h-8', pixFlowFilter === 'all' && 'bg-white shadow-sm')}
+            >
+              Todos
+            </Button>
+            {Object.values(PIX_FLOWS).map(cfg => {
+              const Icon = cfg.icon;
+              const selected = pixFlowFilter === cfg.value;
+              return (
+                <Button
+                  key={cfg.value}
+                  variant={selected ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setPixFlowFilter(cfg.value)}
+                  className={cn(
+                    'h-8 gap-1',
+                    selected && cfg.bgClass,
+                    selected && cfg.textClass,
+                    selected && 'border border-current'
+                  )}
+                >
+                  <Icon className="w-3 h-3" />
+                  {cfg.shortLabel}
+                  <Badge className={cn('ml-1 px-1.5 py-0 text-xs border-0', cfg.bgClass, cfg.textClass)}>
+                    {flowCounts[cfg.value] || 0}
+                  </Badge>
+                </Button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* PIX Type Filter (In/Out) */}

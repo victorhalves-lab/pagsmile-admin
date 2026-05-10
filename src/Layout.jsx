@@ -86,8 +86,16 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.all_transactions'), page: 'Transactions' },
       { label: t('menu.card'), page: 'CardTransactions' },
       { label: t('menu.pix'), page: 'PixTransactions' },
+      { label: '🔁 PIX Automático', page: 'PixMandateHealth' },
+      { label: '👆 PIX Biometria', page: 'PixBiometricInsights' },
       { label: t('menu.decline_analysis'), page: 'DeclineAnalysis' },
     ]
+  },
+  {
+    id: 'open-finance',
+    label: 'Open Finance',
+    icon: Landmark,
+    page: 'OpenFinanceHub',
   },
   {
     id: 'checkout',
@@ -412,6 +420,7 @@ const getAdminInternoMenuItems = (t) => [
       { label: t('menu_admin.retry_intelligence'), page: 'AdminIntRetryIntelligence' },
       { label: t('menu_admin.batch_processing'), page: 'AdminIntBatchProcessing' },
       { label: t('menu_admin.reconciliation'), page: 'AdminIntReconciliation' },
+      { label: '🌐 Open Finance Live Map', page: 'AdminIntOpenFinanceLiveMap' },
       { label: t('menu.reports'), page: 'AdminIntTransactionReports' },
     ]
   },
@@ -582,6 +591,7 @@ const internetBankingPages = [
 // Admin Interno pages
 const adminInternoPages = [
   'AdminIntDashboard',
+  'AdminIntOpenFinanceLiveMap',
   // B22 - Tuna Orchestration & Multi-Method
   'AdminIntMultiMethodCockpit', 'AdminIntCrossMethodRecovery', 'AdminIntConnectionHealth', 'AdminIntMerchantCoverageMatrix',
   'AdminIntOrchestrationStudio', 'AdminIntAntiArbitrage', 'AdminIntSmartSplitSuggester', 'AdminIntABVolumeAllocator',

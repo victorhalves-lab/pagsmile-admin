@@ -36,6 +36,7 @@ import {
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import { PIX_FLOW_OPTIONS, getPixFlowConfig } from './pix/pixFlowConfig';
 
 const STATUS_OPTIONS = [
   { value: 'approved', label: 'Aprovada' },
@@ -355,6 +356,40 @@ export default function TransactionAdvancedFilters({
                             <SelectItem value="failed">3DS Falhou</SelectItem>
                           </SelectContent>
                         </Select>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
+
+                {/* PIX Flow Filter */}
+                {(viewMode === 'all' || viewMode === 'pix') && (
+                  <AccordionItem value="pix_flow" className="border rounded-lg px-3">
+                    <AccordionTrigger className="text-sm font-medium hover:no-underline">
+                      Tipo de PIX (fluxo)
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="grid grid-cols-2 gap-2 pt-2">
+                        {PIX_FLOW_OPTIONS.map(opt => {
+                          const cfg = getPixFlowConfig(opt.value);
+                          const Icon = cfg.icon;
+                          const selected = (localFilters.pix_flows || []).includes(opt.value);
+                          return (
+                            <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                              <Checkbox
+                                checked={selected}
+                                onCheckedChange={(checked) => {
+                                  const current = localFilters.pix_flows || [];
+                                  handleChange('pix_flows', checked
+                                    ? [...current, opt.value]
+                                    : current.filter(f => f !== opt.value)
+                                  );
+                                }}
+                              />
+                              <Icon className={cn('w-3.5 h-3.5', cfg.textClass)} />
+                              <span className="text-sm">{opt.label}</span>
+                            </label>
+                          );
+                        })}
                       </div>
                     </AccordionContent>
                   </AccordionItem>

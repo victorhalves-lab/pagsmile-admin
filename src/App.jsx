@@ -207,6 +207,12 @@ import MySubsellerDocsResend from './pages/MySubsellerDocsResend';
 import SubsellerQuestionnaire from './pages/SubsellerQuestionnaire';
 import ComplianceDocOnly from './pages/ComplianceDocOnly';
 
+// ====== PIX Open Finance (PIX Automático / Biometria / Hub) ======
+import PixMandateHealth from './pages/PixMandateHealth';
+import PixBiometricInsights from './pages/PixBiometricInsights';
+import OpenFinanceHub from './pages/OpenFinanceHub';
+import AdminIntOpenFinanceLiveMap from './pages/AdminIntOpenFinanceLiveMap';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -433,6 +439,12 @@ const AuthenticatedApp = () => {
       {/* ====== Onda 5 — Páginas Públicas White-Label (sem layout wrapper) ====== */}
       <Route path="/SubsellerQuestionnaire" element={<SubsellerQuestionnaire />} />
       <Route path="/ComplianceDocOnly" element={<ComplianceDocOnly />} />
+
+      {/* ====== PIX Open Finance (Automático / Biometria / Hub / Live Map) ====== */}
+      <Route path="/PixMandateHealth" element={<LayoutWrapper currentPageName="PixMandateHealth"><PixMandateHealth /></LayoutWrapper>} />
+      <Route path="/PixBiometricInsights" element={<LayoutWrapper currentPageName="PixBiometricInsights"><PixBiometricInsights /></LayoutWrapper>} />
+      <Route path="/OpenFinanceHub" element={<LayoutWrapper currentPageName="OpenFinanceHub"><OpenFinanceHub /></LayoutWrapper>} />
+      <Route path="/AdminIntOpenFinanceLiveMap" element={<LayoutWrapper currentPageName="AdminIntOpenFinanceLiveMap"><AdminIntOpenFinanceLiveMap /></LayoutWrapper>} />
 
       {/* ====== Compliance Onboarding (replicado do app pagsmile-onboarding) ====== */}
       <Route path="/AdminIntComplianceDashboard" element={<LayoutWrapper currentPageName="AdminIntComplianceDashboard"><AdminIntComplianceDashboard /></LayoutWrapper>} />

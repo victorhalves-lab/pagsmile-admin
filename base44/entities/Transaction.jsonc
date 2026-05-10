@@ -40,6 +40,49 @@
       ],
       "description": "Tipo de transa\u00e7\u00e3o PIX: 'in' para entrada (recebimento) ou 'out' para sa\u00edda (envio/devolu\u00e7\u00e3o)"
     },
+    "pix_flow": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "automatic",
+        "biometric",
+        "scheduled"
+      ],
+      "default": "manual",
+      "description": "Fluxo do PIX: manual (QR/copia-cola), automatic (PIX Autom\u00e1tico recorrente via DICT), biometric (PIX por Biometria via Open Finance sem redirect), scheduled (PIX Agendado BCB)"
+    },
+    "pix_consent_id": {
+      "type": "string",
+      "description": "ID do consentimento Open Finance (para flows automatic e biometric)"
+    },
+    "pix_consent_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "revoked",
+        "expired",
+        "pending"
+      ],
+      "description": "Status do consentimento OF associado"
+    },
+    "pix_auth_method": {
+      "type": "string",
+      "enum": [
+        "face_id",
+        "fingerprint",
+        "password",
+        "none"
+      ],
+      "description": "M\u00e9todo de autentica\u00e7\u00e3o usado (relevante para biometric)"
+    },
+    "pix_journey_ms": {
+      "type": "integer",
+      "description": "Lat\u00eancia total da jornada de autoriza\u00e7\u00e3o em milissegundos"
+    },
+    "pix_bank_name": {
+      "type": "string",
+      "description": "Nome do banco do pagador (relevante para biometric/automatic via OF)"
+    },
     "status": {
       "type": "string",
       "enum": [
@@ -168,16 +211,13 @@
           "type": "string"
         },
         "payer_name": {
-          "type": "string",
-          "description": "Nome do pagador PIX"
+          "type": "string"
         },
         "payer_document": {
-          "type": "string",
-          "description": "CPF/CNPJ do pagador PIX"
+          "type": "string"
         },
         "payer_bank": {
-          "type": "string",
-          "description": "Banco do pagador PIX"
+          "type": "string"
         }
       }
     },
@@ -309,8 +349,7 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "description": "Nome do produto/servi\u00e7o"
+            "type": "string"
           },
           "description": {
             "type": "string"
@@ -322,59 +361,46 @@
             "type": "number"
           },
           "category": {
-            "type": "string",
-            "description": "Categoria do item vendido"
+            "type": "string"
           }
         }
-      },
-      "description": "Itens da transa\u00e7\u00e3o (produtos/servi\u00e7os vendidos)"
+      }
     },
     "external_id": {
-      "type": "string",
-      "description": "PR-01 \u00b7 Chave can\u00f4nica de match com adquirente (NSU + autoriza\u00e7\u00e3o concatenados)"
+      "type": "string"
     },
     "merchant_id": {
-      "type": "string",
-      "description": "PR-01 \u00b7 Atalho desnormalizado para queries de concilia\u00e7\u00e3o"
+      "type": "string"
     },
     "acquirer_id": {
-      "type": "string",
-      "description": "PR-01 \u00b7 cielo|stone|rede|getnet|mp|itau"
+      "type": "string"
     },
     "amount_cents": {
-      "type": "integer",
-      "description": "PR-01 \u00b7 Valor em centavos (paralelo ao 'amount' float existente, para precis\u00e3o em concilia\u00e7\u00e3o)"
+      "type": "integer"
     },
     "occurred_at": {
       "type": "string",
-      "format": "date-time",
-      "description": "PR-01 \u00b7 Timestamp can\u00f4nico para match (paralelo a 'created_at')"
+      "format": "date-time"
     },
     "expected_settle_date": {
       "type": "string",
-      "format": "date",
-      "description": "PR-01 \u00b7 Data esperada de liquida\u00e7\u00e3o"
+      "format": "date"
     },
     "actual_settle_date": {
       "type": "string",
-      "format": "date",
-      "description": "PR-01 \u00b7 Data efetiva de liquida\u00e7\u00e3o confirmada via banco"
+      "format": "date"
     },
     "card_brand": {
-      "type": "string",
-      "description": "PR-01 \u00b7 Atalho desnormalizado de card.brand para indexa\u00e7\u00e3o"
+      "type": "string"
     },
     "split_id": {
-      "type": "string",
-      "description": "PR-01 \u00b7 FK l\u00f3gica \u2192 Split.id (execu\u00e7\u00e3o de split)"
+      "type": "string"
     },
     "raw_payload": {
-      "type": "object",
-      "description": "PR-01 \u00b7 Payload bruto Tuna para auditoria"
+      "type": "object"
     },
     "raw_hash": {
-      "type": "string",
-      "description": "PR-01 \u00b7 SHA-256 do raw_payload"
+      "type": "string"
     },
     "reconciliation_state": {
       "type": "string",
@@ -389,13 +415,11 @@
         "resolved",
         "suppressed"
       ],
-      "default": "pending",
-      "description": "PR-01 \u00b7 Estado da concilia\u00e7\u00e3o tripla"
+      "default": "pending"
     },
     "last_matched_at": {
       "type": "string",
-      "format": "date-time",
-      "description": "PR-01 \u00b7 \u00daltima vez que conseguiu match"
+      "format": "date-time"
     },
     "med_status": {
       "type": "string",
@@ -406,8 +430,7 @@
         "rejected",
         "expired"
       ],
-      "default": "none",
-      "description": "PR-01 \u00b7 Mecanismo Especial de Devolu\u00e7\u00e3o PIX"
+      "default": "none"
     }
   },
   "required": [
