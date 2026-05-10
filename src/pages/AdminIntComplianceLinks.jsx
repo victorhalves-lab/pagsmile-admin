@@ -1,24 +1,30 @@
 import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import {
-  Link as LinkIcon, Copy, Check, ExternalLink, RefreshCw,
-  Shield, ShoppingCart, Cloud, CreditCard, Globe, Briefcase, BookOpen, Store,
-  TrendingUp, MousePointer, FileCheck, Trash2, BarChart3, ChevronDown, ChevronUp,
+  Link as LinkIcon, Copy, Check, RefreshCw, Shield, ShoppingCart, Cloud,
+  CreditCard, Globe, Briefcase, BookOpen, Store, TrendingUp, MousePointer,
+  FileCheck, Building2, Plus, Search, Camera, FileText, Users, UserCheck,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import PageHeader from '@/components/common/PageHeader';
+import V4KpiCard from '@/components/admin-interno/compliance/v4/V4KpiCard';
 import QuickLinkCard from '@/components/admin-interno/compliance/onboarding/QuickLinkCard';
-import LinkAnalyticsDashboard from '@/components/admin-interno/compliance/onboarding/LinkAnalyticsDashboard';
-import GenerateLinkForm from '@/components/admin-interno/compliance/onboarding/GenerateLinkForm.jsx';
-import { mockComplianceLinks } from '@/components/admin-interno/compliance/onboarding/mocks/complianceLinksMock';
+import V4LinksTable from '@/components/admin-interno/compliance/v4/V4LinksTable';
+import { mockOnboardingLinks } from '@/components/admin-interno/compliance/v4/mocks/onboardingLinksV4Mock';
 
 export default function AdminIntComplianceLinks() {
+  const [activeTab, setActiveTab] = useState('quick');
+  const [scopeFilter, setScopeFilter] = useState('all');
+  const [creatorFilter, setCreatorFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [links, setLinks] = useState(mockOnboardingLinks);
   const [copiedKey, setCopiedKey] = useState(null);
-  const [expandedLinkId, setExpandedLinkId] = useState(null);
-  const [activeTab, setActiveTab] = useState('links');
-  const [links, setLinks] = useState(mockComplianceLinks);
 
   const base = typeof window !== 'undefined' ? window.location.origin : '';
 
@@ -29,258 +35,224 @@ export default function AdminIntComplianceLinks() {
     toast.success('Link copiado!');
   };
 
-  const handleDelete = (id) => {
-    setLinks((prev) => prev.filter((l) => l.id !== id));
-    toast.success('Link excluído');
-  };
+  // Quick Links — V4 Cartão por segmento
+  const quickLinksV4Card = [
+    { key: 'GATEWAY_V4', label: 'Gateway v4', desc: '85 perguntas em 12 blocos. Cobertura regulatória ~98%.', icon: Globe, color: '#4f46e5', url: `${base}/ComplianceFullKYC?model=v4_gateway` },
+    { key: 'MARKETPLACE_V4', label: 'Marketplace v4', desc: '75 perguntas. Foco em sellers, split, anti-bolsão.', icon: ShoppingCart, color: '#d97706', url: `${base}/ComplianceFullKYC?model=v4_marketplace` },
+    { key: 'ECOMMERCE_V4', label: 'E-commerce v4', desc: '44 perguntas. Foco em produtos e logística.', icon: ShoppingCart, color: '#e11d48', url: `${base}/ComplianceFullKYC?model=v4_ecommerce` },
+    { key: 'INFOPRODUTOS_V4', label: 'Infoprodutos v4', desc: '56 perguntas. Foco em produto digital, afiliados.', icon: BookOpen, color: '#d97706', url: `${base}/ComplianceFullKYC?model=v4_infoprodutos` },
+    { key: 'EDUCACAO_V4', label: 'Educação v4', desc: '37 perguntas. MEC, modalidade, alunos.', icon: BookOpen, color: '#0284c7', url: `${base}/ComplianceFullKYC?model=v4_educacao` },
+    { key: 'SAAS_V4', label: 'SaaS v4', desc: '40 perguntas. Recorrência, dados, fintech.', icon: Cloud, color: '#0891b2', url: `${base}/ComplianceFullKYC?model=v4_saas` },
+    { key: 'MERCHANT_LINK_V4', label: 'Merchant Link v4', desc: '41 perguntas. MEI/SLU, social, presencial.', icon: Store, color: '#16a34a', url: `${base}/ComplianceFullKYC?model=v4_merchant_link` },
+    { key: 'MPE_V4', label: 'MPE v4', desc: '38 perguntas. MEI/ME, ponto físico, atividade local.', icon: Briefcase, color: '#d97706', url: `${base}/ComplianceFullKYC?model=v4_mpe` },
+    { key: 'DROPSHIPPING_V4', label: 'Dropshipping v4', desc: '52 perguntas. Logística, prazo, afiliados.', icon: ShoppingCart, color: '#ea580c', url: `${base}/ComplianceFullKYC?model=v4_dropshipping` },
+    { key: 'PLATAFORMA_V4', label: 'Plataforma Vertical v4', desc: '52 perguntas. Verticais de nicho (food, saúde).', icon: Briefcase, color: '#7c3aed', url: `${base}/ComplianceFullKYC?model=v4_plataforma_vertical` },
+  ];
 
   const quickLinksPixV4 = [
-    { key: 'PIX_MERCHANT_V4', label: 'PIX Merchant v4', desc: '40 perguntas em 8 blocos. Compliance PIX + Conta para merchants. Foco em volume, natureza, PLD/FT e UBOs. Pré-preenchimento Lead.', icon: CreditCard, color: '#2bc196', url: `${base}/ComplianceDinamico?model=CompliancePixMerchantV4` },
-    { key: 'PIX_INTERMEDIARIO_V4', label: 'PIX Intermediário v4', desc: '47 perguntas em 8 blocos. Compliance PIX + Conta para intermediários (Gateway/PSP, Marketplace, Plataforma). Foco em split, anti-bolção, MED e regulatório BCB.', icon: Globe, color: '#4f46e5', url: `${base}/ComplianceDinamico?model=CompliancePixIntermediarioV4` },
-    { key: 'PIX_API_ENTERPRISE', label: 'PIX API Enterprise', desc: '~30 perguntas em 6 passos. Fluxo simplificado para grandes contas — autocomplete BDC massivo + enriquecimento automático de 40+ datasets. Liveness/Facematch + PLD/FT obrigatórios.', icon: Shield, color: '#2563eb', url: `${base}/ComplianceDinamico?model=pix_api_enterprise` },
+    { key: 'PIX_MERCHANT_V4', label: 'PIX Merchant v4', desc: '40 perguntas em 8 blocos. Volume, natureza, PLD/FT, UBOs.', icon: CreditCard, color: '#2bc196', url: `${base}/CompliancePixOnly?model=v4_pix_merchant` },
+    { key: 'PIX_INTERMEDIARIO_V4', label: 'PIX Intermediário v4', desc: '47 perguntas. Gateway/PSP, Marketplace, Plataforma.', icon: Globe, color: '#4f46e5', url: `${base}/CompliancePixOnly?model=v4_pix_intermediario` },
+    { key: 'PIX_API_ENTERPRISE', label: 'PIX API Enterprise', desc: '~30 perguntas. Autocomplete BDC + Liveness.', icon: Shield, color: '#2563eb', url: `${base}/CompliancePixOnly?model=v4_pix_api_enterprise` },
   ];
 
-  const quickLinksV4 = [
-    { key: 'GATEWAY_V4', label: 'Gateway v4', desc: '85 perguntas em 12 blocos. Pré-preenchimento automático do Lead v5. Cobertura regulatória ~98%.', icon: Globe, color: '#4f46e5', url: `${base}/ComplianceDinamico?model=ComplianceGatewayV4` },
-    { key: 'MARKETPLACE_V4', label: 'Marketplace v4', desc: '75 perguntas em 11 blocos. Foco em sellers, split e anti-bolsão. Pré-preenchimento Lead v5.', icon: ShoppingCart, color: '#d97706', url: `${base}/ComplianceDinamico?model=ComplianceMarketplaceV4` },
-    { key: 'PLATAFORMA_VERTICAL_V4', label: 'Plataforma Vertical v4', desc: '52 perguntas em 9 blocos. Verticais de nicho (food, saúde, eventos). Pré-preenchimento Lead v5.', icon: Briefcase, color: '#7c3aed', url: `${base}/ComplianceDinamico?model=CompliancePlataformaVerticalV4` },
-    { key: 'ECOMMERCE_V4', label: 'E-commerce v4', desc: '44 perguntas em 8 blocos. Foco em produtos, logística e entrega. Pré-preenchimento Lead v5.', icon: ShoppingCart, color: '#e11d48', url: `${base}/ComplianceDinamico?model=ComplianceEcommerceV4` },
-    { key: 'INFOPRODUTOS_V4', label: 'Infoprodutos v4', desc: '56 perguntas em 11 blocos. Foco em produto digital, afiliados e práticas de vendas. Pré-preenchimento Lead v5.', icon: BookOpen, color: '#d97706', url: `${base}/ComplianceDinamico?model=ComplianceInfoprodutosV4` },
-    { key: 'EDUCACAO_V4', label: 'Educação v4', desc: '37 perguntas em 8 blocos. Foco em reconhecimento MEC, modalidade de ensino e perfil de alunos. Pré-preenchimento Lead v5.', icon: BookOpen, color: '#0284c7', url: `${base}/ComplianceDinamico?model=ComplianceEducacaoV4` },
-    { key: 'SAAS_V4', label: 'SaaS v4', desc: '40 perguntas em 9 blocos. Foco em modelo de negócio, recorrência, segurança de dados e triagem fintech. Pré-preenchimento Lead v5.', icon: Cloud, color: '#0891b2', url: `${base}/ComplianceDinamico?model=ComplianceSaaSV4` },
-    { key: 'MERCHANT_LINK_V4', label: 'Merchant Link Pagamento v4', desc: '41 perguntas em 9 blocos. Foco em micro-merchants (MEI/SLU), canais social, entrega presencial e triagem de reclassificação. Pré-preenchimento Lead v5.', icon: Store, color: '#16a34a', url: `${base}/ComplianceDinamico?model=ComplianceMerchantLinkV4` },
-    { key: 'MPE_V4', label: 'Micro e Pequenas Empresas v4', desc: '38 perguntas em 9 blocos. Foco em MEI/ME, ponto físico, atividade local e triagem de reclassificação. Pré-preenchimento Lead v5.', icon: Briefcase, color: '#d97706', url: `${base}/ComplianceDinamico?model=ComplianceMPEV4` },
-    { key: 'DROPSHIPPING_V4', label: 'Dropshipping v4', desc: '52 perguntas em 11 blocos. Foco em fornecedor/logística, prazo de entrega, rastreamento, afiliados e risco de chargeback. Pré-preenchimento Lead v5.', icon: ShoppingCart, color: '#ea580c', url: `${base}/ComplianceDinamico?model=ComplianceDropshippingV4` },
+  const quickLinksSubseller = [
+    { key: 'SUBSELLER_PJ', label: 'Subseller PJ', desc: 'Questionário V4 simplificado para subsellers PJ. Modelo focado em revenda/marketplace.', icon: Building2, color: '#7c3aed', url: `${base}/AccountCreationStep1?type=subseller&kind=pj` },
+    { key: 'SUBSELLER_PF', label: 'Subseller PF', desc: 'Questionário V4 para pessoa física. Foco em CAF + score Serasa + endereço.', icon: Users, color: '#db2777', url: `${base}/AccountCreationStep1?type=subseller&kind=pf` },
   ];
+
+  const quickLinksAdvanced = [
+    { key: 'DOC_ONLY', label: 'Doc-Only (Reenvio)', desc: 'Para casos onde só faltam documentos. Não refaz questionário.', icon: FileText, color: '#d97706', url: `${base}/ComplianceDocOnly` },
+    { key: 'CAF_ONLY', label: 'Só CAF / Liveness', desc: 'Apenas biometria + facematch. Para refazer KYC visual.', icon: Camera, color: '#7c3aed', url: `${base}/LivenessFacematchStep` },
+    { key: 'CAF_DOCS', label: 'CAF + Documentos', desc: 'Biometria CAF + upload de documentos no mesmo fluxo.', icon: UserCheck, color: '#0891b2', url: `${base}/ComplianceFullKYC?caf_docs=true` },
+    { key: 'PRE_FILLED', label: 'Pré-preenchido', desc: 'Inicia o caso com dados pré-preenchidos pelo time interno.', icon: FileCheck, color: '#16a34a', url: `${base}/ComplianceOnboardingStart?prefill=true` },
+  ];
+
+  // Filtros
+  const filteredLinks = useMemo(() => {
+    let list = [...links];
+    if (scopeFilter !== 'all') list = list.filter((l) => l.scope === scopeFilter);
+    if (creatorFilter !== 'all') list = list.filter((l) => l.created_by_type === creatorFilter);
+    if (typeFilter !== 'all') list = list.filter((l) => l.type === typeFilter);
+    if (searchTerm) {
+      const q = searchTerm.toLowerCase();
+      list = list.filter((l) =>
+        l.name.toLowerCase().includes(q) ||
+        l.url.toLowerCase().includes(q) ||
+        (l.merchant_pai_name || '').toLowerCase().includes(q)
+      );
+    }
+    return list.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+  }, [links, scopeFilter, creatorFilter, typeFilter, searchTerm]);
 
   const stats = useMemo(() => {
-    const tc = links.reduce((s, l) => s + (l.clickCount || 0), 0);
-    const ts = links.reduce((s, l) => s + (l.submissionCount || 0), 0);
-    const tco = links.reduce((s, l) => s + (l.completedCount || 0), 0);
-    return { total: links.length, clicks: tc, submissions: ts, completed: tco, conv: tc > 0 ? ((ts / tc) * 100).toFixed(1) : 0 };
+    const totalClicks = links.reduce((s, l) => s + (l.clicks_count || 0), 0);
+    const totalSubs = links.reduce((s, l) => s + (l.submissions_count || 0), 0);
+    const totalCompletions = links.reduce((s, l) => s + (l.completions_count || 0), 0);
+    const conv = totalClicks ? ((totalSubs / totalClicks) * 100).toFixed(1) : 0;
+    return {
+      total: links.length,
+      pagsmile: links.filter((l) => l.created_by_type === 'pagsmile_admin').length,
+      merchant: links.filter((l) => l.created_by_type === 'merchant').length,
+      subseller: links.filter((l) => l.scope === 'subseller').length,
+      clicks: totalClicks,
+      subs: totalSubs,
+      completions: totalCompletions,
+      conv,
+    };
   }, [links]);
 
-  const getLinkLabel = (link) => {
-    const ct = link.complianceType;
-    if (ct === 'PIX') return '💳 Pix';
-    if (ct === 'FULL') return '🔒 Full';
-    if (ct === 'LITE') return '⚡ Lite';
-    if (ct === 'ECOMMERCE') return '🛒 E-comm';
-    if (ct === 'SAAS') return '☁️ SaaS';
-    return '🌐 Genérico';
-  };
-
-  const getV4ModelByComplianceType = (type) => {
-    switch (type) {
-      case 'PIX': return 'CompliancePixMerchantV4';
-      case 'FULL': return 'ComplianceEcommerceV4';
-      case 'LITE': return 'ComplianceSaaSV4';
-      case 'ECOMMERCE': return 'ComplianceEcommerceV4';
-      case 'SAAS': return 'ComplianceSaaSV4';
-      default: return 'ComplianceEcommerceV4';
-    }
-  };
-
-  const generateLinkUrl = (link) => {
-    const model = getV4ModelByComplianceType(link.complianceType);
-    let url = `${base}/ComplianceDinamico?model=${model}&ref=${link.uniqueCode}`;
-    if (link.utmSource) url += `&utm_source=${link.utmSource}`;
-    return url;
+  const handleDelete = (id) => {
+    setLinks((prev) => prev.filter((l) => l.id !== id));
+    toast.success('Link removido');
   };
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6">
       <PageHeader
         title="Links de Compliance"
-        subtitle="Gere e compartilhe links de questionários de compliance por segmento"
+        subtitle="Gere e gerencie links de compliance — Self, Doc-Only, CAF, Subsellers e por segmento"
         icon={LinkIcon}
         breadcrumbs={[
           { label: 'Compliance', page: 'AdminIntComplianceDashboard' },
           { label: 'Links de Compliance' },
         ]}
         actions={
-          <Button variant="outline" onClick={() => toast.success('Atualizado')}>
-            <RefreshCw className="w-4 h-4" /> Atualizar
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline"><RefreshCw className="w-4 h-4 mr-1" /> Atualizar</Button>
+            <Button><Plus className="w-4 h-4 mr-1" /> Novo Link</Button>
+          </div>
         }
       />
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        {[
-          { label: 'Links criados', value: stats.total, icon: LinkIcon, color: '#002443' },
-          { label: 'Cliques', value: stats.clicks, icon: MousePointer, color: '#36706c' },
-          { label: 'Submissões', value: stats.submissions, icon: FileCheck, color: '#2bc196' },
-          { label: 'Concluídos', value: stats.completed, icon: Check, color: '#2bc196' },
-          { label: 'Conversão', value: `${stats.conv}%`, icon: TrendingUp, color: '#36706c' },
-        ].map((s, i) => {
-          const Icon = s.icon;
-          return (
-            <div key={i} className="bg-white dark:bg-[#003459] rounded-2xl border border-slate-100 dark:border-[#004D73] p-4 flex items-center gap-3">
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: `${s.color}15`, color: s.color }}
-              >
-                <Icon className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-2xl font-black text-slate-900 dark:text-white">{s.value}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{s.label}</p>
-              </div>
-            </div>
-          );
-        })}
+      {/* KPIs */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+        <V4KpiCard icon={LinkIcon} label="Total" value={stats.total} accent="blue" />
+        <V4KpiCard icon={Shield} label="PagSmile" value={stats.pagsmile} accent="indigo" />
+        <V4KpiCard icon={Building2} label="Merchants" value={stats.merchant} accent="violet" />
+        <V4KpiCard icon={Users} label="Subsellers" value={stats.subseller} accent="violet" />
+        <V4KpiCard icon={MousePointer} label="Cliques" value={stats.clicks} accent="slate" />
+        <V4KpiCard icon={FileCheck} label="Submissões" value={stats.subs} accent="emerald" />
+        <V4KpiCard icon={TrendingUp} label="Conversão" value={`${stats.conv}%`} accent="emerald" />
       </div>
 
-      {/* Tabs */}
-      <div className="bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl flex gap-1 max-w-2xl">
-        {[
-          { id: 'gerar', label: '✨ Gerar Novo Link' },
-          { id: 'links', label: 'Links Rápidos' },
-          { id: 'historico', label: `Histórico (${links.length})` },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
-              activeTab === tab.id
-                ? 'bg-white dark:bg-[#003459] text-slate-900 dark:text-white shadow-sm'
-                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="bg-white dark:bg-[#003459] rounded-2xl border border-slate-100 dark:border-[#004D73] p-5">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList>
+            <TabsTrigger value="quick">Links Rápidos</TabsTrigger>
+            <TabsTrigger value="history">Histórico ({stats.total})</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {activeTab === 'quick' && (
+          <div className="mt-6 space-y-8">
+            {/* Avançados (Doc-Only / CAF / Pré-preenchido) */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">Links Avançados (Excepcionais)</h2>
+                <Badge className="bg-amber-100 text-amber-700 border-0">Uso Pontual</Badge>
+              </div>
+              <p className="text-xs text-slate-500 mb-4">
+                Esses links são usados em situações específicas (reenvio de docs, refazer biometria, completar caso pré-preenchido).
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {quickLinksAdvanced.map((item) => (
+                  <QuickLinkCard key={item.key} item={item} copied={copiedKey === item.key} onCopy={handleCopy} />
+                ))}
+              </div>
+            </div>
+
+            {/* PIX V4 */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">PIX V4 — Merchants & Intermediários</h2>
+                <Badge className="bg-[#2bc196] text-white border-0">PIX</Badge>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {quickLinksPixV4.map((item) => (
+                  <QuickLinkCard key={item.key} item={item} copied={copiedKey === item.key} onCopy={handleCopy} />
+                ))}
+              </div>
+            </div>
+
+            {/* Card V4 por Segmento */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">Cartão V4 — Por Segmento</h2>
+                <Badge className="bg-indigo-500 text-white border-0">Card</Badge>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {quickLinksV4Card.map((item) => (
+                  <QuickLinkCard key={item.key} item={item} copied={copiedKey === item.key} onCopy={handleCopy} />
+                ))}
+              </div>
+            </div>
+
+            {/* Subseller */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">Subsellers</h2>
+                <Badge className="bg-purple-500 text-white border-0">Multi-tenant</Badge>
+              </div>
+              <p className="text-xs text-slate-500 mb-4">
+                Links que podem ser gerados pelo time interno OU pelo merchant (com white-label da marca dele).
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {quickLinksSubseller.map((item) => (
+                  <QuickLinkCard key={item.key} item={item} copied={copiedKey === item.key} onCopy={handleCopy} />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'history' && (
+          <div className="mt-6 space-y-4">
+            {/* Filtros */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Input
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Buscar links..."
+                  className="pl-9 w-64"
+                />
+              </div>
+              <Select value={scopeFilter} onValueChange={setScopeFilter}>
+                <SelectTrigger className="w-40"><SelectValue placeholder="Escopo" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os escopos</SelectItem>
+                  <SelectItem value="merchant">Merchants</SelectItem>
+                  <SelectItem value="subseller">Subsellers</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={creatorFilter} onValueChange={setCreatorFilter}>
+                <SelectTrigger className="w-40"><SelectValue placeholder="Criador" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="pagsmile_admin">PagSmile (Admin)</SelectItem>
+                  <SelectItem value="merchant">Merchants</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger className="w-44"><SelectValue placeholder="Tipo" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os tipos</SelectItem>
+                  <SelectItem value="self_compliance_subseller">Compliance Self</SelectItem>
+                  <SelectItem value="doc_only">Doc-Only</SelectItem>
+                  <SelectItem value="caf_only">Só CAF</SelectItem>
+                  <SelectItem value="caf_docs">CAF + Docs</SelectItem>
+                  <SelectItem value="pre_filled">Pré-preenchido</SelectItem>
+                  <SelectItem value="subseller_pj">Subseller PJ</SelectItem>
+                  <SelectItem value="subseller_pf">Subseller PF</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <V4LinksTable links={filteredLinks} onDelete={handleDelete} />
+          </div>
+        )}
       </div>
-
-      {activeTab === 'gerar' && (
-        <GenerateLinkForm
-          base={base}
-          onLinkGenerated={(newLink) => setLinks((prev) => [newLink, ...prev])}
-        />
-      )}
-
-      {activeTab === 'links' && (
-        <div className="space-y-8">
-          {/* PIX v4 */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">PIX v4 — Merchants & Intermediários</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Questionários específicos para operação PIX + Conta de pagamento. Conformidade Res. BCB 80/494/501/518.
-                </p>
-              </div>
-              <Badge className="bg-[#2bc196] text-white border-0">NOVO</Badge>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {quickLinksPixV4.map((item) => (
-                <QuickLinkCard key={item.key} item={item} copied={copiedKey === item.key} onCopy={handleCopy} />
-              ))}
-            </div>
-          </div>
-
-          {/* Por Segmento */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Por Segmento v4 — Pré-preenchimento Lead</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Questionários específicos por segmento com dados pré-preenchidos do questionário de lead
-                </p>
-              </div>
-              <Badge className="bg-[#2bc196] text-white border-0">NOVO</Badge>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {quickLinksV4.map((item) => (
-                <QuickLinkCard key={item.key} item={item} copied={copiedKey === item.key} onCopy={handleCopy} />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'historico' && (
-        <div className="space-y-2">
-          {links.length === 0 ? (
-            <div className="text-center py-16 bg-white dark:bg-[#003459] rounded-2xl border border-slate-100 dark:border-[#004D73]">
-              <LinkIcon className="w-12 h-12 mx-auto text-slate-300 mb-3" />
-              <p className="text-slate-700 dark:text-slate-200 font-semibold">Nenhum link criado ainda</p>
-              <p className="text-sm text-slate-500 mt-1">Use os Links Rápidos acima para começar.</p>
-            </div>
-          ) : (
-            links.map((link) => {
-              const isExpanded = expandedLinkId === link.id;
-              const conversion = link.clickCount > 0 ? ((link.submissionCount / link.clickCount) * 100).toFixed(1) : 0;
-              return (
-                <div
-                  key={link.id}
-                  className="bg-white dark:bg-[#003459] rounded-2xl border border-slate-100 dark:border-[#004D73] overflow-hidden"
-                >
-                  <div
-                    className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors"
-                    onClick={() => setExpandedLinkId(isExpanded ? null : link.id)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <span className="font-mono text-xs font-bold text-slate-900 dark:text-white">{link.uniqueCode}</span>
-                          <Badge variant="outline" className="text-xs">{getLinkLabel(link)}</Badge>
-                          {link.commercialAgentName && (
-                            <span className="text-xs text-slate-500">👤 {link.commercialAgentName}</span>
-                          )}
-                          {link.utmSource && (
-                            <Badge variant="outline" className="text-xs">utm: {link.utmSource}</Badge>
-                          )}
-                          <span className="text-xs text-slate-400">
-                            {new Date(link.created_date).toLocaleDateString('pt-BR')}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-4 text-xs text-slate-500">
-                          <span><MousePointer className="w-3 h-3 inline mr-1" />{link.clickCount || 0} cliques</span>
-                          <span><FileCheck className="w-3 h-3 inline mr-1" />{link.submissionCount || 0} subs</span>
-                          <span className="text-emerald-600 font-semibold">
-                            <TrendingUp className="w-3 h-3 inline mr-1" />{conversion}%
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={() => handleCopy(generateLinkUrl(link), link.id)}
-                          className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                          title="Copiar link"
-                        >
-                          {copiedKey === link.id ? <Check className="w-4 h-4 text-[#2bc196]" /> : <Copy className="w-4 h-4 text-slate-500" />}
-                        </button>
-                        <button
-                          onClick={() => window.open(generateLinkUrl(link), '_blank')}
-                          className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                          title="Abrir link"
-                        >
-                          <ExternalLink className="w-4 h-4 text-slate-500" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(link.id)}
-                          className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 transition-colors text-slate-500"
-                          title="Excluir"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500">
-                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {isExpanded && <LinkAnalyticsDashboard link={link} />}
-                </div>
-              );
-            })
-          )}
-        </div>
-      )}
     </div>
   );
 }
