@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import PageHeader from '@/components/common/PageHeader';
 import QuickLinkCard from '@/components/admin-interno/compliance/onboarding/QuickLinkCard';
 import LinkAnalyticsDashboard from '@/components/admin-interno/compliance/onboarding/LinkAnalyticsDashboard';
+import GenerateLinkForm from '@/components/admin-interno/compliance/onboarding/GenerateLinkForm.jsx';
 import { mockComplianceLinks } from '@/components/admin-interno/compliance/onboarding/mocks/complianceLinksMock';
 
 export default function AdminIntComplianceLinks() {
@@ -132,8 +133,9 @@ export default function AdminIntComplianceLinks() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl flex gap-1 max-w-md">
+      <div className="bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl flex gap-1 max-w-2xl">
         {[
+          { id: 'gerar', label: '✨ Gerar Novo Link' },
           { id: 'links', label: 'Links Rápidos' },
           { id: 'historico', label: `Histórico (${links.length})` },
         ].map((tab) => (
@@ -150,6 +152,13 @@ export default function AdminIntComplianceLinks() {
           </button>
         ))}
       </div>
+
+      {activeTab === 'gerar' && (
+        <GenerateLinkForm
+          base={base}
+          onLinkGenerated={(newLink) => setLinks((prev) => [newLink, ...prev])}
+        />
+      )}
 
       {activeTab === 'links' && (
         <div className="space-y-8">
