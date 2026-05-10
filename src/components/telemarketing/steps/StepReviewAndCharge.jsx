@@ -145,7 +145,7 @@ export default function StepReviewAndCharge({ sale, updateSale, onBack, onReset 
           <div className="border border-emerald-300 bg-emerald-50 rounded-lg p-3 flex items-center gap-2 text-sm">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span className="text-emerald-800">
-              Compra confirmada pelo cliente em {new Date(sale.consent_confirmed_at).toLocaleString('pt-BR')} via {sale.consent_channel === 'whatsapp' ? 'WhatsApp' : 'e-mail'}
+              Compra confirmada pelo cliente em {new Date(sale.consent_confirmed_at).toLocaleString('pt-BR')} via {sale.consent_channel === 'whatsapp' ? 'WhatsApp' : sale.consent_channel === 'sms' ? 'SMS' : 'e-mail'}
             </span>
           </div>
         )}
