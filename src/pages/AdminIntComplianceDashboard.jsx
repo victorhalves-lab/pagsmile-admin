@@ -1,129 +1,150 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-  Search, RefreshCw, Clock, CheckCircle2, AlertTriangle, XCircle,
-  Users, FileCheck, Brain, Shield, TrendingUp, Calendar, Building2, Loader2,
+  RefreshCw, Clock, CheckCircle2, AlertTriangle, XCircle,
+  Users, FileCheck, Brain, Shield, TrendingUp, Loader2, Building2,
 } from 'lucide-react';
 
 import PageHeader from '@/components/common/PageHeader';
-import KPICard from '@/components/admin-interno/compliance/onboarding/KPICard';
+import V4KpiCard from '@/components/admin-interno/compliance/v4/V4KpiCard';
+import V4CasesTable from '@/components/admin-interno/compliance/v4/V4CasesTable';
+import V4CasesFilters from '@/components/admin-interno/compliance/v4/V4CasesFilters';
 import HelenaInsightsAlerts from '@/components/admin-interno/compliance/onboarding/HelenaInsightsAlerts';
 import {
   TrendLineChart, HelenaStatusPieChart, ComplianceFunnelChart,
   TopRejectionReasonsChart, RiskDistributionCards, ScoreDistributionChart,
 } from '@/components/admin-interno/compliance/onboarding/ComplianceCharts';
-import ComplianceCasesTable from '@/components/admin-interno/compliance/onboarding/ComplianceCasesTable';
 
-import {
-  mockOnboardingCases, mockHelenaAnalyses, mockDocumentUploads,
-  mockAnalytics, mockTrendData, mockHelenaInsights,
-} from '@/components/admin-interno/compliance/onboarding/mocks/onboardingComplianceMock';
+import { mockAllCases } from '@/components/admin-interno/compliance/v4/mocks/onboardingCasesV4Mock';
+import { mockHelenaAnalyses } from '@/components/admin-interno/compliance/v4/mocks/helenaAnalysisV4Mock';
+import { mockTrendData, mockHelenaInsights } from '@/components/admin-interno/compliance/onboarding/mocks/onboardingComplianceMock';
 
 export default function AdminIntComplianceDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all');
-  const [sortField, setSortField] = useState('created_date');
+  const [tipoFilter, setTipoFilter] = useState('all');
+  const [origemFilter, setOrigemFilter] = useState('all');
+  const [modeloFilter, setModeloFilter] = useState('all');
+  const [merchantPaiFilter, setMerchantPaiFilter] = useState('all');
+  const [sortField, setSortField] = useState('submitted_at');
   const [sortOrder, setSortOrder] = useState('desc');
-  const [merchantTypeFilter, setMerchantTypeFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('all');
   const [refreshing, setRefreshing] = useState(false);
 
-  const onboardingCases = mockOnboardingCases;
+  const cases = mockAllCases;
   const helenaAnalyses = mockHelenaAnalyses;
-  const documentUploads = mockDocumentUploads;
-  const analytics = mockAnalytics;
 
-  // Estatísticas
+  // Lista de merchants pais (para o filtro)
+  const merchantPais = useMemo(() => {
+    const map = new Map();
+    cases.forEach((c) => {
+      if (c.merchant_pai_id && !map.has(c.merchant_pai_id)) {
+        map.set(c.merchant_pai_id, { id: c.merchant_pai_id, name: c.merchant_pai_name });
+      }
+    });
+    return Array.from(map.values());
+  }, [cases]);
+
+  // KPIs
   const stats = useMemo(() => {
+    const day = 24 * 3600 * 1000;
     const now = Date.now();
     const today = new Date(); today.setHours(0, 0, 0, 0);
-    const thisWeek = new Date(today.getTime() - 7 * 24 * 3600 * 1000);
 
-    const casesToday = onboardingCases.filter((c) => new Date(c.created_date) >= today);
-    const completedAnalyses = helenaAnalyses.filter((a) => a.status === 'completed');
-    const approvedByHelena = completedAnalyses.filter((a) => a.decision === 'APPROVED').length;
-    const rejectedByHelena = completedAnalyses.filter((a) => a.decision === 'REJECTED').length;
-    const manualReviewByHelena = completedAnalyses.filter((a) => a.decision === 'MANUAL_REVIEW').length;
+    const merchantCases = cases.filter((c) => c.tipo === 'merchant');
+    const subsellerCases = cases.filter((c) => c.tipo.startsWith('subseller'));
 
-    const avgTimeIA = completedAnalyses.length
-      ? (completedAnalyses.reduce((s, a) => s + (a.processing_time_ms || 0), 0) / completedAnalyses.length / 1000).toFixed(1)
+    const completed = helenaAnalyses.filter((a) => a.status === 'completed');
+    const approved = cases.filter((c) => c.status === 'auto_approved' || c.status === 'manual_approved').length;
+    const rejected = cases.filter((c) => c.status === 'auto_rejected' || c.status === 'manual_rejected').length;
+    const manual = cases.filter((c) => c.status === 'manual_review').length;
+
+    const avgTimeIA = completed.length
+      ? (completed.reduce((s, a) => s + (a.duration_seconds || 0), 0) / completed.length).toFixed(1)
       : 0;
 
-    const finalized = onboardingCases.filter((c) => c.status === 'Aprovado' || c.status === 'Recusado');
-    const rejected = finalized.filter((c) => c.status === 'Recusado');
-    const rejectionRate = finalized.length ? ((rejected.length / finalized.length) * 100).toFixed(1) : 0;
+    const finalized = approved + rejected;
+    const rejectionRate = finalized ? ((rejected / finalized) * 100).toFixed(1) : 0;
 
-    const linkClicks = analytics.filter((a) => a.eventType === 'link_click').length;
-    const completedOb = analytics.filter((a) => a.eventType === 'onboarding_complete').length;
-    const conversionRate = linkClicks ? ((completedOb / linkClicks) * 100).toFixed(1) : 0;
-
-    const pendingManualOver24h = onboardingCases.filter((c) => {
-      if (c.status !== 'Manual') return false;
+    const pendingManualOver24h = cases.filter((c) => {
+      if (c.status !== 'manual_review') return false;
       return (now - new Date(c.updated_date).getTime()) / (1000 * 3600) > 24;
     }).length;
 
-    const casesWithScore = onboardingCases.filter((c) => c.riskScore != null);
+    const casesWithScore = cases.filter((c) => c.risk_score != null);
     const avgScore = casesWithScore.length
-      ? Math.round(casesWithScore.reduce((s, c) => s + c.riskScore, 0) / casesWithScore.length)
+      ? Math.round(casesWithScore.reduce((s, c) => s + c.risk_score, 0) / casesWithScore.length)
       : 0;
 
-    const lowRisk = casesWithScore.filter((c) => c.riskScore >= 80).length;
-    const mediumRisk = casesWithScore.filter((c) => c.riskScore >= 60 && c.riskScore < 80).length;
-    const highRisk = casesWithScore.filter((c) => c.riskScore >= 40 && c.riskScore < 60).length;
-    const criticalRisk = casesWithScore.filter((c) => c.riskScore < 40).length;
+    const lowRisk = casesWithScore.filter((c) => c.risk_score >= 80).length;
+    const mediumRisk = casesWithScore.filter((c) => c.risk_score >= 60 && c.risk_score < 80).length;
+    const highRisk = casesWithScore.filter((c) => c.risk_score >= 40 && c.risk_score < 60).length;
+    const criticalRisk = casesWithScore.filter((c) => c.risk_score < 40).length;
 
-    const pendingDocs = documentUploads.filter((d) => d.validationStatus === 'Pendente').length;
-
-    // Top razões
     const reasonsMap = {};
     helenaAnalyses.forEach((a) => {
-      if (a.decision === 'REJECTED' || a.decision === 'MANUAL_REVIEW') {
-        (a.red_flags || []).forEach((f) => { reasonsMap[f] = (reasonsMap[f] || 0) + 1; });
-      }
+      (a.red_flags || []).forEach((f) => {
+        const key = f.title || f.code;
+        reasonsMap[key] = (reasonsMap[key] || 0) + 1;
+      });
     });
-    const topReasons = Object.entries(reasonsMap).map(([reason, count]) => ({ reason, count })).sort((a, b) => b.count - a.count).slice(0, 6);
+    const topReasons = Object.entries(reasonsMap)
+      .map(([reason, count]) => ({ reason, count }))
+      .sort((a, b) => b.count - a.count).slice(0, 6);
 
-    // Funil
     const funnel = [
-      { label: 'Links acessados', value: linkClicks },
-      { label: 'Cadastros iniciados', value: onboardingCases.length },
-      { label: 'Análise IA concluída', value: completedAnalyses.length },
-      { label: 'Aprovados', value: onboardingCases.filter((c) => c.status === 'Aprovado').length },
+      { label: 'Submetidos', value: cases.length },
+      { label: 'Pipeline IA', value: cases.filter((c) => c.status !== 'draft' && c.status !== 'in_progress').length },
+      { label: 'Análise concluída', value: completed.length },
+      { label: 'Aprovados', value: approved },
     ];
 
     return {
-      casesTotal: onboardingCases.length,
-      casesToday: casesToday.length,
-      approvedByHelena, rejectedByHelena, manualReviewByHelena,
-      avgTimeIA, rejectionRate, conversionRate,
+      total: cases.length,
+      merchantTotal: merchantCases.length,
+      subsellerTotal: subsellerCases.length,
+      approved, rejected, manual,
+      avgTimeIA, rejectionRate,
       pendingManualOver24h, avgScore,
       lowRisk, mediumRisk, highRisk, criticalRisk,
-      pendingDocs,
       topReasons, funnel,
     };
-  }, [onboardingCases, helenaAnalyses, documentUploads, analytics]);
+  }, [cases, helenaAnalyses]);
 
   // Filtragem
   const filteredCases = useMemo(() => {
-    let list = [...onboardingCases];
+    let list = [...cases];
+
     if (activeTab !== 'all') {
-      const map = { pending: 'Pendente', analysis: 'Em Análise', manual: 'Manual', approved: 'Aprovado', rejected: 'Recusado' };
-      list = list.filter((c) => c.status === map[activeTab]);
+      const map = {
+        in_progress: ['in_progress', 'draft'],
+        queue: ['queue_auto', 'submitted', 'running_pipeline'],
+        manual: ['manual_review', 'docs_requested'],
+        approved: ['auto_approved', 'manual_approved'],
+        rejected: ['auto_rejected', 'manual_rejected'],
+      };
+      list = list.filter((c) => (map[activeTab] || []).includes(c.status));
     }
-    if (merchantTypeFilter !== 'all') list = list.filter((c) => c.merchantType === merchantTypeFilter);
+
+    if (tipoFilter !== 'all') list = list.filter((c) => c.tipo === tipoFilter);
+    if (origemFilter !== 'all') list = list.filter((c) => c.origem === origemFilter);
+    if (modeloFilter !== 'all') list = list.filter((c) => c.modelo_compliance === modeloFilter);
+    if (merchantPaiFilter !== 'all') list = list.filter((c) => c.merchant_pai_id === merchantPaiFilter);
+
     if (searchTerm) {
       const q = searchTerm.toLowerCase();
       list = list.filter((c) =>
-        c.merchantName.toLowerCase().includes(q) ||
-        c.case_id.toLowerCase().includes(q) ||
-        c.cnpj.includes(q) ||
-        (c.contactEmail || '').toLowerCase().includes(q)
+        (c.case_id || '').toLowerCase().includes(q) ||
+        (c.razao_social || '').toLowerCase().includes(q) ||
+        (c.nome_fantasia || '').toLowerCase().includes(q) ||
+        (c.nome_completo || '').toLowerCase().includes(q) ||
+        (c.cnpj || '').includes(q) ||
+        (c.cpf || '').includes(q) ||
+        (c.email || '').toLowerCase().includes(q)
       );
     }
+
     list.sort((a, b) => {
       const av = a[sortField], bv = b[sortField];
       if (av == null) return 1; if (bv == null) return -1;
@@ -131,7 +152,7 @@ export default function AdminIntComplianceDashboard() {
       return sortOrder === 'asc' ? cmp : -cmp;
     });
     return list;
-  }, [onboardingCases, activeTab, merchantTypeFilter, searchTerm, sortField, sortOrder]);
+  }, [cases, activeTab, tipoFilter, origemFilter, modeloFilter, merchantPaiFilter, searchTerm, sortField, sortOrder]);
 
   const handleSort = (field) => {
     if (sortField === field) setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -143,20 +164,20 @@ export default function AdminIntComplianceDashboard() {
     setTimeout(() => setRefreshing(false), 800);
   };
 
-  const tabsCount = {
-    all: onboardingCases.length,
-    pending: onboardingCases.filter((c) => c.status === 'Pendente').length,
-    analysis: onboardingCases.filter((c) => c.status === 'Em Análise').length,
-    manual: onboardingCases.filter((c) => c.status === 'Manual').length,
-    approved: onboardingCases.filter((c) => c.status === 'Aprovado').length,
-    rejected: onboardingCases.filter((c) => c.status === 'Recusado').length,
-  };
+  const tabsCount = useMemo(() => ({
+    all: cases.length,
+    in_progress: cases.filter((c) => ['in_progress', 'draft'].includes(c.status)).length,
+    queue: cases.filter((c) => ['queue_auto', 'submitted', 'running_pipeline'].includes(c.status)).length,
+    manual: cases.filter((c) => ['manual_review', 'docs_requested'].includes(c.status)).length,
+    approved: cases.filter((c) => ['auto_approved', 'manual_approved'].includes(c.status)).length,
+    rejected: cases.filter((c) => ['auto_rejected', 'manual_rejected'].includes(c.status)).length,
+  }), [cases]);
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6">
       <PageHeader
         title="Dashboard de Compliance"
-        subtitle="Visão consolidada do onboarding, decisões da Helena IA e gestão de casos"
+        subtitle="Visão consolidada do onboarding (Merchants + Subsellers), decisões da Sentinel V4 IA e gestão de casos"
         icon={Shield}
         breadcrumbs={[{ label: 'Compliance', page: 'AdminIntComplianceDashboard' }, { label: 'Dashboard' }]}
         actions={
@@ -166,41 +187,41 @@ export default function AdminIntComplianceDashboard() {
               Atualizar
             </Button>
             <Button asChild>
-              <Link to="/AdminIntComplianceLinks"><FileCheck className="w-4 h-4" /> Gerar Link</Link>
+              <Link to="/AdminIntComplianceLinks"><FileCheck className="w-4 h-4 mr-1" /> Gerar Link</Link>
             </Button>
           </div>
         }
       />
 
-      {/* KPIs - Linha 1 */}
+      {/* KPIs - Linha 1: Volumes */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KPICard icon={Users} label="Casos Totais" value={stats.casesTotal} subtitle={`${stats.casesToday} hoje`} accent="blue" />
-        <KPICard icon={CheckCircle2} label="Aprovados (IA)" value={stats.approvedByHelena} subtitle="Helena auto-aprovados" accent="emerald" />
-        <KPICard icon={AlertTriangle} label="Manual Review" value={stats.manualReviewByHelena} subtitle={`${stats.pendingManualOver24h} há +24h`} accent="amber" highlight={stats.pendingManualOver24h > 0} />
-        <KPICard icon={XCircle} label="Reprovados (IA)" value={stats.rejectedByHelena} subtitle={`Taxa rejeição: ${stats.rejectionRate}%`} accent="red" />
+        <V4KpiCard icon={Users} label="Casos Totais" value={stats.total} subtitle={`${stats.merchantTotal} merchants · ${stats.subsellerTotal} subsellers`} accent="blue" />
+        <V4KpiCard icon={CheckCircle2} label="Aprovados" value={stats.approved} subtitle="Auto + Manual" accent="emerald" />
+        <V4KpiCard icon={AlertTriangle} label="Análise Manual" value={stats.manual} subtitle={`${stats.pendingManualOver24h} há +24h`} accent="amber" highlight={stats.pendingManualOver24h > 0} />
+        <V4KpiCard icon={XCircle} label="Recusados" value={stats.rejected} subtitle={`Taxa rejeição: ${stats.rejectionRate}%`} accent="red" />
       </div>
 
-      {/* KPIs - Linha 2 */}
+      {/* KPIs - Linha 2: Performance IA */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KPICard icon={Brain} label="Tempo médio IA" value={`${stats.avgTimeIA}s`} subtitle="Análise Helena" accent="violet" />
-        <KPICard icon={TrendingUp} label="Conversão" value={`${stats.conversionRate}%`} subtitle="Links → Onboardings" accent="emerald" />
-        <KPICard icon={Shield} label="Score médio" value={stats.avgScore} subtitle="Carteira atual" accent="blue" />
-        <KPICard icon={FileCheck} label="Docs pendentes" value={stats.pendingDocs} subtitle="Aguardando validação" accent="slate" />
+        <V4KpiCard icon={Brain} label="Tempo médio Sentinel V4" value={`${stats.avgTimeIA}s`} subtitle="4 chamadas paralelas · 7 dimensões" accent="violet" />
+        <V4KpiCard icon={TrendingUp} label="Score médio carteira" value={stats.avgScore} subtitle="Modelo V4 (0-100)" accent="indigo" />
+        <V4KpiCard icon={Building2} label="Subsellers ativos" value={stats.subsellerTotal} subtitle={`de ${merchantPais.length} merchants pais`} accent="violet" />
+        <V4KpiCard icon={Clock} label="Em fila / pipeline" value={tabsCount.queue} subtitle="Aguardando processamento" accent="slate" />
       </div>
 
       {/* Helena Insights */}
       <HelenaInsightsAlerts insights={mockHelenaInsights} />
 
-      {/* Charts row */}
+      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <TrendLineChart data={mockTrendData} />
-        <HelenaStatusPieChart approved={stats.approvedByHelena} rejected={stats.rejectedByHelena} manual={stats.manualReviewByHelena} />
+        <HelenaStatusPieChart approved={stats.approved} rejected={stats.rejected} manual={stats.manual} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <ComplianceFunnelChart data={stats.funnel} />
         <RiskDistributionCards low={stats.lowRisk} medium={stats.mediumRisk} high={stats.highRisk} critical={stats.criticalRisk} />
-        <ScoreDistributionChart cases={onboardingCases} />
+        <ScoreDistributionChart cases={cases.map((c) => ({ riskScore: c.risk_score }))} />
       </div>
 
       <TopRejectionReasonsChart data={stats.topReasons} />
@@ -208,48 +229,33 @@ export default function AdminIntComplianceDashboard() {
       {/* Casos */}
       <div className="bg-white dark:bg-[#003459] rounded-2xl border border-slate-100 dark:border-[#004D73] p-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Casos de Onboarding</h2>
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Buscar por caso, merchant, CNPJ..." className="pl-9 w-64" />
-            </div>
-            <Select value={merchantTypeFilter} onValueChange={setMerchantTypeFilter}>
-              <SelectTrigger className="w-40"><SelectValue placeholder="Tipo" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os tipos</SelectItem>
-                <SelectItem value="Marketplace">Marketplace</SelectItem>
-                <SelectItem value="Ecommerce">Ecommerce</SelectItem>
-                <SelectItem value="SaaS">SaaS</SelectItem>
-                <SelectItem value="Gateway">Gateway</SelectItem>
-                <SelectItem value="Lite">Lite</SelectItem>
-                <SelectItem value="PIX Only">PIX Only</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="w-40"><Calendar className="w-3.5 h-3.5 mr-1" /><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todo período</SelectItem>
-                <SelectItem value="today">Hoje</SelectItem>
-                <SelectItem value="week">Esta semana</SelectItem>
-                <SelectItem value="month">Este mês</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Casos de Onboarding (Merchants + Subsellers)</h2>
+          <V4CasesFilters
+            searchTerm={searchTerm} onSearchChange={setSearchTerm}
+            tipoFilter={tipoFilter} onTipoChange={setTipoFilter}
+            origemFilter={origemFilter} onOrigemChange={setOrigemFilter}
+            modeloFilter={modeloFilter} onModeloChange={setModeloFilter}
+            merchantPaiFilter={merchantPaiFilter} onMerchantPaiChange={setMerchantPaiFilter}
+            merchantPais={merchantPais}
+            onClear={() => {
+              setSearchTerm(''); setTipoFilter('all'); setOrigemFilter('all');
+              setModeloFilter('all'); setMerchantPaiFilter('all');
+            }}
+          />
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
           <TabsList className="flex flex-wrap h-auto">
             <TabsTrigger value="all">Todos <span className="ml-1.5 text-xs opacity-70">({tabsCount.all})</span></TabsTrigger>
-            <TabsTrigger value="pending"><Clock className="w-3.5 h-3.5 mr-1" />Pendentes <span className="ml-1.5 text-xs opacity-70">({tabsCount.pending})</span></TabsTrigger>
-            <TabsTrigger value="analysis"><Brain className="w-3.5 h-3.5 mr-1" />Em Análise <span className="ml-1.5 text-xs opacity-70">({tabsCount.analysis})</span></TabsTrigger>
+            <TabsTrigger value="in_progress"><Clock className="w-3.5 h-3.5 mr-1" />Em Progresso <span className="ml-1.5 text-xs opacity-70">({tabsCount.in_progress})</span></TabsTrigger>
+            <TabsTrigger value="queue"><Brain className="w-3.5 h-3.5 mr-1" />Fila/Pipeline <span className="ml-1.5 text-xs opacity-70">({tabsCount.queue})</span></TabsTrigger>
             <TabsTrigger value="manual"><AlertTriangle className="w-3.5 h-3.5 mr-1" />Manual <span className="ml-1.5 text-xs opacity-70">({tabsCount.manual})</span></TabsTrigger>
             <TabsTrigger value="approved"><CheckCircle2 className="w-3.5 h-3.5 mr-1" />Aprovados <span className="ml-1.5 text-xs opacity-70">({tabsCount.approved})</span></TabsTrigger>
             <TabsTrigger value="rejected"><XCircle className="w-3.5 h-3.5 mr-1" />Recusados <span className="ml-1.5 text-xs opacity-70">({tabsCount.rejected})</span></TabsTrigger>
           </TabsList>
         </Tabs>
 
-        <ComplianceCasesTable
+        <V4CasesTable
           cases={filteredCases}
           onSort={handleSort}
           sortField={sortField}

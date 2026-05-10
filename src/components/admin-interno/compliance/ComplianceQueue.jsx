@@ -1,113 +1,27 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useMemo } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow
-} from '@/components/ui/table';
-import {
-  Search, Filter, Eye, Clock, AlertTriangle, CheckCircle2, XCircle,
-  MoreHorizontal, Download, Mail, User, Building2, Brain, Play
-} from 'lucide-react';
-import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-
-// Mock data para fila de compliance
-const mockQueueData = [
-  { 
-    id: 'sub_001', 
-    business_name: 'Tech Solutions Ltda', 
-    document: '12.345.678/0001-90',
-    type: 'kyb_enterprise',
-    status: 'pending',
-    helena_score: null,
-    created_date: '2026-01-28T10:30:00',
-    time_in_queue: 2,
-    source: 'commercial',
-    analyst: null
-  },
-  { 
-    id: 'sub_002', 
-    business_name: 'E-commerce ABC', 
-    document: '98.765.432/0001-99',
-    type: 'kyc_full',
-    status: 'ai_analyzing',
-    helena_score: null,
-    created_date: '2026-01-28T09:15:00',
-    time_in_queue: 3,
-    source: 'self_service',
-    analyst: null
-  },
-  { 
-    id: 'sub_003', 
-    business_name: 'Loja Rápida ME', 
-    document: '11.222.333/0001-50',
-    type: 'kyc_pix',
-    status: 'manual_review',
-    helena_score: 58,
-    helena_status: 'manual_review',
-    created_date: '2026-01-27T14:00:00',
-    time_in_queue: 24,
-    source: 'self_service',
-    analyst: 'maria@pagsmile.com'
-  },
-  { 
-    id: 'sub_004', 
-    business_name: 'Café Gourmet SA', 
-    document: '44.555.666/0001-22',
-    type: 'kyc_full',
-    status: 'documents_requested',
-    helena_score: 72,
-    helena_status: 'manual_review',
-    created_date: '2026-01-26T11:00:00',
-    time_in_queue: 48,
-    source: 'commercial',
-    analyst: 'joao@pagsmile.com'
-  },
-  { 
-    id: 'sub_005', 
-    business_name: 'Digital Services', 
-    document: '77.888.999/0001-33',
-    type: 'kyb_enterprise',
-    status: 'pending',
-    helena_score: null,
-    created_date: '2026-01-28T08:00:00',
-    time_in_queue: 4,
-    source: 'form_link',
-    analyst: null
-  },
-];
+import {
+  Search, Eye, Clock, AlertTriangle, CheckCircle2, XCircle,
+  MoreHorizontal, Download, Mail, User, Building2, Brain, Play,
+} from 'lucide-react';
+import { mockOnboardingCases } from '@/components/admin-interno/compliance/onboarding/mocks/onboardingComplianceMock';
 
 const statusConfig = {
-  pending: { label: 'Pendente', color: 'bg-slate-100 text-slate-700', icon: Clock },
-  ai_analyzing: { label: 'Analisando (Helena)', color: 'bg-blue-100 text-blue-700', icon: Brain },
-  ai_approved: { label: 'Aprovado (Helena)', color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
-  ai_rejected: { label: 'Reprovado (Helena)', color: 'bg-red-100 text-red-700', icon: XCircle },
-  manual_review: { label: 'Análise Manual', color: 'bg-amber-100 text-amber-700', icon: User },
-  documents_requested: { label: 'Docs Solicitados', color: 'bg-purple-100 text-purple-700', icon: AlertTriangle },
-  approved: { label: 'Aprovado', color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle2 },
-  rejected: { label: 'Reprovado', color: 'bg-red-100 text-red-700', icon: XCircle },
-};
-
-const typeLabels = {
-  kyc_full: 'KYC Completo',
-  kyc_pix: 'KYC Pix',
-  kyc_card: 'KYC Cartão',
-  kyb_enterprise: 'KYB Empresa',
-};
-
-const sourceLabels = {
-  commercial: 'Comercial',
-  self_service: 'Self-Service',
-  form_link: 'Link Externo',
+  Pendente: { label: 'Pendente', color: 'bg-slate-100 text-slate-700', icon: Clock },
+  'Em Análise': { label: 'Analisando (Helena)', color: 'bg-blue-100 text-blue-700', icon: Brain },
+  Aprovado: { label: 'Aprovado', color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle2 },
+  Recusado: { label: 'Reprovado', color: 'bg-red-100 text-red-700', icon: XCircle },
+  Manual: { label: 'Análise Manual', color: 'bg-amber-100 text-amber-700', icon: User },
+  'Docs Solicitados': { label: 'Docs Solicitados', color: 'bg-purple-100 text-purple-700', icon: AlertTriangle },
 };
 
 export default function ComplianceQueue() {
@@ -115,104 +29,81 @@ export default function ComplianceQueue() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedItems, setSelectedItems] = useState([]);
 
-  // Usando mock data - em produção usaria a query real
-  const queueData = mockQueueData;
-  const isLoading = false;
+  const queueData = mockOnboardingCases;
 
-  const filteredData = queueData.filter(item => {
-    const matchesSearch = 
-      item.business_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.document?.includes(searchTerm);
-    const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredData = useMemo(() => {
+    return queueData.filter((item) => {
+      const matchesSearch =
+        item.merchantName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.cnpj?.includes(searchTerm) ||
+        item.case_id?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [queueData, searchTerm, statusFilter]);
+
+  const stats = useMemo(() => {
+    const now = Date.now();
+    return {
+      pending: queueData.filter((q) => q.status === 'Pendente').length,
+      analyzing: queueData.filter((q) => q.status === 'Em Análise').length,
+      manual: queueData.filter((q) => q.status === 'Manual').length,
+      docs: queueData.filter((q) => q.status === 'Docs Solicitados').length,
+      over24h: queueData.filter((q) => {
+        if (q.status === 'Aprovado' || q.status === 'Recusado') return false;
+        return (now - new Date(q.updated_date).getTime()) / 3600000 > 24;
+      }).length,
+    };
+  }, [queueData]);
 
   const toggleSelectAll = () => {
-    if (selectedItems.length === filteredData.length) {
-      setSelectedItems([]);
-    } else {
-      setSelectedItems(filteredData.map(item => item.id));
-    }
+    if (selectedItems.length === filteredData.length) setSelectedItems([]);
+    else setSelectedItems(filteredData.map((i) => i.id));
   };
 
-  const toggleSelectItem = (id) => {
-    setSelectedItems(prev => 
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-    );
-  };
+  const toggleSelectItem = (id) =>
+    setSelectedItems((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
 
   const getStatusBadge = (status) => {
-    const config = statusConfig[status] || statusConfig.pending;
-    const Icon = config.icon;
+    const cfg = statusConfig[status] || statusConfig.Pendente;
+    const Icon = cfg.icon;
     return (
-      <Badge className={`${config.color} gap-1`}>
+      <Badge className={`${cfg.color} gap-1 border-0`}>
         <Icon className="w-3 h-3" />
-        {config.label}
+        {cfg.label}
       </Badge>
     );
   };
 
   const getScoreColor = (score) => {
-    if (!score) return 'text-slate-400';
+    if (score == null) return 'text-slate-400';
     if (score >= 80) return 'text-emerald-600 font-bold';
     if (score >= 60) return 'text-amber-600 font-medium';
     return 'text-red-600 font-bold';
+  };
+
+  const timeInQueueHours = (item) => {
+    return Math.round((Date.now() - new Date(item.created_date).getTime()) / 3600000);
   };
 
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card className="bg-slate-50 dark:bg-slate-800/50">
-          <CardContent className="pt-4 pb-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                {queueData.filter(q => q.status === 'pending').length}
-              </p>
-              <p className="text-xs text-slate-500">Pendentes</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-blue-50 dark:bg-blue-900/20">
-          <CardContent className="pt-4 pb-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600">
-                {queueData.filter(q => q.status === 'ai_analyzing').length}
-              </p>
-              <p className="text-xs text-slate-500">Analisando</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-amber-50 dark:bg-amber-900/20">
-          <CardContent className="pt-4 pb-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-amber-600">
-                {queueData.filter(q => q.status === 'manual_review').length}
-              </p>
-              <p className="text-xs text-slate-500">Manual Review</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-purple-50 dark:bg-purple-900/20">
-          <CardContent className="pt-4 pb-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-purple-600">
-                {queueData.filter(q => q.status === 'documents_requested').length}
-              </p>
-              <p className="text-xs text-slate-500">Docs Pendentes</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-red-50 dark:bg-red-900/20">
-          <CardContent className="pt-4 pb-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-red-600">
-                {queueData.filter(q => q.time_in_queue > 24).length}
-              </p>
-              <p className="text-xs text-slate-500">&gt; 24h na Fila</p>
-            </div>
-          </CardContent>
-        </Card>
+        {[
+          { label: 'Pendentes', value: stats.pending, color: 'slate' },
+          { label: 'Analisando', value: stats.analyzing, color: 'blue' },
+          { label: 'Manual Review', value: stats.manual, color: 'amber' },
+          { label: 'Docs Pendentes', value: stats.docs, color: 'purple' },
+          { label: '> 24h na Fila', value: stats.over24h, color: 'red' },
+        ].map((s, i) => (
+          <Card key={i} className={`bg-${s.color}-50 dark:bg-${s.color}-900/20`}>
+            <CardContent className="pt-4 pb-4 text-center">
+              <p className={`text-2xl font-bold text-${s.color}-600`}>{s.value}</p>
+              <p className="text-xs text-slate-500">{s.label}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Filters */}
@@ -223,7 +114,7 @@ export default function ComplianceQueue() {
               <div className="relative flex-1 sm:w-80">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
-                  placeholder="Buscar por empresa ou CNPJ..."
+                  placeholder="Buscar por empresa, CNPJ ou case ID..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -235,10 +126,12 @@ export default function ComplianceQueue() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos os Status</SelectItem>
-                  <SelectItem value="pending">Pendente</SelectItem>
-                  <SelectItem value="ai_analyzing">Analisando</SelectItem>
-                  <SelectItem value="manual_review">Análise Manual</SelectItem>
-                  <SelectItem value="documents_requested">Docs Solicitados</SelectItem>
+                  <SelectItem value="Pendente">Pendente</SelectItem>
+                  <SelectItem value="Em Análise">Analisando</SelectItem>
+                  <SelectItem value="Manual">Análise Manual</SelectItem>
+                  <SelectItem value="Docs Solicitados">Docs Solicitados</SelectItem>
+                  <SelectItem value="Aprovado">Aprovado</SelectItem>
+                  <SelectItem value="Recusado">Recusado</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -246,7 +139,7 @@ export default function ComplianceQueue() {
               {selectedItems.length > 0 && (
                 <>
                   <Button variant="outline" size="sm" className="gap-2">
-                    <Mail className="w-4 h-4" /> Enviar Lembretes ({selectedItems.length})
+                    <Mail className="w-4 h-4" /> Lembretes ({selectedItems.length})
                   </Button>
                   <Button variant="outline" size="sm" className="gap-2">
                     <User className="w-4 h-4" /> Atribuir Analista
@@ -268,99 +161,98 @@ export default function ComplianceQueue() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">
-                  <Checkbox 
+                  <Checkbox
                     checked={selectedItems.length === filteredData.length && filteredData.length > 0}
                     onCheckedChange={toggleSelectAll}
                   />
                 </TableHead>
-                <TableHead>Empresa</TableHead>
+                <TableHead>Caso / Empresa</TableHead>
                 <TableHead>Tipo</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Score Helena</TableHead>
+                <TableHead>Decisão IA</TableHead>
                 <TableHead>Tempo na Fila</TableHead>
-                <TableHead>Origem</TableHead>
                 <TableHead>Analista</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredData.map((item) => (
-                <TableRow key={item.id} className={item.time_in_queue > 24 ? 'bg-red-50/50 dark:bg-red-900/10' : ''}>
-                  <TableCell>
-                    <Checkbox 
-                      checked={selectedItems.includes(item.id)}
-                      onCheckedChange={() => toggleSelectItem(item.id)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                        <Building2 className="w-4 h-4 text-slate-500" />
+              {filteredData.map((item) => {
+                const t = timeInQueueHours(item);
+                return (
+                  <TableRow key={item.id} className={t > 24 && !['Aprovado', 'Recusado'].includes(item.status) ? 'bg-red-50/50 dark:bg-red-900/10' : ''}>
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedItems.includes(item.id)}
+                        onCheckedChange={() => toggleSelectItem(item.id)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                          <Building2 className="w-4 h-4 text-slate-500" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-white">{item.merchantName}</p>
+                          <p className="text-xs text-slate-500 font-mono">{item.case_id} • {item.cnpj}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-slate-900 dark:text-white">{item.business_name}</p>
-                        <p className="text-xs text-slate-500">{item.document}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="text-xs">
-                      {typeLabels[item.type] || item.type}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{getStatusBadge(item.status)}</TableCell>
-                  <TableCell>
-                    <span className={getScoreColor(item.helena_score)}>
-                      {item.helena_score || '-'}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Clock className={`w-4 h-4 ${item.time_in_queue > 24 ? 'text-red-500' : 'text-slate-400'}`} />
-                      <span className={item.time_in_queue > 24 ? 'text-red-600 font-medium' : ''}>
-                        {item.time_in_queue}h
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="text-xs">{item.merchantType}</Badge>
+                    </TableCell>
+                    <TableCell>{getStatusBadge(item.status)}</TableCell>
+                    <TableCell>
+                      <span className={getScoreColor(item.helenaScore)}>
+                        {item.helenaScore != null ? Math.round(item.helenaScore) : '-'}
                       </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary" className="text-xs">
-                      {sourceLabels[item.source] || item.source}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {item.analyst ? (
-                      <span className="text-sm text-slate-600">{item.analyst.split('@')[0]}</span>
-                    ) : (
-                      <span className="text-xs text-slate-400 italic">Não atribuído</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <Eye className="w-4 h-4" />
-                      </Button>
-                      {item.status === 'pending' && (
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-purple-600">
-                          <Play className="w-4 h-4" />
-                        </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className="text-xs">
+                        {item.iaDecision || '-'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Clock className={`w-4 h-4 ${t > 24 ? 'text-red-500' : 'text-slate-400'}`} />
+                        <span className={t > 24 ? 'text-red-600 font-medium' : ''}>{t}h</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {item.assignedAnalyst ? (
+                        <span className="text-sm text-slate-600">{item.assignedAnalyst}</span>
+                      ) : (
+                        <span className="text-xs text-slate-400 italic">Não atribuído</span>
                       )}
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreHorizontal className="w-4 h-4" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                        {item.status === 'Pendente' && (
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-purple-600">
+                            <Play className="w-4 h-4" />
                           </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Ver Detalhes</DropdownMenuItem>
-                          <DropdownMenuItem>Atribuir Analista</DropdownMenuItem>
-                          <DropdownMenuItem>Solicitar Documentos</DropdownMenuItem>
-                          <DropdownMenuItem>Enviar Lembrete</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        )}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Ver Detalhes</DropdownMenuItem>
+                            <DropdownMenuItem>Atribuir Analista</DropdownMenuItem>
+                            <DropdownMenuItem>Solicitar Documentos</DropdownMenuItem>
+                            <DropdownMenuItem>Enviar Lembrete</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </CardContent>
