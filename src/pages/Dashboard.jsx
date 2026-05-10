@@ -149,8 +149,6 @@ export default function Dashboard() {
               <ReceivablesBreakdown />
             </div>
           </div>
-          {/* Card regulatório de compromissos sobre URs (Mentor Entrega 6 P3) */}
-          <RegulatoryCommitmentsCard />
         </AnimatedSection>
       )}
 
@@ -291,6 +289,11 @@ export default function Dashboard() {
       {/* ZONA 9 — Alertas não-críticos com snooze */}
       <AnimatedSection delay={0.35}>
         <AlertsPanelEnhanced />
+      </AnimatedSection>
+
+      {/* ZONA 10 — Compromissos regulatórios (informativo, baixo destaque) */}
+      <AnimatedSection delay={0.4}>
+        <RegulatoryCommitmentsCard />
       </AnimatedSection>
 
       {/* Modais */}
