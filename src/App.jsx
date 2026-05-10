@@ -134,6 +134,18 @@ import AdminIntJudicialBlockages from './pages/AdminIntJudicialBlockages';
 import MyReceivablesUnits from './pages/MyReceivablesUnits';
 import MyContractEffects from './pages/MyContractEffects';
 
+// ====== Wave Mentor Entrega 7 Parte 2 (Diagnósticos / TPV / Exports / Webhook PIX) ======
+import AdminIntCheckupHub from './pages/AdminIntCheckupHub';
+import AdminIntCheckupAuthorizeFlow from './pages/AdminIntCheckupAuthorizeFlow';
+import AdminIntCheckupSoftDeleteFlow from './pages/AdminIntCheckupSoftDeleteFlow';
+import AdminIntCheckupProgrammaticTrigger from './pages/AdminIntCheckupProgrammaticTrigger';
+import AdminIntTPVAnalytics from './pages/AdminIntTPVAnalytics';
+import AdminIntTPVExportCenter from './pages/AdminIntTPVExportCenter';
+import AdminIntPixWebhookReplay from './pages/AdminIntPixWebhookReplay';
+import MyDataExports from './pages/MyDataExports';
+import MyWebhookHealth from './pages/MyWebhookHealth';
+import MyTPVDashboard from './pages/MyTPVDashboard';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -308,6 +320,18 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntJudicialBlockages" element={<LayoutWrapper currentPageName="AdminIntJudicialBlockages"><AdminIntJudicialBlockages /></LayoutWrapper>} />
       <Route path="/MyReceivablesUnits" element={<LayoutWrapper currentPageName="MyReceivablesUnits"><MyReceivablesUnits /></LayoutWrapper>} />
       <Route path="/MyContractEffects" element={<LayoutWrapper currentPageName="MyContractEffects"><MyContractEffects /></LayoutWrapper>} />
+
+      {/* ====== Wave Mentor Entrega 7 Parte 2 (Diagnósticos / TPV / Exports / Webhook PIX) ====== */}
+      <Route path="/AdminIntCheckupHub" element={<LayoutWrapper currentPageName="AdminIntCheckupHub"><AdminIntCheckupHub /></LayoutWrapper>} />
+      <Route path="/AdminIntCheckupAuthorizeFlow" element={<LayoutWrapper currentPageName="AdminIntCheckupAuthorizeFlow"><AdminIntCheckupAuthorizeFlow /></LayoutWrapper>} />
+      <Route path="/AdminIntCheckupSoftDeleteFlow" element={<LayoutWrapper currentPageName="AdminIntCheckupSoftDeleteFlow"><AdminIntCheckupSoftDeleteFlow /></LayoutWrapper>} />
+      <Route path="/AdminIntCheckupProgrammaticTrigger" element={<LayoutWrapper currentPageName="AdminIntCheckupProgrammaticTrigger"><AdminIntCheckupProgrammaticTrigger /></LayoutWrapper>} />
+      <Route path="/AdminIntTPVAnalytics" element={<LayoutWrapper currentPageName="AdminIntTPVAnalytics"><AdminIntTPVAnalytics /></LayoutWrapper>} />
+      <Route path="/AdminIntTPVExportCenter" element={<LayoutWrapper currentPageName="AdminIntTPVExportCenter"><AdminIntTPVExportCenter /></LayoutWrapper>} />
+      <Route path="/AdminIntPixWebhookReplay" element={<LayoutWrapper currentPageName="AdminIntPixWebhookReplay"><AdminIntPixWebhookReplay /></LayoutWrapper>} />
+      <Route path="/MyDataExports" element={<LayoutWrapper currentPageName="MyDataExports"><MyDataExports /></LayoutWrapper>} />
+      <Route path="/MyWebhookHealth" element={<LayoutWrapper currentPageName="MyWebhookHealth"><MyWebhookHealth /></LayoutWrapper>} />
+      <Route path="/MyTPVDashboard" element={<LayoutWrapper currentPageName="MyTPVDashboard"><MyTPVDashboard /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
