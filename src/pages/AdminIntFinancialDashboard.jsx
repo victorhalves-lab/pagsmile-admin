@@ -6,13 +6,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { TrendingUp, TrendingDown, AlertTriangle, Calendar, DollarSign, Wallet, ArrowUpFromLine, Clock, Target, ArrowRight, Receipt, Sparkles, Shield, ShieldCheck, FileCode, Scale, Lock } from 'lucide-react';
 import { ADJUSTMENTS_KPIS, TOP_REASONS_PARETO, formatCurrency as fmtAdj } from '@/components/financial/adjustments/mocks/manualAdjustmentsMock';
 import { RECEIVABLES_KPIS } from '@/components/financial/receivables/mocks/receivablesLedgerMock';
-import { UR_KPIS, EFFECTS_KPIS, CERC_KPIS, formatCurrencyShort } from '@/components/regulatory/mocks/urMock';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+import { UR_KPIS, EFFECTS_KPIS, CERC_KPIS } from '@/components/regulatory/mocks/urMock';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 
 const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
+const formatCurrencyShort = (v) => {
+    if (v >= 1000000) return `R$ ${(v / 1000000).toFixed(1)} M`;
+    if (v >= 1000) return `R$ ${(v / 1000).toFixed(0)} K`;
+    return formatCurrency(v);
+};
 
 const tpvData = [
     { month: 'Ago', value: 8500000 },
