@@ -4,8 +4,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 import {
-  ArrowLeft, Save, Eye, Info, DollarSign, Package, Clock,
-  Target, Palette, CreditCard, Check, Sparkles, Zap, ShoppingBag, Repeat, TicketPercent,
+  ArrowLeft, Eye, Info, DollarSign, Package, Clock,
+  Target, Palette, CreditCard, Check, Sparkles, ShoppingBag, Repeat, TicketPercent,
   Smartphone, Monitor, Tablet,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,8 +25,6 @@ import PaymentMethodsSection from '@/components/payment-links/PaymentMethodsSect
 import CouponBindingSection from '@/components/payment-links/CouponBindingSection';
 import PaymentLinkPreview from '@/components/payment-links/PaymentLinkPreview';
 
-import ExpressLinkMode from '@/components/payment-links/create/ExpressLinkMode';
-import AICreationAssistant from '@/components/payment-links/create/AICreationAssistant';
 import OrderBumpsSection from '@/components/payment-links/create/OrderBumpsSection';
 import RecurrenceTrialSection from '@/components/payment-links/create/RecurrenceTrialSection';
 
@@ -49,7 +47,6 @@ export default function PaymentLinkCreate() {
   const linkId = params.get('id');
   const qc = useQueryClient();
 
-  const [mode, setMode] = useState('express'); // express | advanced
   const [activeTab, setActiveTab] = useState('basic');
   const [previewDevice, setPreviewDevice] = useState('desktop');
   const [validationErrors, setValidationErrors] = useState({});
@@ -82,24 +79,33 @@ export default function PaymentLinkCreate() {
     enabled: !!linkId,
   });
 
-  // Se for edição, modo avançado por padrão
-  useEffect(() => {
-    if (linkId) setMode('advanced');
-  }, [linkId]);
-
   useEffect(() => {
     if (existingLink) setFormData((prev) => ({ ...prev, ...existingLink }));
   }, [existingLink]);
 
+  // Pré-preenche com sugestões da IA via query params (quando vem do AILinkDrawer "Refinar")
+  useEffect(() => {
+    const aiName = params.get('ai_name');
+    if (aiName) {
+      setFormData((prev) => ({
+        ...prev,
+        name: aiName,
+        description: params.get('ai_desc') || '',
+        amount: parseFloat(params.get('ai_amount')) || null,
+        main_image_url: params.get('ai_image') || '',
+      }));
+    }
+  }, [params]);
+
   // Auto-save de rascunho (debounced)
   useEffect(() => {
-    if (!formData.name || mode !== 'advanced') return;
+    if (!formData.name) return;
     const t = setTimeout(() => {
       setSaveStatus('saving');
       setTimeout(() => setSaveStatus('saved'), 600);
     }, 1500);
     return () => clearTimeout(t);
-  }, [formData, mode]);
+  }, [formData]);
 
   const createMutation = useMutation({
     mutationFn: (data) =>
@@ -147,23 +153,6 @@ export default function PaymentLinkCreate() {
     else createMutation.mutate(dataToSave);
   };
 
-  const handleExpressCreate = (data) => {
-    createMutation.mutate({ ...formData, ...data, status: 'active' });
-  };
-
-  const handleAIApply = (suggestion) => {
-    setFormData((prev) => ({
-      ...prev,
-      name: suggestion.name,
-      description: suggestion.description,
-      long_description: suggestion.long_description,
-      amount: suggestion.amount,
-      payment_methods: suggestion.methods,
-      method_order: suggestion.methods,
-      main_image_url: suggestion.imageUrl,
-    }));
-  };
-
   const isLoading = createMutation.isPending || updateMutation.isPending;
 
   // Progresso global
@@ -177,48 +166,11 @@ export default function PaymentLinkCreate() {
   const totalSections = 5;
   const progress = (completedSections / totalSections) * 100;
 
-  // Modo Express (apenas para criação nova)
-  if (mode === 'express' && !linkId) {
-    return (
-      <div className="space-y-6">
-        <PageHeader
-          title="Novo Link de Pagamento"
-          subtitle="Escolha o modo de criação"
-          breadcrumbs={[
-            { label: 'Links de Pagamento', page: 'PaymentLinks' },
-            { label: 'Novo' },
-          ]}
-          actions={
-            <Button variant="outline" onClick={() => navigate(createPageUrl('PaymentLinks'))}>
-              <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
-            </Button>
-          }
-        />
-
-        {/* AI Assistant */}
-        <div className="max-w-2xl mx-auto">
-          <AICreationAssistant onApply={(s) => { handleAIApply(s); setMode('advanced'); }} />
-        </div>
-
-        <div className="flex items-center gap-4 max-w-2xl mx-auto">
-          <div className="flex-1 h-px bg-slate-200" />
-          <span className="text-xs text-slate-500 uppercase tracking-wide">ou crie manualmente</span>
-          <div className="flex-1 h-px bg-slate-200" />
-        </div>
-
-        <ExpressLinkMode
-          onCreate={handleExpressCreate}
-          onSwitchToAdvanced={() => setMode('advanced')}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       <PageHeader
-        title={linkId ? 'Editar Link' : 'Novo Link de Pagamento'}
-        subtitle={linkId ? `Editando: ${formData.name}` : 'Modo avançado — configurar todas as opções'}
+        title={linkId ? 'Editar Link' : 'Novo Link · Editor Completo'}
+        subtitle={linkId ? `Editando: ${formData.name}` : 'Configure todas as opções avançadas com preview em tempo real'}
         breadcrumbs={[
           { label: 'Links de Pagamento', page: 'PaymentLinks' },
           { label: linkId ? 'Editar' : 'Novo' },
@@ -238,11 +190,6 @@ export default function PaymentLinkCreate() {
               </span>
             )}
 
-            {!linkId && (
-              <Button variant="outline" size="sm" onClick={() => setMode('express')}>
-                <Zap className="w-3.5 h-3.5 mr-1" /> Modo express
-              </Button>
-            )}
             <Button variant="outline" onClick={() => navigate(createPageUrl('PaymentLinks'))}>
               <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
             </Button>

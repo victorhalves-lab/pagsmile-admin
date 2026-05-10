@@ -23,6 +23,8 @@ import PageHeader from '@/components/common/PageHeader';
 import EmptyState from '@/components/common/EmptyState';
 import ShareOptions from '@/components/payment-links/ShareOptions';
 
+import CreateLinkSplitButton from '@/components/payment-links/CreateLinkSplitButton';
+import QuickEditLinkDrawer from '@/components/payment-links/drawers/QuickEditLinkDrawer';
 import PaymentLinksKpiBar from '@/components/payment-links/list/PaymentLinksKpiBar';
 import PaymentLinkHealthScore, { calcLinkHealth } from '@/components/payment-links/list/PaymentLinkHealthScore';
 import PaymentLinkSparkline from '@/components/payment-links/list/PaymentLinkSparkline';
@@ -67,6 +69,7 @@ export default function PaymentLinks() {
   const [sortBy, setSortBy] = useState('recent');
   const [searchTerm, setSearchTerm] = useState('');
   const [shareLink, setShareLink] = useState(null);
+  const [quickEditLink, setQuickEditLink] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
   const [importOpen, setImportOpen] = useState(false);
   const [showInsights, setShowInsights] = useState(true);
@@ -166,7 +169,10 @@ export default function PaymentLinks() {
   };
 
   const goToDetail = (id) => navigate(createPageUrl('PaymentLinkDetail') + `?id=${id}`);
-  const goToEdit = (id) => navigate(createPageUrl('PaymentLinkCreate') + `?id=${id}`);
+  const goToEdit = (id) => {
+    const link = links.find(l => l.id === id);
+    if (link) setQuickEditLink(link);
+  };
 
   const toggleSelect = (id) => {
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -211,13 +217,7 @@ export default function PaymentLinks() {
               <LayoutGrid className="w-4 h-4 mr-2" />
               Vitrine
             </Button>
-            <Button
-              className="bg-[#2bc196] hover:bg-[#239b7a]"
-              onClick={() => navigate(createPageUrl('PaymentLinkCreate'))}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              {t('payment_links.create_link')}
-            </Button>
+            <CreateLinkSplitButton />
           </div>
         }
       />
@@ -325,6 +325,12 @@ export default function PaymentLinks() {
       </SideDrawer>
 
       <ImportLinksModal open={importOpen} onOpenChange={setImportOpen} />
+
+      <QuickEditLinkDrawer
+        open={!!quickEditLink}
+        onOpenChange={(open) => !open && setQuickEditLink(null)}
+        link={quickEditLink}
+      />
     </div>
   );
 }
