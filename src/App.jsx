@@ -160,6 +160,12 @@ import MyReconciliationCenter from './pages/MyReconciliationCenter';
 import MyCheckupCenter from './pages/MyCheckupCenter';
 import MyCommunicationsCenter from './pages/MyCommunicationsCenter';
 
+// ====== Entrega 10 — Operacional Self-Service (Admin Sub) ======
+import MyLimitRequest from './pages/MyLimitRequest';
+import MyFraudAlerts from './pages/MyFraudAlerts';
+import MyWebhookReplay from './pages/MyWebhookReplay';
+import MyRollingReserve from './pages/MyRollingReserve';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -360,6 +366,12 @@ const AuthenticatedApp = () => {
       <Route path="/MyReconciliationCenter" element={<LayoutWrapper currentPageName="MyReconciliationCenter"><MyReconciliationCenter /></LayoutWrapper>} />
       <Route path="/MyCheckupCenter" element={<LayoutWrapper currentPageName="MyCheckupCenter"><MyCheckupCenter /></LayoutWrapper>} />
       <Route path="/MyCommunicationsCenter" element={<LayoutWrapper currentPageName="MyCommunicationsCenter"><MyCommunicationsCenter /></LayoutWrapper>} />
+
+      {/* ====== Entrega 10 — Operacional Self-Service ====== */}
+      <Route path="/MyLimitRequest" element={<LayoutWrapper currentPageName="MyLimitRequest"><MyLimitRequest /></LayoutWrapper>} />
+      <Route path="/MyFraudAlerts" element={<LayoutWrapper currentPageName="MyFraudAlerts"><MyFraudAlerts /></LayoutWrapper>} />
+      <Route path="/MyWebhookReplay" element={<LayoutWrapper currentPageName="MyWebhookReplay"><MyWebhookReplay /></LayoutWrapper>} />
+      <Route path="/MyRollingReserve" element={<LayoutWrapper currentPageName="MyRollingReserve"><MyRollingReserve /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
