@@ -1,0 +1,77 @@
+{
+  "name": "BdcRetryQueue",
+  "type": "object",
+  "properties": {
+    "retry_id": {
+      "type": "string"
+    },
+    "onboarding_case_id": {
+      "type": "string"
+    },
+    "dataset_name": {
+      "type": "string",
+      "description": "Nome do dataset BDC que falhou"
+    },
+    "document_query": {
+      "type": "string",
+      "description": "Documento (CPF/CNPJ) consultado"
+    },
+    "attempt_number": {
+      "type": "number",
+      "default": 1
+    },
+    "max_attempts": {
+      "type": "number",
+      "default": 5
+    },
+    "next_retry_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_attempt_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "retrying",
+        "success",
+        "permanent_failure",
+        "manual_required"
+      ],
+      "default": "pending"
+    },
+    "error_code": {
+      "type": "string"
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "http_status": {
+      "type": "number"
+    },
+    "response_time_ms": {
+      "type": "number"
+    },
+    "backoff_strategy": {
+      "type": "string",
+      "enum": [
+        "linear",
+        "exponential",
+        "fibonacci"
+      ],
+      "default": "exponential"
+    },
+    "blocks_pipeline": {
+      "type": "boolean",
+      "default": false,
+      "description": "Se este dataset bloqueia o avan\u00e7o do pipeline"
+    }
+  },
+  "required": [
+    "retry_id",
+    "dataset_name"
+  ]
+}

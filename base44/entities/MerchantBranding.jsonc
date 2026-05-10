@@ -1,0 +1,93 @@
+{
+  "name": "MerchantBranding",
+  "type": "object",
+  "properties": {
+    "branding_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "merchant_name": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "logo_dark_url": {
+      "type": "string",
+      "description": "Logo para fundos escuros"
+    },
+    "favicon_url": {
+      "type": "string"
+    },
+    "brand_color_primary": {
+      "type": "string",
+      "default": "#2BC196"
+    },
+    "brand_color_secondary": {
+      "type": "string",
+      "default": "#002443"
+    },
+    "brand_color_accent": {
+      "type": "string"
+    },
+    "background_color": {
+      "type": "string",
+      "default": "#FFFFFF"
+    },
+    "text_color": {
+      "type": "string",
+      "default": "#171717"
+    },
+    "business_name_display": {
+      "type": "string",
+      "description": "Nome a exibir nas p\u00e1ginas white-label"
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "support_email": {
+      "type": "string"
+    },
+    "support_phone": {
+      "type": "string"
+    },
+    "support_whatsapp": {
+      "type": "string"
+    },
+    "website_url": {
+      "type": "string"
+    },
+    "privacy_policy_url": {
+      "type": "string"
+    },
+    "terms_url": {
+      "type": "string"
+    },
+    "show_powered_by": {
+      "type": "boolean",
+      "default": true,
+      "description": "Mostrar 'Powered by PagSmile' no rodap\u00e9"
+    },
+    "custom_font": {
+      "type": "string"
+    },
+    "custom_css": {
+      "type": "string",
+      "description": "CSS customizado (advanced)"
+    },
+    "email_template_overrides": {
+      "type": "object",
+      "description": "Overrides de templates de email white-label"
+    }
+  },
+  "required": [
+    "branding_id",
+    "subaccount_id"
+  ]
+}

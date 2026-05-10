@@ -1,0 +1,104 @@
+{
+  "name": "CompliancePartner",
+  "type": "object",
+  "properties": {
+    "partner_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "external_compliance",
+        "bank",
+        "registradora",
+        "auditor",
+        "regulator",
+        "law_firm"
+      ]
+    },
+    "cnpj": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "suspended",
+        "terminated",
+        "onboarding"
+      ],
+      "default": "active"
+    },
+    "access_level": {
+      "type": "string",
+      "enum": [
+        "full",
+        "redacted",
+        "summary"
+      ],
+      "default": "redacted",
+      "description": "N\u00edvel de acesso aos dados de compliance"
+    },
+    "allowed_models": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Modelos de compliance que pode acessar (v4_card, v4_pix, etc)"
+    },
+    "allowed_segments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sla_response_hours": {
+      "type": "number",
+      "default": 24
+    },
+    "contract_start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "contract_end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "total_assignments": {
+      "type": "number",
+      "default": 0
+    },
+    "active_assignments": {
+      "type": "number",
+      "default": 0
+    },
+    "completion_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "avg_response_hours": {
+      "type": "number",
+      "default": 0
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "partner_id",
+    "name",
+    "type"
+  ]
+}

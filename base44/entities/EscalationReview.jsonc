@@ -1,0 +1,103 @@
+{
+  "name": "EscalationReview",
+  "type": "object",
+  "properties": {
+    "escalation_id": {
+      "type": "string"
+    },
+    "onboarding_case_id": {
+      "type": "string"
+    },
+    "case_snapshot": {
+      "type": "object",
+      "description": "Snapshot do caso no momento da escala\u00e7\u00e3o"
+    },
+    "escalation_reason": {
+      "type": "string",
+      "enum": [
+        "false_positive_caf",
+        "false_negative_caf",
+        "fraud_suspected",
+        "no_technical_reason",
+        "regulatory_concern",
+        "manual_override_questionable",
+        "ai_confidence_low",
+        "policy_conflict",
+        "data_integrity_issue",
+        "other"
+      ]
+    },
+    "escalated_by": {
+      "type": "string",
+      "description": "Email do analista que escalou"
+    },
+    "escalated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "original_decision": {
+      "type": "string",
+      "enum": [
+        "auto_approve",
+        "auto_reject",
+        "manual_approve",
+        "manual_reject"
+      ]
+    },
+    "questioned_aspect": {
+      "type": "string",
+      "description": "O que est\u00e1 sendo questionado especificamente"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_review",
+        "confirmed_correct",
+        "overturned",
+        "policy_update_needed"
+      ],
+      "default": "pending"
+    },
+    "reviewer": {
+      "type": "string"
+    },
+    "review_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_notes": {
+      "type": "string"
+    },
+    "outcome_action": {
+      "type": "string",
+      "enum": [
+        "no_action",
+        "reverse_decision",
+        "update_policy",
+        "retrain_model",
+        "warn_analyst",
+        "training_required"
+      ]
+    },
+    "policy_updates_suggested": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "escalation_id",
+    "onboarding_case_id"
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "name": "DocumentUpload",
+  "type": "object",
+  "properties": {
+    "document_id": {
+      "type": "string"
+    },
+    "onboarding_case_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "cnpj_card",
+        "social_contract",
+        "balance_sheet",
+        "rg",
+        "cnh",
+        "passport",
+        "address_proof",
+        "selfie",
+        "selfie_with_doc",
+        "bank_statement",
+        "tax_clearance",
+        "operating_license",
+        "anvisa_license",
+        "antt_license",
+        "bacen_license",
+        "cvm_license",
+        "ibama_license",
+        "pld_policy",
+        "compliance_policy",
+        "kyc_policy",
+        "ubo_declaration",
+        "pep_declaration",
+        "fatca_declaration",
+        "other"
+      ]
+    },
+    "document_name": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "file_size_bytes": {
+      "type": "number"
+    },
+    "mime_type": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "uploaded",
+        "validating",
+        "valid",
+        "invalid",
+        "expired",
+        "rejected",
+        "replaced"
+      ],
+      "default": "pending"
+    },
+    "validation_provider": {
+      "type": "string",
+      "enum": [
+        "caf",
+        "manual",
+        "ocr_helena",
+        "system"
+      ]
+    },
+    "validation_score": {
+      "type": "number"
+    },
+    "validation_details": {
+      "type": "object"
+    },
+    "validation_notes": {
+      "type": "string"
+    },
+    "uploaded_by": {
+      "type": "string",
+      "description": "Email de quem fez upload (merchant ou subseller)"
+    },
+    "uploaded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "validated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "issued_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_required": {
+      "type": "boolean",
+      "default": true
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "previous_version_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "document_id",
+    "document_type"
+  ]
+}

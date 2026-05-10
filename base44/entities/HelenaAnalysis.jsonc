@@ -1,0 +1,163 @@
+{
+  "name": "HelenaAnalysis",
+  "type": "object",
+  "properties": {
+    "analysis_id": {
+      "type": "string"
+    },
+    "onboarding_case_id": {
+      "type": "string"
+    },
+    "model_used": {
+      "type": "string",
+      "enum": [
+        "sentinel_v4",
+        "helena_v3",
+        "claude_sonnet_4_6",
+        "gpt_5_mini"
+      ],
+      "default": "sentinel_v4"
+    },
+    "analysis_type": {
+      "type": "string",
+      "enum": [
+        "initial",
+        "manual_review",
+        "revalidation",
+        "escalation"
+      ],
+      "default": "initial"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "manual_override"
+      ],
+      "default": "pending"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_seconds": {
+      "type": "number"
+    },
+    "parallel_calls": {
+      "type": "number",
+      "default": 4,
+      "description": "N\u00famero de chamadas paralelas Sentinel V4"
+    },
+    "dimensions_analyzed": {
+      "type": "object",
+      "description": "An\u00e1lise detalhada por dimens\u00e3o (PRH, RPF, RPJ, AML, etc)"
+    },
+    "narrative": {
+      "type": "string",
+      "description": "Narrativa textual completa da an\u00e1lise"
+    },
+    "narrative_summary": {
+      "type": "string",
+      "description": "Resumo curto (3-5 linhas) para vis\u00e3o merchant"
+    },
+    "decision_recommendation": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "reject",
+        "manual_review",
+        "request_documents"
+      ]
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "red_flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "info",
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "green_flags": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "rationale": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "documents_to_request": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "raw_llm_response": {
+      "type": "object",
+      "description": "Resposta bruta do LLM (debug)"
+    },
+    "tokens_used": {
+      "type": "number"
+    },
+    "cost_estimate": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "analysis_id",
+    "onboarding_case_id"
+  ]
+}

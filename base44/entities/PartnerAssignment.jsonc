@@ -1,0 +1,96 @@
+{
+  "name": "PartnerAssignment",
+  "type": "object",
+  "properties": {
+    "assignment_id": {
+      "type": "string"
+    },
+    "partner_id": {
+      "type": "string"
+    },
+    "partner_user_id": {
+      "type": "string"
+    },
+    "onboarding_case_id": {
+      "type": "string"
+    },
+    "assigned_by": {
+      "type": "string",
+      "description": "Email do PagSmile que fez o assignment"
+    },
+    "assigned_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "assigned",
+        "in_review",
+        "completed",
+        "expired",
+        "cancelled"
+      ],
+      "default": "assigned"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "data_package_url": {
+      "type": "string",
+      "description": "URL do pacote de dados (Pr\u00e9-KYC + extras) entregue ao parceiro"
+    },
+    "data_redaction_level": {
+      "type": "string",
+      "enum": [
+        "full",
+        "redacted",
+        "summary"
+      ]
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "rejected",
+        "pending_info",
+        "escalated"
+      ]
+    },
+    "outcome_notes": {
+      "type": "string"
+    },
+    "outcome_documents": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sla_met": {
+      "type": "boolean"
+    },
+    "response_time_hours": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "assignment_id",
+    "partner_id",
+    "onboarding_case_id"
+  ]
+}

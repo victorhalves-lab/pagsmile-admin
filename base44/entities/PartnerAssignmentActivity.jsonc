@@ -1,0 +1,54 @@
+{
+  "name": "PartnerAssignmentActivity",
+  "type": "object",
+  "properties": {
+    "activity_id": {
+      "type": "string"
+    },
+    "assignment_id": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "actor_type": {
+      "type": "string",
+      "enum": [
+        "pagsmile",
+        "partner",
+        "system"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "assigned",
+        "viewed",
+        "downloaded_package",
+        "comment_added",
+        "status_changed",
+        "document_requested",
+        "document_received",
+        "completed",
+        "reassigned",
+        "cancelled",
+        "deadline_extended"
+      ]
+    },
+    "details": {
+      "type": "object"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ip_address": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "activity_id",
+    "assignment_id",
+    "action"
+  ]
+}

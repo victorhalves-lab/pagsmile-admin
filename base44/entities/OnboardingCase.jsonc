@@ -1,0 +1,326 @@
+{
+  "name": "OnboardingCase",
+  "type": "object",
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "description": "Identificador \u00fanico do caso (ex: CASE-2026-001234)"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "merchant",
+        "subseller_pj",
+        "subseller_pf"
+      ],
+      "description": "Tipo do caso: merchant direto da PagSmile, subseller PJ ou subseller PF"
+    },
+    "merchant_pai_id": {
+      "type": "string",
+      "description": "ID do merchant pai (somente quando tipo=subseller_*)"
+    },
+    "merchant_pai_name": {
+      "type": "string",
+      "description": "Nome do merchant pai (snapshot)"
+    },
+    "origem": {
+      "type": "string",
+      "enum": [
+        "self_admin_sub",
+        "link_subseller_account",
+        "link_compliance_subseller",
+        "link_doc_only",
+        "link_caf_only",
+        "link_caf_docs",
+        "link_pre_filled",
+        "api_subseller",
+        "api_merchant"
+      ],
+      "description": "Como o caso entrou no sistema"
+    },
+    "modelo_compliance": {
+      "type": "string",
+      "enum": [
+        "v4_card",
+        "v4_pix_merchant",
+        "v4_pix_intermediario",
+        "v4_pix_api_enterprise",
+        "v4_subseller_pj",
+        "v4_subseller_pf"
+      ],
+      "description": "Modelo de question\u00e1rio V4 aplicado"
+    },
+    "segmento": {
+      "type": "string",
+      "description": "Segmento de neg\u00f3cio (ex: ecommerce, marketplace, fintech, etc)"
+    },
+    "razao_social": {
+      "type": "string"
+    },
+    "nome_fantasia": {
+      "type": "string"
+    },
+    "cnpj": {
+      "type": "string"
+    },
+    "cpf": {
+      "type": "string",
+      "description": "Para subseller PF"
+    },
+    "nome_completo": {
+      "type": "string",
+      "description": "Para subseller PF"
+    },
+    "email": {
+      "type": "string"
+    },
+    "telefone": {
+      "type": "string"
+    },
+    "has_account": {
+      "type": "boolean",
+      "default": false,
+      "description": "Se o caso virou conta no Admin Sub"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID do usu\u00e1rio criado (somente se has_account=true)"
+    },
+    "subaccount_id": {
+      "type": "string",
+      "description": "ID da Subaccount vinculada (ap\u00f3s aprova\u00e7\u00e3o)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_progress",
+        "submitted",
+        "queue_auto",
+        "running_pipeline",
+        "auto_approved",
+        "auto_rejected",
+        "manual_review",
+        "manual_approved",
+        "manual_rejected",
+        "docs_requested",
+        "expired",
+        "cancelled"
+      ],
+      "default": "draft"
+    },
+    "current_step": {
+      "type": "number",
+      "default": 1,
+      "description": "Etapa atual do question\u00e1rio"
+    },
+    "total_steps": {
+      "type": "number",
+      "description": "Total de etapas do question\u00e1rio"
+    },
+    "progress_percentage": {
+      "type": "number",
+      "default": 0
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "final_decision_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "final_decision_by": {
+      "type": "string",
+      "enum": [
+        "ai_pipeline",
+        "manual_analyst",
+        "system_auto"
+      ],
+      "description": "Quem tomou a decis\u00e3o final"
+    },
+    "final_decision_reason": {
+      "type": "string"
+    },
+    "analyst_email": {
+      "type": "string",
+      "description": "Email do analista PagSmile respons\u00e1vel (caso manual)"
+    },
+    "questionnaire_data": {
+      "type": "object",
+      "description": "Respostas completas do question\u00e1rio V4"
+    },
+    "helena_analysis_id": {
+      "type": "string",
+      "description": "ID da HelenaAnalysis vinculada"
+    },
+    "compliance_score_id": {
+      "type": "string",
+      "description": "ID do ComplianceScore vinculado"
+    },
+    "risk_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Score V4 final (0-100)"
+    },
+    "risk_band": {
+      "type": "string",
+      "enum": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B10"
+      ],
+      "description": "Banda de risco V4"
+    },
+    "risk_category": {
+      "type": "string",
+      "enum": [
+        "very_low",
+        "low",
+        "medium",
+        "high",
+        "very_high",
+        "critical"
+      ]
+    },
+    "bdc_datasets_consulted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Datasets BDC consultados"
+    },
+    "bdc_health_status": {
+      "type": "string",
+      "enum": [
+        "all_ok",
+        "partial",
+        "failed",
+        "retry_pending"
+      ],
+      "default": "all_ok"
+    },
+    "caf_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "skipped",
+        "not_required"
+      ],
+      "default": "pending"
+    },
+    "caf_score": {
+      "type": "number"
+    },
+    "documents_required": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "documents_uploaded_count": {
+      "type": "number",
+      "default": 0
+    },
+    "documents_pending_count": {
+      "type": "number",
+      "default": 0
+    },
+    "red_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "green_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_pep": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_sanctioned": {
+      "type": "boolean",
+      "default": false
+    },
+    "branding_used": {
+      "type": "object",
+      "description": "Snapshot do branding white-label aplicado (logo, cores, nome) no momento do preenchimento"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "internal_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_internal": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actor": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "next_revalidation_at": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "case_id",
+    "tipo",
+    "status"
+  ]
+}

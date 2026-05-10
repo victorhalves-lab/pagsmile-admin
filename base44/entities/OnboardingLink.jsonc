@@ -1,0 +1,152 @@
+{
+  "name": "OnboardingLink",
+  "type": "object",
+  "properties": {
+    "link_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome amig\u00e1vel do link (ex: 'Onboarding Marketplace X')"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "self_account_creation",
+        "self_compliance_subseller",
+        "doc_only",
+        "caf_only",
+        "caf_docs",
+        "pre_filled",
+        "subseller_pj",
+        "subseller_pf"
+      ],
+      "description": "Tipo do link gerado"
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "merchant",
+        "subseller"
+      ],
+      "description": "Para quem o link foi gerado"
+    },
+    "created_by_type": {
+      "type": "string",
+      "enum": [
+        "pagsmile_admin",
+        "merchant"
+      ],
+      "description": "Quem criou o link (PagSmile interno ou Merchant)"
+    },
+    "created_by_email": {
+      "type": "string"
+    },
+    "merchant_pai_id": {
+      "type": "string",
+      "description": "ID do merchant pai (somente se created_by_type=merchant ou scope=subseller)"
+    },
+    "merchant_pai_name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "description": "URL completa do link"
+    },
+    "short_url": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "description": "Slug customizado (ex: 'marketplace-x')"
+    },
+    "branding_id": {
+      "type": "string",
+      "description": "ID do MerchantBranding aplicado (white-label)"
+    },
+    "pre_filled_data": {
+      "type": "object",
+      "description": "Dados pr\u00e9-preenchidos quando type=pre_filled"
+    },
+    "target_email": {
+      "type": "string",
+      "description": "Email espec\u00edfico do destinat\u00e1rio (se houver)"
+    },
+    "target_document": {
+      "type": "string",
+      "description": "CPF/CNPJ espec\u00edfico do destinat\u00e1rio (se houver)"
+    },
+    "modelo_compliance": {
+      "type": "string",
+      "enum": [
+        "v4_card",
+        "v4_pix_merchant",
+        "v4_pix_intermediario",
+        "v4_pix_api_enterprise",
+        "v4_subseller_pj",
+        "v4_subseller_pf"
+      ]
+    },
+    "segmento": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "max_uses": {
+      "type": "number",
+      "description": "Limite de usos (null = ilimitado)"
+    },
+    "uses_count": {
+      "type": "number",
+      "default": 0
+    },
+    "clicks_count": {
+      "type": "number",
+      "default": 0
+    },
+    "submissions_count": {
+      "type": "number",
+      "default": 0
+    },
+    "completions_count": {
+      "type": "number",
+      "default": 0
+    },
+    "conversion_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "expired",
+        "exhausted",
+        "revoked"
+      ],
+      "default": "active"
+    },
+    "last_used_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "link_id",
+    "type",
+    "scope",
+    "url"
+  ]
+}

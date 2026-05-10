@@ -1,0 +1,108 @@
+{
+  "name": "BankDataCollection",
+  "type": "object",
+  "properties": {
+    "collection_id": {
+      "type": "string"
+    },
+    "onboarding_case_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "partner_id": {
+      "type": "string",
+      "description": "Banco parceiro destino do Pr\u00e9-KYC"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "collected",
+        "validated",
+        "exported",
+        "submitted_to_partner",
+        "approved_by_partner",
+        "rejected_by_partner"
+      ],
+      "default": "pending"
+    },
+    "bank_name": {
+      "type": "string"
+    },
+    "bank_code": {
+      "type": "string"
+    },
+    "ispb": {
+      "type": "string"
+    },
+    "agency": {
+      "type": "string"
+    },
+    "account_number": {
+      "type": "string"
+    },
+    "account_type": {
+      "type": "string",
+      "enum": [
+        "checking",
+        "savings",
+        "payment"
+      ]
+    },
+    "account_holder_name": {
+      "type": "string"
+    },
+    "account_holder_document": {
+      "type": "string"
+    },
+    "validation_method": {
+      "type": "string",
+      "enum": [
+        "pix_micro_transfer",
+        "open_finance",
+        "manual_proof",
+        "shared_credentials"
+      ]
+    },
+    "validation_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "validation_proof_url": {
+      "type": "string"
+    },
+    "pre_kyc_export_url": {
+      "type": "string",
+      "description": "URL do XLSX Pr\u00e9-KYC gerado para o parceiro"
+    },
+    "pre_kyc_exported_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "submitted_to_partner_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "partner_response_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "partner_decision": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "rejected",
+        "pending_info"
+      ]
+    },
+    "partner_decision_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "collection_id",
+    "onboarding_case_id"
+  ]
+}

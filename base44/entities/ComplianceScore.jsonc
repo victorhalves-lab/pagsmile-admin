@@ -1,0 +1,161 @@
+{
+  "name": "ComplianceScore",
+  "type": "object",
+  "properties": {
+    "score_id": {
+      "type": "string"
+    },
+    "onboarding_case_id": {
+      "type": "string"
+    },
+    "model_version": {
+      "type": "string",
+      "default": "v4.0",
+      "description": "Vers\u00e3o do modelo de scoring"
+    },
+    "model_type": {
+      "type": "string",
+      "enum": [
+        "v4_merchant_card",
+        "v4_merchant_pix",
+        "v4_subseller_pj",
+        "v4_subseller_pf"
+      ],
+      "description": "Tipo de modelo aplicado"
+    },
+    "final_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "final_band": {
+      "type": "string",
+      "enum": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B10"
+      ]
+    },
+    "final_category": {
+      "type": "string",
+      "enum": [
+        "very_low",
+        "low",
+        "medium",
+        "high",
+        "very_high",
+        "critical"
+      ]
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "auto_approve",
+        "auto_reject",
+        "manual_review",
+        "request_documents"
+      ]
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "Score por dimens\u00e3o: PRH, RPF, RPJ, AML, Reputa\u00e7\u00e3o, Endere\u00e7o, Transacional, etc",
+      "properties": {
+        "prh": {
+          "type": "object",
+          "description": "Pesquisa Hist\u00f3rica - Person History"
+        },
+        "rpf": {
+          "type": "object",
+          "description": "Risco Pessoa F\u00edsica"
+        },
+        "rpj": {
+          "type": "object",
+          "description": "Risco Pessoa Jur\u00eddica"
+        },
+        "aml": {
+          "type": "object",
+          "description": "Anti-Money Laundering"
+        },
+        "reputacao": {
+          "type": "object"
+        },
+        "endereco": {
+          "type": "object"
+        },
+        "transacional": {
+          "type": "object"
+        },
+        "regulatorio": {
+          "type": "object"
+        },
+        "operacional": {
+          "type": "object"
+        },
+        "financeiro": {
+          "type": "object"
+        },
+        "vinculos": {
+          "type": "object"
+        },
+        "patrimonio": {
+          "type": "object"
+        },
+        "atividade": {
+          "type": "object"
+        }
+      }
+    },
+    "datasets_used": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dataset_name": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "score_contribution": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "partial",
+              "failed",
+              "skipped"
+            ]
+          }
+        }
+      }
+    },
+    "thresholds_applied": {
+      "type": "object",
+      "description": "Thresholds usados para determinar a banda"
+    },
+    "calculated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "calculation_duration_ms": {
+      "type": "number"
+    },
+    "is_final": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "score_id",
+    "onboarding_case_id"
+  ]
+}

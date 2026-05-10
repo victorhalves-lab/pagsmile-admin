@@ -1,0 +1,104 @@
+{
+  "name": "RevalidationSchedule",
+  "type": "object",
+  "properties": {
+    "schedule_id": {
+      "type": "string"
+    },
+    "onboarding_case_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "merchant_name": {
+      "type": "string"
+    },
+    "revalidation_type": {
+      "type": "string",
+      "enum": [
+        "periodic",
+        "triggered",
+        "regulatory",
+        "post_incident",
+        "ongoing_monitoring"
+      ],
+      "default": "periodic"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "quarterly",
+        "semiannual",
+        "annual",
+        "biennial",
+        "custom"
+      ]
+    },
+    "last_revalidation_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_revalidation_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "last_score": {
+      "type": "number"
+    },
+    "score_delta": {
+      "type": "number",
+      "description": "Varia\u00e7\u00e3o do score desde a \u00faltima revalida\u00e7\u00e3o"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "due_soon",
+        "overdue",
+        "in_progress",
+        "completed",
+        "skipped",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "trigger_reason": {
+      "type": "string",
+      "description": "Raz\u00e3o que disparou (mudan\u00e7a regulat\u00f3ria, anomalia, etc)"
+    },
+    "alerts_count": {
+      "type": "number",
+      "default": 0
+    },
+    "auto_revalidate": {
+      "type": "boolean",
+      "default": true
+    },
+    "assigned_analyst": {
+      "type": "string"
+    },
+    "completion_notes": {
+      "type": "string"
+    },
+    "regulatory_basis": {
+      "type": "string",
+      "description": "Base regulat\u00f3ria da revalida\u00e7\u00e3o (BACEN, COAF, etc)"
+    }
+  },
+  "required": [
+    "schedule_id",
+    "next_revalidation_at"
+  ]
+}
