@@ -45,6 +45,7 @@ import RiskScoreCell from '@/components/customers/v2/RiskScoreCell';
 import LastPurchaseCell from '@/components/customers/v2/LastPurchaseCell';
 import CustomerHoverCard from '@/components/customers/v2/CustomerHoverCard';
 import CustomersAdvancedFilters from '@/components/customers/v2/CustomersAdvancedFilters';
+import CustomerDetailDrawer from '@/components/customers/v2/CustomerDetailDrawer';
 import { toast } from 'sonner';
 
 export default function Customers() {
@@ -52,6 +53,7 @@ export default function Customers() {
   const [search, setSearch] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [drawerCustomer, setDrawerCustomer] = useState(null);
   const [filters, setFilters] = useState({
     segment: 'all',
     state: 'all',
@@ -218,11 +220,15 @@ export default function Customers() {
       label: '',
       render: (_, row) => (
         <div className="flex items-center gap-1">
-          <Link to={createPageUrl(`CustomerDetail?id=${row.id}`)} onClick={(e) => e.stopPropagation()}>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Eye className="w-4 h-4" />
-            </Button>
-          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={(e) => { e.stopPropagation(); setDrawerCustomer(row); }}
+            title="Ver detalhes"
+          >
+            <Eye className="w-4 h-4" />
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => e.stopPropagation()}>
@@ -377,6 +383,15 @@ export default function Customers() {
 
       {/* Bulk actions floating bar */}
       <CustomersBulkBar selectedIds={selectedIds} onClear={() => setSelectedIds([])} />
+
+      {/* Detail Drawer */}
+      <CustomerDetailDrawer
+        customer={drawerCustomer}
+        allRows={filteredCustomers}
+        open={!!drawerCustomer}
+        onClose={() => setDrawerCustomer(null)}
+        onNavigate={setDrawerCustomer}
+      />
     </div>
   );
 }

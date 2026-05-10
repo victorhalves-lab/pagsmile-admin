@@ -25,6 +25,7 @@ import ShareOptions from '@/components/payment-links/ShareOptions';
 
 import CreateLinkSplitButton from '@/components/payment-links/CreateLinkSplitButton';
 import QuickEditLinkDrawer from '@/components/payment-links/drawers/QuickEditLinkDrawer';
+import PaymentLinkDetailDrawer from '@/components/payment-links/drawers/PaymentLinkDetailDrawer';
 import PaymentLinksKpiBar from '@/components/payment-links/list/PaymentLinksKpiBar';
 import PaymentLinkHealthScore, { calcLinkHealth } from '@/components/payment-links/list/PaymentLinkHealthScore';
 import PaymentLinkSparkline from '@/components/payment-links/list/PaymentLinkSparkline';
@@ -70,6 +71,7 @@ export default function PaymentLinks() {
   const [searchTerm, setSearchTerm] = useState('');
   const [shareLink, setShareLink] = useState(null);
   const [quickEditLink, setQuickEditLink] = useState(null);
+  const [detailDrawerLink, setDetailDrawerLink] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
   const [importOpen, setImportOpen] = useState(false);
   const [showInsights, setShowInsights] = useState(true);
@@ -168,7 +170,10 @@ export default function PaymentLinks() {
     toast.success('Link copiado!');
   };
 
-  const goToDetail = (id) => navigate(createPageUrl('PaymentLinkDetail') + `?id=${id}`);
+  const goToDetail = (id) => {
+    const link = links.find(l => l.id === id);
+    if (link) setDetailDrawerLink(link);
+  };
   const goToEdit = (id) => {
     const link = links.find(l => l.id === id);
     if (link) setQuickEditLink(link);
@@ -330,6 +335,15 @@ export default function PaymentLinks() {
         open={!!quickEditLink}
         onOpenChange={(open) => !open && setQuickEditLink(null)}
         link={quickEditLink}
+      />
+
+      <PaymentLinkDetailDrawer
+        link={detailDrawerLink}
+        allRows={links}
+        open={!!detailDrawerLink}
+        onClose={() => setDetailDrawerLink(null)}
+        onNavigate={setDetailDrawerLink}
+        onEdit={(link) => { setDetailDrawerLink(null); setQuickEditLink(link); }}
       />
     </div>
   );
