@@ -160,6 +160,9 @@ import MyReconciliationCenter from './pages/MyReconciliationCenter';
 import MyCheckupCenter from './pages/MyCheckupCenter';
 import MyCommunicationsCenter from './pages/MyCommunicationsCenter';
 
+// ====== Compliance Onboarding (replicado do app pagsmile-onboarding) ======
+import AdminIntComplianceDashboard from './pages/AdminIntComplianceDashboard';
+
 // ====== Entrega 10 — Operacional Self-Service (Admin Sub) ======
 import MyLimitRequest from './pages/MyLimitRequest';
 import MyFraudAlerts from './pages/MyFraudAlerts';
@@ -372,6 +375,9 @@ const AuthenticatedApp = () => {
       <Route path="/MyFraudAlerts" element={<LayoutWrapper currentPageName="MyFraudAlerts"><MyFraudAlerts /></LayoutWrapper>} />
       <Route path="/MyWebhookReplay" element={<LayoutWrapper currentPageName="MyWebhookReplay"><MyWebhookReplay /></LayoutWrapper>} />
       <Route path="/MyRollingReserve" element={<LayoutWrapper currentPageName="MyRollingReserve"><MyRollingReserve /></LayoutWrapper>} />
+
+      {/* ====== Compliance Onboarding (replicado do app pagsmile-onboarding) ====== */}
+      <Route path="/AdminIntComplianceDashboard" element={<LayoutWrapper currentPageName="AdminIntComplianceDashboard"><AdminIntComplianceDashboard /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
