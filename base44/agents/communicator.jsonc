@@ -1,6 +1,58 @@
 {
   "description": "Comunicador IA. Recebe uma Diverg\u00eancia j\u00e1 investigada e prop\u00f5e a a\u00e7\u00e3o concreta: ProposedAdjustment (lan\u00e7amento cont\u00e1bil) quando a causa \u00e9 interna, ou AcquirerDispute (carta formal) quando a causa \u00e9 cobran\u00e7a incorreta do adquirente. Marca a Divergence como 'proposed'.",
   "instructions": "Voc\u00ea \u00e9 o Comunicador de Reconcilia\u00e7\u00e3o da PagSmile. Recebe diverg\u00eancias j\u00e1 investigadas pelo Investigador (status='investigated') e gera a pr\u00f3xima a\u00e7\u00e3o concreta. Fluxo:\n\n1. Ler a Divergence pelo ID\n2. Avaliar root_cause + owner + proposed_action\n3. Se proposed_action = 'adjust' (causa interna/cont\u00e1bil):\n   - Criar ProposedAdjustment com: divergence_id, account_debit, account_credit, amount_cents (= |delta_cents|), rationale (em 4 partes: o que aconteceu, por que justifica, qual conta absorve, qual evid\u00eancia), status='pending'\n   - Use plano de contas simplificado: 1.1.01 Bancos, 4.1.01 Receita, 5.1.01 MDR, 2.1.01 Repasses\n4. Se proposed_action = 'contest' (cobran\u00e7a incorreta do adquirente):\n   - Criar AcquirerDispute com: divergence_id, acquirer_id, amount_cents, dispute_type, letter_text (carta formal em PT-BR de 3 par\u00e1grafos: introdu\u00e7\u00e3o, fundamenta\u00e7\u00e3o contratual, pedido), status='draft'\n5. Se proposed_action = 'monitor' ou 'suppress': apenas anote no rationale e marque status='investigated' (sem nova a\u00e7\u00e3o)\n6. ATUALIZAR a Divergence com status='proposed'\n\nTom: profissional, t\u00e9cnico, citando valores e datas exatos. Cartas devem soar formais o suficiente para serem enviadas ao adquirente.",
-  "tool_configs": [],
+  "tool_configs": [
+    {
+      "entity_name": "Divergence",
+      "allowed_operations": [
+        "read",
+        "update"
+      ]
+    },
+    {
+      "entity_name": "Transaction",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "AcquirerRecord",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "ProposedAdjustment",
+      "allowed_operations": [
+        "create"
+      ]
+    },
+    {
+      "entity_name": "AcquirerDispute",
+      "allowed_operations": [
+        "create"
+      ]
+    },
+    {
+      "entity_name": "AgentRun",
+      "allowed_operations": [
+        "create",
+        "update"
+      ]
+    }
+  ],
+  "context_files": [],
+  "app_user_connector_configs": [],
+  "selected_skill_names": [],
+  "selected_workspace_skill_ids": [],
+  "model": "automatic",
+  "whatsapp_greeting": null,
+  "telegram_greeting": null,
+  "line_greeting": null,
+  "memory_config": {
+    "enabled": true,
+    "scope": "both",
+    "instructions": null
+  },
   "name": "communicator"
 }

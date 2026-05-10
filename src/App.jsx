@@ -18,6 +18,9 @@ import DevAppsMarketplace from './pages/DevAppsMarketplace';
 // Onboarding extras
 import SelectSegment from './pages/SelectSegment';
 
+// Recon Agents Cockpit
+import AdminIntReconAgentsCockpit from './pages/AdminIntReconAgentsCockpit';
+
 // ====== Catálogos Mestres (Admin Interno) ======
 import AdminIntAcquirers from './pages/AdminIntAcquirers';
 import AdminIntAcquirerDetail from './pages/AdminIntAcquirerDetail';
@@ -250,6 +253,9 @@ const AuthenticatedApp = () => {
       ))}
       {/* Onboarding extras */}
       <Route path="/SelectSegment" element={<LayoutWrapper currentPageName="SelectSegment"><SelectSegment /></LayoutWrapper>} />
+
+      {/* Recon Agents Cockpit */}
+      <Route path="/AdminIntReconAgentsCockpit" element={<LayoutWrapper currentPageName="AdminIntReconAgentsCockpit"><AdminIntReconAgentsCockpit /></LayoutWrapper>} />
 
       {/* ====== Catálogos Mestres ====== */}
       <Route path="/AdminIntAcquirers" element={<LayoutWrapper currentPageName="AdminIntAcquirers"><AdminIntAcquirers /></LayoutWrapper>} />
