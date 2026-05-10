@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { RefreshCw, PlayCircle, Database, Loader2, Bot, FileText, Receipt, FlaskConical, Zap } from 'lucide-react';
+import { RefreshCw, PlayCircle, Database, Loader2, Bot, FileText, Receipt, FlaskConical, Zap, Inbox, Activity } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import PageHeader from '@/components/common/PageHeader';
 import DivergenceCard from '@/components/recon/agents/DivergenceCard';
 import ReconAgentChat from '@/components/recon/agents/ReconAgentChat';
@@ -61,6 +62,24 @@ export default function AdminIntReconAgentsCockpit() {
         description="Acione Investigador, Comunicador e Reviewer sobre divergências reais do pipeline."
         icon={Bot}
       />
+
+      <div className="flex flex-wrap gap-2">
+        <Link to="/AdminIntReconHealthDashboard">
+          <Button size="sm" variant="outline" className="gap-1">
+            <Activity className="w-3.5 h-3.5" /> Health Dashboard
+          </Button>
+        </Link>
+        <Link to="/AdminIntReconInbox">
+          <Button size="sm" variant="outline" className="gap-1">
+            <Inbox className="w-3.5 h-3.5" /> Inbox de Aprovações
+          </Button>
+        </Link>
+        <Link to="/AdminIntReconObservability">
+          <Button size="sm" variant="outline" className="gap-1">
+            <Bot className="w-3.5 h-3.5" /> Observabilidade
+          </Button>
+        </Link>
+      </div>
 
       {/* Pipeline controls */}
       <Card>
