@@ -6,6 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CreditCard, QrCode, ArrowUpDown } from 'lucide-react';
+import CombinedPaymentSection from '@/components/payments/CombinedPaymentSection';
 
 export default function PaymentMethodsSection({ formData, setFormData }) {
   const togglePaymentMethod = (method) => {
@@ -145,6 +146,12 @@ export default function PaymentMethodsSection({ formData, setFormData }) {
           </CardContent>
         </Card>
       )}
+
+      {/* Combined Payment (Cartão+PIX, 2 Cartões, etc) */}
+      <CombinedPaymentSection
+        value={formData.combined_payment}
+        onChange={(v) => setFormData({ ...formData, combined_payment: v })}
+      />
 
       {/* Pix Settings */}
       {hasMethod('pix') && (

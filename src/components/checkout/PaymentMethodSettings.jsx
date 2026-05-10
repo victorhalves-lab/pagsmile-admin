@@ -9,6 +9,7 @@ import { Slider } from '@/components/ui/slider';
 import { CreditCard, QrCode, GripVertical } from 'lucide-react';
 import SelectionButton from '@/components/ui/selection-button';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import CombinedPaymentSection from '@/components/payments/CombinedPaymentSection';
 
 const cardBrands = [
   { id: 'visa', name: 'Visa' },
@@ -324,6 +325,12 @@ export default function PaymentMethodSettings({ paymentMethods, onChange }) {
           </CardContent>
         )}
       </Card>
+
+      {/* Combined Payment (Cartão+PIX, 2 Cartões, etc) */}
+      <CombinedPaymentSection
+        value={paymentMethods.combined_payment}
+        onChange={(v) => updatePayment('combined_payment', v)}
+      />
 
       {/* Display Settings */}
       <Card>
