@@ -4,9 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ShieldCheck, FileText, AlertTriangle, CheckCircle2, Calendar, Upload, Download, Clock, AlertCircle, FileCheck } from 'lucide-react';
+import { ShieldCheck, FileText, AlertTriangle, CheckCircle2, Calendar, Upload, Download, Clock, AlertCircle, FileCheck, Users, ArrowRight, Plus, Link as LinkIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import MyKpiCard from '@/components/my-compliance/MyKpiCard';
 import { myComplianceStatus, myComplianceDocs, myComplianceActions } from '@/components/my-compliance/mocks/myComplianceMock';
+import { myMockSubsellerCases } from '@/components/my-compliance/mocks/mySubsellersMock';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -24,6 +26,12 @@ const priorityColors = {
 };
 
 export default function MyComplianceCenter() {
+  const navigate = useNavigate();
+  const subsellerStats = {
+    total: myMockSubsellerCases.length,
+    active: myMockSubsellerCases.filter((c) => c.is_active).length,
+    pending: myMockSubsellerCases.filter((c) => ['queue_auto', 'manual_review', 'docs_requested', 'in_progress'].includes(c.status)).length,
+  };
   return (
     <div className="p-6 max-w-[1600px] mx-auto">
       <PageHeader
@@ -91,6 +99,37 @@ export default function MyComplianceCenter() {
           </CardContent>
         </Card>
       )}
+
+      {/* Card de Subsellers */}
+      <Card className="mb-6 border-purple-200 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/10 dark:to-indigo-900/10">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center">
+                <Users className="w-6 h-6 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-purple-700 uppercase">Compliance dos seus Subsellers</p>
+                <p className="font-black text-xl text-slate-900 dark:text-white">
+                  {subsellerStats.total} subsellers · {subsellerStats.active} ativos · {subsellerStats.pending} pendentes
+                </p>
+                <p className="text-xs text-slate-500 mt-1">Convide PJ ou PF e acompanhe a aprovação de compliance V4</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => navigate('/MyComplianceLinks')}>
+                <LinkIcon className="w-4 h-4 mr-1" /> Meus Links
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => navigate('/MySubsellersCases')}>
+                Ver Subsellers <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+              <Button size="sm" onClick={() => navigate('/MySubsellerInvite')}>
+                <Plus className="w-4 h-4 mr-1" /> Convidar
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Tabs defaultValue="documents">
         <TabsList>

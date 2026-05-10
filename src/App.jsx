@@ -164,11 +164,35 @@ import MyCommunicationsCenter from './pages/MyCommunicationsCenter';
 import AdminIntComplianceDashboard from './pages/AdminIntComplianceDashboard';
 import AdminIntComplianceLinks from './pages/AdminIntComplianceLinks';
 
+// ====== Compliance V4 — Onda 3 (12 páginas novas) ======
+import AdminIntComplianceCases from './pages/AdminIntComplianceCases';
+import AdminIntComplianceCaseDetail from './pages/AdminIntComplianceCaseDetail';
+import AdminIntComplianceAnalysis from './pages/AdminIntComplianceAnalysis';
+import AdminIntComplianceRevalidation from './pages/AdminIntComplianceRevalidation';
+import AdminIntComplianceSubsellerLinks from './pages/AdminIntComplianceSubsellerLinks';
+import AdminIntComplianceRiskScoring from './pages/AdminIntComplianceRiskScoring';
+import AdminIntComplianceRiskScoringSubsellers from './pages/AdminIntComplianceRiskScoringSubsellers';
+import AdminIntComplianceEscalations from './pages/AdminIntComplianceEscalations';
+import AdminIntComplianceBulkReprocess from './pages/AdminIntComplianceBulkReprocess';
+import AdminIntComplianceKYCTemplate from './pages/AdminIntComplianceKYCTemplate';
+import AdminIntCompliancePartners from './pages/AdminIntCompliancePartners';
+import AdminIntCompliancePartnerDetail from './pages/AdminIntCompliancePartnerDetail';
+import AdminIntCompliancePreKYCExport from './pages/AdminIntCompliancePreKYCExport';
+import AdminIntComplianceBDCHealth from './pages/AdminIntComplianceBDCHealth';
+import AdminIntComplianceCafLab from './pages/AdminIntComplianceCafLab';
+
 // ====== Entrega 10 — Operacional Self-Service (Admin Sub) ======
 import MyLimitRequest from './pages/MyLimitRequest';
 import MyFraudAlerts from './pages/MyFraudAlerts';
 import MyWebhookReplay from './pages/MyWebhookReplay';
 import MyRollingReserve from './pages/MyRollingReserve';
+
+// ====== Onda 4 — Subsellers (perspectiva Merchant / Admin Sub) ======
+import MySubsellersCases from './pages/MySubsellersCases';
+import MySubsellerCaseDetail from './pages/MySubsellerCaseDetail';
+import MySubsellerInvite from './pages/MySubsellerInvite';
+import MyComplianceLinks from './pages/MyComplianceLinks';
+import MySubsellerDocsResend from './pages/MySubsellerDocsResend';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -377,9 +401,33 @@ const AuthenticatedApp = () => {
       <Route path="/MyWebhookReplay" element={<LayoutWrapper currentPageName="MyWebhookReplay"><MyWebhookReplay /></LayoutWrapper>} />
       <Route path="/MyRollingReserve" element={<LayoutWrapper currentPageName="MyRollingReserve"><MyRollingReserve /></LayoutWrapper>} />
 
+      {/* ====== Onda 4 — Subsellers (Merchant) ====== */}
+      <Route path="/MySubsellersCases" element={<LayoutWrapper currentPageName="MySubsellersCases"><MySubsellersCases /></LayoutWrapper>} />
+      <Route path="/MySubsellerCaseDetail" element={<LayoutWrapper currentPageName="MySubsellerCaseDetail"><MySubsellerCaseDetail /></LayoutWrapper>} />
+      <Route path="/MySubsellerInvite" element={<LayoutWrapper currentPageName="MySubsellerInvite"><MySubsellerInvite /></LayoutWrapper>} />
+      <Route path="/MyComplianceLinks" element={<LayoutWrapper currentPageName="MyComplianceLinks"><MyComplianceLinks /></LayoutWrapper>} />
+      <Route path="/MySubsellerDocsResend" element={<LayoutWrapper currentPageName="MySubsellerDocsResend"><MySubsellerDocsResend /></LayoutWrapper>} />
+
       {/* ====== Compliance Onboarding (replicado do app pagsmile-onboarding) ====== */}
       <Route path="/AdminIntComplianceDashboard" element={<LayoutWrapper currentPageName="AdminIntComplianceDashboard"><AdminIntComplianceDashboard /></LayoutWrapper>} />
       <Route path="/AdminIntComplianceLinks" element={<LayoutWrapper currentPageName="AdminIntComplianceLinks"><AdminIntComplianceLinks /></LayoutWrapper>} />
+
+      {/* ====== Compliance V4 — Onda 3 ====== */}
+      <Route path="/AdminIntComplianceCases" element={<LayoutWrapper currentPageName="AdminIntComplianceCases"><AdminIntComplianceCases /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceCaseDetail" element={<LayoutWrapper currentPageName="AdminIntComplianceCaseDetail"><AdminIntComplianceCaseDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceAnalysis" element={<LayoutWrapper currentPageName="AdminIntComplianceAnalysis"><AdminIntComplianceAnalysis /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceRevalidation" element={<LayoutWrapper currentPageName="AdminIntComplianceRevalidation"><AdminIntComplianceRevalidation /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceSubsellerLinks" element={<LayoutWrapper currentPageName="AdminIntComplianceSubsellerLinks"><AdminIntComplianceSubsellerLinks /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceRiskScoring" element={<LayoutWrapper currentPageName="AdminIntComplianceRiskScoring"><AdminIntComplianceRiskScoring /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceRiskScoringSubsellers" element={<LayoutWrapper currentPageName="AdminIntComplianceRiskScoringSubsellers"><AdminIntComplianceRiskScoringSubsellers /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceEscalations" element={<LayoutWrapper currentPageName="AdminIntComplianceEscalations"><AdminIntComplianceEscalations /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceBulkReprocess" element={<LayoutWrapper currentPageName="AdminIntComplianceBulkReprocess"><AdminIntComplianceBulkReprocess /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceKYCTemplate" element={<LayoutWrapper currentPageName="AdminIntComplianceKYCTemplate"><AdminIntComplianceKYCTemplate /></LayoutWrapper>} />
+      <Route path="/AdminIntCompliancePartners" element={<LayoutWrapper currentPageName="AdminIntCompliancePartners"><AdminIntCompliancePartners /></LayoutWrapper>} />
+      <Route path="/AdminIntCompliancePartnerDetail" element={<LayoutWrapper currentPageName="AdminIntCompliancePartnerDetail"><AdminIntCompliancePartnerDetail /></LayoutWrapper>} />
+      <Route path="/AdminIntCompliancePreKYCExport" element={<LayoutWrapper currentPageName="AdminIntCompliancePreKYCExport"><AdminIntCompliancePreKYCExport /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceBDCHealth" element={<LayoutWrapper currentPageName="AdminIntComplianceBDCHealth"><AdminIntComplianceBDCHealth /></LayoutWrapper>} />
+      <Route path="/AdminIntComplianceCafLab" element={<LayoutWrapper currentPageName="AdminIntComplianceCafLab"><AdminIntComplianceCafLab /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
