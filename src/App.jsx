@@ -146,6 +146,13 @@ import MyDataExports from './pages/MyDataExports';
 import MyWebhookHealth from './pages/MyWebhookHealth';
 import MyTPVDashboard from './pages/MyTPVDashboard';
 
+// ====== Entrega 8 — Compliance Crítico (Admin Sub) ======
+import MyAuditTrail from './pages/MyAuditTrail';
+import MyMEDQueue from './pages/MyMEDQueue';
+import MyComplianceCenter from './pages/MyComplianceCenter';
+import MyBlockagesCenter from './pages/MyBlockagesCenter';
+import MyDriftAlerts from './pages/MyDriftAlerts';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -332,6 +339,13 @@ const AuthenticatedApp = () => {
       <Route path="/MyDataExports" element={<LayoutWrapper currentPageName="MyDataExports"><MyDataExports /></LayoutWrapper>} />
       <Route path="/MyWebhookHealth" element={<LayoutWrapper currentPageName="MyWebhookHealth"><MyWebhookHealth /></LayoutWrapper>} />
       <Route path="/MyTPVDashboard" element={<LayoutWrapper currentPageName="MyTPVDashboard"><MyTPVDashboard /></LayoutWrapper>} />
+
+      {/* ====== Entrega 8 — Compliance Crítico ====== */}
+      <Route path="/MyAuditTrail" element={<LayoutWrapper currentPageName="MyAuditTrail"><MyAuditTrail /></LayoutWrapper>} />
+      <Route path="/MyMEDQueue" element={<LayoutWrapper currentPageName="MyMEDQueue"><MyMEDQueue /></LayoutWrapper>} />
+      <Route path="/MyComplianceCenter" element={<LayoutWrapper currentPageName="MyComplianceCenter"><MyComplianceCenter /></LayoutWrapper>} />
+      <Route path="/MyBlockagesCenter" element={<LayoutWrapper currentPageName="MyBlockagesCenter"><MyBlockagesCenter /></LayoutWrapper>} />
+      <Route path="/MyDriftAlerts" element={<LayoutWrapper currentPageName="MyDriftAlerts"><MyDriftAlerts /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
