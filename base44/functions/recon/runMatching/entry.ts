@@ -69,24 +69,63 @@ function classifyMatch(tx, acq, bank) {
   return 'unmatched';
 }
 
-function detectDivergence(tx, acq) {
-  // valor: amount_cents da transaction vs amount_cents do acquirer
+function detectDivergences(tx, acq, bankResult) {
+  // retorna ARRAY de divergências (uma tx pode ter várias)
+  const out = [];
+
+  // 1) valor: amount_cents da transaction vs amount_cents do acquirer
   if (acq && tx.amount_cents != null && acq.amount_cents != null) {
     const delta = acq.amount_cents - tx.amount_cents;
     if (Math.abs(delta) > AMOUNT_TOLERANCE_CENTS) {
-      return {
+      out.push({
         bucket: 'value_mismatch',
         severity: Math.abs(delta) > 100 ? 'high' : 'medium',
         delta_cents: delta,
         expected_value: tx.amount_cents,
         received_value: acq.amount_cents,
-        root_cause: `Adquirente reportou valor divergente da transação (delta ${delta} centavos)`,
         owner: 'upstream',
-        proposed_action: 'adjust',
-      };
+        proposed_action: 'contest',
+        detected_by: 'pipeline:value_mismatch',
+      });
     }
   }
-  return null;
+
+  // 2) fee mismatch: MDR cobrado vs esperado (tx.fee_amount em reais → centavos)
+  if (acq && tx.fee_amount != null && acq.fee_cents != null) {
+    const expectedFeeCents = Math.round(tx.fee_amount * 100);
+    const feeDelta = acq.fee_cents - expectedFeeCents;
+    if (Math.abs(feeDelta) > AMOUNT_TOLERANCE_CENTS) {
+      out.push({
+        bucket: 'fee_mismatch',
+        severity: Math.abs(feeDelta) > 50 ? 'high' : 'medium',
+        delta_cents: feeDelta,
+        expected_value: expectedFeeCents,
+        received_value: acq.fee_cents,
+        owner: 'upstream',
+        proposed_action: 'contest',
+        detected_by: 'pipeline:fee_mismatch',
+      });
+    }
+  }
+
+  // 3) settlement aging: liquidação atrasou além de TIME_TOLERANCE_DAYS
+  if (acq?.settle_date && bankResult?.movement?.occurred_at) {
+    const lateDays = daysBetween(bankResult.movement.occurred_at, acq.settle_date);
+    if (lateDays > TIME_TOLERANCE_DAYS) {
+      out.push({
+        bucket: 'settlement_aging',
+        severity: lateDays > 5 ? 'high' : 'medium',
+        delta_cents: 0,
+        expected_value: 0,
+        received_value: 0,
+        owner: 'upstream',
+        proposed_action: 'monitor',
+        detected_by: 'pipeline:settlement_aging',
+      });
+    }
+  }
+
+  return out;
 }
 
 // ---------- main ----------
@@ -136,8 +175,9 @@ Deno.serve(async (req) => {
       const bankResult = acq ? findBankMatch(acq, bankPool) : null;
       const matchType = classifyMatch(tx, acq, bankResult);
 
-      // detecta divergência de valor
-      const divergence = detectDivergence(tx, acq);
+      // detecta divergências (pode haver várias por tx)
+      const divergences = detectDivergences(tx, acq, bankResult);
+      const hasDivergence = divergences.length > 0;
 
       if (matchType === 'unmatched') {
         stats.unmatched++;
@@ -159,7 +199,7 @@ Deno.serve(async (req) => {
       if (matchType === 'three_way_perfect') confidence = 100;
       else if (matchType === 'three_way_tolerance') confidence = 90;
       else if (matchType === 'two_way_tx_acquirer') confidence = 70;
-      if (divergence) confidence -= 20;
+      if (hasDivergence) confidence -= 20 * divergences.length;
 
       const matchRecord = {
         transaction_id: tx.transaction_id,
@@ -179,10 +219,10 @@ Deno.serve(async (req) => {
       // atualiza estado da transaction
       let newState;
       if (matchType === 'three_way_perfect' || matchType === 'three_way_tolerance') {
-        newState = divergence ? 'divergent' : 'matched_three_way';
+        newState = hasDivergence ? 'divergent' : 'matched_three_way';
         stats[matchType]++;
       } else {
-        newState = divergence ? 'divergent' : 'matched_acquirer';
+        newState = hasDivergence ? 'divergent' : 'matched_acquirer';
         stats.two_way_tx_acquirer++;
       }
 
@@ -206,7 +246,7 @@ Deno.serve(async (req) => {
         if (idx >= 0) bankPool.splice(idx, 1);
       }
 
-      if (divergence) {
+      for (const div of divergences) {
         stats.divergences++;
         divergencesToCreate.push({
           merchant_id: tx.merchant_id,
@@ -214,8 +254,7 @@ Deno.serve(async (req) => {
           acquirer_record_id: acq?.id || null,
           bank_movement_id: bankResult?.movement.id || null,
           detected_at: new Date().toISOString(),
-          detected_by: 'pipeline:value_mismatch',
-          ...divergence,
+          ...div,
           status: 'detected',
         });
       }

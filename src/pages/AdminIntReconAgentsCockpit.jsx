@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { RefreshCw, PlayCircle, Database, Loader2, Bot, FileText, Receipt } from 'lucide-react';
+import { RefreshCw, PlayCircle, Database, Loader2, Bot, FileText, Receipt, FlaskConical, Zap } from 'lucide-react';
 import PageHeader from '@/components/common/PageHeader';
 import DivergenceCard from '@/components/recon/agents/DivergenceCard';
 import ReconAgentChat from '@/components/recon/agents/ReconAgentChat';
@@ -70,6 +70,10 @@ export default function AdminIntReconAgentsCockpit() {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
+          <Button size="sm" variant="outline" onClick={() => runPipeline('recon/seedDivergenceScenarios')} disabled={!!running}>
+            {running === 'recon/seedDivergenceScenarios' ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <FlaskConical className="w-3 h-3 mr-1" />}
+            Seed Cenários Variados
+          </Button>
           <Button size="sm" variant="outline" onClick={() => runPipeline('bank/syncBankMovements')} disabled={!!running}>
             {running === 'bank/syncBankMovements' ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <RefreshCw className="w-3 h-3 mr-1" />}
             Sync Bank (mock)
@@ -85,6 +89,10 @@ export default function AdminIntReconAgentsCockpit() {
           <Button size="sm" variant="ghost" onClick={refetchAll}>
             <RefreshCw className="w-3 h-3 mr-1" /> Atualizar
           </Button>
+          <div className="ml-auto flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 px-2 py-1 rounded">
+            <Zap className="w-3 h-3" />
+            <span>Auto-Investigator ativo (entity automation)</span>
+          </div>
         </CardContent>
       </Card>
 
