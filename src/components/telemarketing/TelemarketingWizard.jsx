@@ -5,7 +5,8 @@ const STEPS = [
   { id: 1, label: 'Cliente' },
   { id: 2, label: 'Itens' },
   { id: 3, label: 'Pagamento' },
-  { id: 4, label: 'Fechar venda' },
+  { id: 4, label: 'Confirmação' },
+  { id: 5, label: 'Fechar venda' },
 ];
 
 export default function TelemarketingWizard({ current }) {

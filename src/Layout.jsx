@@ -49,7 +49,8 @@ import {
   UserPlus,
   ShieldCheck,
   AlertTriangle,
-  Mail
+  Mail,
+  Phone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -85,7 +86,6 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.all_transactions'), page: 'Transactions' },
       { label: t('menu.card'), page: 'CardTransactions' },
       { label: t('menu.pix'), page: 'PixTransactions' },
-      { label: '🛍️ Venda Manual', page: 'TelemarketingSale' },
       { label: t('menu.decline_analysis'), page: 'DeclineAnalysis' },
     ]
   },
@@ -110,6 +110,12 @@ const getAdminSubMenuItems = (t) => [
     icon: Link2,
     page: 'PaymentLinks',
     badge: '12',
+  },
+  {
+    id: 'phone-sale',
+    label: 'Venda por Telefone',
+    icon: Phone,
+    page: 'TelemarketingSale',
   },
   {
     id: 'coupons',

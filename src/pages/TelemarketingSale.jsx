@@ -6,6 +6,7 @@ import TelemarketingSummaryPanel from '@/components/telemarketing/TelemarketingS
 import StepCustomerIdentification from '@/components/telemarketing/steps/StepCustomerIdentification';
 import StepProducts from '@/components/telemarketing/steps/StepProducts';
 import StepPaymentSplit from '@/components/telemarketing/steps/StepPaymentSplit';
+import StepConsentLink from '@/components/telemarketing/steps/StepConsentLink';
 import StepReviewAndCharge from '@/components/telemarketing/steps/StepReviewAndCharge';
 
 const EMPTY_SALE = {
@@ -50,7 +51,10 @@ export default function TelemarketingSale() {
             <StepPaymentSplit sale={sale} updateSale={updateSale} onNext={() => setStep(4)} onBack={() => setStep(2)} />
           )}
           {step === 4 && (
-            <StepReviewAndCharge sale={sale} updateSale={updateSale} onBack={() => setStep(3)} onReset={reset} />
+            <StepConsentLink sale={sale} updateSale={updateSale} onNext={() => setStep(5)} onBack={() => setStep(3)} />
+          )}
+          {step === 5 && (
+            <StepReviewAndCharge sale={sale} updateSale={updateSale} onBack={() => setStep(4)} onReset={reset} />
           )}
         </div>
 

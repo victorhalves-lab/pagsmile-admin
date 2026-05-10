@@ -69,11 +69,15 @@ export default function StepReviewAndCharge({ sale, updateSale, onBack, onReset 
             description: it.sku,
           })),
           metadata: {
-            channel: 'manual_sale',
+            channel: 'phone_sale',
             parent_sale_id: parentSaleId,
             split_index: i + 1,
             split_total: sale.payments.length,
             operator_notes: sale.operator_notes,
+            consent_token: sale.consent_token,
+            consent_channel: sale.consent_channel,
+            consent_sent_at: sale.consent_sent_at,
+            consent_confirmed_at: sale.consent_confirmed_at,
           },
         });
         txns.push(tx);
@@ -133,10 +137,19 @@ export default function StepReviewAndCharge({ sale, updateSale, onBack, onReset 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Etapa 4 · Fechar venda</CardTitle>
+        <CardTitle className="text-base">Etapa 5 · Fechar venda</CardTitle>
         <p className="text-xs text-slate-500">Revise os dados e processe o pagamento.</p>
       </CardHeader>
       <CardContent className="space-y-4">
+        {sale.consent_confirmed_at && (
+          <div className="border border-emerald-300 bg-emerald-50 rounded-lg p-3 flex items-center gap-2 text-sm">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <span className="text-emerald-800">
+              Compra confirmada pelo cliente em {new Date(sale.consent_confirmed_at).toLocaleString('pt-BR')} via {sale.consent_channel === 'whatsapp' ? 'WhatsApp' : 'e-mail'}
+            </span>
+          </div>
+        )}
+
         <div className="border rounded-lg p-4 space-y-3 bg-slate-50">
           <div>
             <div className="text-[10px] uppercase font-bold text-slate-500">Cliente</div>
