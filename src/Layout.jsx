@@ -76,20 +76,6 @@ const getAdminSubMenuItems = (t) => [
     page: 'Dashboard',
   },
   {
-    id: 'inbox',
-    label: 'Inbox',
-    icon: Mail,
-    page: 'Inbox',
-    badge: '10',
-    badgeVariant: 'destructive',
-  },
-  {
-    id: 'ai-hub',
-    label: 'Agentes IA',
-    icon: Sparkles,
-    page: 'AiAgentsHub',
-  },
-  {
     id: 'transactions',
     label: t('menu.transactions'),
     icon: ArrowLeftRight,
@@ -211,6 +197,20 @@ const getAdminSubMenuItems = (t) => [
       { label: 'Lista de Clientes', page: 'Customers' },
       { label: '✨ Engagement Hub', page: 'CustomersHub' },
     ]
+  },
+  {
+    id: 'inbox',
+    label: 'Inbox',
+    icon: Mail,
+    page: 'Inbox',
+    badge: '10',
+    badgeVariant: 'destructive',
+  },
+  {
+    id: 'ai-hub',
+    label: 'Agentes IA',
+    icon: Sparkles,
+    page: 'AiAgentsHub',
   },
   {
     id: 'analytics',
