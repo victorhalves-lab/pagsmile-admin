@@ -96,7 +96,7 @@ export default function StepConsentLink({ sale, updateSale, onNext, onBack }) {
           <ShieldCheck className="w-4 h-4 text-[#2bc196]" /> Etapa 4 · Confirmação do Cliente
         </CardTitle>
         <p className="text-xs text-slate-500">
-          Envie um link de confirmação para o cliente. Ele revisa o resumo e autoriza a compra antes do processamento.
+          Envie o link de confirmação por SMS, e-mail ou WhatsApp. O cliente clica, aceita os termos, confirma que é ele que está fazendo a compra e recebe o comprovante. Só após essa confirmação a transação é efetivada.
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -115,16 +115,10 @@ export default function StepConsentLink({ sale, updateSale, onNext, onBack }) {
         {/* Canais de envio */}
         {!confirmed && (
           <div className="border rounded-lg p-4 bg-slate-50 space-y-3">
-            <h4 className="text-sm font-bold text-slate-700">Enviar para o cliente</h4>
+            <h4 className="text-sm font-bold text-slate-700">Como enviar o link ao cliente?</h4>
+            <p className="text-[11px] text-slate-500">Escolha um canal. O cliente vai clicar, aceitar os termos e confirmar a compra.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-              <Button
-                onClick={() => simulateSend('whatsapp')}
-                disabled={!phoneDigits || sending}
-                className="bg-emerald-600 hover:bg-emerald-700 h-12"
-              >
-                <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
-              </Button>
               <Button
                 onClick={() => simulateSend('sms')}
                 disabled={!phoneDigits || sending}
@@ -135,10 +129,16 @@ export default function StepConsentLink({ sale, updateSale, onNext, onBack }) {
               <Button
                 onClick={() => simulateSend('email')}
                 disabled={!sale.customer?.email || sending}
-                variant="outline"
-                className="h-12"
+                className="bg-slate-700 hover:bg-slate-800 h-12 text-white"
               >
                 <Mail className="w-4 h-4 mr-2" /> E-mail
+              </Button>
+              <Button
+                onClick={() => simulateSend('whatsapp')}
+                disabled={!phoneDigits || sending}
+                className="bg-emerald-600 hover:bg-emerald-700 h-12"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
               </Button>
             </div>
 
@@ -158,7 +158,7 @@ export default function StepConsentLink({ sale, updateSale, onNext, onBack }) {
               <div className="flex-1">
                 <div className="font-semibold text-amber-900 text-sm">Aguardando confirmação do cliente…</div>
                 <p className="text-xs text-amber-800 mt-1">
-                  Link enviado via {sale.consent_channel === 'whatsapp' ? 'WhatsApp' : sale.consent_channel === 'sms' ? 'SMS' : 'e-mail'}. O status atualiza automaticamente quando o cliente confirma.
+                  Link enviado via {sale.consent_channel === 'whatsapp' ? 'WhatsApp' : sale.consent_channel === 'sms' ? 'SMS' : 'e-mail'}. O cliente precisa abrir o link, aceitar os termos e confirmar que é ele fazendo a compra. O status atualiza automaticamente.
                 </p>
               </div>
             </div>
@@ -179,9 +179,9 @@ export default function StepConsentLink({ sale, updateSale, onNext, onBack }) {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
-                <div className="font-semibold text-emerald-900 text-sm">Cliente confirmou a compra ✓</div>
+                <div className="font-semibold text-emerald-900 text-sm">Cliente aceitou os termos e confirmou a compra ✓</div>
                 <p className="text-xs text-emerald-800 mt-1">
-                  Confirmado em {sale.consent_confirmed_at && new Date(sale.consent_confirmed_at).toLocaleString('pt-BR')} · canal: {sale.consent_channel === 'whatsapp' ? 'WhatsApp' : sale.consent_channel === 'sms' ? 'SMS' : 'E-mail'}
+                  Confirmado em {sale.consent_confirmed_at && new Date(sale.consent_confirmed_at).toLocaleString('pt-BR')} · canal: {sale.consent_channel === 'whatsapp' ? 'WhatsApp' : sale.consent_channel === 'sms' ? 'SMS' : 'E-mail'} · comprovante enviado ao cliente. Pode efetuar a transação.
                 </p>
               </div>
             </div>
