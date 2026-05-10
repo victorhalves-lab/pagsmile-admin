@@ -1,0 +1,46 @@
+{
+  "name": "SystemParam",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "string",
+        "number",
+        "boolean",
+        "json"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "financial",
+        "risk",
+        "operational",
+        "commercial",
+        "system"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "key",
+    "value",
+    "category"
+  ]
+}

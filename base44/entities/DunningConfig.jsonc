@@ -1,0 +1,159 @@
+{
+  "name": "DunningConfig",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome da configura\u00e7\u00e3o de dunning"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "retry_count": {
+      "type": "number",
+      "default": 5,
+      "description": "N\u00famero de retentativas"
+    },
+    "retry_intervals": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Intervalo em dias entre tentativas"
+    },
+    "retry_time_strategy": {
+      "type": "string",
+      "enum": [
+        "same_time",
+        "optimized",
+        "specific"
+      ],
+      "default": "optimized"
+    },
+    "retry_specific_time": {
+      "type": "string"
+    },
+    "retry_weekdays": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "0-6, domingo a s\u00e1bado"
+    },
+    "ai_optimization_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "pre_charge_email_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "pre_charge_email_days_before": {
+      "type": "number",
+      "default": 3
+    },
+    "charge_success_email_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "failure_email_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "reminder_emails": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "[{days_after, template, enabled}]"
+    },
+    "final_notice_email_days_before_cancel": {
+      "type": "number",
+      "default": 3
+    },
+    "cancellation_email_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "sms_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "sms_after_failure_days": {
+      "type": "number"
+    },
+    "sms_final_notice_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "sms_max_count": {
+      "type": "number",
+      "default": 2
+    },
+    "whatsapp_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "whatsapp_after_failure_days": {
+      "type": "number"
+    },
+    "whatsapp_max_count": {
+      "type": "number",
+      "default": 2
+    },
+    "suspend_after_failures": {
+      "type": "number",
+      "default": 3
+    },
+    "cancel_after_days": {
+      "type": "number",
+      "default": 30
+    },
+    "cancellation_action": {
+      "type": "string",
+      "enum": [
+        "silent",
+        "send_email",
+        "offer_discount"
+      ],
+      "default": "send_email"
+    },
+    "update_card_link_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "update_card_link_validity_hours": {
+      "type": "number",
+      "default": 72
+    },
+    "action_after_card_update": {
+      "type": "string",
+      "enum": [
+        "retry_immediately",
+        "wait_next_cycle"
+      ],
+      "default": "retry_immediately"
+    },
+    "offer_pix_on_failure": {
+      "type": "boolean",
+      "default": true
+    },
+    "pix_discount_on_failure": {
+      "type": "number",
+      "default": 5
+    },
+    "behavior_by_failure_reason": {
+      "type": "object"
+    },
+    "behavior_by_value_range": {
+      "type": "object"
+    },
+    "behavior_by_tenure": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

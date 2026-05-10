@@ -1,0 +1,47 @@
+{
+  "name": "AiAgentLog",
+  "type": "object",
+  "properties": {
+    "log_id": {
+      "type": "string"
+    },
+    "agent_name": {
+      "type": "string"
+    },
+    "action_type": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "input_summary": {
+      "type": "string"
+    },
+    "output_summary": {
+      "type": "string"
+    },
+    "result_status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failure",
+        "warning"
+      ]
+    },
+    "duration_ms": {
+      "type": "number"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "confidence_score": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "agent_name",
+    "action_type",
+    "timestamp"
+  ]
+}

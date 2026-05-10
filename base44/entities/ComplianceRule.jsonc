@@ -1,0 +1,111 @@
+{
+  "name": "ComplianceRule",
+  "type": "object",
+  "properties": {
+    "rule_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "auto_approve",
+        "auto_reject",
+        "manual_review",
+        "request_documents",
+        "notification"
+      ],
+      "description": "Tipo da regra"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "priority": {
+      "type": "number",
+      "default": 1,
+      "description": "Ordem de execu\u00e7\u00e3o (1 = maior prioridade)"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "equals",
+              "not_equals",
+              "greater_than",
+              "less_than",
+              "contains",
+              "not_contains",
+              "in",
+              "not_in"
+            ]
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Condi\u00e7\u00f5es para ativa\u00e7\u00e3o da regra"
+    },
+    "logic_operator": {
+      "type": "string",
+      "enum": [
+        "AND",
+        "OR"
+      ],
+      "default": "AND"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action_type": {
+            "type": "string",
+            "enum": [
+              "set_status",
+              "send_notification",
+              "assign_analyst",
+              "request_document",
+              "add_flag"
+            ]
+          },
+          "parameters": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "notification_template_id": {
+      "type": "string"
+    },
+    "executions_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_executed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ]
+}

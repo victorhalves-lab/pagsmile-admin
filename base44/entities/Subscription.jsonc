@@ -1,0 +1,162 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "subscription_id": {
+      "type": "string"
+    },
+    "plan_id": {
+      "type": "string",
+      "description": "Refer\u00eancia ao SubscriptionPlan"
+    },
+    "plan_name": {
+      "type": "string"
+    },
+    "customer_id": {
+      "type": "string"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "customer_document": {
+      "type": "string"
+    },
+    "customer_phone": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "trial",
+        "active",
+        "pending",
+        "delinquent",
+        "paused",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "health_status": {
+      "type": "string",
+      "enum": [
+        "healthy",
+        "attention",
+        "risk"
+      ],
+      "default": "healthy"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "BRL"
+    },
+    "billing_cycle": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "biweekly",
+        "monthly",
+        "bimonthly",
+        "quarterly",
+        "semiannual",
+        "annual"
+      ]
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "trial_end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_billing_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "current_cycle": {
+      "type": "number",
+      "default": 1
+    },
+    "total_cycles": {
+      "type": "number"
+    },
+    "failed_attempts": {
+      "type": "number",
+      "default": 0
+    },
+    "dunning_step": {
+      "type": "number",
+      "default": 0
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "card",
+        "pix",
+        "boleto"
+      ]
+    },
+    "card_last_four": {
+      "type": "string"
+    },
+    "card_brand": {
+      "type": "string"
+    },
+    "card_expiry": {
+      "type": "string"
+    },
+    "total_paid": {
+      "type": "number",
+      "default": 0
+    },
+    "mrr_contribution": {
+      "type": "number"
+    },
+    "applied_discount_percentage": {
+      "type": "number"
+    },
+    "applied_discount_remaining_cycles": {
+      "type": "number"
+    },
+    "pause_start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "pause_end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "cancellation_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "cancellation_reason": {
+      "type": "string"
+    },
+    "cancellation_type": {
+      "type": "string",
+      "enum": [
+        "voluntary",
+        "involuntary"
+      ]
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "plan_id",
+    "customer_email",
+    "amount"
+  ]
+}

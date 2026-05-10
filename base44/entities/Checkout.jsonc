@@ -1,0 +1,101 @@
+{
+  "name": "Checkout",
+  "type": "object",
+  "properties": {
+    "checkout_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "inactive"
+      ],
+      "default": "draft"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "transparent",
+        "redirect"
+      ]
+    },
+    "layout": {
+      "type": "object",
+      "description": "Configura\u00e7\u00e3o visual do checkout"
+    },
+    "payment_methods": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "max_installments": {
+      "type": "number",
+      "default": 12
+    },
+    "pix_discount_percentage": {
+      "type": "number"
+    },
+    "brand_color": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "success_url": {
+      "type": "string"
+    },
+    "cancel_url": {
+      "type": "string"
+    },
+    "webhook_url": {
+      "type": "string"
+    },
+    "custom_fields": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "linked_coupon_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs dos cupons vinculados a este checkout"
+    },
+    "auto_apply_coupon_id": {
+      "type": "string",
+      "description": "ID do cupom que ser\u00e1 aplicado automaticamente neste checkout"
+    },
+    "conversion_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "total_sessions": {
+      "type": "number",
+      "default": 0
+    },
+    "total_completed": {
+      "type": "number",
+      "default": 0
+    },
+    "ab_test_active": {
+      "type": "boolean",
+      "default": false
+    },
+    "ab_test_config": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "checkout_id",
+    "name"
+  ]
+}

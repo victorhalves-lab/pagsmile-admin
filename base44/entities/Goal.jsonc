@@ -1,0 +1,43 @@
+{
+  "name": "Goal",
+  "type": "object",
+  "properties": {
+    "period_month": {
+      "type": "string",
+      "description": "M\u00eas de refer\u00eancia (YYYY-MM)"
+    },
+    "target_activations": {
+      "type": "number",
+      "description": "Meta total de ativa\u00e7\u00f5es (novos merchants)"
+    },
+    "target_pipeline_value": {
+      "type": "number",
+      "description": "Meta de valor total em pipeline (R$)"
+    },
+    "salesperson_targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "user_name": {
+            "type": "string"
+          },
+          "target_activations": {
+            "type": "number"
+          },
+          "target_pipeline": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Metas individualizadas por vendedor"
+    }
+  },
+  "required": [
+    "period_month",
+    "target_activations"
+  ]
+}

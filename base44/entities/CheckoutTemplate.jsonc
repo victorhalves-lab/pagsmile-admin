@@ -1,0 +1,66 @@
+{
+  "name": "CheckoutTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome do template"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "pre-defined",
+        "custom",
+        "vertical"
+      ],
+      "default": "custom"
+    },
+    "vertical": {
+      "type": "string",
+      "enum": [
+        "ecommerce",
+        "saas",
+        "services",
+        "infoproducts",
+        "subscriptions",
+        "donations"
+      ],
+      "description": "Vertical de neg\u00f3cio"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "elements": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "branding": {
+      "type": "object"
+    },
+    "layout": {
+      "type": "object"
+    },
+    "payment_methods": {
+      "type": "object"
+    },
+    "experience": {
+      "type": "object"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

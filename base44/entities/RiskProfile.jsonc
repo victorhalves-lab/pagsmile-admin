@@ -1,0 +1,66 @@
+{
+  "name": "RiskProfile",
+  "type": "object",
+  "properties": {
+    "profile_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "merchant_name": {
+      "type": "string"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "moderate",
+        "alert",
+        "critical",
+        "program"
+      ]
+    },
+    "ratio_cb_visa": {
+      "type": "number"
+    },
+    "ratio_cb_mc": {
+      "type": "number"
+    },
+    "ratio_fraud_visa": {
+      "type": "number"
+    },
+    "ratio_fraud_mc": {
+      "type": "number"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "programs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "program": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "month_count": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "profile_id",
+    "subaccount_id"
+  ]
+}

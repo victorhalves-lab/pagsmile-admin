@@ -1,0 +1,86 @@
+{
+  "name": "AcquirerFile",
+  "type": "object",
+  "properties": {
+    "acquirer_id": {
+      "type": "string"
+    },
+    "file_name": {
+      "type": "string"
+    },
+    "file_size_bytes": {
+      "type": "integer"
+    },
+    "file_hash": {
+      "type": "string",
+      "description": "SHA-256 do arquivo inteiro"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL no file storage Base44"
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reference_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Data de compet\u00eancia do arquivo"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "cnab240",
+        "cnab444",
+        "edi",
+        "custom"
+      ]
+    },
+    "total_records": {
+      "type": "integer",
+      "default": 0
+    },
+    "parsed_records": {
+      "type": "integer",
+      "default": 0
+    },
+    "matched_records": {
+      "type": "integer",
+      "default": 0
+    },
+    "divergent_records": {
+      "type": "integer",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "received",
+        "parsing",
+        "parsed",
+        "matching",
+        "matched",
+        "failed"
+      ],
+      "default": "received"
+    },
+    "parser_version": {
+      "type": "string"
+    },
+    "parse_errors": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "acquirer_id",
+    "file_name",
+    "file_hash",
+    "received_at",
+    "format",
+    "status"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "name": "ComplianceAuditLog",
+  "type": "object",
+  "properties": {
+    "log_id": {
+      "type": "string"
+    },
+    "submission_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "submission_created",
+        "helena_analysis_started",
+        "helena_analysis_completed",
+        "helena_approved",
+        "helena_rejected",
+        "helena_manual_review",
+        "assigned_to_analyst",
+        "analyst_approved",
+        "analyst_rejected",
+        "documents_requested",
+        "document_uploaded",
+        "document_approved",
+        "document_rejected",
+        "status_changed",
+        "note_added",
+        "risk_reclassified",
+        "notification_sent",
+        "rule_triggered",
+        "feedback_provided"
+      ]
+    },
+    "actor": {
+      "type": "string",
+      "description": "Usu\u00e1rio ou 'HELENA_AI' que executou a a\u00e7\u00e3o"
+    },
+    "actor_type": {
+      "type": "string",
+      "enum": [
+        "user",
+        "system",
+        "helena_ai"
+      ]
+    },
+    "details": {
+      "type": "object",
+      "description": "Detalhes adicionais da a\u00e7\u00e3o"
+    },
+    "old_value": {
+      "type": "string"
+    },
+    "new_value": {
+      "type": "string"
+    },
+    "ip_address": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "actor"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "name": "PipelineRun",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": [
+        "ingest",
+        "normalize",
+        "match",
+        "classify",
+        "resolve"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "description": "tuna | cnab_cielo | lina_api | cerc | webhook_pix"
+    },
+    "window_from": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "window_to": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_ms": {
+      "type": "integer"
+    },
+    "records_in": {
+      "type": "integer",
+      "default": 0
+    },
+    "records_out": {
+      "type": "integer",
+      "default": 0
+    },
+    "matches_made": {
+      "type": "integer",
+      "default": 0
+    },
+    "divergences_created": {
+      "type": "integer",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "success",
+        "partial",
+        "failed"
+      ],
+      "default": "running"
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "stage",
+    "window_from",
+    "window_to",
+    "started_at",
+    "status"
+  ]
+}

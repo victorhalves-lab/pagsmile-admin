@@ -1,0 +1,71 @@
+{
+  "name": "AgentRun",
+  "type": "object",
+  "properties": {
+    "agent": {
+      "type": "string",
+      "enum": [
+        "investigator",
+        "communicator",
+        "reviewer"
+      ]
+    },
+    "triggered_by": {
+      "type": "string",
+      "description": "divergence:uuid | adjustment:uuid | scheduled:audit_4h"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "success",
+        "failed",
+        "timeout"
+      ],
+      "default": "running"
+    },
+    "input_ref": {
+      "type": "object",
+      "description": "Apenas IDs/refs, nunca conte\u00fado bruto"
+    },
+    "output": {
+      "type": "object",
+      "description": "JSON estruturado conforme response_json_schema do agente"
+    },
+    "tokens_in": {
+      "type": "integer"
+    },
+    "tokens_out": {
+      "type": "integer"
+    },
+    "cost_cents": {
+      "type": "integer"
+    },
+    "model_used": {
+      "type": "string"
+    },
+    "tools_used": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "agent",
+    "triggered_by",
+    "started_at",
+    "status"
+  ]
+}

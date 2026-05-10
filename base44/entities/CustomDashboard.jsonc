@@ -1,0 +1,46 @@
+{
+  "name": "CustomDashboard",
+  "type": "object",
+  "properties": {
+    "dashboard_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "widgets": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "[{id, type, title, config, position: {x, y, w, h}}]"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false
+    },
+    "public_url": {
+      "type": "string"
+    },
+    "shared_with": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "filters": {
+      "type": "object",
+      "description": "Filtros padr\u00e3o do dashboard"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

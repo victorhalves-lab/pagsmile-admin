@@ -1,0 +1,65 @@
+{
+  "name": "Webhook",
+  "type": "object",
+  "properties": {
+    "webhook_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "failing"
+      ],
+      "default": "active"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "secret": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "default": "v1"
+    },
+    "success_rate": {
+      "type": "number",
+      "default": 100
+    },
+    "total_sent": {
+      "type": "number",
+      "default": 0
+    },
+    "total_failed": {
+      "type": "number",
+      "default": 0
+    },
+    "last_sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_status": {
+      "type": "string"
+    },
+    "last_response_time": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "webhook_id",
+    "name",
+    "url",
+    "events"
+  ]
+}

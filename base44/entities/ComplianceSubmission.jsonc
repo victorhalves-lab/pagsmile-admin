@@ -1,0 +1,225 @@
+{
+  "name": "ComplianceSubmission",
+  "type": "object",
+  "properties": {
+    "submission_id": {
+      "type": "string",
+      "description": "ID \u00fanico da submiss\u00e3o"
+    },
+    "subaccount_id": {
+      "type": "string",
+      "description": "Refer\u00eancia \u00e0 subconta"
+    },
+    "business_name": {
+      "type": "string"
+    },
+    "document": {
+      "type": "string",
+      "description": "CNPJ/CPF"
+    },
+    "questionnaire_type": {
+      "type": "string",
+      "enum": [
+        "kyc_full",
+        "kyc_pix",
+        "kyc_card",
+        "kyb_enterprise"
+      ],
+      "description": "Tipo do question\u00e1rio respondido"
+    },
+    "questionnaire_version": {
+      "type": "string",
+      "description": "Vers\u00e3o do question\u00e1rio"
+    },
+    "questionnaire_data": {
+      "type": "object",
+      "description": "Todas as respostas do question\u00e1rio"
+    },
+    "documents_submitted": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "document_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "approved",
+              "rejected",
+              "expired"
+            ]
+          },
+          "uploaded_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validated_by": {
+            "type": "string"
+          },
+          "rejection_reason": {
+            "type": "string"
+          },
+          "helena_analysis": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "ai_analyzing",
+        "ai_approved",
+        "ai_rejected",
+        "manual_review",
+        "approved",
+        "rejected",
+        "documents_requested"
+      ],
+      "default": "pending"
+    },
+    "helena_score": {
+      "type": "number",
+      "description": "Score de risco calculado pela Helena (0-100)"
+    },
+    "helena_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "manual_review"
+      ],
+      "description": "Decis\u00e3o da Helena"
+    },
+    "helena_recommendation": {
+      "type": "string",
+      "description": "Recomenda\u00e7\u00e3o sumarizada da Helena"
+    },
+    "helena_justification": {
+      "type": "string",
+      "description": "Justificativa robusta e completa da Helena"
+    },
+    "helena_red_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lista de red flags identificados pela Helena"
+    },
+    "helena_analysis_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "helena_processing_time_ms": {
+      "type": "number",
+      "description": "Tempo de processamento da Helena em ms"
+    },
+    "manual_review_reason": {
+      "type": "string",
+      "description": "Motivo do encaminhamento para revis\u00e3o manual"
+    },
+    "assigned_analyst": {
+      "type": "string",
+      "description": "Email do analista respons\u00e1vel"
+    },
+    "analyst_decision": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "rejected",
+        "request_documents"
+      ]
+    },
+    "analyst_notes": {
+      "type": "string"
+    },
+    "analyst_decision_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "documents_requested": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "document_type": {
+            "type": "string"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requested_by": {
+            "type": "string"
+          },
+          "received": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "submission_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approval_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_in_queue_hours": {
+      "type": "number"
+    },
+    "audit_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "subaccount_id",
+    "business_name",
+    "document",
+    "questionnaire_type"
+  ]
+}

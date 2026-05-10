@@ -1,0 +1,80 @@
+{
+  "name": "IntegrationConfig",
+  "type": "object",
+  "properties": {
+    "integration_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "acquirer",
+        "antifraud",
+        "banking",
+        "kyc",
+        "communication",
+        "monitoring"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "error",
+        "maintenance"
+      ],
+      "default": "active"
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "production",
+        "sandbox"
+      ]
+    },
+    "credentials": {
+      "type": "object",
+      "description": "Encrypted or masked credentials"
+    },
+    "endpoints": {
+      "type": "object"
+    },
+    "settings": {
+      "type": "object"
+    },
+    "health_status": {
+      "type": "number",
+      "description": "0-100 score"
+    },
+    "last_check": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "latency_ms": {
+          "type": "number"
+        },
+        "error_rate": {
+          "type": "number"
+        },
+        "calls_24h": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "required": [
+    "name",
+    "provider",
+    "type"
+  ]
+}

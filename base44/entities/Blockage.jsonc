@@ -1,0 +1,70 @@
+{
+  "name": "Blockage",
+  "type": "object",
+  "properties": {
+    "blockage_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "merchant_name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "risk",
+        "chargeback",
+        "compliance",
+        "manual"
+      ]
+    },
+    "amount": {
+      "type": "number"
+    },
+    "is_full_balance": {
+      "type": "boolean",
+      "default": false
+    },
+    "reason": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "released",
+        "expired"
+      ],
+      "default": "active"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string"
+    },
+    "released_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "released_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "subaccount_id",
+    "type",
+    "reason",
+    "status"
+  ]
+}

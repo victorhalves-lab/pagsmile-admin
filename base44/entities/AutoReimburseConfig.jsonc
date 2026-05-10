@@ -1,0 +1,59 @@
+{
+  "name": "AutoReimburseConfig",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "is_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "value_threshold": {
+      "type": "number",
+      "description": "Valor m\u00e1ximo para auto-reembolso global"
+    },
+    "reason_codes_to_auto_reimburse": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Motivos para auto-reembolsar"
+    },
+    "threshold_type": {
+      "type": "string",
+      "enum": [
+        "global",
+        "per_reason_code"
+      ],
+      "default": "global"
+    },
+    "per_reason_code_thresholds": {
+      "type": "object",
+      "description": "Thresholds por reason code: {'fraud': 200, 'not_recognized': 100}"
+    },
+    "customer_history_consideration": {
+      "type": "string",
+      "enum": [
+        "none",
+        "new_customers_only",
+        "exclude_good_standing"
+      ],
+      "default": "none"
+    },
+    "min_customer_purchases_for_good_standing": {
+      "type": "number",
+      "default": 3
+    },
+    "notification_email_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "notification_email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

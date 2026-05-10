@@ -1,0 +1,133 @@
+{
+  "name": "ClientLimitRequest",
+  "type": "object",
+  "properties": {
+    "request_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "business_name": {
+      "type": "string"
+    },
+    "document": {
+      "type": "string"
+    },
+    "limit_type": {
+      "type": "string",
+      "enum": [
+        "per_transaction",
+        "daily",
+        "monthly",
+        "pix_per_transaction",
+        "pix_daily",
+        "card_per_transaction",
+        "card_daily"
+      ],
+      "description": "Tipo de limite solicitado"
+    },
+    "current_limit": {
+      "type": "number",
+      "description": "Limite atual"
+    },
+    "requested_limit": {
+      "type": "number",
+      "description": "Limite solicitado"
+    },
+    "justification": {
+      "type": "string",
+      "description": "Justificativa do cliente"
+    },
+    "supporting_documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "uploaded_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "under_review",
+        "approved",
+        "rejected",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "assigned_analyst": {
+      "type": "string"
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "admin_comments": {
+      "type": "string"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "approved_limit": {
+      "type": "number",
+      "description": "Limite efetivamente aprovado (pode ser diferente do solicitado)"
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "client_metrics": {
+      "type": "object",
+      "description": "M\u00e9tricas do cliente no momento da solicita\u00e7\u00e3o",
+      "properties": {
+        "total_tpv": {
+          "type": "number"
+        },
+        "avg_ticket": {
+          "type": "number"
+        },
+        "approval_rate": {
+          "type": "number"
+        },
+        "chargeback_ratio": {
+          "type": "number"
+        },
+        "time_as_client_days": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "required": [
+    "subaccount_id",
+    "business_name",
+    "limit_type",
+    "current_limit",
+    "requested_limit"
+  ]
+}

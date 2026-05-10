@@ -1,0 +1,50 @@
+{
+  "name": "MCC",
+  "type": "object",
+  "properties": {
+    "cnae": {
+      "type": "string",
+      "description": "C\u00f3digo CNAE"
+    },
+    "secao": {
+      "type": "string",
+      "description": "Se\u00e7\u00e3o CNAE"
+    },
+    "denominacao_cnae": {
+      "type": "string",
+      "description": "Denomina\u00e7\u00e3o CNAE"
+    },
+    "mcc_code": {
+      "type": "string",
+      "description": "C\u00f3digo MCC"
+    },
+    "nome_mcc_description": {
+      "type": "string",
+      "description": "Nome MCC - Description (em ingl\u00eas)"
+    },
+    "nome_mcc": {
+      "type": "string",
+      "description": "Nome MCC (em portugu\u00eas)"
+    },
+    "default_rate": {
+      "type": "number",
+      "description": "Taxa padr\u00e3o aplicada para este MCC (%)"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium",
+      "description": "N\u00edvel de risco associado ao MCC"
+    }
+  },
+  "required": [
+    "cnae",
+    "mcc_code",
+    "nome_mcc"
+  ]
+}

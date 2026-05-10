@@ -1,0 +1,96 @@
+{
+  "name": "Withdrawal",
+  "type": "object",
+  "properties": {
+    "withdrawal_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "fee": {
+      "type": "number",
+      "default": 0
+    },
+    "net_amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "BRL"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "automatic",
+        "scheduled"
+      ]
+    },
+    "bank_name": {
+      "type": "string"
+    },
+    "bank_code": {
+      "type": "string"
+    },
+    "agency": {
+      "type": "string"
+    },
+    "account_number": {
+      "type": "string"
+    },
+    "account_type": {
+      "type": "string",
+      "enum": [
+        "checking",
+        "savings"
+      ]
+    },
+    "pix_key": {
+      "type": "string"
+    },
+    "pix_key_type": {
+      "type": "string",
+      "enum": [
+        "cpf",
+        "cnpj",
+        "email",
+        "phone",
+        "random"
+      ]
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "processed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "failure_reason": {
+      "type": "string"
+    },
+    "receipt_url": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "withdrawal_id",
+    "amount",
+    "type"
+  ]
+}

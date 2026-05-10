@@ -1,0 +1,68 @@
+{
+  "name": "ReconciliationBatch",
+  "type": "object",
+  "properties": {
+    "batch_id": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "bank",
+        "acquirer",
+        "pix_bacen"
+      ]
+    },
+    "provider": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "completed_with_diffs",
+        "error"
+      ]
+    },
+    "total_records_processed": {
+      "type": "number"
+    },
+    "total_amount_processed": {
+      "type": "number"
+    },
+    "total_amount_system": {
+      "type": "number"
+    },
+    "difference_amount": {
+      "type": "number"
+    },
+    "matched_count": {
+      "type": "number"
+    },
+    "unmatched_count": {
+      "type": "number"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "processed_by": {
+      "type": "string"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "batch_id",
+    "date",
+    "type",
+    "status"
+  ]
+}

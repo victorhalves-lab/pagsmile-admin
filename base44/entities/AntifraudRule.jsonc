@@ -1,0 +1,78 @@
+{
+  "name": "AntifraudRule",
+  "type": "object",
+  "properties": {
+    "rule_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "operator": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "block",
+        "review",
+        "approve",
+        "challenge_3ds"
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "global",
+        "merchant",
+        "mcc"
+      ]
+    },
+    "scope_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "priority": {
+      "type": "number",
+      "default": 5
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "rule_id",
+    "name",
+    "conditions",
+    "action"
+  ]
+}

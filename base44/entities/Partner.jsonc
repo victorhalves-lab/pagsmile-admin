@@ -1,0 +1,56 @@
+{
+  "name": "Partner",
+  "type": "object",
+  "properties": {
+    "partner_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "acquirer",
+        "psp_pix",
+        "antifraud",
+        "banking",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "priority": {
+      "type": "number",
+      "default": 1
+    },
+    "costs": {
+      "type": "object"
+    },
+    "integration_config": {
+      "type": "object"
+    },
+    "tpv_share": {
+      "type": "number",
+      "default": 0
+    },
+    "contract_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "contract_end": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "name": "ComplianceQuestionnaire",
+  "type": "object",
+  "properties": {
+    "questionnaire_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome do question\u00e1rio"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "kyc_full",
+        "kyc_pix",
+        "kyc_card",
+        "kyb_enterprise"
+      ],
+      "description": "Tipo do question\u00e1rio"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "inactive",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field_id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "text",
+                    "textarea",
+                    "number",
+                    "date",
+                    "select",
+                    "multiselect",
+                    "checkbox",
+                    "radio",
+                    "file",
+                    "email",
+                    "phone",
+                    "cpf",
+                    "cnpj"
+                  ]
+                },
+                "placeholder": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "validation_rules": {
+                  "type": "object"
+                },
+                "risk_weight": {
+                  "type": "number",
+                  "description": "Peso para c\u00e1lculo de risco da Helena"
+                },
+                "risk_values": {
+                  "type": "object",
+                  "description": "Mapeamento de valores para scores de risco"
+                },
+                "conditional_logic": {
+                  "type": "object",
+                  "description": "L\u00f3gica condicional para exibi\u00e7\u00e3o"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "required_documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "document_type": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "conditional_logic": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "risk_thresholds": {
+      "type": "object",
+      "properties": {
+        "auto_approve_above": {
+          "type": "number"
+        },
+        "auto_reject_below": {
+          "type": "number"
+        },
+        "manual_review_range": {
+          "type": "object"
+        }
+      }
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_modified_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ]
+}

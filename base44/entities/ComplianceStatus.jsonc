@@ -1,0 +1,98 @@
+{
+  "name": "ComplianceStatus",
+  "type": "object",
+  "properties": {
+    "card_brand": {
+      "type": "string",
+      "enum": [
+        "visa",
+        "mastercard"
+      ]
+    },
+    "program_type": {
+      "type": "string",
+      "enum": [
+        "vdmp",
+        "vfmp",
+        "ecm",
+        "efm"
+      ],
+      "description": "VDMP/VFMP (Visa), ECM/EFM (Mastercard)"
+    },
+    "current_ratio": {
+      "type": "number"
+    },
+    "fraud_ratio": {
+      "type": "number"
+    },
+    "threshold_warning": {
+      "type": "number"
+    },
+    "threshold_critical": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "early_warning",
+        "standard",
+        "excessive",
+        "in_program"
+      ],
+      "default": "normal"
+    },
+    "current_level": {
+      "type": "string",
+      "description": "N\u00edvel atual no programa (e.g., N\u00edvel 1, HECM)"
+    },
+    "monthly_chargebacks": {
+      "type": "number"
+    },
+    "monthly_fraud_chargebacks": {
+      "type": "number"
+    },
+    "monthly_transactions": {
+      "type": "number"
+    },
+    "monthly_fraud_volume": {
+      "type": "number"
+    },
+    "period_month": {
+      "type": "string",
+      "description": "YYYY-MM do per\u00edodo"
+    },
+    "projected_ratio": {
+      "type": "number"
+    },
+    "trend": {
+      "type": "string",
+      "enum": [
+        "up",
+        "down",
+        "stable"
+      ]
+    },
+    "last_checked_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "action_plan_suggestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "months_in_program": {
+      "type": "number",
+      "default": 0
+    },
+    "estimated_fines": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "card_brand",
+    "program_type"
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "name": "PaymentLinkShowcase",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "banner_url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "brand_color": {
+      "type": "string"
+    },
+    "social_links": {
+      "type": "object",
+      "description": "{instagram, facebook, whatsapp}"
+    },
+    "link_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "layout_type": {
+      "type": "string",
+      "enum": [
+        "grid_2",
+        "grid_3",
+        "grid_4",
+        "list",
+        "carousel"
+      ],
+      "default": "grid_3"
+    },
+    "allow_cart": {
+      "type": "boolean",
+      "default": false
+    },
+    "allow_search": {
+      "type": "boolean",
+      "default": true
+    },
+    "seo_title": {
+      "type": "string"
+    },
+    "seo_description": {
+      "type": "string"
+    },
+    "seo_image_url": {
+      "type": "string"
+    },
+    "seo_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "views_count": {
+      "type": "number",
+      "default": 0
+    },
+    "total_sales": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "slug"
+  ]
+}

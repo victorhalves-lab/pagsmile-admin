@@ -1,0 +1,22 @@
+{
+  "name": "UserPreferences",
+  "type": "object",
+  "properties": {
+    "quick_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs das a\u00e7\u00f5es r\u00e1pidas selecionadas pelo usu\u00e1rio"
+    },
+    "dashboard_layout": {
+      "type": "object",
+      "description": "Configura\u00e7\u00f5es de layout do dashboard"
+    },
+    "notifications": {
+      "type": "object",
+      "description": "Prefer\u00eancias de notifica\u00e7\u00e3o"
+    }
+  },
+  "required": []
+}

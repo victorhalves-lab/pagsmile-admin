@@ -1,0 +1,49 @@
+{
+  "name": "Questionnaire",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "full",
+        "simplified"
+      ],
+      "default": "full"
+    },
+    "protocol": {
+      "type": "string",
+      "description": "Protocolo \u00fanico"
+    },
+    "data": {
+      "type": "object",
+      "description": "Dados preenchidos no question\u00e1rio"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "received",
+        "processing",
+        "processed",
+        "archived"
+      ],
+      "default": "received"
+    },
+    "lead_id": {
+      "type": "string",
+      "description": "ID do Lead vinculado (se houver)"
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "string",
+      "description": "Origem do tr\u00e1fego (UTM Source)"
+    }
+  },
+  "required": [
+    "type",
+    "data",
+    "received_at"
+  ]
+}

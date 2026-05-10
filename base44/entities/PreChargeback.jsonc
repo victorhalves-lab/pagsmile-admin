@@ -1,0 +1,72 @@
+{
+  "name": "PreChargeback",
+  "type": "object",
+  "properties": {
+    "alert_id": {
+      "type": "string"
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "merchant_name": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "ethoca",
+        "verifi"
+      ]
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "reason_description": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "BRL"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "refunded",
+        "ignored",
+        "expired",
+        "resolved"
+      ]
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deadline_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolution_action": {
+      "type": "string"
+    },
+    "resolution_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "saved_amount": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "alert_id",
+    "transaction_id",
+    "status",
+    "deadline_at"
+  ]
+}

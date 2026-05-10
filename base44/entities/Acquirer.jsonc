@@ -1,0 +1,54 @@
+{
+  "name": "Acquirer",
+  "type": "object",
+  "properties": {
+    "acquirer_code": {
+      "type": "string",
+      "description": "cielo|stone|rede|getnet|mp|itau"
+    },
+    "name": {
+      "type": "string"
+    },
+    "cnpj": {
+      "type": "string",
+      "description": "CNPJ principal (apenas d\u00edgitos)"
+    },
+    "cnpj_variants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "CNPJs adicionais (filiais, agentes)"
+    },
+    "file_format": {
+      "type": "string",
+      "enum": [
+        "cnab240",
+        "cnab444",
+        "edi",
+        "custom_api"
+      ]
+    },
+    "parser_function": {
+      "type": "string",
+      "description": "Nome da function que parseia"
+    },
+    "ftp_host": {
+      "type": "string"
+    },
+    "ftp_path": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "acquirer_code",
+    "name",
+    "cnpj",
+    "file_format",
+    "parser_function"
+  ]
+}

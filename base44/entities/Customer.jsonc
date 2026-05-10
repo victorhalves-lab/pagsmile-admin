@@ -1,0 +1,98 @@
+{
+  "name": "Customer",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "document": {
+      "type": "string",
+      "description": "CPF ou CNPJ"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "cpf",
+        "cnpj"
+      ]
+    },
+    "phone": {
+      "type": "string"
+    },
+    "total_purchases": {
+      "type": "number",
+      "default": 0
+    },
+    "total_spent": {
+      "type": "number",
+      "default": 0
+    },
+    "average_ticket": {
+      "type": "number",
+      "default": 0
+    },
+    "first_purchase_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "last_purchase_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "segment": {
+      "type": "string",
+      "enum": [
+        "new",
+        "recurring",
+        "vip",
+        "at_risk",
+        "inactive"
+      ],
+      "default": "new"
+    },
+    "risk_score": {
+      "type": "number"
+    },
+    "chargebacks_count": {
+      "type": "number",
+      "default": 0
+    },
+    "refunds_count": {
+      "type": "number",
+      "default": 0
+    },
+    "preferred_payment_method": {
+      "type": "string",
+      "enum": [
+        "card",
+        "pix"
+      ]
+    },
+    "addresses": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "saved_cards": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "document"
+  ]
+}

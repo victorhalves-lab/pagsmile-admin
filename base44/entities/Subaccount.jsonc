@@ -1,0 +1,443 @@
+{
+  "name": "Subaccount",
+  "type": "object",
+  "properties": {
+    "subaccount_id": {
+      "type": "string"
+    },
+    "business_name": {
+      "type": "string"
+    },
+    "legal_name": {
+      "type": "string"
+    },
+    "document": {
+      "type": "string"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "cpf",
+        "cnpj"
+      ]
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_compliance",
+        "pending_documents",
+        "under_review",
+        "active",
+        "suspended",
+        "blocked",
+        "cancelled"
+      ],
+      "default": "draft"
+    },
+    "onboarding_step": {
+      "type": "number",
+      "default": 1
+    },
+    "onboarding_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "selected_plan": {
+      "type": "string",
+      "enum": [
+        "starter",
+        "growth",
+        "pro",
+        "instant",
+        "enterprise",
+        "custom"
+      ]
+    },
+    "plan_name": {
+      "type": "string"
+    },
+    "commercial_agent_id": {
+      "type": "string"
+    },
+    "payment_method_type": {
+      "type": "string",
+      "enum": [
+        "pix",
+        "card",
+        "both"
+      ]
+    },
+    "mcc": {
+      "type": "string",
+      "description": "MCC atual/registrado do cliente"
+    },
+    "mcc_description": {
+      "type": "string"
+    },
+    "cnae": {
+      "type": "string",
+      "description": "CNAE declarado pelo cliente"
+    },
+    "mcc_declared": {
+      "type": "string",
+      "description": "MCC declarado/informado pelo cliente no compliance"
+    },
+    "cnae_declared": {
+      "type": "string",
+      "description": "CNAE declarado/informado pelo cliente no compliance"
+    },
+    "mcc_observed": {
+      "type": "string",
+      "description": "MCC inferido a partir dos padr\u00f5es de transa\u00e7\u00e3o"
+    },
+    "cnae_observed": {
+      "type": "string",
+      "description": "CNAE inferido a partir dos padr\u00f5es de transa\u00e7\u00e3o"
+    },
+    "mcc_compliance_status": {
+      "type": "string",
+      "enum": [
+        "compliant",
+        "potential_deviation",
+        "under_review",
+        "not_registered"
+      ],
+      "default": "not_registered",
+      "description": "Status de conformidade do MCC"
+    },
+    "mcc_last_analyzed_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data da \u00faltima an\u00e1lise de MCC"
+    },
+    "mcc_ai_justification": {
+      "type": "string",
+      "description": "Justificativa da IA para MCC observado ou desvio"
+    },
+    "mcc_impact_revenue": {
+      "type": "number",
+      "description": "Impacto estimado na receita devido a desvio de MCC"
+    },
+    "category": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "opening_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "complement": {
+          "type": "string"
+        },
+        "neighborhood": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "zip_code": {
+          "type": "string"
+        }
+      }
+    },
+    "partners": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "contacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "is_primary": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "bank_account": {
+      "type": "object"
+    },
+    "bank_accounts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "kyc_data": {
+      "type": "object",
+      "description": "Dados do question\u00e1rio KYC/KYB"
+    },
+    "compliance_status": {
+      "type": "string",
+      "enum": [
+        "compliant",
+        "pending_docs",
+        "under_review",
+        "non_compliant"
+      ],
+      "default": "pending_docs"
+    },
+    "next_compliance_review_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "ai_compliance_score": {
+      "type": "number",
+      "description": "Score de aptid\u00e3o gerado pela IA (0-100)"
+    },
+    "ai_compliance_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "manual_review",
+        "rejected"
+      ]
+    },
+    "ai_compliance_justification": {
+      "type": "string"
+    },
+    "ai_compliance_red_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "liveness_facematch_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "link_sent",
+        "completed",
+        "failed",
+        "skipped"
+      ],
+      "default": "pending"
+    },
+    "liveness_facematch_score": {
+      "type": "number"
+    },
+    "is_pep": {
+      "type": "boolean",
+      "default": false
+    },
+    "split_percentage": {
+      "type": "number"
+    },
+    "split_fixed": {
+      "type": "number"
+    },
+    "mdr_card": {
+      "type": "number"
+    },
+    "mdr_pix": {
+      "type": "number"
+    },
+    "soft_descriptor": {
+      "type": "string"
+    },
+    "dynamic_soft_descriptor_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "limit_per_transaction": {
+      "type": "number"
+    },
+    "limit_daily": {
+      "type": "number"
+    },
+    "limit_monthly": {
+      "type": "number"
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "per_transaction": {
+          "type": "number"
+        },
+        "daily": {
+          "type": "number"
+        },
+        "monthly": {
+          "type": "number"
+        },
+        "pix_per_transaction": {
+          "type": "number"
+        },
+        "pix_daily": {
+          "type": "number"
+        }
+      }
+    },
+    "total_volume": {
+      "type": "number",
+      "default": 0
+    },
+    "total_lifetime_tpv": {
+      "type": "number",
+      "default": 0
+    },
+    "total_transactions": {
+      "type": "number",
+      "default": 0
+    },
+    "total_transactions_count": {
+      "type": "number",
+      "default": 0
+    },
+    "available_balance": {
+      "type": "number",
+      "default": 0
+    },
+    "balance_available": {
+      "type": "number",
+      "default": 0
+    },
+    "pending_balance": {
+      "type": "number",
+      "default": 0
+    },
+    "balance_pending_release": {
+      "type": "number",
+      "default": 0
+    },
+    "blocked_balance": {
+      "type": "number",
+      "default": 0
+    },
+    "balance_blocked": {
+      "type": "number",
+      "default": 0
+    },
+    "balance_retained_rr": {
+      "type": "number",
+      "default": 0
+    },
+    "revenue_current_month": {
+      "type": "number",
+      "default": 0
+    },
+    "avg_approval_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "avg_chargeback_ratio": {
+      "type": "number",
+      "default": 0
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "risk_status": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "risk_score": {
+      "type": "number"
+    },
+    "validation_results": {
+      "type": "object"
+    },
+    "approval_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "suspension_reason": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "payment_methods_config": {
+      "type": "object",
+      "description": "Configura\u00e7\u00f5es de m\u00e9todos de pagamento"
+    },
+    "security_antifraud_config": {
+      "type": "object",
+      "description": "Configura\u00e7\u00f5es de seguran\u00e7a e antifraude"
+    },
+    "retention_config": {
+      "type": "object",
+      "description": "Configura\u00e7\u00f5es de reten\u00e7\u00e3o (rolling reserve)"
+    },
+    "rates_config": {
+      "type": "object",
+      "description": "Configura\u00e7\u00e3o detalhada de taxas"
+    }
+  },
+  "required": [
+    "business_name",
+    "document",
+    "email"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "name": "RatePlan",
+  "type": "object",
+  "properties": {
+    "plan_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "code": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "custom",
+        "promotional"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "archived"
+      ],
+      "default": "active"
+    },
+    "description": {
+      "type": "string"
+    },
+    "tpv_min": {
+      "type": "number"
+    },
+    "tpv_max": {
+      "type": "number"
+    },
+    "fees": {
+      "type": "object",
+      "properties": {
+        "card_1x": {
+          "type": "number"
+        },
+        "card_2_6x": {
+          "type": "number"
+        },
+        "card_7_12x": {
+          "type": "number"
+        },
+        "debit": {
+          "type": "number"
+        },
+        "pix": {
+          "type": "number"
+        },
+        "anticipation": {
+          "type": "number"
+        },
+        "transaction_fee": {
+          "type": "number"
+        },
+        "antifraud_fee": {
+          "type": "number"
+        },
+        "chargeback_fee": {
+          "type": "number"
+        }
+      }
+    },
+    "rolling_reserve_pct": {
+      "type": "number"
+    },
+    "rolling_reserve_days": {
+      "type": "number"
+    },
+    "payment_term_days": {
+      "type": "number"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "name",
+    "code",
+    "fees"
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "name": "Settlement",
+  "type": "object",
+  "properties": {
+    "settlement_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "merchant_name": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "processing",
+        "file_generated",
+        "sent_to_bank",
+        "paid",
+        "failed",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "amount_gross": {
+      "type": "number"
+    },
+    "amount_net": {
+      "type": "number"
+    },
+    "fees_total": {
+      "type": "number"
+    },
+    "adjustments_amount": {
+      "type": "number"
+    },
+    "rolling_reserve_retained": {
+      "type": "number"
+    },
+    "rolling_reserve_released": {
+      "type": "number"
+    },
+    "bank_account": {
+      "type": "object",
+      "properties": {
+        "bank_name": {
+          "type": "string"
+        },
+        "bank_code": {
+          "type": "string"
+        },
+        "agency": {
+          "type": "string"
+        },
+        "account": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "document": {
+          "type": "string"
+        }
+      }
+    },
+    "transactions_count": {
+      "type": "number"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "ted",
+        "pix"
+      ]
+    },
+    "bank_return_code": {
+      "type": "string"
+    },
+    "bank_return_message": {
+      "type": "string"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "settlement_id",
+    "subaccount_id",
+    "date",
+    "amount_net",
+    "status"
+  ]
+}

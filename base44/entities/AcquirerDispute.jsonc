@@ -1,0 +1,111 @@
+{
+  "name": "AcquirerDispute",
+  "type": "object",
+  "properties": {
+    "merchant_id": {
+      "type": "string"
+    },
+    "divergence_id": {
+      "type": "string"
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "acquirer_id": {
+      "type": "string"
+    },
+    "amount_cents": {
+      "type": "integer"
+    },
+    "dispute_type": {
+      "type": "string",
+      "enum": [
+        "mdr_charged_wrong",
+        "value_mismatch",
+        "missing_settlement",
+        "unauthorized",
+        "other"
+      ]
+    },
+    "prepared_by": {
+      "type": "string",
+      "description": "agent_communicator"
+    },
+    "prepared_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "letter_text": {
+      "type": "string",
+      "description": "Carta formal completa em PT-BR"
+    },
+    "evidence_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs de arquivos no Base44 file storage"
+    },
+    "evidence_hashes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contract_clause": {
+      "type": "string",
+      "description": "Cl\u00e1usula contratual referenciada"
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "submitted_by": {
+      "type": "string",
+      "description": "user_id de quem submeteu (humano)"
+    },
+    "submission_method": {
+      "type": "string",
+      "enum": [
+        "email",
+        "portal",
+        "api",
+        "postal"
+      ]
+    },
+    "acquirer_response": {
+      "type": "object"
+    },
+    "resolution": {
+      "type": "string",
+      "enum": [
+        "accepted",
+        "partial",
+        "rejected",
+        "timeout"
+      ]
+    },
+    "amount_recovered": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_approval",
+        "submitted",
+        "in_review",
+        "resolved",
+        "escalated"
+      ],
+      "default": "draft"
+    }
+  },
+  "required": [
+    "merchant_id",
+    "divergence_id",
+    "amount_cents",
+    "dispute_type",
+    "prepared_at"
+  ]
+}

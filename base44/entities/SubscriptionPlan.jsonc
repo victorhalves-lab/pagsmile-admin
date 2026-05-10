@@ -1,0 +1,129 @@
+{
+  "name": "SubscriptionPlan",
+  "type": "object",
+  "properties": {
+    "plan_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome do plano"
+    },
+    "description": {
+      "type": "string"
+    },
+    "benefits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lista de benef\u00edcios"
+    },
+    "external_id": {
+      "type": "string",
+      "description": "ID para integra\u00e7\u00e3o externa"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Valor por ciclo"
+    },
+    "currency": {
+      "type": "string",
+      "default": "BRL"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "biweekly",
+        "monthly",
+        "bimonthly",
+        "quarterly",
+        "semiannual",
+        "annual"
+      ],
+      "default": "monthly"
+    },
+    "billing_day": {
+      "type": "string",
+      "description": "Dia de cobran\u00e7a: 1-28 ou 'signup_day'"
+    },
+    "trial_days": {
+      "type": "number",
+      "default": 0
+    },
+    "require_card_on_trial": {
+      "type": "boolean",
+      "default": true
+    },
+    "setup_fee": {
+      "type": "number",
+      "default": 0
+    },
+    "initial_discount_percentage": {
+      "type": "number"
+    },
+    "initial_discount_cycles": {
+      "type": "number"
+    },
+    "promotional_amount": {
+      "type": "number"
+    },
+    "promotional_duration_cycles": {
+      "type": "number"
+    },
+    "payment_methods": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "card"
+      ]
+    },
+    "allow_installments": {
+      "type": "boolean",
+      "default": false
+    },
+    "subscriber_limit_type": {
+      "type": "string",
+      "enum": [
+        "unlimited",
+        "limited"
+      ],
+      "default": "unlimited"
+    },
+    "subscriber_limit_count": {
+      "type": "number"
+    },
+    "current_subscribers": {
+      "type": "number",
+      "default": 0
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "private"
+      ],
+      "default": "public"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "total_revenue": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "amount",
+    "frequency"
+  ]
+}

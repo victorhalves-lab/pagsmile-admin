@@ -1,0 +1,104 @@
+{
+  "name": "AcquirerRecord",
+  "type": "object",
+  "properties": {
+    "acquirer_id": {
+      "type": "string",
+      "description": "cielo|stone|rede|getnet|mp|itau|elo|hipercard"
+    },
+    "file_id": {
+      "type": "string",
+      "description": "FK l\u00f3gica para AcquirerFile.id"
+    },
+    "line_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "external_id": {
+      "type": "string",
+      "description": "NSU + autoriza\u00e7\u00e3o concatenados \u2014 chave can\u00f4nica de match"
+    },
+    "merchant_doc": {
+      "type": "string",
+      "description": "CNPJ do estabelecimento (apenas d\u00edgitos)"
+    },
+    "amount_cents": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fee_cents": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    },
+    "net_cents": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "settle_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "captured",
+        "settled",
+        "cancelled",
+        "chargeback",
+        "refund",
+        "other"
+      ]
+    },
+    "card_brand": {
+      "type": "string",
+      "enum": [
+        "visa",
+        "mastercard",
+        "elo",
+        "hipercard",
+        "amex",
+        "other",
+        "none"
+      ],
+      "default": "other"
+    },
+    "installments": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 24,
+      "default": 1
+    },
+    "transaction_type": {
+      "type": "string",
+      "enum": [
+        "sale",
+        "refund",
+        "chargeback",
+        "adjustment",
+        "fee"
+      ],
+      "default": "sale"
+    },
+    "raw_line": {
+      "type": "string",
+      "description": "Linha CNAB original"
+    },
+    "raw_hash": {
+      "type": "string",
+      "description": "SHA-256 da linha"
+    }
+  },
+  "required": [
+    "acquirer_id",
+    "file_id",
+    "line_number",
+    "external_id",
+    "amount_cents",
+    "occurred_at"
+  ]
+}

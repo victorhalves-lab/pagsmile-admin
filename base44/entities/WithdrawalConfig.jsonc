@@ -1,0 +1,62 @@
+{
+  "name": "WithdrawalConfig",
+  "type": "object",
+  "properties": {
+    "is_auto_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "auto_frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "biweekly",
+        "monthly"
+      ],
+      "default": "daily"
+    },
+    "auto_day_of_week": {
+      "type": "number",
+      "description": "0-6 para semanal"
+    },
+    "auto_day_of_month": {
+      "type": "number",
+      "description": "1-28 para mensal"
+    },
+    "min_amount_to_withdraw": {
+      "type": "number",
+      "default": 100,
+      "description": "S\u00f3 sacar se saldo >= X"
+    },
+    "keep_minimum_balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Manter saldo m\u00ednimo na conta"
+    },
+    "default_bank_account_id": {
+      "type": "string"
+    },
+    "notification_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "notification_email": {
+      "type": "string"
+    },
+    "withdrawal_fee_type": {
+      "type": "string",
+      "enum": [
+        "free",
+        "fixed",
+        "percentage"
+      ],
+      "default": "free"
+    },
+    "withdrawal_fee_value": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,45 @@
+{
+  "name": "Split",
+  "type": "object",
+  "properties": {
+    "transaction_id": {
+      "type": "string"
+    },
+    "merchant_id": {
+      "type": "string"
+    },
+    "config_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "executed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_cents": {
+      "type": "integer"
+    },
+    "beneficiary_count": {
+      "type": "integer"
+    },
+    "match_state": {
+      "type": "string",
+      "enum": [
+        "consistent",
+        "inconsistent",
+        "pending"
+      ],
+      "default": "pending"
+    },
+    "delta_cents": {
+      "type": "integer",
+      "description": "Diferen\u00e7a total entre configurado e executado"
+    }
+  },
+  "required": [
+    "transaction_id",
+    "merchant_id",
+    "config_at",
+    "total_cents"
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "name": "SupportTicket",
+  "type": "object",
+  "properties": {
+    "ticket_id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "technical",
+        "financial",
+        "commercial",
+        "disputes",
+        "other"
+      ]
+    },
+    "subject": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "waiting_customer",
+        "resolved",
+        "closed"
+      ],
+      "default": "open"
+    },
+    "assignee": {
+      "type": "string"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "[{role, content, created_at, attachments}]"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "satisfaction_rating": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "category",
+    "subject",
+    "description"
+  ]
+}

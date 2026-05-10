@@ -1,0 +1,60 @@
+{
+  "name": "ApiKey",
+  "type": "object",
+  "properties": {
+    "key_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "production",
+        "sandbox"
+      ]
+    },
+    "key_type": {
+      "type": "string",
+      "enum": [
+        "secret",
+        "public"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "revoked"
+      ],
+      "default": "active"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ip_whitelist": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "last_used_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "key_id",
+    "name",
+    "type",
+    "key_type"
+  ]
+}

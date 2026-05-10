@@ -1,0 +1,52 @@
+{
+  "name": "InterchangeTable",
+  "type": "object",
+  "properties": {
+    "table_id": {
+      "type": "string"
+    },
+    "scheme": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "credit",
+        "debit",
+        "prepaid"
+      ]
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date"
+    },
+    "valid_to": {
+      "type": "string",
+      "format": "date"
+    },
+    "rates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "mcc": {
+            "type": "string"
+          },
+          "rate_1x": {
+            "type": "number"
+          },
+          "rate_2_6x": {
+            "type": "number"
+          },
+          "rate_7_12x": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "scheme",
+    "valid_from"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "CustomerSegment",
+  "type": "object",
+  "properties": {
+    "segment_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome do segmento"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "automatic",
+        "dynamic",
+        "static"
+      ],
+      "default": "dynamic"
+    },
+    "criteria": {
+      "type": "object",
+      "description": "Crit\u00e9rios do segmento: {rules: [{field, operator, value}], logic: 'AND' | 'OR'}"
+    },
+    "customer_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs de clientes (para segmentos est\u00e1ticos)"
+    },
+    "customer_count": {
+      "type": "number",
+      "default": 0
+    },
+    "color": {
+      "type": "string",
+      "default": "#6366F1"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

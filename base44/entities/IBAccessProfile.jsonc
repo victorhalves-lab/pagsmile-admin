@@ -1,0 +1,66 @@
+{
+  "name": "IBAccessProfile",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email do usu\u00e1rio convidado"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Nome do usu\u00e1rio convidado"
+    },
+    "granted_by_user_id": {
+      "type": "string",
+      "description": "ID do usu\u00e1rio que concedeu o acesso (propriet\u00e1rio)"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "viewer",
+        "operator",
+        "admin"
+      ],
+      "default": "viewer",
+      "description": "N\u00edvel de acesso"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "revoked"
+      ],
+      "default": "pending"
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "can_view_balance": {
+          "type": "boolean",
+          "default": true
+        },
+        "can_view_extract": {
+          "type": "boolean",
+          "default": true
+        },
+        "can_send_pix": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_keys": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_profiles": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "required": [
+    "user_email",
+    "role"
+  ]
+}

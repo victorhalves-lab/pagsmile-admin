@@ -1,0 +1,57 @@
+{
+  "name": "WebhookLog",
+  "type": "object",
+  "properties": {
+    "log_id": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "inbound",
+        "outbound"
+      ]
+    },
+    "provider": {
+      "type": "string"
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "response_status": {
+      "type": "number"
+    },
+    "response_body": {
+      "type": "string"
+    },
+    "duration_ms": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failed",
+        "retrying"
+      ]
+    },
+    "attempts": {
+      "type": "number"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "direction",
+    "provider",
+    "timestamp"
+  ]
+}

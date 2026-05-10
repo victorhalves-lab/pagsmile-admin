@@ -1,0 +1,35 @@
+{
+  "name": "PaymentLinkTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "products",
+        "services",
+        "events",
+        "donations",
+        "subscriptions",
+        "other"
+      ],
+      "default": "other"
+    },
+    "config_data": {
+      "type": "object",
+      "description": "Configura\u00e7\u00f5es do link para reutiliza\u00e7\u00e3o"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

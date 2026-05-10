@@ -1,0 +1,57 @@
+{
+  "name": "MccIrregularity",
+  "type": "object",
+  "properties": {
+    "irregularity_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "merchant_name": {
+      "type": "string"
+    },
+    "current_mcc": {
+      "type": "string"
+    },
+    "suggested_mcc": {
+      "type": "string"
+    },
+    "confidence_score": {
+      "type": "number"
+    },
+    "impact_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "detected",
+        "analyzing",
+        "resolved",
+        "ignored"
+      ],
+      "default": "detected"
+    },
+    "detected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evidence": {
+      "type": "object"
+    },
+    "cost_impact": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "subaccount_id",
+    "current_mcc",
+    "suggested_mcc"
+  ]
+}

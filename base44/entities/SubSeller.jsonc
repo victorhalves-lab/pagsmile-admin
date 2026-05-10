@@ -1,0 +1,154 @@
+{
+  "name": "SubSeller",
+  "type": "object",
+  "properties": {
+    "subseller_id": {
+      "type": "string",
+      "description": "ID \u00fanico do sub-seller"
+    },
+    "parent_subaccount_id": {
+      "type": "string",
+      "description": "ID da subconta pai (nosso cliente)"
+    },
+    "parent_business_name": {
+      "type": "string",
+      "description": "Nome do cliente pai"
+    },
+    "business_name": {
+      "type": "string",
+      "description": "Nome fantasia do sub-seller"
+    },
+    "legal_name": {
+      "type": "string",
+      "description": "Raz\u00e3o social"
+    },
+    "document": {
+      "type": "string",
+      "description": "CNPJ/CPF do sub-seller"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "cpf",
+        "cnpj"
+      ]
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "pending",
+        "blocked"
+      ],
+      "default": "active"
+    },
+    "split_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed"
+      ],
+      "default": "percentage"
+    },
+    "split_value": {
+      "type": "number",
+      "description": "Percentual ou valor fixo que o sub-seller recebe"
+    },
+    "mcc": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "bank_account": {
+      "type": "object",
+      "properties": {
+        "bank_code": {
+          "type": "string"
+        },
+        "bank_name": {
+          "type": "string"
+        },
+        "agency": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "account_type": {
+          "type": "string"
+        },
+        "pix_key": {
+          "type": "string"
+        },
+        "pix_key_type": {
+          "type": "string"
+        }
+      }
+    },
+    "total_volume": {
+      "type": "number",
+      "default": 0,
+      "description": "Volume total processado pelo sub-seller"
+    },
+    "total_received": {
+      "type": "number",
+      "default": 0,
+      "description": "Total repassado ao sub-seller"
+    },
+    "total_transactions": {
+      "type": "number",
+      "default": 0
+    },
+    "avg_ticket": {
+      "type": "number",
+      "default": 0
+    },
+    "last_transaction_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "onboarding_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "complement": {
+          "type": "string"
+        },
+        "neighborhood": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "zip_code": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "parent_subaccount_id",
+    "business_name",
+    "document"
+  ]
+}

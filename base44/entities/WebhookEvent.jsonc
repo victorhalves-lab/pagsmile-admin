@@ -1,0 +1,63 @@
+{
+  "name": "WebhookEvent",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": [
+        "pix",
+        "tuna",
+        "cielo",
+        "stone",
+        "other"
+      ]
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "external_id": {
+      "type": "string",
+      "description": "ID \u00fanico do evento no provedor \u2014 chave de idempot\u00eancia com source"
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "raw_payload": {
+      "type": "object"
+    },
+    "raw_hash": {
+      "type": "string"
+    },
+    "signature_valid": {
+      "type": "boolean"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "received",
+        "processed",
+        "failed",
+        "duplicated"
+      ],
+      "default": "received"
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "source",
+    "event_type",
+    "external_id",
+    "received_at",
+    "raw_hash"
+  ]
+}

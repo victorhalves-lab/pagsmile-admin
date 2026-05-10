@@ -1,0 +1,47 @@
+{
+  "name": "AnticipationConfig",
+  "type": "object",
+  "properties": {
+    "is_auto_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "auto_rule": {
+      "type": "string",
+      "enum": [
+        "all",
+        "above_days",
+        "above_value"
+      ],
+      "default": "all",
+      "description": "Regra de auto-antecipa\u00e7\u00e3o"
+    },
+    "auto_min_days": {
+      "type": "number",
+      "default": 15,
+      "description": "S\u00f3 antecipar se D+X >= este valor"
+    },
+    "auto_min_value": {
+      "type": "number",
+      "description": "S\u00f3 antecipar se valor >= X"
+    },
+    "max_fee_percentage": {
+      "type": "number",
+      "description": "Taxa m\u00e1xima aceit\u00e1vel para auto-antecipa\u00e7\u00e3o"
+    },
+    "fee_percentage_monthly": {
+      "type": "number",
+      "default": 1.99,
+      "description": "Taxa de antecipa\u00e7\u00e3o ao m\u00eas"
+    },
+    "total_anticipated": {
+      "type": "number",
+      "default": 0
+    },
+    "total_fees_paid": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": []
+}

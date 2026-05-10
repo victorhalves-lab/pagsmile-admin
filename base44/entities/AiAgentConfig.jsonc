@@ -1,0 +1,49 @@
+{
+  "name": "AiAgentConfig",
+  "type": "object",
+  "properties": {
+    "agent_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "enum": [
+        "PRISCILA",
+        "HELENA",
+        "DIA",
+        "VIGIL"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "maintenance"
+      ],
+      "default": "active"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "automatic",
+        "manual",
+        "shadow"
+      ]
+    },
+    "config": {
+      "type": "object"
+    },
+    "model_params": {
+      "type": "object"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "name",
+    "status"
+  ]
+}

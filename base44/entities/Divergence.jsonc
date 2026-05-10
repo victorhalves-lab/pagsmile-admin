@@ -1,0 +1,133 @@
+{
+  "name": "Divergence",
+  "type": "object",
+  "properties": {
+    "merchant_id": {
+      "type": "string"
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "acquirer_record_id": {
+      "type": "string"
+    },
+    "bank_movement_id": {
+      "type": "string"
+    },
+    "cerc_record_id": {
+      "type": "string"
+    },
+    "split_id": {
+      "type": "string"
+    },
+    "detected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "detected_by": {
+      "type": "string",
+      "description": "pipeline:rule_X | agent_investigator"
+    },
+    "bucket": {
+      "type": "string",
+      "enum": [
+        "value_mismatch",
+        "fee_mismatch",
+        "settlement_aging",
+        "phantom_internal",
+        "phantom_external",
+        "split_inconsistency",
+        "regulatory_hold",
+        "bank_phantom_negative",
+        "status_mismatch",
+        "date_mismatch",
+        "med_pending",
+        "chargeback_unresolved"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "delta_cents": {
+      "type": "integer",
+      "description": "Pode ser negativo. Null em phantoms."
+    },
+    "expected_value": {
+      "type": "integer",
+      "description": "Em centavos"
+    },
+    "received_value": {
+      "type": "integer",
+      "description": "Em centavos"
+    },
+    "root_cause": {
+      "type": "string",
+      "description": "Frase do Investigador: <quem> <fez o qu\u00ea> porque <raz\u00e3o>"
+    },
+    "owner": {
+      "type": "string",
+      "enum": [
+        "ops",
+        "reference_data",
+        "accounting",
+        "upstream",
+        "merchant",
+        "external"
+      ]
+    },
+    "expected_clear_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "proposed_action": {
+      "type": "string",
+      "enum": [
+        "monitor",
+        "adjust",
+        "contest",
+        "suppress",
+        "escalate",
+        "retry"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "detected",
+        "investigating",
+        "investigated",
+        "proposed",
+        "approved",
+        "resolved",
+        "escalated",
+        "suppressed",
+        "wontfix"
+      ],
+      "default": "detected"
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolved_by": {
+      "type": "string"
+    },
+    "agent_run_id": {
+      "type": "string",
+      "description": "FK l\u00f3gica para AgentRun.id (Investigador)"
+    }
+  },
+  "required": [
+    "merchant_id",
+    "detected_at",
+    "detected_by",
+    "bucket",
+    "severity"
+  ]
+}

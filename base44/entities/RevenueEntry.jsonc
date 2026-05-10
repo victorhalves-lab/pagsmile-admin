@@ -1,0 +1,85 @@
+{
+  "name": "RevenueEntry",
+  "type": "object",
+  "properties": {
+    "entry_id": {
+      "type": "string"
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "business_name": {
+      "type": "string"
+    },
+    "revenue_type": {
+      "type": "string",
+      "enum": [
+        "mdr_card",
+        "mdr_pix",
+        "mdr_boleto",
+        "anticipation",
+        "fixed_fee_pix",
+        "fixed_fee_card",
+        "fixed_fee_boleto",
+        "antifraud",
+        "setup_fee",
+        "chargeback_fee",
+        "other"
+      ],
+      "description": "Tipo de receita"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "credit_card",
+        "debit_card",
+        "pix",
+        "boleto"
+      ]
+    },
+    "card_brand": {
+      "type": "string"
+    },
+    "gross_amount": {
+      "type": "number",
+      "description": "Valor bruto da transa\u00e7\u00e3o"
+    },
+    "revenue_amount": {
+      "type": "number",
+      "description": "Valor da receita PagSmile"
+    },
+    "cost_amount": {
+      "type": "number",
+      "description": "Custo associado"
+    },
+    "net_revenue": {
+      "type": "number",
+      "description": "Receita l\u00edquida (revenue - cost)"
+    },
+    "rate_applied": {
+      "type": "number",
+      "description": "Taxa aplicada (%)"
+    },
+    "entry_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "settlement_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "period_month": {
+      "type": "string",
+      "description": "YYYY-MM para facilitar agrega\u00e7\u00e3o"
+    }
+  },
+  "required": [
+    "transaction_id",
+    "subaccount_id",
+    "revenue_type",
+    "revenue_amount"
+  ]
+}

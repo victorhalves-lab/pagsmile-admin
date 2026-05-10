@@ -1,0 +1,186 @@
+{
+  "name": "Dispute",
+  "type": "object",
+  "properties": {
+    "dispute_id": {
+      "type": "string"
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "chargeback",
+        "alert_ethoca",
+        "alert_verifi",
+        "retrieval"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "received",
+        "in_analysis",
+        "in_contestation",
+        "won",
+        "lost",
+        "accepted",
+        "expired",
+        "pending",
+        "reimbursed"
+      ],
+      "default": "received"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "reason_description": {
+      "type": "string"
+    },
+    "reason_category": {
+      "type": "string",
+      "enum": [
+        "fraud",
+        "consumer",
+        "authorization",
+        "processing"
+      ],
+      "description": "Categoria do reason code"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "BRL"
+    },
+    "card_brand": {
+      "type": "string",
+      "enum": [
+        "visa",
+        "mastercard",
+        "elo",
+        "amex",
+        "hipercard"
+      ]
+    },
+    "opened_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "deadline_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "resolved_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "customer_document": {
+      "type": "string"
+    },
+    "arn": {
+      "type": "string",
+      "description": "Acquirer Reference Number - 23 d\u00edgitos"
+    },
+    "win_probability": {
+      "type": "number",
+      "description": "Probabilidade de ganho (0-100%)"
+    },
+    "ai_recommendation": {
+      "type": "string",
+      "enum": [
+        "contest",
+        "accept"
+      ],
+      "description": "Recomenda\u00e7\u00e3o do agente de IA"
+    },
+    "ai_recommendation_reason": {
+      "type": "string",
+      "description": "Justificativa da recomenda\u00e7\u00e3o da IA"
+    },
+    "alert_source": {
+      "type": "string",
+      "enum": [
+        "ethoca",
+        "verifi"
+      ],
+      "description": "Origem do alerta de pr\u00e9-chargeback"
+    },
+    "alert_deadline": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Prazo final para a\u00e7\u00e3o no pr\u00e9-chargeback"
+    },
+    "resolution_action": {
+      "type": "string",
+      "enum": [
+        "refund",
+        "partial_refund",
+        "ignore",
+        "contest_proactive",
+        "contact_customer"
+      ],
+      "description": "A\u00e7\u00e3o tomada no pr\u00e9-chargeback"
+    },
+    "partial_refund_amount": {
+      "type": "number"
+    },
+    "is_auto_reimbursed": {
+      "type": "boolean",
+      "default": false
+    },
+    "evidence_submitted": {
+      "type": "boolean",
+      "default": false
+    },
+    "evidence_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_checklist": {
+      "type": "object",
+      "description": "Checklist de evid\u00eancias por tipo"
+    },
+    "narrative_text": {
+      "type": "string",
+      "description": "Texto da narrativa de contesta\u00e7\u00e3o"
+    },
+    "submission_protocol_id": {
+      "type": "string"
+    },
+    "submission_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "is_fraud": {
+      "type": "boolean",
+      "default": false
+    },
+    "contacted_customer": {
+      "type": "boolean",
+      "default": false
+    },
+    "customer_contact_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "dispute_id",
+    "transaction_id",
+    "type",
+    "amount"
+  ]
+}

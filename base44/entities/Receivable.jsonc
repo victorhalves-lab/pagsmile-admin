@@ -1,0 +1,88 @@
+{
+  "name": "Receivable",
+  "type": "object",
+  "properties": {
+    "receivable_id": {
+      "type": "string"
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "settled",
+        "anticipated",
+        "blocked",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "settlement_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Data de liquida\u00e7\u00e3o prevista"
+    },
+    "original_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Data original antes de antecipa\u00e7\u00e3o"
+    },
+    "gross_amount": {
+      "type": "number"
+    },
+    "fee_amount": {
+      "type": "number"
+    },
+    "net_amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "BRL"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "card",
+        "pix"
+      ]
+    },
+    "card_brand": {
+      "type": "string"
+    },
+    "installment_number": {
+      "type": "number",
+      "description": "N\u00famero da parcela (ex: 3)"
+    },
+    "total_installments": {
+      "type": "number",
+      "description": "Total de parcelas (ex: 6)"
+    },
+    "days_to_settle": {
+      "type": "number",
+      "description": "D+X para liquida\u00e7\u00e3o"
+    },
+    "is_anticipatable": {
+      "type": "boolean",
+      "default": true
+    },
+    "anticipated_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "anticipation_fee": {
+      "type": "number"
+    },
+    "subaccount_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "transaction_id",
+    "settlement_date",
+    "gross_amount",
+    "net_amount"
+  ]
+}

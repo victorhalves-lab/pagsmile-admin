@@ -1,0 +1,93 @@
+{
+  "name": "SplitRule",
+  "type": "object",
+  "properties": {
+    "rule_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome da regra de split"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "split_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed",
+        "mixed"
+      ],
+      "default": "percentage"
+    },
+    "recipients": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Lista de recebedores: [{subaccount_id, type: percentage|fixed, value, is_liable_for_fees, is_liable_for_chargebacks}]"
+    },
+    "fee_payer": {
+      "type": "string",
+      "enum": [
+        "marketplace",
+        "seller",
+        "proportional"
+      ],
+      "default": "seller",
+      "description": "Quem paga o MDR"
+    },
+    "chargeback_liable": {
+      "type": "string",
+      "enum": [
+        "marketplace",
+        "seller",
+        "proportional"
+      ],
+      "default": "seller",
+      "description": "Quem assume chargebacks"
+    },
+    "apply_to": {
+      "type": "string",
+      "enum": [
+        "all",
+        "product",
+        "category",
+        "specific"
+      ],
+      "default": "all"
+    },
+    "apply_to_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs de produtos/categorias quando apply_to n\u00e3o \u00e9 'all'"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "total_transactions": {
+      "type": "number",
+      "default": 0
+    },
+    "total_volume": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "recipients"
+  ]
+}

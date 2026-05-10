@@ -1,0 +1,30 @@
+{
+  "name": "SplitBeneficiary",
+  "type": "object",
+  "properties": {
+    "split_id": {
+      "type": "string"
+    },
+    "beneficiary_merchant_id": {
+      "type": "string"
+    },
+    "amount_configured_cents": {
+      "type": "integer"
+    },
+    "amount_executed_cents": {
+      "type": "integer"
+    },
+    "delta_cents": {
+      "type": "integer"
+    },
+    "bank_movement_id": {
+      "type": "string",
+      "description": "Match com movimento banc\u00e1rio do benefici\u00e1rio"
+    }
+  },
+  "required": [
+    "split_id",
+    "beneficiary_merchant_id",
+    "amount_configured_cents"
+  ]
+}

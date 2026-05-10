@@ -1,0 +1,67 @@
+{
+  "name": "ContractEffect",
+  "type": "object",
+  "properties": {
+    "ur_id": {
+      "type": "string",
+      "description": "FK l\u00f3gica para CercRecord.ur_id"
+    },
+    "merchant_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "judicial_lien",
+        "attachment",
+        "administrative_lien",
+        "fiduciary_assignment",
+        "credit_assignment",
+        "registered_anticipation",
+        "voluntary_lock"
+      ]
+    },
+    "value_affected_cents": {
+      "type": "integer"
+    },
+    "beneficiary_name": {
+      "type": "string"
+    },
+    "beneficiary_document": {
+      "type": "string"
+    },
+    "beneficiary_bank": {
+      "type": "string"
+    },
+    "beneficiary_account": {
+      "type": "string"
+    },
+    "effective_from": {
+      "type": "string",
+      "format": "date"
+    },
+    "effective_until": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "released",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "court_order_ref": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "ur_id",
+    "type",
+    "value_affected_cents",
+    "effective_from",
+    "status"
+  ]
+}

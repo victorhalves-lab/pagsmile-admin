@@ -1,0 +1,53 @@
+{
+  "name": "Blocklist",
+  "type": "object",
+  "properties": {
+    "blocklist_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "card_pan",
+        "card_bin",
+        "cpf_cnpj",
+        "email",
+        "ip",
+        "device_id"
+      ]
+    },
+    "value": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "global",
+        "merchant"
+      ]
+    },
+    "scope_id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiration_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "blocklist_id",
+    "type",
+    "value",
+    "reason"
+  ]
+}

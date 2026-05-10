@@ -1,0 +1,148 @@
+{
+  "name": "Coupon",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo do cupom (ex: DESCONTO10)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome de exibi\u00e7\u00e3o do cupom"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o ou termos de uso"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed_amount"
+      ],
+      "description": "Tipo de desconto: percentual ou valor fixo"
+    },
+    "value": {
+      "type": "number",
+      "description": "Valor do desconto (ex: 10 para 10%, 20.00 para R$20)"
+    },
+    "currency": {
+      "type": "string",
+      "default": "BRL"
+    },
+    "min_purchase_amount": {
+      "type": "number",
+      "description": "Valor m\u00ednimo da compra"
+    },
+    "max_discount_amount": {
+      "type": "number",
+      "description": "Teto m\u00e1ximo de desconto para cupons percentuais"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "usage_limit_total": {
+      "type": "number",
+      "description": "Limite total de usos"
+    },
+    "usage_limit_per_user": {
+      "type": "number",
+      "description": "Limite de usos por cliente"
+    },
+    "times_used": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "expired",
+        "depleted"
+      ],
+      "default": "active"
+    },
+    "applies_to": {
+      "type": "string",
+      "enum": [
+        "all_products",
+        "specific_products",
+        "specific_categories",
+        "specific_plans"
+      ],
+      "default": "all_products"
+    },
+    "target_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs de produtos/categorias/planos alvo"
+    },
+    "is_stackable": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_nominal": {
+      "type": "boolean",
+      "default": false,
+      "description": "Se \u00e9 um cupom nominal (restrito a e-mail ou link \u00fanico)"
+    },
+    "assigned_to_email": {
+      "type": "string",
+      "description": "E-mail do destinat\u00e1rio do cupom nominal"
+    },
+    "generated_link": {
+      "type": "string",
+      "description": "URL com cupom aplicado automaticamente"
+    },
+    "linked_payment_link_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs dos Links de Pagamento vinculados ao cupom"
+    },
+    "linked_checkout_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs dos Checkouts vinculados ao cupom"
+    },
+    "link_scope": {
+      "type": "string",
+      "enum": [
+        "all",
+        "specific_links",
+        "specific_checkouts",
+        "specific_both"
+      ],
+      "default": "all",
+      "description": "Define se o cupom vale para todos os links/checkouts ou apenas os selecionados"
+    },
+    "total_discount_given": {
+      "type": "number",
+      "default": 0,
+      "description": "Total de desconto concedido"
+    },
+    "total_revenue_generated": {
+      "type": "number",
+      "default": 0,
+      "description": "Receita total gerada por transa\u00e7\u00f5es com este cupom"
+    }
+  },
+  "required": [
+    "code",
+    "name",
+    "type",
+    "value",
+    "start_date"
+  ]
+}

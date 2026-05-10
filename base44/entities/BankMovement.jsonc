@@ -1,0 +1,104 @@
+{
+  "name": "BankMovement",
+  "type": "object",
+  "properties": {
+    "bank_account_id": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "lina_api",
+        "lina_force_sync",
+        "manual_upload"
+      ]
+    },
+    "source_tx_id": {
+      "type": "string",
+      "description": "ID Lina \u00fanico \u2014 chave de idempot\u00eancia com bank_account_id"
+    },
+    "amount_cents": {
+      "type": "integer"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "credit",
+        "debit"
+      ]
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "posted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "counterparty": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "document": {
+          "type": "string"
+        },
+        "bank": {
+          "type": "string"
+        },
+        "account": {
+          "type": "string"
+        }
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "transaction_type": {
+      "type": "string",
+      "enum": [
+        "pix_in",
+        "pix_out",
+        "ted",
+        "doc",
+        "tef",
+        "fee",
+        "other"
+      ],
+      "default": "other"
+    },
+    "end_to_end_id": {
+      "type": "string",
+      "description": "PIX E2E ID se aplic\u00e1vel"
+    },
+    "raw_payload": {
+      "type": "object"
+    },
+    "raw_hash": {
+      "type": "string"
+    },
+    "lina_updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "match_state": {
+      "type": "string",
+      "enum": [
+        "unmatched",
+        "matched",
+        "aggregated",
+        "ignored"
+      ],
+      "default": "unmatched"
+    }
+  },
+  "required": [
+    "bank_account_id",
+    "source",
+    "source_tx_id",
+    "amount_cents",
+    "direction",
+    "occurred_at"
+  ]
+}

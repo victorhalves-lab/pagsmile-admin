@@ -1,0 +1,88 @@
+{
+  "name": "DisputeAgentConfig",
+  "type": "object",
+  "properties": {
+    "is_agent_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "auto_action_probability_threshold": {
+      "type": "number",
+      "default": 70,
+      "description": "Probabilidade m\u00ednima para auto-a\u00e7\u00e3o (0-100%)"
+    },
+    "max_value_for_auto_action": {
+      "type": "number",
+      "default": 500,
+      "description": "Valor m\u00e1ximo para a\u00e7\u00f5es autom\u00e1ticas"
+    },
+    "auto_contest_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "auto_accept_low_probability_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "low_probability_threshold": {
+      "type": "number",
+      "default": 20
+    },
+    "require_human_review": {
+      "type": "boolean",
+      "default": true
+    },
+    "notification_email_each_action": {
+      "type": "boolean",
+      "default": false
+    },
+    "notification_daily_summary": {
+      "type": "boolean",
+      "default": true
+    },
+    "notification_push_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "notification_email": {
+      "type": "string"
+    },
+    "escalation_value_threshold": {
+      "type": "number",
+      "default": 1000,
+      "description": "Valor acima do qual escalar para humano"
+    },
+    "escalation_uncertain_probability_range": {
+      "type": "object",
+      "description": "{min: 30, max: 60} - Faixa de probabilidade incerta"
+    },
+    "escalation_reason_codes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Reason codes que sempre escalam"
+    },
+    "total_disputes_managed": {
+      "type": "number",
+      "default": 0
+    },
+    "total_won": {
+      "type": "number",
+      "default": 0
+    },
+    "total_lost": {
+      "type": "number",
+      "default": 0
+    },
+    "total_value_protected": {
+      "type": "number",
+      "default": 0
+    },
+    "total_pre_cbs_prevented": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": []
+}

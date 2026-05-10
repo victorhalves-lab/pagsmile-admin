@@ -1,0 +1,93 @@
+{
+  "name": "OriginationAgentConfig",
+  "type": "object",
+  "properties": {
+    "is_agent_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "auto_approval_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "auto_approval_min_score": {
+      "type": "number",
+      "default": 70,
+      "description": "Score m\u00ednimo para auto-aprova\u00e7\u00e3o (0-100)"
+    },
+    "auto_approval_max_risk_score": {
+      "type": "number",
+      "default": 30,
+      "description": "Score de risco m\u00e1ximo para auto-aprova\u00e7\u00e3o"
+    },
+    "eligible_mccs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "MCCs eleg\u00edveis para auto-aprova\u00e7\u00e3o"
+    },
+    "high_risk_mccs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "MCCs que sempre precisam revis\u00e3o humana"
+    },
+    "auto_initial_limit_transaction": {
+      "type": "number",
+      "default": 1000,
+      "description": "Limite inicial por transa\u00e7\u00e3o para auto-aprovados"
+    },
+    "auto_initial_limit_daily": {
+      "type": "number",
+      "default": 5000
+    },
+    "auto_initial_limit_monthly": {
+      "type": "number",
+      "default": 50000
+    },
+    "escalation_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Crit\u00e9rios que escalam para humano"
+    },
+    "sla_hours": {
+      "type": "number",
+      "default": 24,
+      "description": "SLA para an\u00e1lise de casos escalados"
+    },
+    "validations_enabled": {
+      "type": "object",
+      "description": "{cnpj: true, cpf: true, pep: true, sanctions: true, lawsuits: true, protests: true}"
+    },
+    "face_match_threshold": {
+      "type": "number",
+      "default": 80,
+      "description": "Score m\u00ednimo de face match"
+    },
+    "liveness_required": {
+      "type": "boolean",
+      "default": true
+    },
+    "total_onboardings_processed": {
+      "type": "number",
+      "default": 0
+    },
+    "total_auto_approved": {
+      "type": "number",
+      "default": 0
+    },
+    "total_escalated": {
+      "type": "number",
+      "default": 0
+    },
+    "avg_onboarding_time_hours": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": []
+}

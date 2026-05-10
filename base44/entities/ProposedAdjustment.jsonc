@@ -1,0 +1,98 @@
+{
+  "name": "ProposedAdjustment",
+  "type": "object",
+  "properties": {
+    "divergence_id": {
+      "type": "string"
+    },
+    "proposed_by": {
+      "type": "string",
+      "description": "agent_communicator"
+    },
+    "proposed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "account_debit": {
+      "type": "string",
+      "description": "C\u00f3digo do plano de contas"
+    },
+    "account_credit": {
+      "type": "string"
+    },
+    "amount_cents": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rationale": {
+      "type": "string",
+      "description": "4 partes: o que aconteceu, por que justifica, qual conta absorve, qual evid\u00eancia"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "reviewer_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "reviewer_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reviewer_notes": {
+      "type": "string"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "user_id do controller que aprovou"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rejected_by": {
+      "type": "string"
+    },
+    "rejected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "posted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "journal_entry_id": {
+      "type": "string",
+      "description": "TODO PR-11 \u2014 ID do lan\u00e7amento cont\u00e1bil real"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "pending_senior_review",
+        "approved",
+        "rejected",
+        "posted",
+        "reverted"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "divergence_id",
+    "proposed_by",
+    "proposed_at",
+    "account_debit",
+    "account_credit",
+    "amount_cents",
+    "rationale"
+  ]
+}

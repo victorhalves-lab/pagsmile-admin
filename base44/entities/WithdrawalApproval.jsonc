@@ -1,0 +1,114 @@
+{
+  "name": "WithdrawalApproval",
+  "type": "object",
+  "properties": {
+    "approval_id": {
+      "type": "string"
+    },
+    "withdrawal_id": {
+      "type": "string"
+    },
+    "subaccount_id": {
+      "type": "string"
+    },
+    "business_name": {
+      "type": "string"
+    },
+    "document": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "fee": {
+      "type": "number"
+    },
+    "net_amount": {
+      "type": "number"
+    },
+    "bank_account": {
+      "type": "object",
+      "properties": {
+        "bank_name": {
+          "type": "string"
+        },
+        "bank_code": {
+          "type": "string"
+        },
+        "agency": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "account_type": {
+          "type": "string"
+        },
+        "pix_key": {
+          "type": "string"
+        },
+        "pix_key_type": {
+          "type": "string"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "processing",
+        "completed",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "requires_approval": {
+      "type": "boolean",
+      "default": true
+    },
+    "approval_reason": {
+      "type": "string",
+      "enum": [
+        "high_value",
+        "first_withdrawal",
+        "new_bank_account",
+        "flagged_account",
+        "manual_request"
+      ],
+      "description": "Motivo pelo qual precisa de aprova\u00e7\u00e3o"
+    },
+    "risk_score": {
+      "type": "number"
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "admin_comments": {
+      "type": "string"
+    },
+    "rejection_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "withdrawal_id",
+    "subaccount_id",
+    "amount"
+  ]
+}

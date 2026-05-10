@@ -1,0 +1,61 @@
+{
+  "name": "Plugin",
+  "type": "object",
+  "properties": {
+    "plugin_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "ecommerce",
+        "erp",
+        "crm",
+        "automation",
+        "other"
+      ]
+    },
+    "platform": {
+      "type": "string",
+      "description": "Ex: WooCommerce, Shopify, Salesforce"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "documentation_url": {
+      "type": "string"
+    },
+    "is_installed": {
+      "type": "boolean",
+      "default": false
+    },
+    "installed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "config": {
+      "type": "object"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "installed",
+        "configuring",
+        "error"
+      ],
+      "default": "available"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "platform"
+  ]
+}

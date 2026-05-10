@@ -1,0 +1,60 @@
+{
+  "name": "ReconciliationDailyStats",
+  "type": "object",
+  "properties": {
+    "day": {
+      "type": "string",
+      "format": "date"
+    },
+    "method": {
+      "type": "string"
+    },
+    "acquirer_id": {
+      "type": "string"
+    },
+    "merchant_id": {
+      "type": "string",
+      "description": "Null = agregado total PagSmile"
+    },
+    "total_transactions": {
+      "type": "integer",
+      "default": 0
+    },
+    "total_volume_cents": {
+      "type": "integer",
+      "default": 0
+    },
+    "three_way": {
+      "type": "integer",
+      "default": 0
+    },
+    "three_way_volume_cents": {
+      "type": "integer",
+      "default": 0
+    },
+    "two_way_acq": {
+      "type": "integer",
+      "default": 0
+    },
+    "two_way_bank": {
+      "type": "integer",
+      "default": 0
+    },
+    "unmatched": {
+      "type": "integer",
+      "default": 0
+    },
+    "divergent": {
+      "type": "integer",
+      "default": 0
+    },
+    "computed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "day",
+    "computed_at"
+  ]
+}

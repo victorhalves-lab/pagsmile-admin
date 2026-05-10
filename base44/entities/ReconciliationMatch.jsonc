@@ -1,0 +1,73 @@
+{
+  "name": "ReconciliationMatch",
+  "type": "object",
+  "properties": {
+    "transaction_id": {
+      "type": "string"
+    },
+    "acquirer_record_id": {
+      "type": "string"
+    },
+    "bank_movement_id": {
+      "type": "string"
+    },
+    "cerc_record_id": {
+      "type": "string"
+    },
+    "split_id": {
+      "type": "string"
+    },
+    "match_type": {
+      "type": "string",
+      "enum": [
+        "three_way_perfect",
+        "three_way_tolerance",
+        "two_way_tx_acquirer",
+        "two_way_tx_bank",
+        "aggregated",
+        "fuzzy",
+        "partial_split",
+        "cerc_assigned"
+      ]
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "matched_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "matched_by": {
+      "type": "string",
+      "description": "pipeline | agent_investigator | human:user_id"
+    },
+    "tolerance_applied": {
+      "type": "object",
+      "description": "Ex.: { amount_cents: 1, time_minutes: 60 }"
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Snapshots dos lados no momento do match"
+    },
+    "reviewer_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "reviewer_notes": {
+      "type": "string"
+    },
+    "reviewer_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "transaction_id",
+    "match_type",
+    "matched_at",
+    "matched_by"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "name": "CercRecord",
+  "type": "object",
+  "properties": {
+    "ur_id": {
+      "type": "string",
+      "description": "ID \u00fanico da UR no CERC"
+    },
+    "registrar_id": {
+      "type": "string",
+      "description": "ID do registrador (B3, CIP, TAG)"
+    },
+    "merchant_id": {
+      "type": "string"
+    },
+    "merchant_doc": {
+      "type": "string",
+      "description": "CNPJ do estabelecimento (apenas d\u00edgitos)"
+    },
+    "card_brand": {
+      "type": "string"
+    },
+    "nsu": {
+      "type": "string"
+    },
+    "arn": {
+      "type": "string"
+    },
+    "gross_cents": {
+      "type": "integer"
+    },
+    "net_cents": {
+      "type": "integer"
+    },
+    "expected_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "has_assignment": {
+      "type": "boolean",
+      "default": false
+    },
+    "has_judicial_lien": {
+      "type": "boolean",
+      "default": false
+    },
+    "arrangement": {
+      "type": "string",
+      "enum": [
+        "VCC",
+        "DCC",
+        "VCD",
+        "DCD",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "registered",
+        "cancelled",
+        "liquidated"
+      ],
+      "default": "registered"
+    },
+    "raw_payload": {
+      "type": "object"
+    },
+    "raw_hash": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "ur_id",
+    "registrar_id",
+    "merchant_doc",
+    "gross_cents",
+    "expected_date",
+    "arrangement"
+  ]
+}
