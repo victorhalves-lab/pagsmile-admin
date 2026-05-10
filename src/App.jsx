@@ -20,6 +20,7 @@ import SelectSegment from './pages/SelectSegment';
 
 // Recon Agents Cockpit
 import AdminIntReconAgentsCockpit from './pages/AdminIntReconAgentsCockpit';
+import AdminIntReconInbox from './pages/AdminIntReconInbox';
 
 // ====== Catálogos Mestres (Admin Interno) ======
 import AdminIntAcquirers from './pages/AdminIntAcquirers';
@@ -256,6 +257,7 @@ const AuthenticatedApp = () => {
 
       {/* Recon Agents Cockpit */}
       <Route path="/AdminIntReconAgentsCockpit" element={<LayoutWrapper currentPageName="AdminIntReconAgentsCockpit"><AdminIntReconAgentsCockpit /></LayoutWrapper>} />
+      <Route path="/AdminIntReconInbox" element={<LayoutWrapper currentPageName="AdminIntReconInbox"><AdminIntReconInbox /></LayoutWrapper>} />
 
       {/* ====== Catálogos Mestres ====== */}
       <Route path="/AdminIntAcquirers" element={<LayoutWrapper currentPageName="AdminIntAcquirers"><AdminIntAcquirers /></LayoutWrapper>} />
