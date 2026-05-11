@@ -9,10 +9,15 @@ import { Badge } from '@/components/ui/badge';
 import { Calculator } from 'lucide-react';
 import MdrRateGrid from '@/components/admin-interno/rates/MdrRateGrid';
 import { createDefaultRateTable } from '@/lib/mdrCalculator';
+import PlanFullSummary from '@/components/admin-interno/plans/PlanFullSummary';
+import PlanInstallmentSimulator from '@/components/admin-interno/plans/PlanInstallmentSimulator';
+import { PLAN_TEMPLATES } from '@/components/admin-interno/plans/planSchema';
 
 export default function AdminIntFeePlanDetail() {
     const [planMdr, setPlanMdr] = useState(createDefaultRateTable());
     const [planAnticipation, setPlanAnticipation] = useState(1.99);
+    // Plano completo (mock — em produção viria do backend pelo ?id=)
+    const fullPlan = PLAN_TEMPLATES.growth;
 
     return (
         <div className="space-y-6">
@@ -22,6 +27,10 @@ export default function AdminIntFeePlanDetail() {
                 breadcrumbs={[{ label: 'Planos', page: 'AdminIntFeePlans' }, { label: 'Growth', page: '#' }]}
                 actions={<Button>Salvar Alterações</Button>}
             />
+
+            {/* Resumo completo de TODAS as taxas + simulador */}
+            <PlanFullSummary plan={fullPlan} />
+            <PlanInstallmentSimulator plan={fullPlan} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-1">
