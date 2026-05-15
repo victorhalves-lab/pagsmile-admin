@@ -51,7 +51,6 @@ import ProfileSwitcher, { useProfile } from '@/components/dashboard/ProfileSwitc
 import AlertsPanelEnhanced from '@/components/dashboard/AlertsPanelEnhanced';
 import OnboardingTour from '@/components/common/OnboardingTour';
 import ScheduledReportsModal from '@/components/common/ScheduledReportsModal';
-import QicCallToActionBanner from '@/components/dashboard/QicCallToActionBanner';
 import RegulatoryCommitmentsCard from '@/components/dashboard/RegulatoryCommitmentsCard';
 
 // Container animado padrão
@@ -126,19 +125,14 @@ export default function Dashboard() {
         }
       />
 
-      {/* ZONA QIC — Cadastro de compliance pendente (banner em destaque) */}
-      <AnimatedSection>
-        <QicCallToActionBanner />
-      </AnimatedSection>
-
-      {/* ZONA 0 — Alertas críticos */}
+      {/* ZONA 0 — Alertas críticos (só se houver) */}
       {showSection('alerts') && (
         <AnimatedSection>
           <CriticalAlertsBanner />
         </AnimatedSection>
       )}
 
-      {/* ZONA 1 — AGORA: saldo + antecipação + a receber */}
+      {/* ZONA 1 — DINHEIRO AGORA: saldo + antecipação + a receber */}
       {showSection('balance') && (
         <AnimatedSection delay={0.05} className="space-y-4">
           <BalanceCard available={125430.5} pending={212880.0} blocked={2500.0} />
@@ -153,74 +147,76 @@ export default function Dashboard() {
         </AnimatedSection>
       )}
 
-      {/* ZONA 2 — VAI ACONTECER: forecast + intraday + risco */}
-      {showSection('forecast') && (
+      {/* ZONA 2 — VENDAS: Volume / Transações / Ticket Médio (subiu para responder a pergunta #1) */}
+      {showSection('gmv') && (
         <AnimatedSection delay={0.1}>
+          <GMVCardConsolidated data={gmvData} loading={loadingTx} />
+        </AnimatedSection>
+      )}
+
+      {/* ZONA 3 — ATALHOS (subiu para o topo do campo de visão) */}
+      <AnimatedSection delay={0.12}>
+        <QuickActionsCustomizable />
+      </AnimatedSection>
+
+      {/* ZONA 4 — PERFORMANCE: indicadores acionáveis + métricas de transação */}
+      {showSection('gmv') && showSection('performance') && (
+        <AnimatedSection delay={0.15} className="space-y-4">
+          <PerformanceIndicatorsActionable transactions={transactions} />
+          <TransactionMetricsCards transactions={transactions} />
+        </AnimatedSection>
+      )}
+
+      {/* ZONA 5 — VAI ACONTECER: forecast + intraday + risco */}
+      {showSection('forecast') && (
+        <AnimatedSection delay={0.18}>
           <ForecastRow />
         </AnimatedSection>
       )}
 
       {(showSection('forecast') || showSection('goals')) && (
-        <AnimatedSection delay={0.12} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <AnimatedSection delay={0.2} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <IntradayProjection />
           <FinancialRiskCard />
           {showSection('goals') && <GoalsProgressCard />}
         </AnimatedSection>
       )}
 
-      {/* ZONA 3 — IA proativa */}
+      {/* ZONA 6 — IA proativa */}
       {showSection('ai') && (
-        <AnimatedSection delay={0.15} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <AnimatedSection delay={0.22} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <AISuggestionsCard />
           <RecoveryRevenueCard />
         </AnimatedSection>
       )}
 
       {showSection('levers') && (
-        <AnimatedSection delay={0.18}>
+        <AnimatedSection delay={0.25}>
           <TopRevenueLevers />
         </AnimatedSection>
       )}
 
-      {/* ZONA 4 — ACONTECEU: GMV + performance */}
-      {showSection('gmv') && (
-        <AnimatedSection delay={0.2} className="space-y-4">
-          <GMVCardConsolidated data={gmvData} loading={loadingTx} />
-          {showSection('performance') && (
-            <PerformanceIndicatorsActionable transactions={transactions} />
-          )}
-          {showSection('performance') && (
-            <TransactionMetricsCards transactions={transactions} />
-          )}
-        </AnimatedSection>
-      )}
-
-      {/* ZONA 5 — Onde meu dinheiro está + canais */}
+      {/* ZONA 7 — FLUXO DE DINHEIRO + CANAIS */}
       {showSection('flow') && (
-        <AnimatedSection delay={0.22} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <AnimatedSection delay={0.28} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <MoneyFlowCard />
           {showSection('channels') ? <ChannelBreakdownCard /> : <CheckoutFunnelCard />}
         </AnimatedSection>
       )}
 
-      {/* ZONA 6 — Orquestração + canais (Ops) */}
+      {/* ZONA 8 — Orquestração + canais (Ops) */}
       {showSection('acquirers') && (
-        <AnimatedSection delay={0.25}>
+        <AnimatedSection delay={0.3}>
           <AcquirerPerformanceCard />
         </AnimatedSection>
       )}
 
       {showSection('channels') && showSection('funnel') && (
-        <AnimatedSection delay={0.28} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <AnimatedSection delay={0.32} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <ChannelBreakdownCard />
           <CheckoutFunnelCard />
         </AnimatedSection>
       )}
-
-      {/* ZONA 7 — Quick Actions + Volume + Activity Feed */}
-      <AnimatedSection delay={0.3}>
-        <QuickActionsCustomizable />
-      </AnimatedSection>
 
       {showSection('volume') || showSection('activity') ? (
         <AnimatedSection delay={0.32} className="grid grid-cols-1 lg:grid-cols-3 gap-4">

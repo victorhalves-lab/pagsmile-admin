@@ -67,6 +67,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import ComplianceHeaderAlert from '@/components/common/ComplianceHeaderAlert';
 
 // Menu items for Admin Sub module - using translation keys
 const getAdminSubMenuItems = (t) => [
@@ -1245,27 +1246,9 @@ export default function Layout({ children, currentPageName }) {
           </div>
         </header>
 
-        {/* Compliance Alert */}
-        {showComplianceAlert && currentPageName === 'Dashboard' && (
-          <div className="px-4 lg:px-6 pt-4 lg:pt-6 pb-0">
-            <Alert className="bg-amber-50 border-amber-200">
-              <AlertTriangle className="h-4 w-4 text-amber-600" />
-              <AlertTitle className="text-amber-800 font-semibold">Ação Necessária: Complete seu Compliance!</AlertTitle>
-              <AlertDescription className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-700">
-                <span>Sua conta está quase pronta! Complete o processo de Compliance para começar a transacionar.</span>
-                <div className="flex gap-2">
-                  <Link to={createPageUrl('ComplianceOnboardingStart')}>
-                    <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-white">
-                      Completar Compliance
-                    </Button>
-                  </Link>
-                  <Button size="sm" variant="ghost" onClick={() => setDismissedComplianceAlertForSession(true)} className="text-amber-600 hover:text-amber-800">
-                    Depois
-                  </Button>
-                </div>
-              </AlertDescription>
-            </Alert>
-          </div>
+        {/* Compliance Alert — Unified header banner (slim, sempre que pendente) */}
+        {showComplianceAlert && (
+          <ComplianceHeaderAlert onDismiss={() => setDismissedComplianceAlertForSession(true)} />
         )}
 
         {/* Page Content */}
