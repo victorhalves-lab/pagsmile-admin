@@ -59,6 +59,12 @@ import CustomerJourneyCard from '@/components/transactions/detail/CustomerJourne
 import MentorSyncReconciliationCard from '@/components/mentor/transactions/detail/MentorSyncReconciliationCard';
 import MentorTechnicalEventsCard from '@/components/mentor/transactions/detail/MentorTechnicalEventsCard';
 import MentorReceiptCard from '@/components/mentor/transactions/detail/MentorReceiptCard';
+import EnhancedTimeline from '@/components/transactions/detail/EnhancedTimeline';
+import CustomerDetailCard from '@/components/transactions/detail/CustomerDetailCard';
+import EventsLogsCard from '@/components/transactions/detail/EventsLogsCard';
+import ApiPayloadsCard from '@/components/transactions/detail/ApiPayloadsCard';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { LayoutDashboard, Code2, Activity } from 'lucide-react';
 
 const TimelineEvent = ({ icon: Icon, iconColor, title, description, timestamp, isLast }) => (
   <div className="flex gap-3">
@@ -303,46 +309,35 @@ export default function TransactionDetail() {
         </CardContent>
       </Card>
 
-      {/* Antifraude Explicável + Jornada do cliente + Relacionadas */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <AntifraudExplainCard transaction={transaction} />
-        </div>
-        <CustomerJourneyCard />
-      </div>
+      {/* ========== ABAS PRINCIPAIS ========== */}
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="bg-white border border-slate-200 p-1 h-auto flex-wrap">
+          <TabsTrigger value="overview" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white text-xs gap-1.5">
+            <LayoutDashboard className="w-3.5 h-3.5" /> Visão Geral
+          </TabsTrigger>
+          <TabsTrigger value="timeline" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white text-xs gap-1.5">
+            <Clock className="w-3.5 h-3.5" /> Timeline
+          </TabsTrigger>
+          <TabsTrigger value="customer" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white text-xs gap-1.5">
+            <User className="w-3.5 h-3.5" /> Cliente
+          </TabsTrigger>
+          <TabsTrigger value="events" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white text-xs gap-1.5">
+            <Activity className="w-3.5 h-3.5" /> Eventos & Logs
+          </TabsTrigger>
+          <TabsTrigger value="api" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white text-xs gap-1.5">
+            <Code2 className="w-3.5 h-3.5" /> API · Request/Response
+          </TabsTrigger>
+          <TabsTrigger value="advanced" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white text-xs gap-1.5">
+            <Shield className="w-3.5 h-3.5" /> Antifraude & Relacionadas
+          </TabsTrigger>
+        </TabsList>
 
-      <RelatedTransactionsCard transaction={transaction} />
-
-      {/* ====== Blocos Mentor (G.2) ====== */}
-      <MentorSyncReconciliationCard transaction={transaction} />
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <MentorTechnicalEventsCard />
-        </div>
-        <MentorReceiptCard transaction={transaction} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Timeline */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Timeline de Eventos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {timelineEvents.map((event, idx) => (
-                <TimelineEvent
-                  key={idx}
-                  {...event}
-                  isLast={idx === timelineEvents.length - 1}
-                />
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Payment Details */}
-          <Card>
+        {/* ===== TAB: VISÃO GERAL ===== */}
+        <TabsContent value="overview" className="space-y-6 mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <EnhancedTimeline transaction={transaction} />
+              <Card>
             <CardHeader>
               <CardTitle className="text-base">
                 {isCard ? 'Dados do Cartão' : 'Dados do Pix'}
@@ -394,80 +389,81 @@ export default function TransactionDetail() {
           </Card>
         </div>
 
-        {/* Right Column */}
-        <div className="space-y-6">
-          {/* Customer Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Dados do Pagador</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                  <User className="w-5 h-5 text-gray-500" />
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900">{transaction.customer_name || 'Cliente'}</p>
-                  <p className="text-xs text-gray-500">CPF: {transaction.customer_document || '***.***.***-**'}</p>
-                </div>
-              </div>
-              <Separator />
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-600">{transaction.customer_email || 'email@exemplo.com'}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-600">(11) 99999-9999</span>
-                </div>
-                <div className="flex items-start gap-2 text-sm">
-                  <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
-                  <span className="text-gray-600">
-                    Av. Paulista, 1000 - Bela Vista<br />
-                    São Paulo - SP, 01310-100
-                  </span>
-                </div>
-              </div>
-              <Button variant="outline" className="w-full" size="sm">
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Ver Perfil do Cliente
-              </Button>
-            </CardContent>
-          </Card>
+            {/* Right Column - resumo + refs */}
+            <div className="space-y-6">
+              <CustomerDetailCard transaction={transaction} />
 
-          {/* Reference Codes */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Códigos de Referência</CardTitle>
-            </CardHeader>
-            <CardContent className="divide-y divide-gray-100">
-              <InfoRow label="ID PagSmile" value={transaction.transaction_id} copyable mono />
-              <InfoRow label="ID Pedido Merchant" value={transaction.merchant_order_id || 'ORD-123456'} copyable mono />
-              {isCard && (
-                <>
-                  <InfoRow label="TID" value="1234567890123456789" copyable mono />
-                  <InfoRow label="ARN" value="12345678901234567890123" copyable mono />
-                </>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Códigos de Referência</CardTitle>
+                </CardHeader>
+                <CardContent className="divide-y divide-gray-100">
+                  <InfoRow label="ID PagSmile" value={transaction.transaction_id} copyable mono />
+                  <InfoRow label="ID Pedido Merchant" value={transaction.external_id || transaction.merchant_order_id || 'ORD-123456'} copyable mono />
+                  {isCard && (
+                    <>
+                      <InfoRow label="TID" value={transaction.acquirer_data?.tid || '1234567890123456789'} copyable mono />
+                      <InfoRow label="ARN" value={transaction.acquirer_data?.arn || '12345678901234567890123'} copyable mono />
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+
+              {transaction.metadata && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Metadata</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="text-xs bg-slate-900 text-emerald-300 p-3 rounded-lg overflow-auto max-h-40 font-mono">
+                      {JSON.stringify(transaction.metadata, null, 2)}
+                    </pre>
+                  </CardContent>
+                </Card>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+        </TabsContent>
 
-          {/* Metadata */}
-          {transaction.metadata && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Metadata</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <pre className="text-xs bg-gray-50 p-3 rounded-lg overflow-auto max-h-40">
-                  {JSON.stringify(transaction.metadata, null, 2)}
-                </pre>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </div>
+        {/* ===== TAB: TIMELINE ===== */}
+        <TabsContent value="timeline" className="mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <EnhancedTimeline transaction={transaction} />
+            </div>
+            <CustomerJourneyCard />
+          </div>
+        </TabsContent>
+
+        {/* ===== TAB: CLIENTE ===== */}
+        <TabsContent value="customer" className="mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <CustomerDetailCard transaction={transaction} />
+            <div className="lg:col-span-2">
+              <CustomerJourneyCard />
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* ===== TAB: EVENTOS & LOGS ===== */}
+        <TabsContent value="events" className="mt-4 space-y-6">
+          <EventsLogsCard transaction={transaction} />
+          <MentorTechnicalEventsCard />
+        </TabsContent>
+
+        {/* ===== TAB: API ===== */}
+        <TabsContent value="api" className="mt-4">
+          <ApiPayloadsCard transaction={transaction} />
+        </TabsContent>
+
+        {/* ===== TAB: ANTIFRAUDE & RELACIONADAS ===== */}
+        <TabsContent value="advanced" className="mt-4 space-y-6">
+          <AntifraudExplainCard transaction={transaction} />
+          <RelatedTransactionsCard transaction={transaction} />
+          <MentorSyncReconciliationCard transaction={transaction} />
+          <MentorReceiptCard transaction={transaction} />
+        </TabsContent>
+      </Tabs>
 
       {/* Refund Side Drawer */}
       <SideDrawer
