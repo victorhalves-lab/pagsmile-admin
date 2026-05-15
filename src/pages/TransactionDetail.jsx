@@ -315,9 +315,6 @@ export default function TransactionDetail() {
           <TabsTrigger value="overview" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white text-xs gap-1.5">
             <LayoutDashboard className="w-3.5 h-3.5" /> Visão Geral
           </TabsTrigger>
-          <TabsTrigger value="timeline" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white text-xs gap-1.5">
-            <Clock className="w-3.5 h-3.5" /> Timeline
-          </TabsTrigger>
           <TabsTrigger value="customer" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white text-xs gap-1.5">
             <User className="w-3.5 h-3.5" /> Cliente
           </TabsTrigger>
@@ -422,16 +419,6 @@ export default function TransactionDetail() {
                 </Card>
               )}
             </div>
-          </div>
-        </TabsContent>
-
-        {/* ===== TAB: TIMELINE ===== */}
-        <TabsContent value="timeline" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <EnhancedTimeline transaction={transaction} />
-            </div>
-            <CustomerJourneyCard />
           </div>
         </TabsContent>
 
