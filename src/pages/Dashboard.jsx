@@ -18,10 +18,11 @@ import VolumeChart from '@/components/dashboard/VolumeChart';
 import PaymentMethodsChart from '@/components/dashboard/PaymentMethodsChart';
 import ApprovalRateChart from '@/components/dashboard/ApprovalRateChart';
 import TransactionMetricsCards from '@/components/dashboard/TransactionMetricsCards';
-import CardPerformanceMetrics from '@/components/dashboard/CardPerformanceMetrics';
-import PixPerformanceMetrics from '@/components/dashboard/PixPerformanceMetrics';
 import HeatmapChart from '@/components/dashboard/HeatmapChart';
 import DeclineAnalysis from '@/components/dashboard/DeclineAnalysis';
+import CardPerformanceFull from '@/components/dashboard/analytics/CardPerformanceFull';
+import PixPerformanceFull from '@/components/dashboard/analytics/PixPerformanceFull';
+import AdvancedAnalyticsFull from '@/components/dashboard/analytics/AdvancedAnalyticsFull';
 import ComparativeMetrics from '@/components/dashboard/ComparativeMetrics';
 import ConversionMetricsCards from '@/components/dashboard/ConversionMetricsCards';
 import PixFlowCards from '@/components/dashboard/PixFlowCards';
@@ -262,25 +263,17 @@ export default function Dashboard() {
         </TabsContent>
 
         <TabsContent value="card" className="space-y-4">
-          <CardPerformanceMetrics transactions={transactions} />
-          <DeclineAnalysis transactions={transactions} />
+          <CardPerformanceFull />
         </TabsContent>
 
         <TabsContent value="pix" className="space-y-4">
           <PixUpliftCard />
           <PixFlowCards transactions={transactions} />
-          <PixPerformanceMetrics transactions={transactions} />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <HeatmapChart type="volume" />
-            <HeatmapChart type="approval" />
-          </div>
+          <PixPerformanceFull />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <HeatmapChart type="volume" />
-            <DeclineAnalysis transactions={transactions} />
-          </div>
+          <AdvancedAnalyticsFull />
         </TabsContent>
       </Tabs>
 
