@@ -4,10 +4,20 @@ module.exports = {
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ['Inter', 'system-ui', 'sans-serif'],
+  			mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			sm: 'calc(var(--radius) - 4px)',
+  			'card-v7': '14px',
+  			'pill': '999px'
+  		},
+  		boxShadow: {
+  			'v7-card': '0 1px 0 rgba(15, 23, 42, 0.04), 0 6px 24px -16px rgba(15, 23, 42, 0.18)',
+  			'v7-card-hover': '0 1px 0 rgba(15, 23, 42, 0.06), 0 12px 32px -16px rgba(15, 23, 42, 0.24)',
   		},
   		colors: {
   			background: 'hsl(var(--background))',

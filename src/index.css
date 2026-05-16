@@ -2,87 +2,226 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   PAGSMILE PULSE · DESIGN SYSTEM V7
+   Tokens fundamentais extraídos do V7
+   ============================================ */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    /* ===== V7 RAW TOKENS ===== */
+    --v7-bg: #fafaf9;
+    --v7-ink: #0f172a;
+    --v7-mute: #64748b;
+    --v7-bd: #e2e8f0;
+    --v7-brand: #10b981;
+    --v7-brand-d: #047857;
+    --v7-brand-l: #5cf7cf;
+    --v7-card: #ffffff;
+    --v7-side: #0f172a;
+    --v7-side-h: #1e293b;
+    --v7-side-bd: #334155;
+
+    /* ===== Tipografia V7 ===== */
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+    /* ===== Shadows canônicas V7 ===== */
+    --shadow-card: 0 1px 0 rgba(15, 23, 42, 0.04), 0 6px 24px -16px rgba(15, 23, 42, 0.18);
+    --shadow-card-hover: 0 1px 0 rgba(15, 23, 42, 0.06), 0 12px 32px -16px rgba(15, 23, 42, 0.24);
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+
+    /* ===== Radius V7 ===== */
+    --radius: 0.625rem; /* 10px - botões/inputs */
+    --radius-card: 14px;
+    --radius-pill: 999px;
+
+    /* ===== Shadcn tokens mapeados aos V7 ===== */
+    --background: 60 9% 98%; /* #fafaf9 */
+    --foreground: 222 47% 11%; /* #0f172a */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 160 84% 39%; /* #10b981 emerald */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%; /* #64748b */
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%; /* #e2e8f0 */
+    --input: 214 32% 91%;
+    --ring: 160 84% 39%;
+
+    /* Charts V7 - paleta sóbria */
+    --chart-1: 160 84% 39%; /* emerald */
+    --chart-2: 199 89% 48%; /* sky */
+    --chart-3: 38 92% 50%;  /* amber */
+    --chart-4: 0 84% 60%;   /* rose */
+    --chart-5: 215 16% 47%; /* slate */
+
+    /* Sidebar V7 (slate-900, não azul-marinho) */
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 215 20% 80%;
+    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 160 84% 39%;
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 160 84% 45%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 160 84% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 160 84% 45%;
+    --sidebar-background: 222 47% 4%;
+    --sidebar-foreground: 215 20% 75%;
+    --sidebar-accent: 217 33% 14%;
+    --sidebar-border: 217 33% 14%;
   }
 }
-
-
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
 
+  html {
+    font-family: var(--font-sans);
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  /* JetBrains Mono para elementos técnicos */
+  code, kbd, samp, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* ============================================
+   V7 UTILITY CLASSES
+   ============================================ */
+@layer utilities {
+  /* Sombras canônicas V7 */
+  .shadow-v7-card {
+    box-shadow: var(--shadow-card);
+  }
+  .shadow-v7-card-hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /* Mono utilities V7 */
+  .font-mono-v7 {
+    font-family: var(--font-mono);
+    font-feature-settings: 'tnum', 'zero';
+  }
+
+  /* Tipografia V7 - números técnicos */
+  .num-tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Label mono uppercase (estilo V7 .sec-g) */
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--v7-mute);
+  }
+
+  /* Pill V7 (estilo .pill) */
+  .pill-v7 {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--v7-brand-d);
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: color-mix(in oklch, var(--v7-brand) 14%, transparent);
+    border: 1px solid color-mix(in oklch, var(--v7-brand) 30%, transparent);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Crumb (breadcrumb mono) */
+  .crumb-v7 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--v7-mute);
+  }
+  .crumb-v7 b {
+    color: var(--v7-ink);
+    font-weight: 600;
+  }
+
+  /* Card V7 com sombra dupla canônica */
+  .card-v7 {
+    background: var(--v7-card);
+    border: 1px solid var(--v7-bd);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Title V7 */
+  .title-v7 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--v7-ink);
+  }
+}
+
+/* ============================================
+   SCROLLBAR V7
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
