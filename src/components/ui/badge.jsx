@@ -14,19 +14,21 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400",
+          "border-pag-mint-200 bg-pag-mint-50 text-pag-mint-700 hover:bg-pag-mint-100 dark:border-pag-mint-500/30 dark:bg-pag-mint-500/12 dark:text-pag-mint-300",
         secondary:
-          "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300",
+          "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-pag-navy-600 dark:bg-pag-navy-700 dark:text-slate-300",
         destructive:
           "border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400",
         success:
-          "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400",
+          "border-pag-mint-200 bg-pag-mint-50 text-pag-mint-700 dark:border-pag-mint-500/30 dark:bg-pag-mint-500/12 dark:text-pag-mint-300",
         warning:
           "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400",
         info:
           "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400",
+        brand:
+          "border-pag-navy-200 bg-pag-navy-50 text-pag-navy-700 dark:border-pag-mint-500/30 dark:bg-pag-mint-500/12 dark:text-pag-mint-300",
         outline:
-          "text-slate-600 border-slate-200 hover:bg-slate-50 dark:text-slate-400 dark:border-slate-700",
+          "text-slate-600 border-slate-200 hover:bg-pag-mint-50 hover:text-pag-mint-700 hover:border-pag-mint-200 dark:text-slate-400 dark:border-pag-navy-600 dark:hover:bg-pag-mint-500/10 dark:hover:text-pag-mint-300",
       },
     },
     defaultVariants: {
