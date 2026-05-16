@@ -1,0 +1,380 @@
+/* ============================================
+   PULSE · DESIGN SYSTEM LIBRARY (V7)
+   Classes utilitárias 1:1 com os packs HTML.
+   Importado em index.css. Não edite componentes
+   tailwind dos packs aqui — apenas as primitivas.
+   ============================================ */
+
+/* ---------- TOKENS LOCAIS PULSE ---------- */
+:root {
+  /* Pulse brand (mesmo dos packs) */
+  --pulse-navy:    #002443;
+  --pulse-navy-2:  #001a33;
+  --pulse-navy-3:  #001124;
+  --pulse-mint:    #2bc196;
+  --pulse-mint-d:  #18866a;
+  --pulse-mint-soft: #d8f5e9;
+  --pulse-mint-bg: #f0faf6;
+  --pulse-highlight: #5cf7cf;
+  --pulse-teal:    #36706c;
+
+  --pulse-paper:   #f4f4f4;
+  --pulse-paper-2: #ededed;
+  --pulse-paper-3: #e3e3e3;
+  --pulse-line:    #e7e7e7;
+  --pulse-line-2:  #d6d6d6;
+  --pulse-line-soft: #f0f0f0;
+
+  --pulse-ink:     #282828;
+  --pulse-ink-2:   #1f1f1f;
+  --pulse-ink-3:   #404040;
+  --pulse-muted:   #5a5a5a;
+  --pulse-muted-2: #888888;
+  --pulse-muted-3: #a8a8a8;
+
+  --pulse-amber:   #f5b942;
+  --pulse-amber-soft: #fff4d6;
+  --pulse-amber-deep: #b45309;
+  --pulse-amber-bg:   #fffaf0;
+
+  --pulse-coral:   #ff6b6b;
+  --pulse-coral-soft: #ffe0e0;
+  --pulse-coral-deep: #b91c1c;
+
+  --pulse-info:    #3b82f6;
+  --pulse-info-soft: #dbeafe;
+  --pulse-info-deep: #1e40af;
+
+  --pulse-purple:  #8b5cf6;
+  --pulse-purple-soft: #ede9fe;
+  --pulse-purple-deep: #6d28d9;
+
+  --pulse-pink:    #ec4899;
+  --pulse-pink-soft: #fce7f3;
+  --pulse-pink-deep: #be185d;
+}
+
+/* ---------- TIPOGRAFIA PULSE ---------- */
+.pulse-mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Label uppercase mono (eyebrow dos KPIs / sections) */
+.pulse-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pulse-muted);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Section number (01· / 02· / …) */
+.pulse-section-num {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--pulse-muted);
+  font-weight: 700;
+}
+
+/* ============================================
+   PILLS (Pack 02)
+   ============================================ */
+.pulse-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.pulse-pill svg { width: 12px; height: 12px; }
+
+/* Tamanhos */
+.pulse-pill.is-xs { font-size: 9px;   padding: 2px 7px; }
+.pulse-pill.is-sm { font-size: 9.5px; padding: 3px 8px; }
+.pulse-pill.is-md { font-size: 10.5px; padding: 4px 9px; }
+.pulse-pill.is-lg { font-size: 11.5px; padding: 6px 12px; }
+.pulse-pill.is-xl { font-size: 13px;   padding: 8px 14px; }
+
+/* Variantes SOFT (default) */
+.pulse-pill.is-mint    { background: var(--pulse-mint-soft);  color: var(--pulse-mint-d); }
+.pulse-pill.is-amber   { background: var(--pulse-amber-soft); color: var(--pulse-amber-deep); }
+.pulse-pill.is-coral   { background: var(--pulse-coral-soft); color: var(--pulse-coral-deep); }
+.pulse-pill.is-info    { background: var(--pulse-info-soft);  color: var(--pulse-info-deep); }
+.pulse-pill.is-purple  { background: var(--pulse-purple-soft); color: var(--pulse-purple-deep); }
+.pulse-pill.is-pink    { background: var(--pulse-pink-soft);  color: var(--pulse-pink-deep); }
+.pulse-pill.is-teal    { background: #d4ebe8; color: var(--pulse-teal); }
+.pulse-pill.is-neutral { background: var(--pulse-paper-2); color: var(--pulse-ink-3); }
+.pulse-pill.is-ink     { background: var(--pulse-ink); color: #fff; }
+
+/* Variante OUTLINE */
+.pulse-pill.is-outline {
+  background: transparent;
+  border-color: currentColor;
+}
+.pulse-pill.is-outline.is-mint   { color: var(--pulse-mint-d); }
+.pulse-pill.is-outline.is-amber  { color: var(--pulse-amber-deep); }
+.pulse-pill.is-outline.is-coral  { color: var(--pulse-coral-deep); }
+.pulse-pill.is-outline.is-info   { color: var(--pulse-info-deep); }
+.pulse-pill.is-outline.is-neutral{ color: var(--pulse-muted); }
+
+/* Variante SOLID */
+.pulse-pill.is-solid          { color: #fff; }
+.pulse-pill.is-solid.is-mint   { background: var(--pulse-mint); }
+.pulse-pill.is-solid.is-amber  { background: var(--pulse-amber); }
+.pulse-pill.is-solid.is-coral  { background: var(--pulse-coral); }
+.pulse-pill.is-solid.is-info   { background: var(--pulse-info); }
+.pulse-pill.is-solid.is-purple { background: var(--pulse-purple); }
+.pulse-pill.is-solid.is-navy   { background: var(--pulse-navy); }
+
+/* Dot leading dentro do pill */
+.pulse-pill-dot {
+  width: 6px; height: 6px; border-radius: 999px;
+  background: currentColor; flex-shrink: 0;
+}
+.pulse-pill-dot.is-pulse {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%     { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* ============================================
+   KPIs (Pack 01)
+   ============================================ */
+.pulse-kpi {
+  background: #fff;
+  border: 1px solid var(--pulse-line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 1px 0 rgba(0, 36, 67, 0.04), 0 6px 24px -16px rgba(0, 36, 67, 0.18);
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+.pulse-kpi:hover {
+  box-shadow: 0 1px 0 rgba(0, 36, 67, 0.06), 0 12px 32px -16px rgba(0, 36, 67, 0.24);
+}
+
+/* Densidades */
+.pulse-kpi.is-compact { padding: 12px 14px; gap: 6px; }
+.pulse-kpi.is-comfort { padding: 24px 26px; gap: 14px; }
+
+/* Header row (eyebrow + pill) */
+.pulse-kpi-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px;
+}
+
+/* Valor — Inter (display) ou Mono (numérico) */
+.pulse-kpi-value {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--pulse-ink);
+  line-height: 1;
+}
+.pulse-kpi-value.is-sm   { font-size: 16px; }
+.pulse-kpi-value.is-md   { font-size: 22px; }
+.pulse-kpi-value.is-lg   { font-size: 28px; }
+.pulse-kpi-value.is-xl   { font-size: 36px; }
+.pulse-kpi-value.is-hero { font-size: 56px; }
+
+.pulse-kpi-value .pulse-ccy {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.55em;
+  color: var(--pulse-muted);
+  margin-right: 6px;
+  font-weight: 500;
+}
+
+/* Delta inline */
+.pulse-kpi-delta {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.pulse-kpi-delta.is-up   { color: var(--pulse-mint-d); }
+.pulse-kpi-delta.is-down { color: var(--pulse-coral-deep); }
+.pulse-kpi-delta.is-flat { color: var(--pulse-muted); }
+
+/* Footer (sub-texto explicativo) */
+.pulse-kpi-foot {
+  font-size: 11.5px;
+  color: var(--pulse-muted);
+  line-height: 1.4;
+}
+
+/* Glow accents (Pack 01 / 03) */
+.pulse-kpi.is-glow-mint {
+  border-color: color-mix(in oklch, var(--pulse-mint) 30%, transparent);
+  background-image: linear-gradient(180deg, var(--pulse-mint-bg), transparent 60%);
+}
+.pulse-kpi.is-glow-amber {
+  border-color: color-mix(in oklch, var(--pulse-amber) 30%, transparent);
+  background-image: linear-gradient(180deg, var(--pulse-amber-bg), transparent 60%);
+}
+.pulse-kpi.is-glow-coral {
+  border-color: color-mix(in oklch, var(--pulse-coral) 30%, transparent);
+  background-image: linear-gradient(180deg, var(--pulse-coral-soft), transparent 70%);
+}
+.pulse-kpi.is-glow-info {
+  border-color: color-mix(in oklch, var(--pulse-info) 30%, transparent);
+  background-image: linear-gradient(180deg, var(--pulse-info-soft), transparent 70%);
+}
+.pulse-kpi.is-glow-purple {
+  border-color: color-mix(in oklch, var(--pulse-purple) 30%, transparent);
+  background-image: linear-gradient(180deg, var(--pulse-purple-soft), transparent 70%);
+}
+
+/* ============================================
+   SECTION HEAD (numerada, Pack 13)
+   ============================================ */
+.pulse-section {
+  display: flex; flex-direction: column; gap: 4px;
+  margin-bottom: 14px;
+}
+.pulse-section-meta {
+  display: flex; align-items: center; gap: 10px;
+}
+.pulse-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pulse-ink);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.pulse-section-sub {
+  font-size: 12.5px;
+  color: var(--pulse-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ============================================
+   CARDS (Pack 03)
+   ============================================ */
+.pulse-card {
+  background: #fff;
+  border: 1px solid var(--pulse-line);
+  border-radius: 14px;
+  box-shadow: 0 1px 0 rgba(0, 36, 67, 0.04), 0 6px 24px -16px rgba(0, 36, 67, 0.18);
+  overflow: hidden;
+}
+.pulse-card-head {
+  padding: 14px 18px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--pulse-line-soft);
+}
+.pulse-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pulse-ink);
+  margin: 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.pulse-card-body { padding: 16px 18px; }
+.pulse-card-foot {
+  padding: 10px 18px;
+  border-top: 1px solid var(--pulse-line-soft);
+  background: var(--pulse-paper);
+  font-size: 11.5px;
+  color: var(--pulse-muted);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* Insight card variants */
+.pulse-insight {
+  border-left: 3px solid transparent;
+  padding: 16px 18px;
+  border-radius: 12px;
+  display: flex; gap: 14px;
+  background: #fff;
+  border: 1px solid var(--pulse-line);
+}
+.pulse-insight-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px;
+  flex-shrink: 0;
+}
+.pulse-insight-body { flex: 1; min-width: 0; }
+.pulse-insight-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--pulse-ink); margin: 4px 0 6px;
+}
+.pulse-insight-text {
+  font-size: 12.5px; color: var(--pulse-muted); line-height: 1.55;
+  margin: 0;
+}
+
+.pulse-insight.is-trend  { background: var(--pulse-mint-bg); border-color: var(--pulse-mint-soft); }
+.pulse-insight.is-trend  .pulse-insight-icon { background: var(--pulse-mint-soft); color: var(--pulse-mint-d); }
+.pulse-insight.is-watch  { background: var(--pulse-amber-bg); border-color: #fde9b8; }
+.pulse-insight.is-watch  .pulse-insight-icon { background: var(--pulse-amber-soft); color: var(--pulse-amber-deep); }
+.pulse-insight.is-anomaly{ background: #fff5f5; border-color: var(--pulse-coral-soft); }
+.pulse-insight.is-anomaly .pulse-insight-icon { background: var(--pulse-coral-soft); color: var(--pulse-coral-deep); }
+.pulse-insight.is-info   { background: #f5f9ff; border-color: var(--pulse-info-soft); }
+.pulse-insight.is-info   .pulse-insight-icon { background: var(--pulse-info-soft); color: var(--pulse-info-deep); }
+
+/* ============================================
+   TABLES (Pack 05)
+   ============================================ */
+.pulse-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+.pulse-table thead th {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pulse-muted);
+  text-align: left;
+  padding: 10px 14px;
+  background: var(--pulse-paper);
+  border-bottom: 1px solid var(--pulse-line);
+}
+.pulse-table tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--pulse-line-soft);
+  color: var(--pulse-ink);
+  vertical-align: middle;
+}
+.pulse-table tbody tr:hover { background: var(--pulse-paper); }
+.pulse-table .pulse-num { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+/* ============================================
+   GRIDS HELPERS
+   ============================================ */
+.pulse-grid-4 { display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; }
+@media (min-width: 640px) { .pulse-grid-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .pulse-grid-4 { grid-template-columns: repeat(4, 1fr); } }
+
+.pulse-grid-3 { display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; }
+@media (min-width: 768px) { .pulse-grid-3 { grid-template-columns: repeat(3, 1fr); } }
+
+.pulse-grid-2 { display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; }
+@media (min-width: 768px) { .pulse-grid-2 { grid-template-columns: repeat(2, 1fr); } }

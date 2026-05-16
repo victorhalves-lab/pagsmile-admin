@@ -1,6 +1,6 @@
 import React from 'react';
 import PageHeader from '@/components/common/PageHeader';
-import PixMandateHealthDashboard from '@/components/transactions/pix/PixMandateHealthDashboard';
+import PixMandateHealthDashboard from '@/components/transactions/pix/PixMandateHealthDashboard.jsx';
 
 export default function PixMandateHealth() {
   return (

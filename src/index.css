@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Pulse DS library (classes utilitárias 1:1 com os packs HTML) */
+@import './styles/pulse.css';
+
 /* ============================================
    PAGSMILE PULSE · DESIGN SYSTEM V7 (final)
    Tokens oficiais da marca (Manual): Mint #2bc196, Navy #002443,
