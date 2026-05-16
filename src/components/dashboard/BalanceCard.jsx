@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { PulsePill } from '@/components/pulse';
+import { MonoNumber } from '@/components/ui/mono-number';
 import {
   Wallet, Clock, Lock, ArrowUpRight, Eye, EyeOff, FileText,
 } from 'lucide-react';
 
+/**
+ * BalanceCard — V7. Navy hero strip com saldo total + breakdown.
+ * Padrão consistente com GMVCardConsolidated / ChartCard.
+ */
 export default function BalanceCard({
   available = 0,
   pending = 0,
@@ -22,32 +26,30 @@ export default function BalanceCard({
   const total = available + pending + blocked;
 
   const items = [
-    { label: 'Disponível', value: available, icon: Wallet, accent: 'text-[#5cf7cf]' },
-    { label: 'A receber', value: pending, icon: Clock, accent: 'text-[#f5b942]' },
-    { label: 'Bloqueado', value: blocked, icon: Lock, accent: 'text-[#ff6b6b]' },
+    { label: 'Disponível', value: available, icon: Wallet, accent: 'text-emerald-300' },
+    { label: 'A receber', value: pending, icon: Clock, accent: 'text-amber-300' },
+    { label: 'Bloqueado', value: blocked, icon: Lock, accent: 'text-rose-300' },
   ];
 
   return (
     <div
       className={cn(
-        'rounded-[14px] p-6 text-white relative overflow-hidden',
-        'bg-[#002443] border border-[#003459]',
+        'rounded-card-v7 p-6 text-white relative overflow-hidden',
+        'bg-slate-900 dark:bg-slate-950 border border-slate-800',
         className
       )}
-      style={{
-        backgroundImage:
-          'radial-gradient(800px 200px at 100% 0%, rgba(92,247,207,0.08), transparent 60%)',
-      }}
     >
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        {/* Total */}
         <div className="flex items-center gap-4">
-          <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
-            <Wallet className="w-5 h-5 text-[#2bc196]" />
+          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
+            <Wallet className="w-4 h-4 text-emerald-300" />
           </div>
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="pulse-eyebrow !text-white/55">SALDO TOTAL</span>
-              <PulsePill tone="mint" size="xs" dot pulse>LIVE</PulsePill>
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] font-medium text-white/55">
+                Saldo total
+              </span>
               <button
                 className="text-white/40 hover:text-white transition-colors"
                 onClick={() => setShowValues(!showValues)}
@@ -56,12 +58,13 @@ export default function BalanceCard({
                 {showValues ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
               </button>
             </div>
-            <p className="pulse-mono font-bold tracking-tight text-[36px] leading-none">
+            <MonoNumber size="hero" className="text-white tracking-tight">
               {fmt(total)}
-            </p>
+            </MonoNumber>
           </div>
         </div>
 
+        {/* Breakdown */}
         <div className="flex items-center gap-3 lg:gap-6 flex-wrap lg:flex-nowrap">
           {items.map((item, i) => (
             <React.Fragment key={item.label}>
@@ -70,8 +73,12 @@ export default function BalanceCard({
                   <item.icon className={cn('w-4 h-4', item.accent)} />
                 </div>
                 <div>
-                  <p className="pulse-eyebrow !text-white/50 !text-[9.5px]">{item.label}</p>
-                  <p className="pulse-mono text-base font-bold mt-0.5">{fmt(item.value)}</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.12em] font-medium text-white/50">
+                    {item.label}
+                  </p>
+                  <MonoNumber size="base" className="block font-semibold text-white mt-0.5">
+                    {fmt(item.value)}
+                  </MonoNumber>
                 </div>
               </div>
               {i < items.length - 1 && <div className="hidden lg:block w-px h-10 bg-white/10" />}
@@ -79,13 +86,14 @@ export default function BalanceCard({
           ))}
         </div>
 
+        {/* Ações */}
         <div className="flex gap-2 lg:flex-shrink-0">
-          <Button size="sm" className="bg-[#2bc196] hover:bg-[#20a780] text-white font-semibold h-10 px-4">
-            <ArrowUpRight className="w-4 h-4 mr-2" />
+          <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium h-9 px-3">
+            <ArrowUpRight className="w-4 h-4 mr-1.5" />
             Solicitar saque
           </Button>
-          <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10 hover:text-white font-medium h-10 px-4 bg-transparent">
-            <FileText className="w-4 h-4 mr-2" />
+          <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10 hover:text-white font-medium h-9 px-3 bg-transparent">
+            <FileText className="w-4 h-4 mr-1.5" />
             Ver extrato
           </Button>
         </div>
