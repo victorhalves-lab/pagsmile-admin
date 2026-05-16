@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageHeader from '@/components/common/PageHeader';
 import ChartCard from '@/components/dashboard/ChartCard';
 import QuickActionsCustomizable from '@/components/dashboard/QuickActionsCustomizable';
-import BalanceCard from '@/components/dashboard/BalanceCard.jsx';
+import BalanceCard from '@/components/dashboard/BalanceCard';
 import VolumeChart from '@/components/dashboard/VolumeChart';
 import PaymentMethodsChart from '@/components/dashboard/PaymentMethodsChart';
 import ApprovalRateChart from '@/components/dashboard/ApprovalRateChart';
@@ -31,11 +31,11 @@ import PixUpliftCard from '@/components/dashboard/PixUpliftCard';
 // Tier 1
 import CriticalAlertsBanner from '@/components/dashboard/CriticalAlertsBanner';
 import GMVCardConsolidated from '@/components/dashboard/GMVCardConsolidated';
-import ReceivablesBreakdown from '@/components/dashboard/ReceivablesBreakdown.jsx';
-import AnticipationContextCard from '@/components/dashboard/AnticipationContextCard.jsx';
+import ReceivablesBreakdown from '@/components/dashboard/ReceivablesBreakdown';
+import AnticipationContextCard from '@/components/dashboard/AnticipationContextCard';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import AcquirerPerformanceCard from '@/components/dashboard/AcquirerPerformanceCard';
-import PerformanceIndicatorsActionable from '@/components/dashboard/PerformanceIndicatorsActionable.jsx';
+import PerformanceIndicatorsActionable from '@/components/dashboard/PerformanceIndicatorsActionable';
 
 // Tier 2
 import ForecastRow from '@/components/dashboard/ForecastRow';
