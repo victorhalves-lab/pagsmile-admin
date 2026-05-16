@@ -41,7 +41,11 @@ export default function CardTransactionsView() {
 
   const { data: transactions = [], isLoading } = useQuery({
     queryKey: ['transactions', 'card'],
-    queryFn: () => base44.entities.Transaction.filter({ type: 'card' }, '-created_date', 500),
+    queryFn: () => base44.entities.Transaction.filter(
+      { method: { $in: ['credit_card', 'debit_card'] } },
+      '-created_date',
+      500
+    ),
   });
 
 

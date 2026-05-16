@@ -86,7 +86,7 @@ export default function PixTransactionsView() {
 
   const { data: transactions = [], isLoading } = useQuery({
     queryKey: ['transactions', 'pix'],
-    queryFn: () => base44.entities.Transaction.filter({ type: 'pix' }, '-created_date', 500),
+    queryFn: () => base44.entities.Transaction.filter({ method: 'pix' }, '-created_date', 500),
   });
 
 
