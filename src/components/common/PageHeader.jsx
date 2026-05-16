@@ -5,15 +5,16 @@ import { ChevronRight, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
- * PageHeader · V7
- * - Breadcrumb estilo "crumb" mono (var(--v7-mute) / ink em negrito)
- * - Sem ícone-cápsula colorido; ícone é neutro/slate
- * - Sem Sparkles decorativo
- * - Título 24px / weight 800 (tracking -0.02em) — alinhado a .title-v7
+ * PageHeader · V7 (Pagsmile Pulse)
+ * - Eyebrow mono uppercase em mint Pagsmile (cor-marca)
+ * - Breadcrumb crumb-v7 (slate-muted com último item ink-strong)
+ * - Ícone com fundo mint-soft (não slate puro) — traz a cor da marca
+ * - Título 24px / w800 / tracking -0.02em
  */
 export default function PageHeader({
   title,
   subtitle,
+  eyebrow,
   breadcrumbs = [],
   actions,
   icon: Icon,
@@ -25,7 +26,7 @@ export default function PageHeader({
         <nav className="flex items-center gap-1.5 mb-3 font-mono text-[11px] text-slate-500 dark:text-slate-400">
           <Link
             to={createPageUrl('Dashboard')}
-            className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors inline-flex items-center"
+            className="hover:text-pag-mint-700 dark:hover:text-pag-mint-300 transition-colors inline-flex items-center"
           >
             <Home className="w-3.5 h-3.5" />
           </Link>
@@ -35,13 +36,13 @@ export default function PageHeader({
               <React.Fragment key={index}>
                 <ChevronRight className="w-3 h-3 text-slate-300 dark:text-slate-600" />
                 {isLast ? (
-                  <span className="font-semibold text-slate-800 dark:text-slate-100">
+                  <span className="font-semibold text-pag-navy-900 dark:text-white">
                     {crumb.label}
                   </span>
                 ) : (
                   <Link
                     to={createPageUrl(crumb.page)}
-                    className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+                    className="hover:text-pag-mint-700 dark:hover:text-pag-mint-300 transition-colors"
                   >
                     {crumb.label}
                   </Link>
@@ -55,12 +56,17 @@ export default function PageHeader({
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex items-start gap-3 min-w-0">
           {Icon && (
-            <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <Icon className="w-5 h-5 text-slate-600 dark:text-slate-300" strokeWidth={1.75} />
+            <div className="w-10 h-10 rounded-lg bg-pag-mint-50 dark:bg-pag-mint-500/15 border border-pag-mint-200/70 dark:border-pag-mint-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Icon className="w-5 h-5 text-pag-mint-700 dark:text-pag-mint-300" strokeWidth={1.75} />
             </div>
           )}
           <div className="min-w-0">
-            <h1 className="text-[24px] font-extrabold tracking-[-0.02em] text-slate-900 dark:text-white leading-tight">
+            {eyebrow && (
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] font-bold text-pag-mint-700 dark:text-pag-mint-300 mb-1.5">
+                {eyebrow}
+              </p>
+            )}
+            <h1 className="text-[24px] font-extrabold tracking-[-0.02em] text-pag-navy-900 dark:text-white leading-tight">
               {title}
             </h1>
             {subtitle && (

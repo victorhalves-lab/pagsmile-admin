@@ -16,10 +16,27 @@ module.exports = {
   			'pill': '999px'
   		},
   		boxShadow: {
-  			'v7-card': '0 1px 0 rgba(15, 23, 42, 0.04), 0 6px 24px -16px rgba(15, 23, 42, 0.18)',
-  			'v7-card-hover': '0 1px 0 rgba(15, 23, 42, 0.06), 0 12px 32px -16px rgba(15, 23, 42, 0.24)',
+  			'v7-card': '0 1px 0 rgba(0, 36, 67, 0.04), 0 6px 24px -16px rgba(0, 36, 67, 0.18)',
+  			'v7-card-hover': '0 1px 0 rgba(0, 36, 67, 0.06), 0 12px 32px -16px rgba(0, 36, 67, 0.24)',
+  			'v7-glow-mint': '0 0 0 1px #9cebc9, 0 8px 24px -8px rgba(43, 193, 150, 0.35)',
   		},
   		colors: {
+  			pag: {
+  				mint: {
+  					50: '#e8faf3', 100: '#c5f3e0', 200: '#9cebc9', 300: '#6fe1b1', 400: '#4cd5a3',
+  					500: '#2bc196', 600: '#20a780', 700: '#18866a', 800: '#126653', 900: '#0c4a3d',
+  				},
+  				navy: {
+  					50: '#e6ecf2', 100: '#c0cfdc', 200: '#8aa5bd', 300: '#547c9d', 400: '#2c577f',
+  					500: '#013766', 600: '#002d56', 700: '#002443', 800: '#001b34', 900: '#001124',
+  				},
+  				highlight: {
+  					400: '#88f9d9', 500: '#5cf7cf', 600: '#2cebbb', 700: '#15c79a',
+  				},
+  				teal: {
+  					400: '#4d847f', 500: '#36706c', 600: '#2c5e5a', 700: '#234a47',
+  				},
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
