@@ -363,6 +363,83 @@
 }
 
 /* ============================================
+   V7 GLOBAL OVERRIDES — força tokens Pagsmile
+   em classes Tailwind hard-coded encontradas
+   nas páginas legadas (sem refatorar uma por uma).
+   ============================================ */
+@layer utilities {
+  /* === ACCENT MINT: substitui blue/indigo/cyan/teal genéricos === */
+  .bg-blue-500, .bg-blue-600, .bg-blue-700,
+  .bg-indigo-500, .bg-indigo-600, .bg-indigo-700,
+  .bg-cyan-500, .bg-cyan-600,
+  .bg-teal-500, .bg-teal-600 {
+    background-color: var(--pag-mint-500) !important;
+  }
+  .hover\:bg-blue-600:hover, .hover\:bg-blue-700:hover,
+  .hover\:bg-indigo-600:hover, .hover\:bg-indigo-700:hover,
+  .hover\:bg-cyan-600:hover, .hover\:bg-teal-600:hover {
+    background-color: var(--pag-mint-600) !important;
+  }
+  .text-blue-500, .text-blue-600, .text-blue-700,
+  .text-indigo-500, .text-indigo-600, .text-indigo-700,
+  .text-cyan-600, .text-cyan-700,
+  .text-teal-600, .text-teal-700 {
+    color: var(--pag-mint-700) !important;
+  }
+  .dark .text-blue-400, .dark .text-blue-500,
+  .dark .text-indigo-400, .dark .text-cyan-400, .dark .text-teal-400 {
+    color: var(--pag-mint-300) !important;
+  }
+  .border-blue-500, .border-blue-600,
+  .border-indigo-500, .border-indigo-600,
+  .border-cyan-500, .border-teal-500 {
+    border-color: var(--pag-mint-500) !important;
+  }
+  .bg-blue-50, .bg-indigo-50, .bg-cyan-50, .bg-teal-50 {
+    background-color: var(--pag-mint-50) !important;
+  }
+  .border-blue-200, .border-indigo-200, .border-cyan-200, .border-teal-200 {
+    border-color: var(--pag-mint-200) !important;
+  }
+  .ring-blue-500, .ring-indigo-500, .ring-cyan-500, .ring-teal-500 {
+    --tw-ring-color: var(--pag-mint-500) !important;
+  }
+
+  /* === EMERALD/GREEN: alinha ao mint Pagsmile === */
+  .bg-emerald-500, .bg-emerald-600, .bg-emerald-700,
+  .bg-green-500, .bg-green-600, .bg-green-700 {
+    background-color: var(--pag-mint-500) !important;
+  }
+  .hover\:bg-emerald-600:hover, .hover\:bg-emerald-700:hover,
+  .hover\:bg-green-600:hover, .hover\:bg-green-700:hover {
+    background-color: var(--pag-mint-600) !important;
+  }
+  .text-emerald-500, .text-emerald-600, .text-emerald-700,
+  .text-green-600, .text-green-700 {
+    color: var(--pag-mint-700) !important;
+  }
+  .dark .text-emerald-400, .dark .text-green-400 {
+    color: var(--pag-mint-300) !important;
+  }
+  .bg-emerald-50, .bg-green-50 {
+    background-color: var(--pag-mint-50) !important;
+  }
+  .border-emerald-200, .border-green-200 {
+    border-color: var(--pag-mint-200) !important;
+  }
+
+  /* === DARK BACKGROUNDS slate-900/950 → navy Pagsmile === */
+  .bg-slate-900 { background-color: var(--pag-navy-700) !important; }
+  .bg-slate-950 { background-color: var(--pag-navy-900) !important; }
+  .bg-gray-900 { background-color: var(--pag-navy-700) !important; }
+  .bg-gray-950 { background-color: var(--pag-navy-900) !important; }
+  .bg-zinc-900, .bg-neutral-900 { background-color: var(--pag-navy-700) !important; }
+
+  /* === HEX literais Pagsmile já corretos (mantém) === */
+  /* #2bc196, #002443 — já são da marca, não tocar */
+}
+
+/* ============================================
    SCROLLBAR V7
    ============================================ */
 ::-webkit-scrollbar {
