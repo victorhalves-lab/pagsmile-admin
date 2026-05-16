@@ -31,6 +31,8 @@ import {
   Menu,
   X,
   Sparkles,
+  Bot,
+  Cpu,
   Building2,
   FileText,
   Key,
@@ -87,8 +89,8 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.all_transactions'), page: 'Transactions' },
       { label: t('menu.card'), page: 'CardTransactions' },
       { label: t('menu.pix'), page: 'PixTransactions' },
-      { label: '🔁 PIX Automático', page: 'PixMandateHealth' },
-      { label: '👆 PIX Biometria', page: 'PixBiometricInsights' },
+      { label: 'PIX Automático', page: 'PixMandateHealth' },
+      { label: 'PIX Biometria', page: 'PixBiometricInsights' },
       { label: t('menu.decline_analysis'), page: 'DeclineAnalysis' },
     ]
   },
@@ -107,8 +109,8 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.builder'), page: 'CheckoutBuilder' },
       { label: t('menu.my_checkouts'), page: 'Checkouts' },
       { label: t('menu.templates'), page: 'CheckoutTemplates' },
-      { label: '✨ Multi-Método Config', page: 'MultiMethodCheckoutConfig' },
-      { label: '✨ Recovery Ladder', page: 'RecoveryLadderConfig' },
+      { label: 'Multi-Método Config', page: 'MultiMethodCheckoutConfig' },
+      { label: 'Recovery Ladder', page: 'RecoveryLadderConfig' },
       { label: t('menu.analytics'), page: 'CheckoutAnalytics' },
       { label: t('menu.converter_agent'), page: 'ConverterAgent' },
     ]
@@ -178,8 +180,8 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.tariffs'), page: 'FeesAnalysis' },
       { label: t('menu.anticipation'), page: 'Anticipation' },
       { label: t('menu.split'), page: 'SplitManagement' },
-      { label: '✨ Split Designer', page: 'SplitDesignerPage' },
-      { label: '✨ Split Transparency', page: 'SplitTransparencyDashboard' },
+      { label: 'Split Designer', page: 'SplitDesignerPage' },
+      { label: 'Split Transparency', page: 'SplitTransparencyDashboard' },
     ]
   },
   {
@@ -196,9 +198,9 @@ const getAdminSubMenuItems = (t) => [
     submenu: [
       { label: t('menu.dashboard'), page: 'SubaccountsDashboard' },
       { label: t('menu.subaccounts'), page: 'SubaccountsList' },
-      { label: '👥 Meus Subsellers', page: 'MySubsellersCases' },
-      { label: '➕ Convidar Subseller', page: 'MySubsellerInvite' },
-      { label: '🔗 Meus Links Compliance', page: 'MyComplianceLinks' },
+      { label: 'Meus Subsellers', page: 'MySubsellersCases' },
+      { label: 'Convidar Subseller', page: 'MySubsellerInvite' },
+      { label: 'Meus Links Compliance', page: 'MyComplianceLinks' },
       { label: t('menu.onboarding'), page: 'SubaccountOnboarding' },
       { label: 'Progresso do Onboarding', page: 'SubaccountOnboardingProgress' },
       { label: 'Documentos KYC', page: 'SubaccountKycReupload' },
@@ -214,7 +216,7 @@ const getAdminSubMenuItems = (t) => [
     page: 'Customers',
     submenu: [
       { label: 'Lista de Clientes', page: 'Customers' },
-      { label: '✨ Engagement Hub', page: 'CustomersHub' },
+      { label: 'Engagement Hub', page: 'CustomersHub' },
     ]
   },
   {
@@ -228,7 +230,7 @@ const getAdminSubMenuItems = (t) => [
   {
     id: 'ai-hub',
     label: 'Agentes IA',
-    icon: Sparkles,
+    icon: Bot,
     page: 'AiAgentsHub',
   },
   {
@@ -322,26 +324,26 @@ const getAdminInternoMenuItems = (t) => [
     icon: ShieldCheck,
     page: 'AdminIntComplianceDashboard',
     submenu: [
-      { label: '🏠 Dashboard', page: 'AdminIntComplianceDashboard' },
-      { label: '📋 Todos os Casos', page: 'AdminIntComplianceCases' },
-      { label: '🧠 Análise Manual', page: 'AdminIntComplianceAnalysis' },
-      { label: '⚠️ Escalações', page: 'AdminIntComplianceEscalations' },
-      { label: '🔄 Revalidações', page: 'AdminIntComplianceRevalidation' },
-      { label: '📤 Submissões', page: 'AdminIntComplianceSubmissions' },
-      { label: '📁 Documentos', page: 'AdminIntComplianceDocs' },
-      { label: '🔗 Links de Compliance', page: 'AdminIntComplianceLinks' },
-      { label: '👥 Links de Subsellers', page: 'AdminIntComplianceSubsellerLinks' },
-      { label: '🎯 Risk Scoring (Merchants)', page: 'AdminIntComplianceRiskScoring' },
-      { label: '🎯 Risk Scoring (Subsellers)', page: 'AdminIntComplianceRiskScoringSubsellers' },
-      { label: '🤖 Helena IA', page: 'AdminIntComplianceHelena' },
-      { label: '⚙️ Regras & Workflows', page: 'AdminIntComplianceRules' },
-      { label: '📋 Templates KYC', page: 'AdminIntComplianceKYCTemplate' },
-      { label: '🏦 Parceiros', page: 'AdminIntCompliancePartners' },
-      { label: '📊 Pré-KYC Export', page: 'AdminIntCompliancePreKYCExport' },
-      { label: '🔁 Bulk Reprocess', page: 'AdminIntComplianceBulkReprocess' },
-      { label: '📡 BDC Health', page: 'AdminIntComplianceBDCHealth' },
-      { label: '📷 CAF Lab', page: 'AdminIntComplianceCafLab' },
-      { label: '📜 Auditoria', page: 'AdminIntComplianceAudit' },
+      { label: 'Dashboard', page: 'AdminIntComplianceDashboard' },
+      { label: 'Todos os Casos', page: 'AdminIntComplianceCases' },
+      { label: 'Análise Manual', page: 'AdminIntComplianceAnalysis' },
+      { label: 'Escalações', page: 'AdminIntComplianceEscalations' },
+      { label: 'Revalidações', page: 'AdminIntComplianceRevalidation' },
+      { label: 'Submissões', page: 'AdminIntComplianceSubmissions' },
+      { label: 'Documentos', page: 'AdminIntComplianceDocs' },
+      { label: 'Links de Compliance', page: 'AdminIntComplianceLinks' },
+      { label: 'Links de Subsellers', page: 'AdminIntComplianceSubsellerLinks' },
+      { label: 'Risk Scoring (Merchants)', page: 'AdminIntComplianceRiskScoring' },
+      { label: 'Risk Scoring (Subsellers)', page: 'AdminIntComplianceRiskScoringSubsellers' },
+      { label: 'Helena IA', page: 'AdminIntComplianceHelena' },
+      { label: 'Regras & Workflows', page: 'AdminIntComplianceRules' },
+      { label: 'Templates KYC', page: 'AdminIntComplianceKYCTemplate' },
+      { label: 'Parceiros', page: 'AdminIntCompliancePartners' },
+      { label: 'Pré-KYC Export', page: 'AdminIntCompliancePreKYCExport' },
+      { label: 'Bulk Reprocess', page: 'AdminIntComplianceBulkReprocess' },
+      { label: 'BDC Health', page: 'AdminIntComplianceBDCHealth' },
+      { label: 'CAF Lab', page: 'AdminIntComplianceCafLab' },
+      { label: 'Auditoria', page: 'AdminIntComplianceAudit' },
       { label: t('menu_admin.form_link'), page: 'AdminIntComplianceFormLink' },
     ]
   },
@@ -354,9 +356,9 @@ const getAdminInternoMenuItems = (t) => [
       { label: 'Gestão Comerciantes & Subcontas', page: 'AdminIntMerchantsOverview' },
       { label: t('menu.dashboard'), page: 'AdminIntMerchants' },
       { label: t('menu_admin.merchant_list'), page: 'AdminIntMerchantsList' },
-      { label: '✨ Coverage Matrix (Split)', page: 'AdminIntMerchantCoverageMatrix' },
-      { label: '✨ Smart Split Suggester', page: 'AdminIntSmartSplitSuggester' },
-      { label: '✨ Tenant Management', page: 'AdminIntTenantManagement' },
+      { label: 'Coverage Matrix (Split)', page: 'AdminIntMerchantCoverageMatrix' },
+      { label: 'Smart Split Suggester', page: 'AdminIntSmartSplitSuggester' },
+      { label: 'Tenant Management', page: 'AdminIntTenantManagement' },
       { label: t('menu_admin.profile_360'), page: 'AdminIntMerchantProfile' },
       { label: t('menu.subaccounts'), page: 'AdminIntSubaccounts' },
       { label: t('menu_admin.limit_requests'), page: 'AdminIntLimitRequests' },
@@ -373,10 +375,10 @@ const getAdminInternoMenuItems = (t) => [
     icon: Building2,
     page: 'AdminIntCompanies',
     submenu: [
-      { label: '🏢 Empresas Controladoras', page: 'AdminIntCompanies' },
-      { label: '👥 Representantes Comerciais', page: 'AdminIntSalesReps' },
-      { label: '🏗 Projetos (Multi-tenant)', page: 'AdminIntProjects' },
-      { label: '📊 Dashboard Consolidado', page: 'AdminIntProjectsConsolidatedDashboard' },
+      { label: 'Empresas Controladoras', page: 'AdminIntCompanies' },
+      { label: 'Representantes Comerciais', page: 'AdminIntSalesReps' },
+      { label: 'Projetos (Multi-tenant)', page: 'AdminIntProjects' },
+      { label: 'Dashboard Consolidado', page: 'AdminIntProjectsConsolidatedDashboard' },
     ]
   },
   {
@@ -410,18 +412,18 @@ const getAdminInternoMenuItems = (t) => [
       { label: t('menu.dashboard'), page: 'AdminIntTransactionsDashboard' },
       { label: t('menu_admin.transaction_list'), page: 'AdminIntTransactionsList' },
       { label: t('menu_admin.orchestration'), page: 'AdminIntOrchestration' },
-      { label: '✨ Multi-Method Cockpit', page: 'AdminIntMultiMethodCockpit' },
-      { label: '✨ Cross-Method Recovery', page: 'AdminIntCrossMethodRecovery' },
-      { label: '✨ Connection Health', page: 'AdminIntConnectionHealth' },
-      { label: '✨ Orchestration Studio', page: 'AdminIntOrchestrationStudio' },
-      { label: '✨ A/B Volume Allocator', page: 'AdminIntABVolumeAllocator' },
-      { label: '✨ Shadow Mode Testing', page: 'AdminIntShadowMode' },
-      { label: '✨ Crypto Hub', page: 'AdminIntCryptoHub' },
+      { label: 'Multi-Method Cockpit', page: 'AdminIntMultiMethodCockpit' },
+      { label: 'Cross-Method Recovery', page: 'AdminIntCrossMethodRecovery' },
+      { label: 'Connection Health', page: 'AdminIntConnectionHealth' },
+      { label: 'Orchestration Studio', page: 'AdminIntOrchestrationStudio' },
+      { label: 'A/B Volume Allocator', page: 'AdminIntABVolumeAllocator' },
+      { label: 'Shadow Mode Testing', page: 'AdminIntShadowMode' },
+      { label: 'Crypto Hub', page: 'AdminIntCryptoHub' },
       { label: t('menu_admin.bin_analysis'), page: 'AdminIntBINAnalysis' },
       { label: t('menu_admin.retry_intelligence'), page: 'AdminIntRetryIntelligence' },
       { label: t('menu_admin.batch_processing'), page: 'AdminIntBatchProcessing' },
       { label: t('menu_admin.reconciliation'), page: 'AdminIntReconciliation' },
-      { label: '🌐 Open Finance Live Map', page: 'AdminIntOpenFinanceLiveMap' },
+      { label: 'Open Finance Live Map', page: 'AdminIntOpenFinanceLiveMap' },
       { label: t('menu.reports'), page: 'AdminIntTransactionReports' },
     ]
   },
@@ -432,10 +434,10 @@ const getAdminInternoMenuItems = (t) => [
     page: 'AdminIntFinancialDashboard',
     submenu: [
       { label: t('menu.dashboard'), page: 'AdminIntFinancialDashboard' },
-      { label: '✨ Receivables Ledger', page: 'AdminIntReceivablesLedger' },
-      { label: '✨ Ajustes Manuais', page: 'AdminIntManualAdjustments' },
-      { label: '✨ Reconciliation Hub', page: 'AdminIntReconciliationHub' },
-      { label: '✨ Settlement Forecasting', page: 'AdminIntSettlementForecasting' },
+      { label: 'Receivables Ledger', page: 'AdminIntReceivablesLedger' },
+      { label: 'Ajustes Manuais', page: 'AdminIntManualAdjustments' },
+      { label: 'Reconciliation Hub', page: 'AdminIntReconciliationHub' },
+      { label: 'Settlement Forecasting', page: 'AdminIntSettlementForecasting' },
       { label: t('menu_admin.financial_results'), page: 'AdminIntFinancialResults' },
       { label: t('menu_admin.client_profitability'), page: 'AdminIntClientProfitability' },
       { label: t('menu_admin.reconciliation'), page: 'AdminIntConciliation' },
@@ -454,8 +456,8 @@ const getAdminInternoMenuItems = (t) => [
     page: 'AdminIntRiskDashboard',
     submenu: [
       { label: t('menu_admin.risk_dashboard'), page: 'AdminIntRiskDashboard' },
-      { label: '✨ Fraud Anomaly Detector', page: 'AdminIntFraudAnomalyDetector' },
-      { label: '✨ Anti-Arbitrage Monitor', page: 'AdminIntAntiArbitrage' },
+      { label: 'Fraud Anomaly Detector', page: 'AdminIntFraudAnomalyDetector' },
+      { label: 'Anti-Arbitrage Monitor', page: 'AdminIntAntiArbitrage' },
       { label: t('menu_admin.fraud_monitoring'), page: 'AdminIntFraudMonitoring' },
       { label: t('menu.chargebacks'), page: 'AdminIntChargebacksList' },
       { label: t('menu.meds'), page: 'AdminIntMEDsList' },
@@ -507,8 +509,8 @@ const getAdminInternoMenuItems = (t) => [
       { label: t('menu.integrations'), page: 'AdminIntIntegrations' },
       { label: t('menu.templates'), page: 'AdminIntTemplates' },
       { label: t('menu_admin.system_logs'), page: 'AdminIntSystemLogs' },
-      { label: '✨ Audit Trail Enhanced', page: 'AdminIntAuditTrailEnhanced' },
-      { label: '✨ Webhook Replay', page: 'AdminIntWebhookReplay' },
+      { label: 'Audit Trail Enhanced', page: 'AdminIntAuditTrailEnhanced' },
+      { label: 'Webhook Replay', page: 'AdminIntWebhookReplay' },
       { label: t('menu_admin.mccs'), page: 'AdminIntMCCs' },
       { label: t('menu_admin.mcc_analysis'), page: 'AdminIntMCCsAnalysis' },
       { label: t('menu_admin.partners_costs'), page: 'AdminIntPartners' },
@@ -769,7 +771,7 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 left-0 z-50 h-full bg-[#002443] text-slate-300 transition-all duration-300 shadow-2xl border-r border-slate-800/50 dark:border-slate-700/30",
+        "fixed top-0 left-0 z-50 h-full bg-slate-900 text-slate-300 transition-all duration-300 shadow-xl border-r border-slate-800",
         sidebarOpen ? "w-64" : "w-20",
         mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
@@ -1032,12 +1034,12 @@ export default function Layout({ children, currentPageName }) {
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-50" />
                     )}
                     <div className={cn(
-                      "relative w-6 h-6 flex items-center justify-center rounded-lg transition-all duration-300 shadow-lg",
+                      "relative w-6 h-6 flex items-center justify-center rounded-lg transition-all duration-200",
                       isActivePage(agent.page) 
-                          ? "bg-gradient-to-br from-primary to-emerald-600 text-white shadow-primary/25" 
-                          : "bg-slate-800/50 text-slate-500 group-hover:bg-primary/20 group-hover:text-primary border border-slate-700/50 group-hover:border-primary/30"
+                          ? "bg-emerald-600 text-white" 
+                          : "bg-slate-800 text-slate-500 group-hover:bg-emerald-500/15 group-hover:text-emerald-400 border border-slate-700/50 group-hover:border-emerald-500/30"
                     )}>
-                       <Sparkles className="w-3.5 h-3.5" />
+                       <Bot className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 relative z-10">
                       <span className="font-medium block">{agent.label}</span>
@@ -1078,12 +1080,12 @@ export default function Layout({ children, currentPageName }) {
                       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-transparent opacity-50" />
                     )}
                     <div className={cn(
-                      "relative w-6 h-6 flex items-center justify-center rounded-lg transition-all duration-300 shadow-lg",
+                      "relative w-6 h-6 flex items-center justify-center rounded-lg transition-all duration-200",
                       isActivePage(agent.page) 
-                          ? "bg-gradient-to-br from-purple-500 to-indigo-600 text-white shadow-purple-500/25" 
-                          : "bg-slate-800/50 text-slate-500 group-hover:bg-purple-500/20 group-hover:text-purple-400 border border-slate-700/50 group-hover:border-purple-500/30"
+                          ? "bg-indigo-600 text-white" 
+                          : "bg-slate-800 text-slate-500 group-hover:bg-indigo-500/15 group-hover:text-indigo-400 border border-slate-700/50 group-hover:border-indigo-500/30"
                     )}>
-                       <Sparkles className="w-3.5 h-3.5" />
+                       <Cpu className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 relative z-10">
                       <span className="font-medium block">{agent.label}</span>
@@ -1101,7 +1103,7 @@ export default function Layout({ children, currentPageName }) {
 
           {/* User Profile */}
           {sidebarOpen && (
-            <div className="p-4 border-t border-slate-800/50 bg-[#001a33]">
+            <div className="p-4 border-t border-slate-800 bg-slate-950">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all duration-200 border border-transparent hover:border-slate-700/50 group">
@@ -1110,7 +1112,7 @@ export default function Layout({ children, currentPageName }) {
                           <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" />
                           <AvatarFallback className="bg-primary text-white font-bold">JD</AvatarFallback>
                       </Avatar>
-                      <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#2bc196] border-2 border-[#001a33] rounded-full"></span>
+                      <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-slate-950 rounded-full"></span>
                     </div>
                     <div className="flex-1 text-left overflow-hidden">
                       <p className="text-sm font-semibold text-slate-200 truncate group-hover:text-white transition-colors">João Silva</p>
