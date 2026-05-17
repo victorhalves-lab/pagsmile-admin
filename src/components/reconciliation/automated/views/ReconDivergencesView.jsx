@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
-import { Search, AlertTriangle } from 'lucide-react';
+import { Search, AlertTriangle, ChevronRight, Sparkles } from 'lucide-react';
 import { DIVERGENCES_LIST, DIVERGENCE_BUCKETS, fmtBRL } from '../mocks/reconciliationAutomatedMocks';
 
 const SEVERITY_META = {
-  critical: { label: 'Crítico', color: 'var(--sys-danger)' },
-  high: { label: 'Alto', color: 'var(--sys-danger)' },
-  medium: { label: 'Médio', color: 'var(--sys-warn)' },
-  low: { label: 'Baixo', color: 'var(--v8-fg-muted)' },
+  critical: { label: 'Crítico', color: '#B91C1C', bg: '#FEE2E2', accent: '#B91C1C' },
+  high:     { label: 'Alto',    color: '#B91C1C', bg: '#FEE2E2', accent: '#DC2626' },
+  medium:   { label: 'Médio',   color: '#B45309', bg: '#FEF3C7', accent: '#D97706' },
+  low:      { label: 'Baixo',   color: '#64748B', bg: '#F4F4F4', accent: '#94A3B8' },
 };
 
 const STATUS_META = {
-  detected: { label: 'Detectada', color: 'var(--sys-warn)' },
-  investigating: { label: 'Investigando', color: 'var(--pag-blue-700)' },
-  proposed: { label: 'Pronta', color: 'var(--pag-mint-700)' },
-  resolved: { label: 'Resolvida', color: 'var(--pag-mint-500)' },
+  detected:      { label: 'Detectada',    color: '#B45309', bg: '#FEF3C7' },
+  investigating: { label: 'Investigando', color: '#002443', bg: '#E6ECF2' },
+  proposed:      { label: 'Pronta',       color: '#007A5C', bg: '#E0F8F1' },
+  resolved:      { label: 'Resolvida',    color: '#007A5C', bg: '#E0F8F1' },
+};
+
+const ACTION_META = {
+  contest:  { label: 'Contestar', color: '#fff', bg: 'linear-gradient(180deg, #1ECB9D 0%, #00C194 100%)' },
+  escalate: { label: 'Escalar',   color: '#fff', bg: 'linear-gradient(180deg, #DC2626 0%, #B91C1C 100%)' },
+  adjust:   { label: 'Ajustar',   color: '#fff', bg: 'linear-gradient(180deg, #013766 0%, #002443 100%)' },
 };
 
 export default function ReconDivergencesView() {
@@ -27,27 +33,41 @@ export default function ReconDivergencesView() {
   });
 
   return (
-    <div className="v8-card" style={{ padding: 0, overflow: 'hidden' }}>
+    <div style={{
+      background: '#FFFFFF',
+      border: '1px solid #E2E8F0',
+      borderRadius: 16,
+      overflow: 'hidden',
+      boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06)',
+    }}>
+      {/* Header */}
       <div style={{
-        padding: '14px 18px',
-        borderBottom: '1px solid var(--v8-bd-default)',
-        background: 'var(--v8-bg-surface-2)',
+        padding: '16px 18px',
+        background: 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)',
+        borderBottom: '1px solid #E2E8F0',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 14 }}>
           <div>
-            <span className="v8-eyebrow">DIVERGÊNCIAS DETECTADAS</span>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--v8-fg-strong)', marginTop: 2 }}>
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+              fontWeight: 700, letterSpacing: '0.16em',
+              textTransform: 'uppercase', color: '#007A5C',
+            }}>
+              DIVERGÊNCIAS DETECTADAS
+            </span>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#0F172A', marginTop: 4, letterSpacing: '-0.012em' }}>
               {filtered.length} de {DIVERGENCES_LIST.length} casos
             </div>
           </div>
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            height: 32, padding: '0 10px',
-            background: 'var(--v8-bg-surface)',
-            border: '1px solid var(--v8-bd-default)',
-            borderRadius: 8, width: 260,
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            height: 36, padding: '0 12px',
+            background: '#FFFFFF',
+            border: '1px solid #E2E8F0',
+            borderRadius: 10, width: 280,
+            transition: 'border-color .14s, box-shadow .14s',
           }}>
-            <Search size={13} style={{ color: 'var(--v8-fg-muted)' }} />
+            <Search size={14} style={{ color: '#94A3B8' }} />
             <input
               type="text"
               value={search}
@@ -55,67 +75,176 @@ export default function ReconDivergencesView() {
               placeholder="Buscar por ID ou transação..."
               style={{
                 flex: 1, border: 'none', outline: 'none', background: 'transparent',
-                fontSize: 12, color: 'var(--v8-fg-strong)',
+                fontSize: 12, color: '#0F172A',
+                fontFamily: 'Inter, sans-serif',
               }}
             />
           </div>
         </div>
 
+        {/* Filter pills */}
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           <button
             type="button" onClick={() => setFilter('all')}
-            className={filter === 'all' ? 'v8-pill v8-pill--brand' : 'v8-pill v8-pill--neutral'}
-            style={{ cursor: 'pointer', border: 'none', height: 26, fontSize: 11 }}
+            style={{
+              padding: '6px 12px', borderRadius: 999,
+              fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 700,
+              cursor: 'pointer',
+              background: filter === 'all' ? 'linear-gradient(180deg, #1ECB9D 0%, #00C194 100%)' : '#FFFFFF',
+              color: filter === 'all' ? '#fff' : '#475569',
+              border: filter === 'all' ? '1px solid #00C194' : '1px solid #E2E8F0',
+              boxShadow: filter === 'all' ? '0 2px 6px -1px rgba(0,193,148,0.32)' : 'none',
+            }}
           >Todos</button>
-          {DIVERGENCE_BUCKETS.map(b => (
-            <button
-              key={b.id}
-              type="button" onClick={() => setFilter(b.id)}
-              className={filter === b.id ? 'v8-pill v8-pill--brand' : 'v8-pill v8-pill--neutral'}
-              style={{ cursor: 'pointer', border: 'none', height: 26, fontSize: 11 }}
-            >
-              {b.code} · {b.label}
-            </button>
-          ))}
+          {DIVERGENCE_BUCKETS.map(b => {
+            const isActive = filter === b.id;
+            return (
+              <button
+                key={b.id}
+                type="button" onClick={() => setFilter(b.id)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '6px 12px', borderRadius: 999,
+                  fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 700,
+                  cursor: 'pointer',
+                  background: isActive ? 'linear-gradient(180deg, #1ECB9D 0%, #00C194 100%)' : '#FFFFFF',
+                  color: isActive ? '#fff' : '#475569',
+                  border: isActive ? '1px solid #00C194' : '1px solid #E2E8F0',
+                  boxShadow: isActive ? '0 2px 6px -1px rgba(0,193,148,0.32)' : 'none',
+                }}
+              >
+                <code style={{
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: 9.5, fontWeight: 800,
+                  padding: '1px 5px', borderRadius: 3,
+                  background: isActive ? 'rgba(255,255,255,0.25)' : '#F1F5F9',
+                  color: isActive ? '#fff' : '#475569',
+                  letterSpacing: '0.04em',
+                }}>{b.code}</code>
+                {b.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
+      {/* Lista de divergências */}
       <div>
-        {filtered.map(d => {
+        {filtered.map((d, idx) => {
           const sev = SEVERITY_META[d.severity];
           const st = STATUS_META[d.status];
+          const isLast = idx === filtered.length - 1;
+          const action = ACTION_META[d.proposed_action];
+
           return (
             <div key={d.id} style={{
-              padding: '14px 18px',
-              borderBottom: '1px solid var(--v8-bd-subtle)',
-              borderLeft: `3px solid ${sev.color}`,
-              display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
-            }}>
-              <AlertTriangle size={16} style={{ color: sev.color, flexShrink: 0 }} />
-              <div style={{ minWidth: 200 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--v8-fg-strong)', fontFamily: 'JetBrains Mono, monospace' }}>
+              padding: '16px 18px',
+              borderBottom: isLast ? 'none' : '1px solid #F1F5F9',
+              borderLeft: `3px solid ${sev.accent}`,
+              display: 'grid',
+              gridTemplateColumns: '40px minmax(180px, 1fr) minmax(240px, 2fr) auto auto 16px',
+              gap: 16, alignItems: 'center',
+              transition: 'background .14s',
+              cursor: 'pointer',
+            }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#F8FAFC'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+            >
+              {/* Icon */}
+              <div style={{
+                width: 40, height: 40, borderRadius: 12,
+                background: sev.bg, color: sev.color,
+                display: 'grid', placeItems: 'center', flexShrink: 0,
+              }}>
+                <AlertTriangle size={17} strokeWidth={2} />
+              </div>
+
+              {/* IDs + status pill */}
+              <div style={{ minWidth: 0 }}>
+                <div style={{
+                  fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 800,
+                  color: '#0F172A', letterSpacing: '-0.01em',
+                }}>
                   {d.id}
                 </div>
-                <div style={{ fontSize: 10, color: 'var(--v8-fg-muted)', marginTop: 2, fontFamily: 'JetBrains Mono, monospace' }}>
-                  {d.transaction_id} · {d.acquirer}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
+                  <span style={{
+                    fontFamily: 'JetBrains Mono, monospace', fontSize: 10.5,
+                    color: '#64748B',
+                  }}>{d.transaction_id}</span>
+                  <span style={{ fontSize: 10, color: '#CBD5E1' }}>·</span>
+                  <span style={{
+                    fontSize: 11, fontWeight: 700, color: '#0F172A',
+                  }}>{d.acquirer}</span>
                 </div>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  marginTop: 6,
+                  padding: '2px 8px', borderRadius: 999,
+                  background: st.bg, color: st.color,
+                  fontSize: 10, fontWeight: 700,
+                  textTransform: 'uppercase', letterSpacing: '0.08em',
+                  border: `1px solid ${st.color}33`,
+                }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: st.color }} />
+                  {st.label}
+                </span>
               </div>
-              <div style={{ flex: 1, minWidth: 240, fontSize: 12, color: 'var(--v8-fg-default)' }}>
+
+              {/* Root cause */}
+              <div style={{
+                fontSize: 12.5, color: '#1E293B',
+                lineHeight: 1.5, padding: '8px 12px',
+                background: '#F8FAFC',
+                borderRadius: 10,
+                border: '1px solid #E2E8F0',
+                position: 'relative',
+              }}>
+                <div style={{
+                  fontFamily: 'JetBrains Mono, monospace', fontSize: 9, fontWeight: 700,
+                  textTransform: 'uppercase', letterSpacing: '0.14em',
+                  color: '#007A5C', marginBottom: 4,
+                  display: 'flex', alignItems: 'center', gap: 4,
+                }}>
+                  <Sparkles size={9} strokeWidth={2.5} />
+                  CAUSA RAIZ · {d.agent_confidence}% CONFIANÇA
+                </div>
                 {d.root_cause}
               </div>
-              <div style={{ textAlign: 'right' }} className="v8-num">
-                <div style={{ fontSize: 14, fontWeight: 700, color: d.delta < 0 ? 'var(--sys-danger)' : 'var(--pag-mint-700)' }}>
+
+              {/* Delta */}
+              <div style={{ textAlign: 'right' }}>
+                <div style={{
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: 16, fontWeight: 800,
+                  color: d.delta < 0 ? '#B91C1C' : d.delta === 0 ? '#64748B' : '#007A5C',
+                  fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em',
+                }}>
                   {d.delta > 0 ? '+' : ''}{fmtBRL(d.delta)}
                 </div>
-                <div style={{ fontSize: 10, color: 'var(--v8-fg-subtle)' }}>diferença</div>
+                <div style={{
+                  fontSize: 10, color: '#94A3B8', marginTop: 2,
+                  textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600,
+                }}>diferença</div>
               </div>
-              <span style={{
-                padding: '2px 8px', borderRadius: 999,
-                background: 'var(--v8-bg-surface-2)',
-                border: `1px solid ${st.color}40`,
-                fontSize: 10, fontWeight: 700, color: st.color,
-                textTransform: 'uppercase', letterSpacing: '0.08em',
-              }}>{st.label}</span>
+
+              {/* Ação proposta */}
+              <div>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center',
+                  padding: '6px 12px', borderRadius: 8,
+                  background: action.bg,
+                  color: action.color,
+                  fontSize: 11, fontWeight: 700,
+                  letterSpacing: '0.02em',
+                  boxShadow: '0 2px 6px -1px rgba(0,0,0,0.15)',
+                  whiteSpace: 'nowrap',
+                }}>
+                  {action.label}
+                </span>
+              </div>
+
+              <ChevronRight size={16} strokeWidth={2} style={{ color: '#94A3B8' }} />
             </div>
           );
         })}
