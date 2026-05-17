@@ -44,14 +44,60 @@ export default function MyReconciliationAutomated() {
         minHeight: '100vh',
       }}
     >
+      {/* Bloco 1 · Resumo executivo (sempre visível) */}
       <ReconHeaderV8 active={agentActive} onToggle={() => setAgentActive(v => !v)} />
       <ReconKpiGridV8 />
       <ThreeWayDiagramV8 />
-      <DivergenceBucketMatrix onSelect={setSelectedBucket} />
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      {/* Bloco 2 · Sub-abas + matriz dentro de uma section V8 */}
+      <div style={{
+        background: '#FFFFFF',
+        border: '1px solid #E2E8F0',
+        borderRadius: 16,
+        padding: 20,
+        boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06)',
+      }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: 12, flexWrap: 'wrap',
+          paddingBottom: 14, marginBottom: 14,
+          borderBottom: '1px solid #EDEDED',
+        }}>
+          <div>
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+              fontWeight: 700, letterSpacing: '0.16em',
+              textTransform: 'uppercase', color: '#007A5C',
+            }}>
+              DETALHAMENTO DA CONCILIAÇÃO
+            </span>
+            <div style={{
+              marginTop: 4, fontSize: 16, fontWeight: 700,
+              letterSpacing: '-0.018em', color: '#0F172A',
+            }}>
+              Explore arquivos, divergências, ajustes e cronograma
+            </div>
+          </div>
+          <span style={{
+            fontFamily: 'JetBrains Mono, monospace', fontSize: 10.5,
+            fontWeight: 600, color: '#64748B',
+            letterSpacing: '0.04em', textTransform: 'uppercase',
+          }}>
+            6 modos · {subTab.replace('_', ' ')}
+          </span>
+        </div>
+
         <ReconSubTabs value={subTab} onChange={setSubTab} />
-        {renderSubTab()}
+
+        <div style={{ marginTop: 16 }}>
+          {renderSubTab()}
+        </div>
+
+        {subTab === 'overview' && (
+          <div style={{ marginTop: 18 }}>
+            <DivergenceBucketMatrix onSelect={setSelectedBucket} />
+          </div>
+        )}
       </div>
 
       {selectedBucket && (

@@ -10,45 +10,54 @@ const TABS = [
   { id: 'how', label: 'Como funciona', icon: HelpCircle },
 ];
 
+/**
+ * Tabs V8 oficial — underline mint estilo .s-tabs do V8 standalone.
+ */
 export default function ReconSubTabs({ value, onChange }) {
   return (
     <div style={{
-      display: 'flex', gap: 4, padding: 6,
-      background: 'var(--v8-bg-surface-2)',
-      border: '1px solid var(--v8-bd-default)',
-      borderRadius: 12,
-      overflowX: 'auto',
+      display: 'flex', gap: 4, alignItems: 'center',
+      borderBottom: '1px solid #E2E8F0',
+      flexWrap: 'wrap',
+      marginBottom: 4,
     }}>
       {TABS.map(t => {
         const Icon = t.icon;
-        const isActive = value === t.id;
+        const active = value === t.id;
+        const accentColor = t.accent ? '#B45309' : '#00C194';
         return (
           <button
             key={t.id}
             type="button"
             onClick={() => onChange(t.id)}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 7,
-              height: 34, padding: '0 14px',
-              background: isActive ? 'var(--v8-bg-surface)' : 'transparent',
-              border: isActive ? '1px solid var(--v8-bd-default)' : '1px solid transparent',
-              borderRadius: 8,
-              fontFamily: 'Inter, sans-serif', fontSize: 12,
-              fontWeight: isActive ? 700 : 500,
-              color: isActive ? 'var(--v8-fg-strong)' : 'var(--v8-fg-muted)',
-              cursor: 'pointer', whiteSpace: 'nowrap',
-              boxShadow: isActive ? 'var(--sh-xs)' : 'none',
-              transition: 'all .14s var(--ease-out)',
+              padding: '10px 14px',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 12.5,
+              fontWeight: active ? 700 : 600,
+              color: active ? '#0F172A' : '#64748B',
+              borderBottom: `2px solid ${active ? accentColor : 'transparent'}`,
+              borderTop: 0, borderLeft: 0, borderRight: 0,
+              background: 'transparent',
+              cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              marginBottom: -1,
+              transition: 'color .14s, border-color .14s',
+              whiteSpace: 'nowrap',
             }}
+            onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = '#1E293B'; }}
+            onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = '#64748B'; }}
           >
-            <Icon size={13} strokeWidth={isActive ? 2.2 : 1.8} />
-            {t.label}
+            <Icon size={14} strokeWidth={active ? 2.2 : 1.8} />
+            <span>{t.label}</span>
             {t.badge != null && (
               <span style={{
-                fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fontWeight: 700,
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: 10, fontWeight: 700,
                 padding: '1px 6px', borderRadius: 999,
-                background: t.accent ? 'var(--sys-danger)' : 'var(--pag-mint-500)',
-                color: '#fff', minWidth: 18, textAlign: 'center',
+                background: active ? accentColor : '#EDEDED',
+                color: active ? '#FFFFFF' : '#64748B',
+                minWidth: 18, textAlign: 'center',
               }}>{t.badge}</span>
             )}
           </button>
