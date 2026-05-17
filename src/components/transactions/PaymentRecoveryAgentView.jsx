@@ -62,15 +62,41 @@ export default function PaymentRecoveryAgentView() {
       <BeforeAfterV8 />
 
       {/* Bloco 2 · Sub-abas + matriz dentro de uma section V8 */}
-      <div className="v8-section" style={{ padding: 18 }}>
-        <div className="v8-section__head">
+      <div style={{
+        background: '#FFFFFF',
+        border: '1px solid #E2E8F0',
+        borderRadius: 16,
+        padding: 20,
+        boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06)',
+      }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: 12, flexWrap: 'wrap',
+          paddingBottom: 14, marginBottom: 14,
+          borderBottom: '1px solid #EDEDED',
+        }}>
           <div>
-            <span className="v8-eyebrow">DETALHAMENTO POR CANAL E ESTRATÉGIA</span>
-            <div className="v8-section__title" style={{ marginTop: 4 }}>
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+              fontWeight: 700, letterSpacing: '0.16em',
+              textTransform: 'uppercase', color: '#007A5C',
+            }}>
+              DETALHAMENTO POR CANAL E ESTRATÉGIA
+            </span>
+            <div style={{
+              marginTop: 4, fontSize: 16, fontWeight: 700,
+              letterSpacing: '-0.018em', color: '#0F172A',
+            }}>
               Explore como o agente atua em cada frente
             </div>
           </div>
-          <span className="v8-section__meta">7 modos · {subTab.replace('_', ' ')}</span>
+          <span style={{
+            fontFamily: 'JetBrains Mono, monospace', fontSize: 10.5,
+            fontWeight: 600, color: '#64748B',
+            letterSpacing: '0.04em', textTransform: 'uppercase',
+          }}>
+            7 modos · {subTab.replace('_', ' ')}
+          </span>
         </div>
 
         <RecoverySubTabs value={subTab} onChange={setSubTab} />

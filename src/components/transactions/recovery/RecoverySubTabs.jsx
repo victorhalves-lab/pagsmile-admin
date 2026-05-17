@@ -15,22 +15,55 @@ const TABS = [
 ];
 
 /**
- * Tabs V8 oficial — usa .v8-tabs + .v8-tab (underline mint).
+ * Tabs V8 oficial — underline mint estilo .s-tabs do standalone, com inline styles.
  */
 export default function RecoverySubTabs({ value, onChange }) {
   return (
-    <div className="v8-tabs">
+    <div style={{
+      display: 'flex', gap: 4, alignItems: 'center',
+      borderBottom: '1px solid #E2E8F0',
+      flexWrap: 'wrap',
+      marginBottom: 4,
+    }}>
       {TABS.map(t => {
         const Icon = t.icon;
         const active = value === t.id;
-        const cls = ['v8-tab'];
-        if (active) cls.push('v8-tab--active');
-        if (t.accent) cls.push('v8-tab--accent');
+        const accentColor = t.accent ? '#15C79A' : '#00C194';
         return (
-          <button key={t.id} type="button" className={cls.join(' ')} onClick={() => onChange(t.id)}>
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => onChange(t.id)}
+            style={{
+              padding: '10px 14px',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 12.5,
+              fontWeight: active ? 700 : 600,
+              color: active ? '#0F172A' : '#64748B',
+              borderBottom: `2px solid ${active ? accentColor : 'transparent'}`,
+              borderTop: 0, borderLeft: 0, borderRight: 0,
+              background: 'transparent',
+              cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              marginBottom: -1,
+              transition: 'color .14s, border-color .14s',
+              whiteSpace: 'nowrap',
+            }}
+            onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = '#1E293B'; }}
+            onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = '#64748B'; }}
+          >
             <Icon size={14} strokeWidth={active ? 2.2 : 1.8} />
             <span>{t.label}</span>
-            {t.badge != null && <span className="v8-tab__badge">{t.badge}</span>}
+            {t.badge != null && (
+              <span style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: 10, fontWeight: 700,
+                padding: '1px 6px', borderRadius: 999,
+                background: active ? '#00C194' : '#EDEDED',
+                color: active ? '#FFFFFF' : '#64748B',
+                minWidth: 18, textAlign: 'center',
+              }}>{t.badge}</span>
+            )}
           </button>
         );
       })}
