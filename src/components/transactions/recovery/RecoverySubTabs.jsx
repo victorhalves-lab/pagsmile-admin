@@ -1,13 +1,14 @@
 import React from 'react';
 import {
-  BarChart3, ListChecks, MessageSquare, Phone, Mail, Zap, Beaker,
+  BarChart3, ListChecks, MessageSquare, Phone, Mail, Zap, Beaker, Play,
 } from 'lucide-react';
 
 const TABS = [
   { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+  { id: 'simulator', label: 'Simulador', icon: Play, accent: true },
   { id: 'queue', label: 'Fila ao vivo', icon: ListChecks, badge: 67 },
   { id: 'whatsapp', label: 'WhatsApp', icon: MessageSquare },
-  { id: 'phone', label: 'Telefone', icon: Phone, accent: true },
+  { id: 'phone', label: 'Telefone', icon: Phone },
   { id: 'email_sms', label: 'E-mail / SMS', icon: Mail },
   { id: 'auto_retry', label: 'Auto-retry', icon: Zap },
   { id: 'ab_tests', label: 'A/B Tests', icon: Beaker, badge: 3 },

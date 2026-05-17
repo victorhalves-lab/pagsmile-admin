@@ -6,12 +6,14 @@ import DeclineReasonMatrix from './recovery/DeclineReasonMatrix';
 import DeclineReasonDrawer from './recovery/DeclineReasonDrawer';
 import RecoverySubTabs from './recovery/RecoverySubTabs';
 import RecoveryDashboardView from './recovery/views/RecoveryDashboardView';
+import RecoverySimulatorView from './recovery/views/RecoverySimulatorView';
 import RecoveryLiveQueueView from './recovery/views/RecoveryLiveQueueView';
 import RecoveryWhatsAppView from './recovery/views/RecoveryWhatsAppView';
 import RecoveryPhoneView from './recovery/views/RecoveryPhoneView';
 import RecoveryEmailSmsView from './recovery/views/RecoveryEmailSmsView';
 import RecoveryAutoRetryView from './recovery/views/RecoveryAutoRetryView';
 import RecoveryABTestsView from './recovery/views/RecoveryABTestsView';
+import SalesRecoveryTemplates from './recovery/SalesRecoveryTemplates';
 
 /**
  * Payment Recovery Agent View · V8
@@ -26,8 +28,14 @@ export default function PaymentRecoveryAgentView() {
   const renderSubTab = () => {
     switch (subTab) {
       case 'dashboard': return <RecoveryDashboardView />;
+      case 'simulator': return <RecoverySimulatorView />;
       case 'queue': return <RecoveryLiveQueueView />;
-      case 'whatsapp': return <RecoveryWhatsAppView />;
+      case 'whatsapp': return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <RecoveryWhatsAppView />
+          <SalesRecoveryTemplates />
+        </div>
+      );
       case 'phone': return <RecoveryPhoneView />;
       case 'email_sms': return <RecoveryEmailSmsView />;
       case 'auto_retry': return <RecoveryAutoRetryView />;
