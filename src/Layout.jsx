@@ -92,6 +92,7 @@ const getAdminSubMenuItems = (t) => [
       { label: 'PIX Automático', page: 'PixMandateHealth' },
       { label: 'PIX Biometria', page: 'PixBiometricInsights' },
       { label: t('menu.decline_analysis'), page: 'DeclineAnalysis' },
+      { label: 'Recovery Agent', page: 'RecoveryAgent' },
     ]
   },
   {
