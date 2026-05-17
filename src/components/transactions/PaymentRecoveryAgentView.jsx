@@ -61,37 +61,26 @@ export default function PaymentRecoveryAgentView() {
       <RecoveryKpiGridV8 />
       <BeforeAfterV8 />
 
-      {/* Bloco 2 · Sub-abas em destaque + matriz como conteúdo da Dashboard */}
-      <div style={{
-        display: 'flex', flexDirection: 'column', gap: 14,
-        background: 'var(--v8-bg-surface)',
-        border: '1px solid var(--v8-bd-default)',
-        borderRadius: 'var(--r-lg)',
-        padding: 16,
-        boxShadow: 'var(--sh-sm)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+      {/* Bloco 2 · Sub-abas + matriz dentro de uma section V8 */}
+      <div className="v8-section" style={{ padding: 18 }}>
+        <div className="v8-section__head">
           <div>
             <span className="v8-eyebrow">DETALHAMENTO POR CANAL E ESTRATÉGIA</span>
-            <h2 style={{
-              fontSize: 18, fontWeight: 700, color: 'var(--v8-fg-strong)',
-              letterSpacing: 'var(--tr-tight)', margin: '4px 0 0',
-            }}>
+            <div className="v8-section__title" style={{ marginTop: 4 }}>
               Explore como o agente atua em cada frente
-            </h2>
+            </div>
           </div>
+          <span className="v8-section__meta">7 modos · {subTab.replace('_', ' ')}</span>
         </div>
 
         <RecoverySubTabs value={subTab} onChange={setSubTab} />
 
-        {/* Conteúdo da sub-aba ativa */}
-        <div style={{ paddingTop: 4 }}>
+        <div style={{ marginTop: 16 }}>
           {renderSubTab()}
         </div>
 
-        {/* Matriz aparece dentro da aba Dashboard como contexto principal */}
         {subTab === 'dashboard' && (
-          <div style={{ marginTop: 6 }}>
+          <div style={{ marginTop: 18 }}>
             <DeclineReasonMatrix onSelect={setSelectedReason} />
           </div>
         )}
