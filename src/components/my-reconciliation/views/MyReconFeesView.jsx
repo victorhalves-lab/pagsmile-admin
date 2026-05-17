@@ -139,7 +139,7 @@ export default function MyReconFeesView() {
                     color: t.delta === 0 ? '#94A3B8' : t.delta > 0 ? '#B91C1C' : '#007A5C',
                     fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.018em',
                   }}>
-                    {t.delta === 0 ? '—' : `${t.delta > 0 ? '+' : ''}${fmtBRL(t.delta)}`}
+                    {t.delta === 0 ? '-' : `${t.delta > 0 ? '+' : ''}${fmtBRL(t.delta)}`}
                   </div>
                   <div style={{
                     fontFamily: 'JetBrains Mono, monospace', fontSize: 9.5, fontWeight: 700,

@@ -117,7 +117,7 @@ export default function MyReconSettlementsView() {
                     fontFamily: 'Inter, sans-serif', fontSize: 17, fontWeight: 800,
                     color: l.valor_realizado > 0 ? '#0F172A' : '#CBD5E1',
                     letterSpacing: '-0.018em', fontVariantNumeric: 'tabular-nums',
-                  }}>{l.valor_realizado > 0 ? fmtBRLShort(l.valor_realizado) : '—'}</div>
+                  }}>{l.valor_realizado > 0 ? fmtBRLShort(l.valor_realizado) : '-'}</div>
                 </div>
               </div>
             );

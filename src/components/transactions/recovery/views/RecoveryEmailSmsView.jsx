@@ -143,7 +143,7 @@ export default function RecoveryEmailSmsView() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <RecommendationItem
               icon={Mail} accent="#5CF7CF"
-              text={<><strong style={{ color: '#fff' }}>E-mail</strong> é ideal para <strong style={{ color: '#5CF7CF' }}>cartão vencido</strong> e <strong style={{ color: '#5CF7CF' }}>3DS falhou</strong> — conteúdo longo, link com atualização de dados.</>}
+              text={<><strong style={{ color: '#fff' }}>E-mail</strong> é ideal para <strong style={{ color: '#5CF7CF' }}>cartão vencido</strong> e <strong style={{ color: '#5CF7CF' }}>3DS falhou</strong>. Conteúdo longo, link com atualização de dados.</>}
             />
             <RecommendationItem
               icon={Smartphone} accent="#F59E0B"

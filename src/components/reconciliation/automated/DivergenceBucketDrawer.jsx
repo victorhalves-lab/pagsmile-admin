@@ -150,7 +150,7 @@ export default function DivergenceBucketDrawer({ bucket, onClose }) {
                       Recebido
                     </div>
                     <div className="v8-num" style={{ fontSize: 13, fontWeight: 700, color: 'var(--v8-fg-strong)', marginTop: 2 }}>
-                      {item.received_value !== null ? fmtBRL(item.received_value) : '— ausente —'}
+                      {item.received_value !== null ? fmtBRL(item.received_value) : 'ausente'}
                     </div>
                   </div>
                   <div style={{

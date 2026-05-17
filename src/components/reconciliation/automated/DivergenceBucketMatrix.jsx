@@ -53,7 +53,7 @@ export default function DivergenceBucketMatrix({ onSelect }) {
             letterSpacing: '-0.018em', marginTop: 4, margin: 0,
             lineHeight: 1.3,
           }}>
-            Onde está o seu dinheiro pendente — classificado por causa raiz
+            Onde está o seu dinheiro pendente, classificado por causa raiz
           </h3>
         </div>
         <div style={{ display: 'flex', gap: 16, fontSize: 12, alignItems: 'center' }}>

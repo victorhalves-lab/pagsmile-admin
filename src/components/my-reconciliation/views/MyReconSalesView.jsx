@@ -143,10 +143,10 @@ export default function MyReconSalesView() {
               return (
                 <tr key={v.id} style={{ borderBottom: idx === filtered.length - 1 ? 'none' : '1px solid #F1F5F9' }}>
                   <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 700, color: v.erp_order ? '#0F172A' : '#CBD5E1' }}>
-                    {v.erp_order || '—'}
+                    {v.erp_order || '-'}
                   </td>
                   <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 700, color: v.pagsmile_tx ? '#0F172A' : '#CBD5E1' }}>
-                    {v.pagsmile_tx || '—'}
+                    {v.pagsmile_tx || '-'}
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{
@@ -157,13 +157,13 @@ export default function MyReconSalesView() {
                     }}>{method.label}</span>
                   </td>
                   <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 700, color: v.erp_value !== null ? '#0F172A' : '#CBD5E1', fontVariantNumeric: 'tabular-nums' }}>
-                    {v.erp_value !== null ? fmtBRL(v.erp_value) : '—'}
+                    {v.erp_value !== null ? fmtBRL(v.erp_value) : '-'}
                   </td>
                   <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 700, color: v.pagsmile_value !== null ? '#0F172A' : '#CBD5E1', fontVariantNumeric: 'tabular-nums' }}>
-                    {v.pagsmile_value !== null ? fmtBRL(v.pagsmile_value) : '—'}
+                    {v.pagsmile_value !== null ? fmtBRL(v.pagsmile_value) : '-'}
                   </td>
                   <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 800, fontVariantNumeric: 'tabular-nums', color: v.delta === 0 ? '#94A3B8' : v.delta < 0 ? '#B91C1C' : '#007A5C' }}>
-                    {v.delta === 0 ? '—' : `${v.delta > 0 ? '+' : ''}${fmtBRL(v.delta)}`}
+                    {v.delta === 0 ? '-' : `${v.delta > 0 ? '+' : ''}${fmtBRL(v.delta)}`}
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{

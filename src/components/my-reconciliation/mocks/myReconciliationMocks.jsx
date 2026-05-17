@@ -5,7 +5,7 @@
  * Não existe "adquirente externo" aqui. Tudo é:
  *   Lado A (ERP / pedidos do merchant)  vs.  Lado B (PagSmile)
  *
- * Sem travessões (proibidos em todo o admin).
+ * Sem travessoes (proibidos em todo o admin).
  */
 
 export const KPI_PERIODO = {

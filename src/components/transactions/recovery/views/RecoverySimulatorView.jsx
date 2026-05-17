@@ -100,7 +100,7 @@ const LIVE_EVENTS_POOL = [
   { customer: 'João S.', amount: 289, scenario: 'Saldo insuf.', action: 'PIX oferecido via WhatsApp', status: 'pending' },
   { customer: 'Maria L.', amount: 450, scenario: 'Limite', action: 'Parcelamento aceito', status: 'recovered' },
   { customer: 'Carlos M.', amount: 178, scenario: 'CVV inválido', action: 'Reenvio WhatsApp', status: 'pending' },
-  { customer: 'Ana P.', amount: 890, scenario: 'Timeout', action: 'Auto-retry sucesso', status: 'recovered' },
+  { customer: 'Ana P.', amount: 890, scenario: 'Timeout', action: 'Auto retry sucesso', status: 'recovered' },
   { customer: 'Pedro R.', amount: 345, scenario: 'PIX pendente', action: 'Lembrete enviado', status: 'pending' },
   { customer: 'Beatriz O.', amount: 1240, scenario: 'Antifraude', action: 'Ligação humana convertida', status: 'recovered' },
 ];

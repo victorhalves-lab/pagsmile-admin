@@ -31,7 +31,7 @@ const TEMPLATES = [
     successRate: 51,
     title: 'Dados do cartão incorretos',
     body:
-      'Oi, {{customer_name}}! Não conseguimos concluir sua compra de {{amount}} — parece que algum dado do cartão estava errado ' +
+      'Oi, {{customer_name}}! Não conseguimos concluir sua compra de {{amount}}. Parece que algum dado do cartão estava errado ' +
       '(número, validade ou nome). Toque aqui para revisar e finalizar: {{retry_link}}',
     cta: 'Corrigir dados',
   },
@@ -41,9 +41,9 @@ const TEMPLATES = [
     code: '51',
     channel: 'whatsapp',
     successRate: 64,
-    title: 'Saldo insuficiente — oferecer PIX',
+    title: 'Saldo insuficiente, oferecer PIX',
     body:
-      'Olá, {{customer_name}}! Seu cartão não tinha limite/saldo disponível para {{amount}}. ' +
+      'Olá, {{customer_name}}! Seu cartão não tinha limite ou saldo disponível para {{amount}}. ' +
       'Que tal pagar via PIX? É instantâneo e o desconto continua válido. 📲 QR Code aqui: {{pix_qr_link}}',
     cta: 'Pagar com PIX',
     highlight: true,
@@ -54,7 +54,7 @@ const TEMPLATES = [
     code: '61',
     channel: 'whatsapp',
     successRate: 49,
-    title: 'Limite estourou — parcelar ou PIX',
+    title: 'Limite estourou, parcelar ou PIX',
     body:
       '{{customer_name}}, o limite do cartão não foi suficiente. Posso dividir em mais parcelas ou você prefere pagar via PIX à vista? ' +
       'Parcelar: {{installments_link}} · PIX: {{pix_qr_link}}',
@@ -66,10 +66,10 @@ const TEMPLATES = [
     code: '91',
     channel: 'auto_retry',
     successRate: 72,
-    title: 'Falha técnica — retry automático',
+    title: 'Falha técnica, retry automático',
     body:
       '[Automático] Banco não respondeu a tempo. Repetir transação em 2h pelo roteador alternativo. ' +
-      'Cliente não recebe mensagem — agente apenas reprocessa silenciosamente.',
+      'Cliente não recebe mensagem. Agente apenas reprocessa silenciosamente.',
     cta: 'Reprocessar agora',
   },
   {
@@ -78,7 +78,7 @@ const TEMPLATES = [
     code: 'FR',
     channel: 'phone',
     successRate: 38,
-    title: 'Ligação humana — antifraude',
+    title: 'Ligação humana, antifraude',
     body:
       'Script da ligação: "Olá {{customer_name}}, aqui é da {{merchant_name}}. Detectamos uma compra recusada pelo seu banco por segurança. ' +
       'Você reconhece essa tentativa? Posso te ajudar a finalizar agora?"',
@@ -90,7 +90,7 @@ const TEMPLATES = [
     code: '54',
     channel: 'email',
     successRate: 44,
-    title: 'Cartão vencido — usar outro',
+    title: 'Cartão vencido, usar outro',
     body:
       'Olá, {{customer_name}}. Seu cartão terminado em ****{{last4}} está vencido. ' +
       'Atualize com um cartão novo ou pague via PIX neste link: {{retry_link}}',
@@ -102,10 +102,10 @@ const TEMPLATES = [
     code: '05',
     channel: 'whatsapp',
     successRate: 41,
-    title: 'Emissor recusou — sugerir outro método',
+    title: 'Emissor recusou, sugerir outro método',
     body:
       'Oi {{customer_name}}, seu banco não autorizou a compra de {{amount}} (sem motivo específico). ' +
-      'Recomendamos tentar outro cartão ou pagar com PIX — vai cair na hora: {{pix_qr_link}}',
+      'Recomendamos tentar outro cartão ou pagar com PIX. Vai cair na hora: {{pix_qr_link}}',
     cta: 'Outro método',
   },
 ];
@@ -138,7 +138,7 @@ export default function SalesRecoveryTemplates() {
               Templates do Sales Recovery
             </h3>
             <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-slate-500 mt-0.5">
-              Mensagens que a IA envia · WhatsApp · ligação · e-mail · auto-retry
+              Mensagens que a IA envia · WhatsApp · ligação · e-mail · auto retry
             </p>
           </div>
         </div>

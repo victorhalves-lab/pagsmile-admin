@@ -78,7 +78,7 @@ export default function ReconHeaderV8({ active, onToggle }) {
             margin: 0, marginBottom: 6,
             lineHeight: 1.2,
           }}>
-            Conciliação Automatizada — cada centavo conferido
+            Conciliação Automatizada · cada centavo conferido
           </h2>
 
           <p style={{ fontSize: 13, color: '#475569', margin: 0, lineHeight: 1.5 }}>
@@ -106,7 +106,7 @@ export default function ReconHeaderV8({ active, onToggle }) {
               <strong style={{ color: '#0F172A' }}>
                 {RECON_KPIS.divergences_open} casos críticos
               </strong>{' '}
-              — agente resolveu o resto sozinho.
+. Agente resolveu o resto sozinho.
             </span>
           </div>
         </div>

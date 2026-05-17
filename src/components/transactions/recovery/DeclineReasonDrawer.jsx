@@ -11,15 +11,15 @@ const CHANNEL_OPTIONS = [
 
 const TEMPLATE_BODIES = {
   cvv_invalid: 'Olá, {{customer_name}}! Tentamos processar seu pagamento de {{amount}} mas o código de segurança (CVV) do cartão estava incorreto. Os 3 dígitos ficam no verso do cartão. Quer tentar novamente agora? 👉 {{retry_link}}',
-  invalid_card_data: 'Oi, {{customer_name}}! Não conseguimos concluir sua compra de {{amount}} — parece que algum dado do cartão estava errado (número, validade ou nome). Toque aqui para revisar e finalizar: {{retry_link}}',
+  invalid_card_data: 'Oi, {{customer_name}}! Não conseguimos concluir sua compra de {{amount}}. Parece que algum dado do cartão estava errado (número, validade ou nome). Toque aqui para revisar e finalizar: {{retry_link}}',
   cardholder_name_mismatch: '{{customer_name}}, o nome digitado no checkout não bate com o impresso no cartão. Confirme exatamente como está no plástico: {{retry_link}}',
-  insufficient_funds: 'Olá, {{customer_name}}! Seu cartão não tinha limite/saldo disponível para {{amount}}. Que tal pagar via PIX? É instantâneo e o desconto continua válido. 📲 QR Code aqui: {{pix_qr_link}}',
+  insufficient_funds: 'Olá, {{customer_name}}! Seu cartão não tinha limite ou saldo disponível para {{amount}}. Que tal pagar via PIX? É instantâneo e o desconto continua válido. 📲 QR Code aqui: {{pix_qr_link}}',
   limit_exceeded: '{{customer_name}}, o limite do cartão não foi suficiente. Posso dividir em mais parcelas ou você prefere pagar via PIX à vista? Parcelar: {{installments_link}} · PIX: {{pix_qr_link}}',
   card_expired: 'Olá, {{customer_name}}. Seu cartão terminado em ****{{last4}} está vencido. Atualize com um cartão novo ou pague via PIX neste link: {{retry_link}}',
   issuer_timeout: '[Automático] Banco não respondeu a tempo. Repetir transação em 2h pelo roteador alternativo. Cliente NÃO recebe mensagem.',
-  not_authorized: 'Oi {{customer_name}}, seu banco não autorizou a compra de {{amount}} (sem motivo específico). Recomendamos tentar outro cartão ou pagar com PIX — vai cair na hora: {{pix_qr_link}}',
+  not_authorized: 'Oi {{customer_name}}, seu banco não autorizou a compra de {{amount}} (sem motivo específico). Recomendamos tentar outro cartão ou pagar com PIX. Vai cair na hora: {{pix_qr_link}}',
   fraud_block: 'Script da ligação: "Olá {{customer_name}}, aqui é da {{merchant_name}}. Detectamos uma compra recusada pelo seu banco por segurança. Você reconhece essa tentativa? Posso te ajudar a finalizar agora?"',
-  lost_stolen: 'Oi {{customer_name}}, sua tentativa de pagamento foi recusada — o cartão pode estar marcado como perdido. Recomendamos PIX para finalizar com segurança: {{pix_qr_link}}',
+  lost_stolen: 'Oi {{customer_name}}, sua tentativa de pagamento foi recusada. O cartão pode estar marcado como perdido. Recomendamos PIX para finalizar com segurança: {{pix_qr_link}}',
   '3ds_failed': '{{customer_name}}, a autenticação 3D Secure do seu cartão falhou. Tente novamente ou use PIX (sem etapa de autenticação): {{pix_qr_link}}',
 };
 

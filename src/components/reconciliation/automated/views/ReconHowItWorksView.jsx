@@ -23,7 +23,7 @@ const STEPS = [
   {
     icon: Search,
     title: 'Detecção e classificação · Investigator Agent',
-    desc: 'Divergências são classificadas em 12 buckets (valor, MDR, atraso, phantom, split, etc.) com causa raiz redigida pelo agente: "quem fez o quê, porquê, qual a evidência".',
+    desc: 'Divergências são classificadas em 12 buckets (valor, MDR, atraso, phantom, split, etc.) com causa raiz redigida pelo agente: quem fez o quê, porquê, qual a evidência.',
     color: '#B45309',
     bg: 'linear-gradient(135deg, #D97706 0%, #92400E 100%)',
     softBg: 'linear-gradient(180deg, #FEF3C7 0%, #FFFFFF 100%)',
