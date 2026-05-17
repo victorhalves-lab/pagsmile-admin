@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ShieldCheck, Upload, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useActionWithUndo } from '@/components/common/useActionWithUndo';
 
 /**
  * Mentor F0317–F0337 — Fluxo de desbloqueio com checklist + alçada dupla.
@@ -34,9 +35,25 @@ export default function AdminIntUnblockFlow() {
   const [notes, setNotes] = useState('');
   const [secondApprover, setSecondApprover] = useState('');
   const allChecked = CHECKLIST.every((_, i) => checked[i]);
+  const { triggerAction } = useActionWithUndo();
 
   const submit = () => {
-    toast.success('Desbloqueio aplicado');
+    triggerAction({
+      actionType: 'merchant.unblock',
+      actionLabel: `Desbloqueio · ${blockageId || 'BLK-001'}`,
+      targetSummary: `Merchant #${merchantId} · alçada dupla aprovada por ${secondApprover}`,
+      tone: 'warning',
+      undoWindowSeconds: 60,
+      pinnable: true,
+      entityId: merchantId,
+      payload: {
+        blockage_id: blockageId,
+        checklist_complete: allChecked,
+        evidence_attached: evidence,
+        notes,
+        second_approver: secondApprover,
+      },
+    });
     navigate(createPageUrl(`AdminIntMerchantProfile?id=${merchantId}&tab=bloqueios`));
   };
 

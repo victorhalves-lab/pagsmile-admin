@@ -78,7 +78,7 @@ import AdminIntABVolumeAllocator from './pages/AdminIntABVolumeAllocator';
 import AdminIntShadowMode from './pages/AdminIntShadowMode';
 import AdminIntReconciliationHub from './pages/AdminIntReconciliationHub';
 import AdminIntFraudAnomalyDetector from './pages/AdminIntFraudAnomalyDetector';
-import AdminIntAuditTrailEnhanced from './pages/AdminIntAuditTrailEnhanced';
+import AdminIntAuditTrailEnhanced from './pages/AdminIntAuditTrailEnhanced.jsx';
 import AdminIntTenantManagement from './pages/AdminIntTenantManagement';
 import AdminIntWebhookReplay from './pages/AdminIntWebhookReplay';
 import AdminIntSettlementForecasting from './pages/AdminIntSettlementForecasting';

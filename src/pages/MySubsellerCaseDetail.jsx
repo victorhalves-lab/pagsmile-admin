@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, FileText, Building2, User, CheckCircle2, AlertTriangle,
-  Mail, Phone, RefreshCw, Send, TrendingUp,
+  Mail, Phone, RefreshCw, Send, TrendingUp, UserMinus,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +13,7 @@ import CaseTypeBadge from '@/components/admin-interno/compliance/v4/CaseTypeBadg
 import CaseStatusBadge from '@/components/admin-interno/compliance/v4/CaseStatusBadge';
 import RiskBandBadge from '@/components/admin-interno/compliance/v4/RiskBandBadge';
 import { myMockSubsellerCases } from '@/components/my-compliance/mocks/mySubsellersMock';
+import { useActionWithUndo } from '@/components/common/useActionWithUndo';
 
 export default function MySubsellerCaseDetail() {
   const navigate = useNavigate();
@@ -20,8 +21,29 @@ export default function MySubsellerCaseDetail() {
   const id = params.get('id');
 
   const subseller = useMemo(() => myMockSubsellerCases.find((c) => c.id === id) || myMockSubsellerCases[0], [id]);
+  const { triggerAction } = useActionWithUndo();
 
   if (!subseller) return <div className="p-12 text-center">Subseller não encontrado</div>;
+
+  const handleCancelSubseller = () => {
+    if (!window.confirm(`Cancelar subseller "${subseller.razao_social || subseller.nome_completo}"? Você terá 60s para desfazer.`)) return;
+    triggerAction({
+      actionType: 'subseller.cancel',
+      actionLabel: 'Cancelamento de Subseller',
+      targetSummary: `${subseller.razao_social || subseller.nome_completo} · ${subseller.cnpj || subseller.cpf || ''}`,
+      tone: 'destructive',
+      undoWindowSeconds: 60,
+      pinnable: true,
+      entityId: subseller.id,
+      payload: {
+        subseller_id: subseller.id,
+        tipo: subseller.tipo,
+        razao_social: subseller.razao_social,
+        cnpj: subseller.cnpj,
+      },
+    });
+    navigate('/MySubsellersCases');
+  };
 
   return (
     <div className="p-6 max-w-[1400px] mx-auto space-y-5">
@@ -65,6 +87,15 @@ export default function MySubsellerCaseDetail() {
             {subseller.status === 'manual_review' && (
               <Button variant="outline">
                 <RefreshCw className="w-4 h-4 mr-1" /> Acompanhar Análise
+              </Button>
+            )}
+            {subseller.is_active && (
+              <Button
+                variant="outline"
+                onClick={handleCancelSubseller}
+                className="border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800 hover:border-red-300"
+              >
+                <UserMinus className="w-4 h-4 mr-1" /> Cancelar Subseller
               </Button>
             )}
           </div>

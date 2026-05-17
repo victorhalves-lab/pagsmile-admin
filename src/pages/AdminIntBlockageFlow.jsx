@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Ban, AlertTriangle, FileText, ShieldCheck, Upload, ChevronRight, ChevronLeft, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useActionWithUndo } from '@/components/common/useActionWithUndo';
 
 /**
  * Mentor F0288–F0316 — Fluxo formal de aplicar bloqueio.
@@ -40,9 +41,26 @@ export default function AdminIntBlockageFlow() {
   const [otp, setOtp] = useState('');
 
   const cfg = BLOCKAGE_TYPES.find(t => t.value === type);
+  const { triggerAction } = useActionWithUndo();
 
   const submit = () => {
-    toast.success('Bloqueio aplicado com sucesso');
+    triggerAction({
+      actionType: 'merchant.block',
+      actionLabel: `Bloqueio · ${cfg?.label}`,
+      targetSummary: `Merchant #${merchantId} · ${reason.slice(0, 80)}${reason.length > 80 ? '…' : ''}`,
+      tone: 'destructive',
+      undoWindowSeconds: 60,
+      pinnable: true,
+      entityId: merchantId,
+      payload: {
+        type,
+        reason,
+        cnj: cnj || null,
+        doc_uploaded: docUploaded,
+        review_date: reviewDate || null,
+        otp_verified: true,
+      },
+    });
     navigate(createPageUrl(`AdminIntMerchantProfile?id=${merchantId}&tab=bloqueios`));
   };
 

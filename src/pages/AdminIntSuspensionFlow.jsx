@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Pause } from 'lucide-react';
 import { toast } from 'sonner';
+import { useActionWithUndo } from '@/components/common/useActionWithUndo';
 
 /**
  * Mentor F0317-F0337 (parte) — Fluxo de suspensão (voluntária / programada / preventiva).
@@ -22,9 +23,30 @@ export default function AdminIntSuspensionFlow() {
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
   const [reason, setReason] = useState('');
+  const { triggerAction } = useActionWithUndo();
+
+  const SUSPENSION_LABELS = {
+    voluntary: 'Voluntária',
+    seasonal: 'Sazonal',
+    preventive: 'Preventiva',
+  };
 
   const submit = () => {
-    toast.success('Suspensão programada');
+    triggerAction({
+      actionType: 'merchant.suspend',
+      actionLabel: `Suspensão · ${SUSPENSION_LABELS[type] || type}`,
+      targetSummary: `Merchant #${merchantId} · ${start}${end ? ` → ${end}` : ' (sem fim previsto)'}`,
+      tone: 'destructive',
+      undoWindowSeconds: 60,
+      pinnable: true,
+      entityId: merchantId,
+      payload: {
+        type,
+        start,
+        end: end || null,
+        reason,
+      },
+    });
     navigate(createPageUrl(`AdminIntMerchantProfile?id=${merchantId}&tab=bloqueios`));
   };
 
