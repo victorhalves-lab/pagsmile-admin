@@ -5,6 +5,9 @@
 /* Pulse DS library (classes utilitárias 1:1 com os packs HTML) */
 @import './styles/pulse.css';
 
+/* Pulse V8 tokens — scoped sob [data-ds="v8"] (não afeta resto do app) */
+@import './styles/v8-tokens.css';
+
 /* ============================================
    PAGSMILE PULSE · DESIGN SYSTEM V7 (final)
    Tokens oficiais da marca (Manual): Mint #2bc196, Navy #002443,

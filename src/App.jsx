@@ -8,6 +8,13 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
+// V8 · ActionWithUndo (undo window de 60s para ações destrutivas)
+import ActionWithUndoProvider from '@/components/common/ActionWithUndoProvider';
+import { registerAllActionHandlers } from '@/components/common/registerActionHandlers';
+
+// Registra os 8 handlers undo-able no startup (idempotente — registrar 2x é seguro)
+registerAllActionHandlers();
+
 // B16 - Developer Hub satellite pages
 import DevStatusPage from './pages/DevStatusPage';
 import DevChangelog from './pages/DevChangelog';
@@ -484,11 +491,13 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <NavigationTracker />
-          <AuthenticatedApp />
-        </Router>
-        <Toaster />
+        <ActionWithUndoProvider>
+          <Router>
+            <NavigationTracker />
+            <AuthenticatedApp />
+          </Router>
+          <Toaster />
+        </ActionWithUndoProvider>
       </QueryClientProvider>
     </AuthProvider>
   )

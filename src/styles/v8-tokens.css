@@ -1,0 +1,489 @@
+/* ═══════════════════════════════════════════════════════════════════
+   PAGSMILE PULSE V8 · TOKENS (SCOPED)
+   Aplicado apenas dentro de elementos com `data-ds="v8"`.
+   Garante que páginas/componentes não-V8 do app permaneçam intactos.
+   Fonte de verdade: Brand Guidelines 2026 · 4 cores oficiais.
+   ═══════════════════════════════════════════════════════════════════ */
+
+[data-ds="v8"] {
+  /* ───────── VERDE MÉDIO · brand principal · #00C194 ───────── */
+  --pag-mint-50:#E0F8F1;
+  --pag-mint-100:#B3F0DE;
+  --pag-mint-200:#80E5C6;
+  --pag-mint-300:#4DD8AB;
+  --pag-mint-400:#1ECB9D;
+  --pag-mint-500:#00C194;
+  --pag-mint-600:#009E78;
+  --pag-mint-700:#007A5C;
+  --pag-mint-800:#005A43;
+  --pag-mint-900:#0F2B2B;
+  --pag-mint-950:#061515;
+
+  /* ───────── VERDE CLARO · highlight · #5CF7CF ───────── */
+  --pag-glow-300:#B4FCE8;
+  --pag-glow-400:#88F9D9;
+  --pag-glow-500:#5CF7CF;
+  --pag-glow-600:#2CEBBB;
+  --pag-glow-700:#15C79A;
+
+  /* ───────── AZUL ESCURO · #002443 ───────── */
+  --pag-blue-50:#E6ECF2;
+  --pag-blue-100:#C0CFDC;
+  --pag-blue-200:#8AA5BD;
+  --pag-blue-300:#547C9D;
+  --pag-blue-400:#2C577F;
+  --pag-blue-500:#013766;
+  --pag-blue-600:#002D56;
+  --pag-blue-700:#002443;
+  --pag-blue-800:#001B34;
+  --pag-blue-900:#001124;
+  --pag-blue-950:#000814;
+
+  /* ───────── VERDE ESCURO · #0F2B2B ───────── */
+  --pag-deep-50:#E8EDED;
+  --pag-deep-100:#C0CDCD;
+  --pag-deep-500:#1A3939;
+  --pag-deep-700:#0F2B2B;
+  --pag-deep-800:#091818;
+  --pag-deep-900:#050E0E;
+
+  /* ───────── Aliases curtos ───────── */
+  --ps-400:var(--pag-mint-400);
+  --ps-500:var(--pag-mint-500);
+  --ps-600:var(--pag-mint-600);
+  --ps-700:var(--pag-mint-700);
+  --ps-mint:var(--pag-mint-500);
+  --ps-mint-soft:var(--pag-mint-50);
+  --ps-mint-d:var(--pag-mint-700);
+  --ps-glow:var(--pag-glow-500);
+  --ps-blue:var(--pag-blue-700);
+  --ps-deep:var(--pag-deep-700);
+
+  /* ───────── SISTEMA · status (uso restrito a pills/badges) ───────── */
+  --sys-warn:#B45309;
+  --sys-warn-soft:#FEF3C7;
+  --sys-warn-bd:#FDE68A;
+  --sys-danger:#B91C1C;
+  --sys-danger-soft:#FEE2E2;
+  --sys-danger-bd:#FCA5A5;
+  --sys-info:var(--pag-blue-700);
+  --sys-info-soft:var(--pag-blue-50);
+  --sys-info-bd:var(--pag-blue-200);
+
+  /* ───────── Gradientes oficiais ───────── */
+  --grad-brand:linear-gradient(135deg,var(--pag-mint-400) 0%,var(--pag-mint-500) 50%,var(--pag-mint-700) 100%);
+  --grad-brand-soft:linear-gradient(135deg,var(--pag-mint-50) 0%,var(--pag-mint-100) 100%);
+  --grad-brand-dark:linear-gradient(135deg,var(--pag-blue-700) 0%,var(--pag-blue-900) 100%);
+  --grad-glow:linear-gradient(135deg,var(--pag-glow-500) 0%,var(--pag-mint-500) 100%);
+  --grad-deep:linear-gradient(135deg,var(--pag-deep-500) 0%,var(--pag-deep-800) 100%);
+  --grad-blue:linear-gradient(135deg,var(--pag-blue-500) 0%,var(--pag-blue-900) 100%);
+  --grad-hero:linear-gradient(135deg,var(--pag-mint-50) 0%,var(--pag-glow-300) 100%);
+
+  /* ───────── Neutros ───────── */
+  --n-0:#FFFFFF;
+  --n-25:#FAFAFA;
+  --n-50:#F4F4F4;
+  --n-100:#EDEDED;
+  --n-150:#E5E7EB;
+  --n-200:#E2E8F0;
+  --n-300:#CBD5E1;
+  --n-400:#94A3B8;
+  --n-500:#64748B;
+  --n-600:#475569;
+  --n-700:#334155;
+  --n-800:#1E293B;
+  --n-900:#0F172A;
+
+  /* ───────── Surfaces ───────── */
+  --v8-bg-canvas:#FAFAFA;
+  --v8-bg-surface:#FFFFFF;
+  --v8-bg-surface-2:#F4F4F4;
+  --v8-bg-surface-3:#EDEDED;
+  --v8-bg-elevated:#FFFFFF;
+  --v8-bg-brand-tint:rgba(0,193,148,0.08);
+  --v8-bg-brand-soft:var(--pag-mint-50);
+  --v8-bg-success:var(--pag-mint-50);
+  --v8-bg-warning:var(--sys-warn-soft);
+  --v8-bg-danger:var(--sys-danger-soft);
+  --v8-bg-info:var(--sys-info-soft);
+
+  /* ───────── Foreground ───────── */
+  --v8-fg-strong:#0F172A;
+  --v8-fg-default:#1E293B;
+  --v8-fg-muted:#64748B;
+  --v8-fg-subtle:#94A3B8;
+  --v8-fg-faint:#CBD5E1;
+  --v8-fg-brand:var(--pag-mint-700);
+  --v8-fg-success:var(--pag-mint-700);
+  --v8-fg-warning:var(--sys-warn);
+  --v8-fg-danger:var(--sys-danger);
+  --v8-fg-info:var(--pag-blue-700);
+
+  /* ───────── Borders ───────── */
+  --v8-bd-subtle:#EDEDED;
+  --v8-bd-default:#E2E8F0;
+  --v8-bd-strong:#CBD5E1;
+  --v8-bd-brand:rgba(0,193,148,0.32);
+  --v8-bd-success:var(--pag-mint-300);
+  --v8-bd-warning:var(--sys-warn-bd);
+  --v8-bd-danger:var(--sys-danger-bd);
+  --v8-bd-info:var(--sys-info-bd);
+
+  /* ───────── Shadows ───────── */
+  --sh-xs:0 1px 1px rgba(15,23,42,0.04);
+  --sh-sm:0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06);
+  --sh-md:0 2px 4px rgba(15,23,42,0.04), 0 4px 8px rgba(15,23,42,0.06);
+  --sh-lg:0 4px 8px rgba(15,23,42,0.05), 0 12px 24px rgba(15,23,42,0.08);
+  --sh-xl:0 8px 16px rgba(15,23,42,0.06), 0 24px 48px rgba(15,23,42,0.10);
+  --sh-2xl:0 16px 32px rgba(15,23,42,0.10), 0 32px 64px rgba(15,23,42,0.14);
+  --sh-brand:0 1px 2px rgba(0,193,148,0.18), 0 8px 24px -4px rgba(0,193,148,0.32);
+  --sh-brand-lg:0 4px 12px rgba(0,193,148,0.18), 0 16px 40px -8px rgba(0,193,148,0.36);
+  --sh-focus:0 0 0 4px rgba(0,193,148,0.22);
+
+  /* ───────── Radii ───────── */
+  --r-xs:6px;
+  --r-sm:8px;
+  --r-md:12px;
+  --r-lg:16px;
+  --r-xl:20px;
+  --r-2xl:24px;
+  --r-pill:999px;
+
+  /* ───────── Typography ───────── */
+  --v8-font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --v8-font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+
+  --tr-tightest:-0.04em;
+  --tr-tighter:-0.028em;
+  --tr-tight:-0.018em;
+  --tr-normal:-0.005em;
+  --tr-wide:0.04em;
+  --tr-wider:0.10em;
+  --tr-widest:0.16em;
+
+  /* ───────── Motion ───────── */
+  --ease-std:cubic-bezier(0.2,0,0,1);
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   V8 · UTILITY CLASSES (scoped — só dentro de data-ds="v8")
+   ═══════════════════════════════════════════════════════════════════ */
+[data-ds="v8"] .v8-eyebrow {
+  font-family: var(--v8-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: var(--tr-widest);
+  text-transform: uppercase;
+  color: var(--v8-fg-brand);
+}
+
+[data-ds="v8"] .v8-mono {
+  font-family: var(--v8-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+[data-ds="v8"] .v8-num {
+  font-family: var(--v8-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  font-weight: 600;
+}
+
+/* Card V8 */
+[data-ds="v8"] .v8-card {
+  background: var(--v8-bg-surface);
+  border: 1px solid var(--v8-bd-default);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  box-shadow: var(--sh-sm);
+  transition: box-shadow .24s var(--ease-out), border-color .18s;
+}
+[data-ds="v8"] .v8-card:hover {
+  border-color: var(--v8-bd-strong);
+  box-shadow: var(--sh-md);
+}
+
+/* Pill V8 */
+[data-ds="v8"] .v8-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: var(--tr-normal);
+  white-space: nowrap;
+  line-height: 1.4;
+  border: 1px solid transparent;
+}
+[data-ds="v8"] .v8-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+[data-ds="v8"] .v8-pill--brand {
+  background: var(--v8-bg-brand-soft);
+  color: var(--ps-700);
+  border-color: var(--v8-bd-brand);
+}
+[data-ds="v8"] .v8-pill--success {
+  background: var(--v8-bg-success);
+  color: var(--v8-fg-success);
+  border-color: var(--v8-bd-success);
+}
+[data-ds="v8"] .v8-pill--warning {
+  background: var(--v8-bg-warning);
+  color: var(--v8-fg-warning);
+  border-color: var(--v8-bd-warning);
+}
+[data-ds="v8"] .v8-pill--danger {
+  background: var(--v8-bg-danger);
+  color: var(--v8-fg-danger);
+  border-color: var(--v8-bd-danger);
+}
+[data-ds="v8"] .v8-pill--info {
+  background: var(--v8-bg-info);
+  color: var(--v8-fg-info);
+  border-color: var(--v8-bd-info);
+}
+[data-ds="v8"] .v8-pill--neutral {
+  background: var(--v8-bg-surface-2);
+  color: var(--v8-fg-muted);
+  border-color: var(--v8-bd-default);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ACTIONWITHUNDO · Toast V8
+   ═══════════════════════════════════════════════════════════════════ */
+.v8-undo-toast {
+  position: relative;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  background: var(--v8-bg-elevated, #FFFFFF);
+  border: 1px solid var(--v8-bd-default, #E2E8F0);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(15,23,42,0.05), 0 12px 24px rgba(15,23,42,0.08);
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  color: #1E293B;
+}
+
+.v8-undo-toast--destructive { border-top: 3px solid #B91C1C; }
+.v8-undo-toast--warning { border-top: 3px solid #B45309; }
+.v8-undo-toast--info { border-top: 3px solid #002443; }
+
+.v8-undo-toast__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px 10px;
+}
+
+.v8-undo-toast__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.v8-undo-toast--destructive .v8-undo-toast__icon {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+.v8-undo-toast--warning .v8-undo-toast__icon {
+  background: #FEF3C7;
+  color: #B45309;
+}
+.v8-undo-toast--info .v8-undo-toast__icon {
+  background: #E6ECF2;
+  color: #002443;
+}
+
+.v8-undo-toast__title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  color: #0F172A;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v8-undo-toast__icon-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: #94A3B8;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: background .14s, color .14s;
+}
+.v8-undo-toast__icon-btn:hover {
+  background: #F4F4F4;
+  color: #0F172A;
+}
+.v8-undo-toast__icon-btn--active {
+  color: #B45309;
+}
+
+.v8-undo-toast__body {
+  padding: 0 16px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #64748B;
+}
+
+.v8-undo-toast__progress {
+  position: relative;
+  height: 4px;
+  background: #EDEDED;
+  overflow: hidden;
+}
+.v8-undo-toast__progress-bar {
+  height: 100%;
+  transform-origin: left;
+  transition: transform 1s linear;
+}
+.v8-undo-toast--destructive .v8-undo-toast__progress-bar { background: #B91C1C; }
+.v8-undo-toast--warning .v8-undo-toast__progress-bar { background: #B45309; }
+.v8-undo-toast--info .v8-undo-toast__progress-bar { background: #002443; }
+
+.v8-undo-toast__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px 12px;
+}
+
+.v8-undo-toast__counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  letter-spacing: 0.02em;
+}
+.v8-undo-toast__counter--mid {
+  color: #B45309;
+}
+.v8-undo-toast__counter--low {
+  color: #B91C1C;
+  font-weight: 700;
+  animation: v8-pulse 1s ease-in-out infinite;
+}
+
+.v8-undo-toast__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.v8-undo-toast__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: background .14s, color .14s, border-color .14s;
+  white-space: nowrap;
+  line-height: 1;
+}
+.v8-undo-toast__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.v8-undo-toast__btn--undo {
+  color: #B91C1C;
+  border-color: #FCA5A5;
+  background: #FFFFFF;
+}
+.v8-undo-toast__btn--undo:hover:not(:disabled) {
+  background: #FEE2E2;
+}
+.v8-undo-toast__btn--confirm {
+  color: #475569;
+}
+.v8-undo-toast__btn--confirm:hover:not(:disabled) {
+  background: #F4F4F4;
+  color: #0F172A;
+}
+
+.v8-undo-toast__paused-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.03);
+  pointer-events: none;
+  border-radius: 12px;
+}
+
+.v8-undo-toast--pinned {
+  border: 2px solid #FDE68A;
+}
+
+.v8-undo-toast__spinner {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: v8-undo-spin 0.8s linear infinite;
+}
+
+@keyframes v8-undo-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes v8-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* Container empilhado dos toasts */
+.v8-undo-stack {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  pointer-events: none;
+}
+.v8-undo-stack > * {
+  pointer-events: auto;
+  animation: v8-undo-enter 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes v8-undo-enter {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 480px) {
+  .v8-undo-stack {
+    left: 16px;
+    right: 16px;
+  }
+  .v8-undo-toast {
+    width: 100%;
+  }
+}
