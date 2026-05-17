@@ -267,16 +267,27 @@ export default function RecoverySimulatorView() {
         )}
       </div>
 
-      {/* 2 · Cenários + Preview */}
+      {/* 2 · Cenários + Preview · ambos dark navy (sem texto em fundo branco) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 1fr) 2fr', gap: 16 }}>
-        {/* Lista cenários */}
-        <div className="v8-card" style={{ padding: 0, overflow: 'hidden' }}>
+        {/* Lista cenários · dark navy */}
+        <div style={{
+          padding: 0, overflow: 'hidden', borderRadius: 16,
+          background: 'linear-gradient(180deg, #002443 0%, #001a30 100%)',
+          border: '1px solid rgba(92,247,207,0.18)',
+          boxShadow: '0 4px 12px rgba(0,36,67,0.20)',
+        }}>
           <div style={{
-            padding: '14px 16px', borderBottom: '1px solid var(--v8-bd-default)',
-            background: 'var(--v8-bg-surface-2)',
+            padding: '14px 16px',
+            borderBottom: '1px solid rgba(255,255,255,0.10)',
+            background: 'rgba(255,255,255,0.04)',
           }}>
-            <span className="v8-eyebrow">OU SELECIONE UM CENÁRIO</span>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--v8-fg-strong)', marginTop: 2 }}>
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 10, fontWeight: 700,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              color: '#5CF7CF',
+            }}>OU SELECIONE UM CENÁRIO</span>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginTop: 2 }}>
               Simule como o agente reage
             </div>
           </div>
@@ -290,20 +301,25 @@ export default function RecoverySimulatorView() {
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                     padding: '12px 16px', textAlign: 'left',
-                    background: isSel ? 'var(--pag-mint-50)' : 'transparent',
-                    border: 'none', borderBottom: '1px solid var(--v8-bd-subtle)',
-                    borderLeft: isSel ? '3px solid var(--pag-mint-500)' : '3px solid transparent',
+                    background: isSel ? 'rgba(92,247,207,0.10)' : 'transparent',
+                    border: 'none', borderBottom: '1px solid rgba(255,255,255,0.06)',
+                    borderLeft: isSel ? '3px solid #5CF7CF' : '3px solid transparent',
                     cursor: running ? 'not-allowed' : 'pointer',
                     opacity: running && !isSel ? 0.4 : 1,
                     fontFamily: 'Inter, sans-serif',
+                    transition: 'background .15s',
                   }}
                 >
-                  <Icon size={16} style={{ color: 'var(--v8-fg-muted)', flexShrink: 0 }} />
+                  <Icon size={16} style={{ color: isSel ? '#5CF7CF' : 'rgba(255,255,255,0.55)', flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--v8-fg-strong)' }}>{sc.name}</div>
-                    <div style={{ fontSize: 10, color: 'var(--v8-fg-muted)', marginTop: 1 }}>{sc.description}</div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{sc.name}</div>
+                    <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', marginTop: 1 }}>{sc.description}</div>
                   </div>
-                  <span className="v8-num" style={{ fontSize: 11, fontWeight: 700, color: 'var(--pag-mint-700)' }}>
+                  <span style={{
+                    fontSize: 11, fontWeight: 700, color: '#5CF7CF',
+                    fontFamily: 'JetBrains Mono, monospace',
+                    fontVariantNumeric: 'tabular-nums',
+                  }}>
                     {sc.recoveryRate}%
                   </span>
                 </button>
@@ -312,32 +328,42 @@ export default function RecoverySimulatorView() {
           </div>
         </div>
 
-        {/* Preview checkout + simulação */}
-        <div className="v8-card" style={{ padding: 18 }}>
-          <span className="v8-eyebrow">SIMULAÇÃO DE RECUPERAÇÃO</span>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--v8-fg-strong)', margin: '4px 0 14px' }}>
+        {/* Preview checkout + simulação · dark navy */}
+        <div style={{
+          padding: 18, borderRadius: 16,
+          background: 'linear-gradient(180deg, #002443 0%, #001a30 100%)',
+          border: '1px solid rgba(92,247,207,0.18)',
+          boxShadow: '0 4px 12px rgba(0,36,67,0.20)',
+        }}>
+          <span style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 10, fontWeight: 700,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            color: '#5CF7CF',
+          }}>SIMULAÇÃO DE RECUPERAÇÃO</span>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: '4px 0 14px' }}>
             {selected ? `Cenário: ${selected.name}` : 'Selecione um cenário para começar'}
           </h3>
 
           {!selected ? (
             <div style={{
               minHeight: 280, display: 'grid', placeItems: 'center', textAlign: 'center',
-              background: 'var(--v8-bg-surface-2)', borderRadius: 10,
-              border: '1px dashed var(--v8-bd-default)',
+              background: 'rgba(255,255,255,0.04)', borderRadius: 10,
+              border: '1px dashed rgba(255,255,255,0.14)',
             }}>
               <div>
-                <Play size={36} style={{ color: 'var(--v8-fg-subtle)', margin: '0 auto 8px' }} />
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--v8-fg-muted)' }}>
+                <Play size={36} style={{ color: 'rgba(92,247,207,0.55)', margin: '0 auto 8px' }} />
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>
                   Escolha um cenário ao lado
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--v8-fg-subtle)', marginTop: 4 }}>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', marginTop: 4 }}>
                   Veja o agente em ação passo a passo
                 </div>
               </div>
             </div>
           ) : (
             <>
-              {/* Passos */}
+              {/* Passos · dark */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, padding: '0 8px' }}>
                 {['Detectar', 'Analisar', 'Selecionar', 'Executar'].map((label, idx) => {
                   const done = step > idx;
@@ -348,19 +374,20 @@ export default function RecoverySimulatorView() {
                         <div style={{
                           width: 28, height: 28, borderRadius: '50%',
                           display: 'grid', placeItems: 'center',
-                          background: done ? 'var(--pag-mint-500)' : active ? 'var(--pag-mint-300)' : 'var(--v8-bg-surface-3)',
-                          color: done || active ? '#fff' : 'var(--v8-fg-subtle)',
+                          background: done ? '#5CF7CF' : active ? 'rgba(92,247,207,0.40)' : 'rgba(255,255,255,0.08)',
+                          color: done ? '#002443' : active ? '#fff' : 'rgba(255,255,255,0.45)',
                           fontSize: 11, fontWeight: 700,
                           animation: active ? 'pulse 1.2s ease-in-out infinite' : 'none',
+                          boxShadow: done ? '0 4px 12px rgba(92,247,207,0.32)' : 'none',
                         }}>
                           {done ? '✓' : idx + 1}
                         </div>
-                        <span style={{ fontSize: 10, color: 'var(--v8-fg-muted)', fontWeight: 600 }}>{label}</span>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.65)', fontWeight: 600 }}>{label}</span>
                       </div>
                       {idx < 3 && (
                         <div style={{
                           flex: 1, height: 2, margin: '0 4px', marginBottom: 18,
-                          background: step > idx ? 'var(--pag-mint-500)' : 'var(--v8-bg-surface-3)',
+                          background: step > idx ? '#5CF7CF' : 'rgba(255,255,255,0.10)',
                           transition: 'background .3s',
                         }} />
                       )}
@@ -369,22 +396,27 @@ export default function RecoverySimulatorView() {
                 })}
               </div>
 
-              {/* Mockup checkout */}
+              {/* Mockup checkout · card branco dentro do navy (representa checkout real) */}
               <div style={{
                 padding: 18,
-                background: 'var(--v8-bg-surface-2)',
-                border: '1px dashed var(--v8-bd-default)',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px dashed rgba(255,255,255,0.14)',
                 borderRadius: 12, marginBottom: 14,
               }}>
                 <div style={{ textAlign: 'center', marginBottom: 10 }}>
-                  <span className="v8-eyebrow">PREVIEW DO CHECKOUT</span>
+                  <span style={{
+                    fontFamily: 'JetBrains Mono, monospace',
+                    fontSize: 10, fontWeight: 700,
+                    letterSpacing: '0.18em', textTransform: 'uppercase',
+                    color: '#5CF7CF',
+                  }}>PREVIEW DO CHECKOUT</span>
                 </div>
                 <div style={{
                   maxWidth: 360, margin: '0 auto',
-                  background: 'var(--v8-bg-surface)',
-                  border: '1px solid var(--v8-bd-default)',
+                  background: '#fff',
+                  border: '1px solid rgba(0,36,67,0.10)',
                   borderRadius: 12, padding: 20,
-                  boxShadow: 'var(--sh-md)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
                   opacity: running ? 0.7 : 1,
                   transition: 'opacity .3s',
                 }}>
@@ -397,15 +429,15 @@ export default function RecoverySimulatorView() {
                   </div>
                   <h4 style={{
                     fontSize: 15, fontWeight: 700, textAlign: 'center',
-                    color: 'var(--v8-fg-strong)', margin: '0 0 6px',
+                    color: '#002443', margin: '0 0 6px',
                   }}>{selected.checkout.title}</h4>
                   <p style={{
-                    fontSize: 12, color: 'var(--v8-fg-muted)', textAlign: 'center',
+                    fontSize: 12, color: '#4a5568', textAlign: 'center',
                     margin: '0 0 14px', lineHeight: 1.5,
                   }}>{selected.checkout.message}</p>
                   <button type="button" disabled style={{
                     width: '100%', height: 38, marginBottom: 8,
-                    background: 'var(--grad-brand)', color: '#fff',
+                    background: 'linear-gradient(135deg, #2BC196 0%, #00A87A 100%)', color: '#fff',
                     border: 'none', borderRadius: 10,
                     fontSize: 13, fontWeight: 700, cursor: 'default',
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
@@ -415,8 +447,8 @@ export default function RecoverySimulatorView() {
                   </button>
                   <button type="button" disabled style={{
                     width: '100%', height: 36,
-                    background: 'transparent', color: 'var(--v8-fg-strong)',
-                    border: '1px solid var(--v8-bd-default)', borderRadius: 10,
+                    background: 'transparent', color: '#002443',
+                    border: '1px solid rgba(0,36,67,0.16)', borderRadius: 10,
                     fontSize: 12, fontWeight: 600, cursor: 'default',
                   }}>
                     {selected.checkout.secondary}
@@ -424,25 +456,25 @@ export default function RecoverySimulatorView() {
                 </div>
               </div>
 
-              {/* Resultado */}
+              {/* Resultado · dark */}
               {result && (
                 <div style={{
                   padding: 14, borderRadius: 12,
-                  background: result === 'recovered' ? 'var(--pag-mint-50)' : 'var(--sys-danger-soft)',
-                  border: `1px solid ${result === 'recovered' ? 'var(--v8-bd-brand)' : 'var(--sys-danger-bd)'}`,
+                  background: result === 'recovered' ? 'rgba(92,247,207,0.12)' : 'rgba(239,68,68,0.14)',
+                  border: `1px solid ${result === 'recovered' ? 'rgba(92,247,207,0.38)' : 'rgba(239,68,68,0.38)'}`,
                   display: 'flex', alignItems: 'center', gap: 12,
                 }}>
                   {result === 'recovered'
-                    ? <CheckCircle2 size={24} style={{ color: 'var(--pag-mint-700)', flexShrink: 0 }} />
-                    : <XCircle size={24} style={{ color: 'var(--sys-danger)', flexShrink: 0 }} />}
+                    ? <CheckCircle2 size={24} style={{ color: '#5CF7CF', flexShrink: 0 }} />
+                    : <XCircle size={24} style={{ color: '#FCA5A5', flexShrink: 0 }} />}
                   <div>
                     <div style={{
                       fontSize: 13, fontWeight: 700,
-                      color: result === 'recovered' ? 'var(--pag-mint-700)' : 'var(--sys-danger)',
+                      color: result === 'recovered' ? '#5CF7CF' : '#FCA5A5',
                     }}>
                       {result === 'recovered' ? 'Pagamento recuperado!' : 'Recuperação não concluída'}
                     </div>
-                    <div style={{ fontSize: 11, color: 'var(--v8-fg-muted)', marginTop: 2 }}>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', marginTop: 2 }}>
                       {result === 'recovered'
                         ? 'Cliente concluiu o pagamento com método alternativo.'
                         : 'Cliente não respondeu. Próxima cadência será disparada automaticamente.'}
