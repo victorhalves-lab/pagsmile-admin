@@ -182,6 +182,7 @@ const getAdminSubMenuItems = (t) => [
       { label: t('menu.split'), page: 'SplitManagement' },
       { label: 'Split Designer', page: 'SplitDesignerPage' },
       { label: 'Split Transparency', page: 'SplitTransparencyDashboard' },
+      { label: 'Conciliação Automatizada', page: 'MyReconciliationAutomated' },
     ]
   },
   {

@@ -173,6 +173,7 @@ import MyDriftAlerts from './pages/MyDriftAlerts';
 import MyOrchestrationView from './pages/MyOrchestrationView';
 import MyPricingTransparency from './pages/MyPricingTransparency';
 import MyReconciliationCenter from './pages/MyReconciliationCenter';
+import MyReconciliationAutomated from './pages/MyReconciliationAutomated';
 import MyCheckupCenter from './pages/MyCheckupCenter';
 import MyCommunicationsCenter from './pages/MyCommunicationsCenter';
 
@@ -429,6 +430,7 @@ const AuthenticatedApp = () => {
       <Route path="/MyOrchestrationView" element={<LayoutWrapper currentPageName="MyOrchestrationView"><MyOrchestrationView /></LayoutWrapper>} />
       <Route path="/MyPricingTransparency" element={<LayoutWrapper currentPageName="MyPricingTransparency"><MyPricingTransparency /></LayoutWrapper>} />
       <Route path="/MyReconciliationCenter" element={<LayoutWrapper currentPageName="MyReconciliationCenter"><MyReconciliationCenter /></LayoutWrapper>} />
+      <Route path="/MyReconciliationAutomated" element={<LayoutWrapper currentPageName="MyReconciliationAutomated"><MyReconciliationAutomated /></LayoutWrapper>} />
       <Route path="/MyCheckupCenter" element={<LayoutWrapper currentPageName="MyCheckupCenter"><MyCheckupCenter /></LayoutWrapper>} />
       <Route path="/MyCommunicationsCenter" element={<LayoutWrapper currentPageName="MyCommunicationsCenter"><MyCommunicationsCenter /></LayoutWrapper>} />
 
