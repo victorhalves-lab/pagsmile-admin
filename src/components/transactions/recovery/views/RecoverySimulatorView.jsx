@@ -153,56 +153,83 @@ export default function RecoverySimulatorView() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* 1 · Input linguagem natural */}
-      <div className="v8-card" style={{
-        padding: 18,
-        background: 'var(--grad-hero)',
-        borderColor: 'var(--v8-bd-brand)',
+      {/* 1 · Input linguagem natural · dark gradient (sem textura sobre branco) */}
+      <div style={{
+        position: 'relative', overflow: 'hidden',
+        padding: '20px 22px', borderRadius: 16,
+        background: 'linear-gradient(135deg, #002443 0%, #001a30 100%)',
+        border: '1px solid rgba(92,247,207,0.22)',
+        boxShadow: '0 4px 12px rgba(0,36,67,0.18)',
+        color: '#fff',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <div style={{
+          position: 'absolute', right: -80, top: -80, width: 240, height: 240,
+          background: 'radial-gradient(closest-side, rgba(92,247,207,0.18), transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
           <div style={{
-            width: 32, height: 32, borderRadius: 10,
-            background: 'var(--pag-mint-500)', color: '#fff',
+            width: 40, height: 40, borderRadius: 12,
+            background: 'linear-gradient(135deg, #5CF7CF 0%, #00C194 100%)',
+            color: '#002443',
             display: 'grid', placeItems: 'center',
+            boxShadow: '0 6px 18px rgba(92,247,207,0.32)',
           }}>
-            <Sparkles size={15} />
+            <Sparkles size={18} strokeWidth={2.2} />
           </div>
           <div>
-            <span className="v8-eyebrow">DESCREVER CENÁRIO EM LINGUAGEM NATURAL</span>
-            <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--v8-fg-strong)', margin: '2px 0 0' }}>
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 10.5, fontWeight: 700,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              color: '#5CF7CF',
+            }}>DESCREVER CENÁRIO EM LINGUAGEM NATURAL</span>
+            <h3 style={{
+              fontSize: 16, fontWeight: 800, letterSpacing: '-0.018em',
+              color: '#fff', margin: '2px 0 0',
+            }}>
               Descreva uma falha e a IA recomenda a melhor estratégia
             </h3>
           </div>
         </div>
+
         <textarea
           value={nlInput}
           onChange={(e) => setNlInput(e.target.value)}
           placeholder="Ex: cliente novo tentando pagar R$ 500 com cartão Visa, recusou por saldo insuficiente às 19h..."
           rows={3}
           style={{
-            width: '100%', padding: 12,
-            background: 'var(--v8-bg-surface)',
-            border: '1px solid var(--v8-bd-default)',
-            borderRadius: 10, fontFamily: 'Inter, sans-serif', fontSize: 12,
-            color: 'var(--v8-fg-strong)', resize: 'vertical', outline: 'none', marginBottom: 10,
+            position: 'relative',
+            width: '100%', padding: 14,
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.16)',
+            borderRadius: 12,
+            fontFamily: 'Inter, sans-serif', fontSize: 13,
+            color: '#fff',
+            resize: 'vertical', outline: 'none', marginBottom: 12,
           }}
         />
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ position: 'relative', display: 'flex', gap: 10 }}>
           <button type="button" onClick={analyzeNl} disabled={!nlInput.trim()} style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            height: 36, padding: '0 18px', borderRadius: 10,
-            background: nlInput.trim() ? 'var(--grad-brand)' : 'var(--v8-bg-surface-3)',
-            color: nlInput.trim() ? '#fff' : 'var(--v8-fg-subtle)',
+            height: 40, padding: '0 20px', borderRadius: 12,
+            background: nlInput.trim()
+              ? 'linear-gradient(135deg, #5CF7CF 0%, #00C194 100%)'
+              : 'rgba(255,255,255,0.08)',
+            color: nlInput.trim() ? '#002443' : 'rgba(255,255,255,0.45)',
             border: 'none', fontSize: 13, fontWeight: 700,
             cursor: nlInput.trim() ? 'pointer' : 'not-allowed',
-            boxShadow: nlInput.trim() ? 'var(--sh-brand)' : 'none',
+            boxShadow: nlInput.trim() ? '0 6px 18px rgba(92,247,207,0.32)' : 'none',
+            transition: 'transform .15s',
           }}>
-            <Sparkles size={14} /> Analisar com IA
+            <Sparkles size={15} strokeWidth={2.4} /> Analisar com IA
           </button>
           <button type="button" onClick={() => { setNlInput(''); setAiSuggestion(null); }} style={{
-            height: 36, padding: '0 14px', borderRadius: 10,
-            background: 'var(--v8-bg-surface)', border: '1px solid var(--v8-bd-default)',
-            color: 'var(--v8-fg-strong)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+            height: 40, padding: '0 16px', borderRadius: 12,
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.18)',
+            color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
           }}>
             Limpar
           </button>
@@ -210,17 +237,31 @@ export default function RecoverySimulatorView() {
 
         {aiSuggestion && (
           <div style={{
-            marginTop: 12, padding: 14,
-            background: 'var(--v8-bg-surface)',
-            border: '1px solid var(--v8-bd-brand)', borderRadius: 10,
+            position: 'relative',
+            marginTop: 14, padding: 16,
+            background: 'rgba(92,247,207,0.10)',
+            border: '1px solid rgba(92,247,207,0.32)',
+            borderRadius: 12,
           }}>
-            <span className="v8-eyebrow">RECOMENDAÇÃO DA IA</span>
-            <div style={{ fontSize: 13, color: 'var(--v8-fg-strong)', marginTop: 6, fontWeight: 600 }}>
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 10, fontWeight: 700,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              color: '#5CF7CF',
+            }}>RECOMENDAÇÃO DA IA</span>
+            <div style={{
+              fontSize: 14, color: '#fff', marginTop: 6, fontWeight: 700,
+              letterSpacing: '-0.012em',
+            }}>
               {aiSuggestion.strategy}
             </div>
-            <div style={{ display: 'flex', gap: 14, marginTop: 8, fontSize: 11, color: 'var(--v8-fg-muted)' }}>
-              <span>Canal: <strong style={{ color: 'var(--pag-mint-700)' }}>{aiSuggestion.channel}</strong></span>
-              <span>Probabilidade: <strong className="v8-num" style={{ color: 'var(--pag-mint-700)' }}>{aiSuggestion.probability}%</strong></span>
+            <div style={{ display: 'flex', gap: 16, marginTop: 10, fontSize: 11.5, color: 'rgba(255,255,255,0.7)' }}>
+              <span>Canal: <strong style={{ color: '#5CF7CF' }}>{aiSuggestion.channel}</strong></span>
+              <span>Probabilidade: <strong style={{
+                color: '#5CF7CF',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontVariantNumeric: 'tabular-nums',
+              }}>{aiSuggestion.probability}%</strong></span>
             </div>
           </div>
         )}
