@@ -439,6 +439,7 @@ const getAdminInternoMenuItems = (t) => [
       { label: 'Receivables Ledger', page: 'AdminIntReceivablesLedger' },
       { label: 'Ajustes Manuais', page: 'AdminIntManualAdjustments' },
       { label: 'Reconciliation Hub', page: 'AdminIntReconciliationHub' },
+      { label: 'Conciliação Automatizada', page: 'AdminIntReconciliationAutomated' },
       { label: 'Settlement Forecasting', page: 'AdminIntSettlementForecasting' },
       { label: t('menu_admin.financial_results'), page: 'AdminIntFinancialResults' },
       { label: t('menu_admin.client_profitability'), page: 'AdminIntClientProfitability' },
@@ -599,6 +600,7 @@ const adminInternoPages = [
   'AdminIntOpenFinanceLiveMap',
   // B22 - Tuna Orchestration & Multi-Method
   'AdminIntMultiMethodCockpit', 'AdminIntCrossMethodRecovery', 'AdminIntConnectionHealth', 'AdminIntMerchantCoverageMatrix',
+  'AdminIntReconciliationAutomated',
   'AdminIntOrchestrationStudio', 'AdminIntAntiArbitrage', 'AdminIntSmartSplitSuggester', 'AdminIntABVolumeAllocator',
   'AdminIntShadowMode', 'AdminIntReconciliationHub', 'AdminIntFraudAnomalyDetector', 'AdminIntAuditTrailEnhanced',
   'AdminIntTenantManagement', 'AdminIntWebhookReplay', 'AdminIntSettlementForecasting', 'AdminIntCryptoHub',

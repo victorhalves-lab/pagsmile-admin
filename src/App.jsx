@@ -177,6 +177,9 @@ import MyReconciliationAutomated from './pages/MyReconciliationAutomated';
 import MyCheckupCenter from './pages/MyCheckupCenter';
 import MyCommunicationsCenter from './pages/MyCommunicationsCenter';
 
+// ====== Conciliação Automatizada · Admin Interno (3-way Tuna × Adquirente × Banco) ======
+import AdminIntReconciliationAutomated from './pages/AdminIntReconciliationAutomated';
+
 // ====== Compliance Onboarding (replicado do app pagsmile-onboarding) ======
 import AdminIntComplianceDashboard from './pages/AdminIntComplianceDashboard';
 import AdminIntComplianceLinks from './pages/AdminIntComplianceLinks';
@@ -431,6 +434,7 @@ const AuthenticatedApp = () => {
       <Route path="/MyPricingTransparency" element={<LayoutWrapper currentPageName="MyPricingTransparency"><MyPricingTransparency /></LayoutWrapper>} />
       <Route path="/MyReconciliationCenter" element={<LayoutWrapper currentPageName="MyReconciliationCenter"><MyReconciliationCenter /></LayoutWrapper>} />
       <Route path="/MyReconciliationAutomated" element={<LayoutWrapper currentPageName="MyReconciliationAutomated"><MyReconciliationAutomated /></LayoutWrapper>} />
+      <Route path="/AdminIntReconciliationAutomated" element={<LayoutWrapper currentPageName="AdminIntReconciliationAutomated"><AdminIntReconciliationAutomated /></LayoutWrapper>} />
       <Route path="/MyCheckupCenter" element={<LayoutWrapper currentPageName="MyCheckupCenter"><MyCheckupCenter /></LayoutWrapper>} />
       <Route path="/MyCommunicationsCenter" element={<LayoutWrapper currentPageName="MyCommunicationsCenter"><MyCommunicationsCenter /></LayoutWrapper>} />
 

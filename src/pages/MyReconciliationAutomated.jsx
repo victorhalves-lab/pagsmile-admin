@@ -1,36 +1,39 @@
 import React, { useState } from 'react';
-import ReconHeaderV8 from '@/components/reconciliation/automated/ReconHeaderV8';
-import ReconKpiGridV8 from '@/components/reconciliation/automated/ReconKpiGridV8';
-import ThreeWayDiagramV8 from '@/components/reconciliation/automated/ThreeWayDiagramV8';
-import DivergenceBucketMatrix from '@/components/reconciliation/automated/DivergenceBucketMatrix';
-import DivergenceBucketDrawer from '@/components/reconciliation/automated/DivergenceBucketDrawer';
-import ReconSubTabs from '@/components/reconciliation/automated/ReconSubTabs';
-import ReconOverviewView from '@/components/reconciliation/automated/views/ReconOverviewView';
-import ReconFilesView from '@/components/reconciliation/automated/views/ReconFilesView';
-import ReconDivergencesView from '@/components/reconciliation/automated/views/ReconDivergencesView';
-import ReconAdjustmentsView from '@/components/reconciliation/automated/views/ReconAdjustmentsView';
-import ReconScheduleView from '@/components/reconciliation/automated/views/ReconScheduleView';
-import ReconHowItWorksView from '@/components/reconciliation/automated/views/ReconHowItWorksView';
+import MyReconHeader from '@/components/my-reconciliation/MyReconHeader';
+import MyReconKpiGrid from '@/components/my-reconciliation/MyReconKpiGrid';
+import MyReconSubTabs from '@/components/my-reconciliation/MyReconSubTabs';
+import MyReconOverviewView from '@/components/my-reconciliation/views/MyReconOverviewView';
+import MyReconSalesView from '@/components/my-reconciliation/views/MyReconSalesView';
+import MyReconFeesView from '@/components/my-reconciliation/views/MyReconFeesView';
+import MyReconSettlementsView from '@/components/my-reconciliation/views/MyReconSettlementsView';
+import MyReconDivergencesView from '@/components/my-reconciliation/views/MyReconDivergencesView';
 
 /**
- * Conciliação Automatizada · Admin Sub · V8
- * Tela single-merchant que cruza Tuna × Adquirente × Banco em 3 vias.
- * Inspirada na arquitetura do Recovery Agent V8 + Admin Interno ReconciliationHub.
+ * Conciliação Completa · Admin Sub (Merchant)
+ *
+ * Visão do merchant contra a PagSmile, que é seu sub-adquirente.
+ * Não existem adquirentes externos aqui. Tudo é:
+ *   Lado A (ERP / pedidos do merchant)  vs.  Lado B (PagSmile)
+ *
+ * 5 abas:
+ *  1. Visão geral
+ *  2. Vendas vs PagSmile (confronto pedido a pedido)
+ *  3. Taxas cobradas (auditoria contrato vs cobrado)
+ *  4. Recebimentos (liquidações e saques)
+ *  5. Divergências (lista consolidada com ações)
  */
 export default function MyReconciliationAutomated() {
-  const [agentActive, setAgentActive] = useState(true);
-  const [selectedBucket, setSelectedBucket] = useState(null);
+  const [auditorActive, setAuditorActive] = useState(true);
   const [subTab, setSubTab] = useState('overview');
 
   const renderSubTab = () => {
     switch (subTab) {
-      case 'overview': return <ReconOverviewView />;
-      case 'files': return <ReconFilesView />;
-      case 'divergences': return <ReconDivergencesView />;
-      case 'adjustments': return <ReconAdjustmentsView />;
-      case 'schedule': return <ReconScheduleView />;
-      case 'how': return <ReconHowItWorksView />;
-      default: return <ReconOverviewView />;
+      case 'overview':    return <MyReconOverviewView />;
+      case 'sales':       return <MyReconSalesView />;
+      case 'fees':        return <MyReconFeesView />;
+      case 'settlements': return <MyReconSettlementsView />;
+      case 'divergences': return <MyReconDivergencesView />;
+      default:            return <MyReconOverviewView />;
     }
   };
 
@@ -40,16 +43,17 @@ export default function MyReconciliationAutomated() {
       style={{
         display: 'flex', flexDirection: 'column', gap: 18,
         padding: 20,
-        background: 'var(--v8-bg-canvas)',
+        background: 'var(--v8-bg-canvas, #FAFAFA)',
         minHeight: '100vh',
       }}
     >
-      {/* Bloco 1 · Resumo executivo (sempre visível) */}
-      <ReconHeaderV8 active={agentActive} onToggle={() => setAgentActive(v => !v)} />
-      <ReconKpiGridV8 />
-      <ThreeWayDiagramV8 />
+      <MyReconHeader
+        auditorActive={auditorActive}
+        onToggle={() => setAuditorActive(v => !v)}
+      />
 
-      {/* Bloco 2 · Sub-abas + matriz dentro de uma section V8 */}
+      <MyReconKpiGrid />
+
       <div style={{
         background: '#FFFFFF',
         border: '1px solid #E2E8F0',
@@ -69,13 +73,13 @@ export default function MyReconciliationAutomated() {
               fontWeight: 700, letterSpacing: '0.16em',
               textTransform: 'uppercase', color: '#007A5C',
             }}>
-              DETALHAMENTO DA CONCILIAÇÃO
+              CONCILIAÇÃO COMPLETA
             </span>
             <div style={{
               marginTop: 4, fontSize: 16, fontWeight: 700,
               letterSpacing: '-0.018em', color: '#0F172A',
             }}>
-              Explore arquivos, divergências, ajustes e cronograma
+              Audite vendas, taxas e recebimentos contra a PagSmile
             </div>
           </div>
           <span style={{
@@ -83,29 +87,16 @@ export default function MyReconciliationAutomated() {
             fontWeight: 600, color: '#64748B',
             letterSpacing: '0.04em', textTransform: 'uppercase',
           }}>
-            6 modos · {subTab.replace('_', ' ')}
+            5 modos · {subTab}
           </span>
         </div>
 
-        <ReconSubTabs value={subTab} onChange={setSubTab} />
+        <MyReconSubTabs value={subTab} onChange={setSubTab} />
 
         <div style={{ marginTop: 16 }}>
           {renderSubTab()}
         </div>
-
-        {subTab === 'overview' && (
-          <div style={{ marginTop: 18 }}>
-            <DivergenceBucketMatrix onSelect={setSelectedBucket} />
-          </div>
-        )}
       </div>
-
-      {selectedBucket && (
-        <DivergenceBucketDrawer
-          bucket={selectedBucket}
-          onClose={() => setSelectedBucket(null)}
-        />
-      )}
     </div>
   );
 }
