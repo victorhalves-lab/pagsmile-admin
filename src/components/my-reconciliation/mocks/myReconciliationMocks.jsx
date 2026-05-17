@@ -311,6 +311,7 @@ export const DIVERGENCIAS = [
 
 export const DIVERGENCE_BUCKETS_LABELS = {
   taxa_acima_contrato:    { label: 'Taxa acima do contrato', color: '#B45309' },
+  tarifa_acima_contrato:  { label: 'Tarifa acima do contrato', color: '#B45309' },
   tarifa_nao_prevista:    { label: 'Tarifa não prevista',    color: '#B91C1C' },
   saque_nao_creditado:    { label: 'Saque não creditado',    color: '#B91C1C' },
   venda_erp_sem_pagsmile: { label: 'Venda no ERP sem PagSmile', color: '#B45309' },

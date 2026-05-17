@@ -65,7 +65,7 @@ export default function MyReconDivergencesView() {
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           <BucketPill label="Todos" active={filter === 'all'} onClick={() => setFilter('all')} />
           {bucketsAtivos.map(b => {
-            const meta = DIVERGENCE_BUCKETS_LABELS[b];
+            const meta = DIVERGENCE_BUCKETS_LABELS[b] || { label: b, color: '#475569' };
             const count = DIVERGENCIAS.filter(d => d.bucket === b).length;
             return (
               <BucketPill
