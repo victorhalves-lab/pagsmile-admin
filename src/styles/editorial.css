@@ -1,0 +1,209 @@
+/* ============================================
+   PAGSMILE EDITORIAL FINTECH · 2026
+   Cores oficiais do Brand Guide aplicadas em fundos
+   e destaques mesclando azul navy + verdes.
+   ============================================ */
+
+@layer base {
+  :root {
+    /* ===== CORES OFICIAIS PAGSMILE 2026 (Brand Guide) ===== */
+    --ps-green-dark:   #0f2b2b;  /* Verde escuro oficial */
+    --ps-green-mid:    #00c194;  /* Verde médio oficial · COR PRIMÁRIA */
+    --ps-green-light:  #5cf7cf;  /* Verde claro · highlight */
+    --ps-navy:         #002443;  /* Azul escuro oficial */
+
+    /* Variações sintéticas (para fundos e estados) */
+    --ps-green-dark-2: #163838;  /* Card elevation sobre green-dark */
+    --ps-green-dark-3: #1d4242;  /* Card elevation 2 */
+    --ps-navy-2:       #001b34;  /* Navy mais profundo */
+    --ps-navy-3:       #003459;  /* Navy elevation */
+
+    --ps-green-mid-hover: #00d9a8;  /* Hover state */
+    --ps-green-mid-soft:  rgba(0, 193, 148, 0.12);  /* Background soft */
+    --ps-green-mid-border: rgba(0, 193, 148, 0.25);
+
+    --ps-text-mono-label: #7a9b97;  /* Verde-cinza p/ labels mono */
+    --ps-text-strong-dark: #0f2b2b;
+    --ps-text-strong-light: #ffffff;
+
+    /* Estados */
+    --ps-warn:   #f59e0b;
+    --ps-danger: #ef4444;
+    --ps-info:   #5cf7cf;  /* highlight como info */
+    --ps-success: #00c194;
+  }
+}
+
+@layer utilities {
+  /* ============================================
+     HEADLINE EDITORIAL com palavra-destaque
+     Padrão: PAINEL <span class="hl-accent">EXECUTIVO</span>
+     ============================================ */
+  .editorial-h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--ps-text-strong-dark);
+    text-transform: uppercase;
+  }
+  .dark .editorial-h1 {
+    color: var(--ps-text-strong-light);
+  }
+  .editorial-h1 .hl-accent {
+    color: var(--ps-green-mid);
+  }
+
+  .editorial-h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.018em;
+    line-height: 1.1;
+    color: var(--ps-text-strong-dark);
+    text-transform: uppercase;
+  }
+  .dark .editorial-h2 {
+    color: var(--ps-text-strong-light);
+  }
+  .editorial-h2 .hl-accent {
+    color: var(--ps-green-mid);
+  }
+
+  /* Subtitle mono uppercase */
+  .editorial-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ps-text-mono-label);
+  }
+
+  /* Eyebrow (label antes do título) */
+  .editorial-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ps-green-mid);
+  }
+
+  /* Background "hero" estilo Landing — gradient navy radial + glows */
+  .editorial-hero-bg {
+    background:
+      radial-gradient(1200px 600px at 50% 0%, rgba(0, 193, 148, 0.14), transparent 60%),
+      radial-gradient(900px 500px at 50% 100%, rgba(92, 247, 207, 0.10), transparent 60%),
+      linear-gradient(180deg, var(--ps-navy-2) 0%, var(--ps-navy) 50%, var(--ps-green-dark) 100%);
+  }
+
+  /* Background "page" mais sutil — mescla navy + verde escuro */
+  .editorial-page-bg-dark {
+    background:
+      radial-gradient(800px 400px at 0% 0%, rgba(0, 193, 148, 0.06), transparent 50%),
+      radial-gradient(800px 400px at 100% 100%, rgba(0, 36, 67, 0.4), transparent 50%),
+      linear-gradient(180deg, var(--ps-green-dark) 0%, var(--ps-navy-2) 100%);
+  }
+
+  /* Cards editoriais */
+  .editorial-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(15, 43, 43, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(15, 43, 43, 0.04);
+  }
+  .dark .editorial-card {
+    background: var(--ps-green-dark-2);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+  }
+
+  /* Card destacado (KPI / hero block) */
+  .editorial-card-hero {
+    background: linear-gradient(135deg, var(--ps-navy) 0%, var(--ps-green-dark) 100%);
+    border: 1px solid rgba(0, 193, 148, 0.2);
+    border-radius: 14px;
+    color: #fff;
+  }
+
+  /* Pill mono editorial — sem emoji, neutro */
+  .editorial-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid rgba(0, 193, 148, 0.25);
+    background: rgba(0, 193, 148, 0.08);
+    color: var(--ps-green-mid);
+  }
+
+  /* Botão primário editorial (refined, sem glow) */
+  .editorial-btn-primary {
+    background: var(--ps-green-mid);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 0;
+    transition: background-color 0.15s ease, transform 0.05s ease;
+  }
+  .editorial-btn-primary:hover {
+    background: var(--ps-green-mid-hover);
+  }
+  .editorial-btn-primary:active {
+    transform: translateY(1px);
+  }
+
+  /* Number display — sempre JetBrains Mono tabular */
+  .num-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .num-large {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    font-size: 32px;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+  .num-mega {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    font-size: 48px;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  /* Divider sutil com label mono */
+  .editorial-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0;
+  }
+  .editorial-divider::before,
+  .editorial-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(15, 43, 43, 0.1);
+  }
+  .dark .editorial-divider::before,
+  .dark .editorial-divider::after {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}

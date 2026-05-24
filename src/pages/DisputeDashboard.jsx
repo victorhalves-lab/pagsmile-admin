@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import PageHeader from '@/components/common/PageHeader';
+import EditorialPageHeader from '@/components/editorial/EditorialPageHeader';
 import DisputeRatioGauge from '@/components/disputes/DisputeRatioGauge';
 import DisputeTrendChart from '@/components/disputes/DisputeTrendChart';
 import ComplianceOverview from '@/components/disputes/ComplianceOverview';
@@ -27,6 +27,7 @@ import {
   Download,
   FileText
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function DisputeDashboard() {
   const { t } = useTranslation();
@@ -136,9 +137,11 @@ export default function DisputeDashboard() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={t('disputes.title')}
-        subtitle={t('disputes.title')}
+      <EditorialPageHeader
+        titleWords={["GESTÃO", "DISPUTAS"]}
+        accentIndex={1}
+        subtitle="CHARGEBACKS · PRÉ-CB · MED · COMPLIANCE"
+        eyebrow="CONTROLE DE RISCO"
         actions={
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
@@ -231,83 +234,49 @@ export default function DisputeDashboard() {
         isLoading={loadingAgent}
       />
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Link to={createPageUrl('Disputes')}>
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-emerald-100 rounded-lg">
-                    <Shield className="w-5 h-5 text-emerald-600" />
+      {/* Quick Actions · estilo editorial sólido, sem gradientes */}
+      <div>
+        <div className="flex items-baseline gap-3 mb-3">
+          <span className="font-mono text-[11px] font-bold text-[#00c194] tracking-widest">04</span>
+          <h2 className="text-[16px] font-extrabold uppercase tracking-[-0.01em] text-pag-navy-900 dark:text-white">
+            ATALHOS RÁPIDOS
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          {[
+            { page: 'Disputes', label: 'Cockpit Unificado', desc: 'Pre-CB + CB + MED em uma fila', icon: Shield, accent: 'mint' },
+            { page: 'PreChargebacks', label: 'Pré-Chargebacks', desc: `${kpiData.activePreChargebacks} alertas ativos`, icon: AlertTriangle, accent: 'warn' },
+            { page: 'Chargebacks', label: 'Chargebacks', desc: `${kpiData.inContestationCount} em contestação`, icon: Shield, accent: 'danger' },
+            { page: 'DisputeAgentSettings', label: 'Dispute Manager', desc: 'Configurar agente automatizado', icon: TrendingUp, accent: 'mint' },
+          ].map((card, idx) => {
+            const accentMap = {
+              mint:   'border-l-[#00c194] hover:border-[#00c194]/40',
+              warn:   'border-l-amber-500 hover:border-amber-500/40',
+              danger: 'border-l-red-500 hover:border-red-500/40',
+            };
+            const iconColorMap = {
+              mint: 'text-[#00c194]',
+              warn: 'text-amber-500',
+              danger: 'text-red-500',
+            };
+            const Icon = card.icon;
+            return (
+              <Link key={card.page} to={createPageUrl(card.page)}>
+                <div className={cn(
+                  'bg-white dark:bg-[#163838] border border-slate-200 dark:border-white/[0.06] border-l-4 rounded-xl p-4 transition-all hover:shadow-sm group cursor-pointer h-full',
+                  accentMap[card.accent]
+                )}>
+                  <div className="flex items-start justify-between mb-2">
+                    <Icon className={cn('w-5 h-5', iconColorMap[card.accent])} strokeWidth={1.75} />
+                    <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-[#00c194] group-hover:translate-x-0.5 transition-all" />
                   </div>
-                  <div>
-                    <p className="font-semibold text-emerald-900">Cockpit Unificado</p>
-                    <p className="text-sm text-emerald-700">Pre-CB + CB + MED em uma fila</p>
-                  </div>
+                  <p className="font-bold text-sm text-pag-navy-900 dark:text-white uppercase tracking-wide">{card.label}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{card.desc}</p>
                 </div>
-                <ArrowRight className="w-5 h-5 text-emerald-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link to={createPageUrl('PreChargebacks')}>
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-orange-200 bg-orange-50">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-orange-100 rounded-lg">
-                    <AlertTriangle className="w-5 h-5 text-orange-600" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-orange-900">Pré-Chargebacks</p>
-                    <p className="text-sm text-orange-700">{kpiData.activePreChargebacks} alertas ativos</p>
-                  </div>
-                </div>
-                <ArrowRight className="w-5 h-5 text-orange-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link to={createPageUrl('Chargebacks')}>
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-red-200 bg-red-50">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-red-100 rounded-lg">
-                    <Shield className="w-5 h-5 text-red-600" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-red-900">Chargebacks</p>
-                    <p className="text-sm text-red-700">{kpiData.inContestationCount} em contestação</p>
-                  </div>
-                </div>
-                <ArrowRight className="w-5 h-5 text-red-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link to={createPageUrl('DisputeAgentSettings')}>
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-purple-200 bg-purple-50">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <TrendingUp className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-purple-900">Dispute Manager</p>
-                    <p className="text-sm text-purple-700">Configurar agente IA</p>
-                  </div>
-                </div>
-                <ArrowRight className="w-5 h-5 text-purple-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

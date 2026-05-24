@@ -36,7 +36,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
-import PageHeader from '@/components/common/PageHeader';
+import EditorialPageHeader from '@/components/editorial/EditorialPageHeader';
 import DataTable from '@/components/common/DataTable';
 import CustomersKpiBar from '@/components/customers/v2/CustomersKpiBar';
 import CustomersSearchBar from '@/components/customers/v2/CustomersSearchBar';
@@ -268,9 +268,11 @@ export default function Customers() {
 
   return (
     <div className="space-y-6 pb-24">
-      <PageHeader
-        title={t('customers.title')}
-        subtitle="Customer Intelligence + Engagement"
+      <EditorialPageHeader
+        titleWords={["BASE DE", "CLIENTES"]}
+        accentIndex={1}
+        subtitle="INTELLIGENCE · ENGAGEMENT · LIFETIME VALUE"
+        eyebrow="CRM"
         breadcrumbs={[{ label: t('customers.title'), page: 'Customers' }]}
         actions={
           <div className="flex gap-2">
@@ -282,25 +284,27 @@ export default function Customers() {
               <Download className="w-4 h-4 mr-2" />
               Export
             </Button>
-            <Button className="bg-[#2bc196] hover:bg-[#239b7a]" onClick={() => setCreateOpen(true)}>
+            <Button className="bg-[#00c194] hover:bg-[#00d9a8] text-white" onClick={() => setCreateOpen(true)}>
               <UserPlus className="w-4 h-4 mr-2" /> Novo Cliente
             </Button>
           </div>
         }
       />
 
-      {/* AI Banner */}
-      <div className="bg-gradient-to-r from-purple-50 via-white to-emerald-50 border border-purple-100 rounded-xl p-3 flex items-center gap-3">
-        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#2bc196] to-emerald-400 flex items-center justify-center flex-shrink-0">
-          <Sparkles className="w-4 h-4 text-white" />
+      {/* Insights detectados — sem gradiente, sem emoji, estilo editorial */}
+      <div className="bg-white dark:bg-[#163838] border-l-4 border-[#00c194] border-y border-r border-slate-200 dark:border-white/[0.06] rounded-r-xl p-4 flex items-start gap-4">
+        <div className="font-mono text-[10px] uppercase tracking-[0.18em] font-bold text-[#00c194] pt-1 whitespace-nowrap">
+          INSIGHTS<br/>DETECTADOS
         </div>
-        <div className="flex-1">
-          <p className="text-sm font-bold text-slate-900">
-            🎯 IA detectou: <span className="text-purple-700">{cardsExpiring.length} clientes com cartão expirando + {highValueAtRisk.length} VIPs em risco</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-pag-navy-900 dark:text-white leading-snug">
+            <span className="num-display">{cardsExpiring.length}</span> clientes com cartão expirando · <span className="num-display">{highValueAtRisk.length}</span> VIPs em risco
           </p>
-          <p className="text-xs text-slate-600">Acionar Account Updater + campanha retention pode evitar ~R$ 28k em churn involuntário</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+            Acionar Account Updater + campanha de retenção pode evitar ~<span className="font-mono font-bold text-[#00c194]">R$ 28k</span> em churn involuntário.
+          </p>
         </div>
-        <Button size="sm" variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+        <Button size="sm" variant="outline" className="border-[#00c194]/40 text-[#00c194] hover:bg-[#00c194]/10 flex-shrink-0">
           Ver recomendações
         </Button>
       </div>

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import PageHeader from '@/components/common/PageHeader';
+import EditorialPageHeader from '@/components/editorial/EditorialPageHeader';
 import BalanceSummaryCards from '@/components/financial/BalanceSummaryCards';
 import DailySummaryCard from '@/components/financial/v2/DailySummaryCard';
 import CashFlowProjector from '@/components/financial/v2/CashFlowProjector';
@@ -165,18 +165,20 @@ export default function FinancialOverview() {
   };
 
   const quickLinks = [
-    { labelKey: 'financial.statement', icon: FileText, page: 'FinancialStatement', color: 'bg-blue-100 text-blue-600' },
-    { labelKey: 'financial.receivables', icon: Calendar, page: 'ReceivablesAgenda', color: 'bg-green-100 text-green-600' },
-    { labelKey: 'financial.anticipation', icon: Zap, page: 'Anticipation', color: 'bg-purple-100 text-purple-600' },
-    { labelKey: 'menu.split', icon: ArrowLeftRight, page: 'SplitManagement', color: 'bg-indigo-100 text-indigo-600' },
-    { labelKey: 'financial.withdrawals', icon: ArrowUpFromLine, page: 'Withdrawals', color: 'bg-orange-100 text-orange-600' },
+    { labelKey: 'financial.statement', icon: FileText, page: 'FinancialStatement' },
+    { labelKey: 'financial.receivables', icon: Calendar, page: 'ReceivablesAgenda' },
+    { labelKey: 'financial.anticipation', icon: Zap, page: 'Anticipation' },
+    { labelKey: 'menu.split', icon: ArrowLeftRight, page: 'SplitManagement' },
+    { labelKey: 'financial.withdrawals', icon: ArrowUpFromLine, page: 'Withdrawals' },
   ];
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={t('financial.title')}
-        subtitle={t('financial.overview')}
+      <EditorialPageHeader
+        titleWords={["VISÃO", "FINANCEIRA"]}
+        accentIndex={1}
+        subtitle="SALDOS · RECEBÍVEIS · FLUXO DE CAIXA"
+        eyebrow="FINANCEIRO"
         breadcrumbs={[{ label: t('financial.title') }]}
         actions={
           <div className="flex gap-2">
@@ -186,7 +188,7 @@ export default function FinancialOverview() {
                 {t('financial.statement')}
               </Link>
             </Button>
-            <Button className="bg-green-600 hover:bg-green-700" asChild>
+            <Button className="bg-[#00c194] hover:bg-[#00d9a8] text-white" asChild>
               <Link to={createPageUrl('Withdrawals')}>
                 <ArrowUpFromLine className="w-4 h-4 mr-2" />
                 {t('financial.withdraw')}
@@ -238,18 +240,16 @@ export default function FinancialOverview() {
       {/* Painel de ajustes manuais aplicados pela equipe interna - transparência total */}
       <MerchantAdjustmentsPanel limit={10} />
 
-      {/* Quick Links */}
+      {/* Quick Links · padronizado editorial */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {quickLinks.map((link) => (
           <Link
             key={link.page}
             to={createPageUrl(link.page)}
-            className="flex items-center gap-3 p-4 bg-white rounded-lg border hover:shadow-md transition-all"
+            className="flex items-center gap-3 p-4 bg-white dark:bg-[#163838] border border-slate-200 dark:border-white/[0.06] border-l-4 border-l-[#00c194]/40 hover:border-l-[#00c194] rounded-xl hover:shadow-sm transition-all group"
           >
-            <div className={cn("p-2 rounded-lg", link.color)}>
-              <link.icon className="w-5 h-5" />
-            </div>
-            <span className="font-medium text-sm">{t(link.labelKey)}</span>
+            <link.icon className="w-5 h-5 text-[#00c194] group-hover:scale-110 transition-transform" strokeWidth={1.75} />
+            <span className="font-semibold text-sm text-pag-navy-900 dark:text-white uppercase tracking-wide">{t(link.labelKey)}</span>
           </Link>
         ))}
       </div>

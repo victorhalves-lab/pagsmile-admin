@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useTranslation } from 'react-i18next';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 
-import PageHeader from '@/components/common/PageHeader';
+import EditorialPageHeader from '@/components/editorial/EditorialPageHeader';
 import AllTransactionsView from '@/components/transactions/AllTransactionsView';
 import CardTransactionsView from '@/components/transactions/CardTransactionsView';
 import PixTransactionsView from '@/components/transactions/PixTransactionsView';
@@ -46,9 +46,10 @@ function TransactionsHubInner() {
 
   return (
     <div className="space-y-5 bg-[var(--color-bg-page)] min-h-screen">
-      <PageHeader
-        title={t('transactions.title')}
-        subtitle={t('transactions.subtitle') || 'Hub centralizado de transações, reembolsos, recusas e CRM'}
+      <EditorialPageHeader
+        titleWords={["CENTRAL", "TRANSAÇÕES"]}
+        accentIndex={1}
+        subtitle="HUB UNIFICADO · CARD · PIX · REEMBOLSOS · CRM"
         breadcrumbs={[{ label: t('transactions.title'), page: 'Transactions' }]}
       />
 
