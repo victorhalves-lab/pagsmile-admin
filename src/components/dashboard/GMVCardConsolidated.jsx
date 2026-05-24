@@ -1,10 +1,9 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, DollarSign, ChevronRight, Hash, Receipt } from 'lucide-react';
+import { CurrencyDollar, Hash, Receipt, TrendUp, TrendDown, CaretRight, Lightning } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import Sparkline from './Sparkline';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
-import { MonoNumber } from '@/components/ui/mono-number';
 
 /**
  * GMV / Volume Transacionado — Card consolidado com 3 visões em abas:
@@ -12,6 +11,9 @@ import { MonoNumber } from '@/components/ui/mono-number';
  *  2. Transações (#)    — quantidade de transações
  *  3. Ticket Médio      — R$/tx incluindo split cartão vs PIX
  * Mantém toggle de período (Hoje / Ontem / 7d / Mês / Mês anterior).
+ *
+ * UI 2026: paleta verde Pagsmile + accents navy/highlight + gradients sutis,
+ * tipografia editorial, números HUGE em JetBrains Mono tabular.
  */
 
 const PERIODS = [
@@ -23,29 +25,10 @@ const PERIODS = [
 ];
 
 const VIEWS = [
-  { id: 'volume',  label: 'Volume (R$)',     icon: DollarSign, color: 'emerald' },
-  { id: 'count',   label: 'Transações (#)',  icon: Hash,       color: 'sky' },
-  { id: 'ticket',  label: 'Ticket Médio',    icon: Receipt,    color: 'slate' },
+  { id: 'volume',  label: 'Volume (R$)',     icon: CurrencyDollar },
+  { id: 'count',   label: 'Transações (#)',  icon: Hash },
+  { id: 'ticket',  label: 'Ticket Médio',    icon: Receipt },
 ];
-
-// V7: cores sóbrias, sem gradientes nem shadows coloridas
-const COLOR_THEME = {
-  emerald: {
-    accent: 'text-emerald-700 dark:text-emerald-400',
-    border: 'border-emerald-600',
-    spark: 'emerald',
-  },
-  sky: {
-    accent: 'text-sky-700 dark:text-sky-400',
-    border: 'border-sky-600',
-    spark: 'blue',
-  },
-  slate: {
-    accent: 'text-slate-700 dark:text-slate-300',
-    border: 'border-slate-700',
-    spark: 'violet',
-  },
-};
 
 export default function GMVCardConsolidated({ data = {}, loading = false }) {
   const [period, setPeriod] = React.useState('today');
@@ -75,7 +58,6 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
   };
 
   // ===== DADOS DE CONTAGEM (# transações) =====
-  // Derivado: estimativa ~R$ 95 ticket médio combinado
   const AVG_TICKET = 95;
   const countMap = Object.fromEntries(
     Object.entries(volumeMap).map(([k, v]) => [k, {
@@ -87,11 +69,10 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
   );
 
   // ===== DADOS DE TICKET MÉDIO =====
-  // Ticket cartão ~R$ 142 / Ticket PIX ~R$ 48 (proporção 67/33 do volume)
   const ticketMap = Object.fromEntries(
     Object.entries(volumeMap).map(([k, v]) => [k, {
       value: AVG_TICKET,
-      change: (v.change || 0) * 0.3, // ticket varia menos que volume
+      change: (v.change || 0) * 0.3,
       sub: v.sub,
       cardTicket: 142,
       pixTicket: 48,
@@ -101,7 +82,6 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
   const dataMap = { volume: volumeMap, count: countMap, ticket: ticketMap };
   const current = dataMap[view][period];
   const viewMeta = VIEWS.find(v => v.id === view);
-  const theme = COLOR_THEME[viewMeta.color];
   const positive = (current.change || 0) >= 0;
 
   // Sparkline mock
@@ -118,29 +98,34 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
         cardLabel: 'Cartão',
         cardValue: formatCurrency((current.value || 0) * 0.67),
         cardPct: '67% do total',
+        cardPercent: 67,
         pixLabel: 'PIX',
         pixValue: formatCurrency((current.value || 0) * 0.33),
         pixPct: '33% do total',
+        pixPercent: 33,
       };
     }
     if (view === 'count') {
       return {
         cardLabel: 'Cartão',
-        cardValue: formatNumber((current.value || 0) * 0.50), // # tx cartão ~50% (ticket maior)
+        cardValue: formatNumber((current.value || 0) * 0.50),
         cardPct: '50% das transações',
+        cardPercent: 50,
         pixLabel: 'PIX',
         pixValue: formatNumber((current.value || 0) * 0.50),
         pixPct: '50% das transações',
+        pixPercent: 50,
       };
     }
-    // ticket
     return {
       cardLabel: 'Ticket Cartão',
       cardValue: formatCurrency(current.cardTicket),
       cardPct: 'média parcelado/à vista',
+      cardPercent: 75,
       pixLabel: 'Ticket PIX',
       pixValue: formatCurrency(current.pixTicket),
       pixPct: 'à vista',
+      pixPercent: 25,
     };
   })();
 
@@ -148,33 +133,52 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
   const Icon = viewMeta.icon;
 
   return (
-    <div className="rounded-card-v7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-v7-card overflow-hidden">
-      <div className="p-5">
-        {/* Header: icon + label + period toggle */}
-        <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700">
-              <Icon className={cn('w-4 h-4', theme.accent)} />
+    <div
+      className="relative rounded-2xl border border-slate-200/80 dark:border-white/[0.06] overflow-hidden"
+      style={{
+        background:
+          'radial-gradient(800px 300px at 0% 0%, rgba(0,193,148,0.06), transparent 60%), linear-gradient(180deg, #ffffff 0%, #f8faf9 100%)',
+      }}
+    >
+      {/* Glow corner top-right */}
+      <div
+        className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-50 pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(92,247,207,0.15) 0%, transparent 70%)' }}
+      />
+
+      <div className="relative p-6">
+        {/* ===== HEADER ===== */}
+        <div className="flex items-start justify-between gap-3 mb-5 flex-wrap">
+          <div className="flex items-center gap-3">
+            {/* Ícone badge — fundo verde-claro com glow */}
+            <div className="relative">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#00c194] to-[#0f2b2b] flex items-center justify-center shadow-[0_4px_16px_-4px_rgba(0,193,148,0.4)]">
+                <Icon className="w-5 h-5 text-white" weight="bold" />
+              </div>
+              <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#5cf7cf] animate-pulse shadow-[0_0_8px_rgba(92,247,207,0.8)]" />
             </div>
             <div>
-              <p className={cn('font-mono text-[10px] uppercase tracking-[0.12em] font-medium', theme.accent)}>
-                {viewMeta.label}
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] font-bold text-[#00c194]">
+                {viewMeta.label.toUpperCase()}
               </p>
-              <p className="text-[10px] text-slate-500 mt-0.5">{current.sub}</p>
+              <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
+                <Lightning className="w-3 h-3 text-amber-500" weight="fill" />
+                {current.sub}
+              </p>
             </div>
           </div>
 
-          {/* Period toggle */}
-          <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5">
+          {/* Period pills modernos */}
+          <div className="inline-flex items-center bg-white border border-slate-200 dark:bg-white/[0.04] dark:border-white/10 rounded-full p-1 shadow-sm">
             {PERIODS.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setPeriod(p.id)}
                 className={cn(
-                  'px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider font-medium rounded-md transition-colors',
+                  'px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider font-bold rounded-full transition-all',
                   period === p.id
-                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                    : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-200'
+                    ? 'bg-[#00c194] text-white shadow-[0_2px_8px_-2px_rgba(0,193,148,0.5)]'
+                    : 'text-slate-500 hover:text-[#00c194]'
                 )}
               >
                 {p.label}
@@ -183,94 +187,153 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
           </div>
         </div>
 
-        {/* View tabs (Volume / Transações / Ticket) */}
-        <div className="flex items-center gap-1 mb-5 border-b border-slate-100 dark:border-slate-800">
+        {/* ===== VIEW TABS — underline grosso verde quando ativo ===== */}
+        <div className="flex items-center gap-1 mb-6 border-b border-slate-200/70 dark:border-white/[0.06]">
           {VIEWS.map((v) => {
             const VIcon = v.icon;
             const active = view === v.id;
-            const vTheme = COLOR_THEME[v.color];
             return (
               <button
                 key={v.id}
                 onClick={() => setView(v.id)}
                 className={cn(
-                  'flex items-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors border-b-2 -mb-px',
+                  'relative flex items-center gap-2 px-4 py-3 text-sm font-semibold transition-all',
                   active
-                    ? `${vTheme.accent} border-current`
-                    : 'text-slate-500 border-transparent hover:text-slate-700 dark:hover:text-slate-300'
+                    ? 'text-[#00c194]'
+                    : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
                 )}
               >
-                <VIcon className="w-3.5 h-3.5" />
+                <VIcon className="w-4 h-4" weight={active ? 'fill' : 'regular'} />
                 {v.label}
+                {active && (
+                  <span className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-gradient-to-r from-[#00c194] to-[#5cf7cf] rounded-t-full" />
+                )}
               </button>
             );
           })}
         </div>
 
-        {/* Main grid: value + breakdown + sparkline */}
+        {/* ===== MAIN GRID ===== */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-end">
-          {/* Value + change */}
+          {/* === Valor principal HUGE === */}
           <div className="lg:col-span-4">
-            <Link to={createPageUrl('Transactions')} className="group inline-flex items-baseline gap-1.5">
-              <MonoNumber size="hero" className="text-slate-900 dark:text-white tracking-tight group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+            <Link to={createPageUrl('Transactions')} className="group inline-flex items-baseline gap-2">
+              <span
+                className="font-mono font-extrabold tracking-tight tabular-nums text-[44px] sm:text-[52px] leading-none"
+                style={{
+                  background: 'linear-gradient(135deg, #002443 0%, #00c194 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
                 {mainValue}
-              </MonoNumber>
-              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-600 transition-colors self-center" />
+              </span>
+              <CaretRight
+                className="w-4 h-4 text-slate-300 group-hover:text-[#00c194] group-hover:translate-x-0.5 transition-all"
+                weight="bold"
+              />
             </Link>
-            <div className="flex items-center gap-2 mt-2">
+
+            {/* Badge variação — chip verde sólido com ícone */}
+            <div className="flex items-center gap-2 mt-3">
               <span
                 className={cn(
-                  'inline-flex items-center gap-1 font-mono text-[10px] tabular-nums font-semibold px-1.5 py-0.5 rounded border',
+                  'inline-flex items-center gap-1.5 font-mono text-xs tabular-nums font-bold px-2.5 py-1 rounded-full',
                   positive
-                    ? 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/30 dark:text-emerald-400'
-                    : 'text-rose-700 bg-rose-50 border-rose-200 dark:bg-rose-500/10 dark:border-rose-500/30 dark:text-rose-400'
+                    ? 'bg-[#00c194] text-white shadow-[0_2px_8px_-2px_rgba(0,193,148,0.5)]'
+                    : 'bg-red-500 text-white shadow-[0_2px_8px_-2px_rgba(239,68,68,0.5)]'
                 )}
               >
-                {positive ? <TrendingUp className="w-2.5 h-2.5" strokeWidth={2.5} /> : <TrendingDown className="w-2.5 h-2.5" strokeWidth={2.5} />}
-                {Math.abs(current.change || 0).toFixed(1)}%
+                {positive
+                  ? <TrendUp className="w-3 h-3" weight="bold" />
+                  : <TrendDown className="w-3 h-3" weight="bold" />
+                }
+                {positive ? '+' : ''}{(current.change || 0).toFixed(1)}%
               </span>
-              <span className="text-[10px] text-slate-500">vs período anterior</span>
+              <span className="text-xs text-slate-500 font-medium">vs período anterior</span>
             </div>
+
             {current.projection && view !== 'ticket' && (
-              <p className="text-[10px] text-amber-700 dark:text-amber-400 mt-2 font-mono">
-                Projeção fim do mês:{' '}
-                <span className="font-semibold tabular-nums">
-                  {view === 'count' ? formatNumber(current.projection) : formatCurrency(current.projection)}
-                </span>
-              </p>
+              <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30">
+                <Lightning className="w-3.5 h-3.5 text-amber-600" weight="fill" />
+                <p className="text-[11px] font-mono text-amber-800 dark:text-amber-400">
+                  Projeção fim do mês:{' '}
+                  <span className="font-bold tabular-nums">
+                    {view === 'count' ? formatNumber(current.projection) : formatCurrency(current.projection)}
+                  </span>
+                </p>
+              </div>
             )}
           </div>
 
-          {/* Breakdown card vs pix (varia por visão) */}
+          {/* === Sub-cards CARTÃO vs PIX — dark navy com barra de proporção === */}
           <div className="lg:col-span-4 grid grid-cols-2 gap-3">
+            {/* CARTÃO */}
             <Link to={createPageUrl('CardTransactions')} className="block group">
-              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
-                <p className="font-mono text-[10px] uppercase tracking-[0.12em] font-medium text-slate-500">
+              <div
+                className="relative p-4 rounded-xl overflow-hidden h-full transition-all group-hover:scale-[1.02] group-hover:shadow-lg"
+                style={{
+                  background: 'linear-gradient(135deg, #002443 0%, #001b34 100%)',
+                }}
+              >
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] font-bold text-[#5cf7cf]">
                   {breakdown.cardLabel}
                 </p>
-                <MonoNumber size="base" className="block font-semibold text-slate-900 dark:text-white mt-1">
+                <p className="font-mono font-extrabold text-white text-xl tabular-nums mt-1.5 leading-none">
                   {breakdown.cardValue}
-                </MonoNumber>
-                <p className="text-[10px] text-slate-500 mt-0.5">{breakdown.cardPct}</p>
+                </p>
+                <p className="text-[10px] text-white/50 mt-1">{breakdown.cardPct}</p>
+                {/* Barra de proporção */}
+                <div className="mt-3 h-1 rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#5cf7cf] to-[#00c194] rounded-full transition-all"
+                    style={{ width: `${breakdown.cardPercent}%` }}
+                  />
+                </div>
               </div>
             </Link>
+
+            {/* PIX — verde Pagsmile sólido */}
             <Link to={createPageUrl('PixTransactions')} className="block group">
-              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-500/40 transition-colors">
-                <p className="font-mono text-[10px] uppercase tracking-[0.12em] font-medium text-emerald-700 dark:text-emerald-400">
+              <div
+                className="relative p-4 rounded-xl overflow-hidden h-full transition-all group-hover:scale-[1.02] group-hover:shadow-lg"
+                style={{
+                  background: 'linear-gradient(135deg, #00c194 0%, #18866a 100%)',
+                  boxShadow: '0 2px 12px -4px rgba(0,193,148,0.3)',
+                }}
+              >
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] font-bold text-white/90">
                   {breakdown.pixLabel}
                 </p>
-                <MonoNumber size="base" className="block font-semibold text-slate-900 dark:text-white mt-1">
+                <p className="font-mono font-extrabold text-white text-xl tabular-nums mt-1.5 leading-none">
                   {breakdown.pixValue}
-                </MonoNumber>
-                <p className="text-[10px] text-slate-500 mt-0.5">{breakdown.pixPct}</p>
+                </p>
+                <p className="text-[10px] text-white/70 mt-1">{breakdown.pixPct}</p>
+                {/* Barra de proporção */}
+                <div className="mt-3 h-1 rounded-full bg-white/20 overflow-hidden">
+                  <div
+                    className="h-full bg-white rounded-full transition-all"
+                    style={{ width: `${breakdown.pixPercent}%` }}
+                  />
+                </div>
               </div>
             </Link>
           </div>
 
-          {/* Sparkline */}
+          {/* === Sparkline === */}
           <div className="lg:col-span-4">
-            <p className="font-mono text-[10px] text-slate-500 mb-2 uppercase tracking-[0.12em] font-medium">Tendência 12 períodos</p>
-            <Sparkline data={sparkSeries} color={theme.spark} height={48} showTooltip />
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-mono text-[10px] text-slate-500 uppercase tracking-[0.16em] font-bold">
+                Tendência 12 períodos
+              </p>
+              <span className="font-mono text-[10px] text-[#00c194] font-bold tabular-nums">
+                {positive ? '↗' : '↘'} {Math.abs(current.change || 0).toFixed(1)}%
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-white border border-slate-100 dark:bg-white/[0.02] dark:border-white/[0.06]">
+              <Sparkline data={sparkSeries} color="emerald" height={64} showTooltip />
+            </div>
           </div>
         </div>
       </div>
