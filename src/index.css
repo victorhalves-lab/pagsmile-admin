@@ -14,6 +14,9 @@
 /* Pulse V9 / VF — design system oficial (V9.html + PagsmilePulseDesignSystemVF.html) */
 @import './styles/pulse-v9.css';
 
+/* Pulse DS — padrões V8 BOLD + V9 (ds-* utility classes) */
+@import './styles/pulse-ds.css';
+
 /* ============================================
    PAGSMILE PULSE · DESIGN SYSTEM V7 (final)
    Tokens oficiais da marca (Manual): Mint #2bc196, Navy #002443,

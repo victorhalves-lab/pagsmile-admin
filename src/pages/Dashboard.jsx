@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import EditorialPageHeader from '@/components/editorial/EditorialPageHeader';
+
 import ChartCard from '@/components/dashboard/ChartCard';
 import QuickActionsCustomizable from '@/components/dashboard/QuickActionsCustomizable';
 import BalanceCard from '@/components/dashboard/BalanceCard';
@@ -93,40 +93,45 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen pb-8">
-      <EditorialPageHeader
-        titleWords={["PAINEL", "EXECUTIVO"]}
-        accentIndex={1}
-        subtitle="VISÃO 360 DA SUA OPERAÇÃO"
-        eyebrow="DASHBOARD · TEMPO REAL"
-        actions={
-          <div className="flex items-center gap-2 flex-wrap">
-            <ProfileSwitcher profile={profile} onChange={setProfile} />
-            <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => refetch()} title="Atualizar dados">
-              <RefreshCw className="w-4 h-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => setScheduleOpen(true)} title="Agendar relatório">
-              <CalendarPlus className="w-4 h-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => setTourOpen(true)} title="Tour guiado">
-              <HelpCircle className="w-4 h-4" />
-            </Button>
-            <Select value={period} onValueChange={setPeriod}>
-              <SelectTrigger className="w-36 h-9">
-                <Calendar className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="24h">{t('common.today')}</SelectItem>
-                <SelectItem value="yesterday">{t('common.yesterday')}</SelectItem>
-                <SelectItem value="7d">{t('common.last_7_days')}</SelectItem>
-                <SelectItem value="30d">{t('common.this_month')}</SelectItem>
-                <SelectItem value="last_month">{t('common.last_month')}</SelectItem>
-                <SelectItem value="90d">{t('common.last_90_days')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        }
-      />
+      {/* DS PAGE HERO · v9 / VF */}
+      <div className="ds-page-hero flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <span className="badge">
+            <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)] animate-pulse" />
+            Dashboard · tempo real
+          </span>
+          <h1>
+            Painel <em>executivo</em>
+          </h1>
+          <p>Visão 360 da sua operação · volume, conversão, recebíveis e risco em um só lugar.</p>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <ProfileSwitcher profile={profile} onChange={setProfile} />
+          <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => refetch()} title="Atualizar dados">
+            <RefreshCw className="w-4 h-4" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => setScheduleOpen(true)} title="Agendar relatório">
+            <CalendarPlus className="w-4 h-4" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => setTourOpen(true)} title="Tour guiado">
+            <HelpCircle className="w-4 h-4" />
+          </Button>
+          <Select value={period} onValueChange={setPeriod}>
+            <SelectTrigger className="w-36 h-9">
+              <Calendar className="w-4 h-4 mr-2" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="24h">{t('common.today')}</SelectItem>
+              <SelectItem value="yesterday">{t('common.yesterday')}</SelectItem>
+              <SelectItem value="7d">{t('common.last_7_days')}</SelectItem>
+              <SelectItem value="30d">{t('common.this_month')}</SelectItem>
+              <SelectItem value="last_month">{t('common.last_month')}</SelectItem>
+              <SelectItem value="90d">{t('common.last_90_days')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
       {/* ZONA 0 — Alertas críticos (só se houver) */}
       {showSection('alerts') && (
