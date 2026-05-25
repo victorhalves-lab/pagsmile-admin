@@ -1,8 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Shield, Scale, FileLock2, Zap, ArrowRight, Info } from 'lucide-react';
+import {
+  ShieldCheck,
+  Scales,
+  Lock,
+  Lightning,
+  ArrowRight,
+  Info,
+} from '@phosphor-icons/react';
 import { createPageUrl } from '@/components/utils';
 import { MOCK_EFFECTS, formatCurrencyShort } from '@/components/regulatory/mocks/urMock';
 
@@ -11,39 +16,32 @@ const TYPES = [
     key: 'judicial',
     label: 'Bloqueios judiciais',
     description: 'Penhoras e ordens judiciais',
-    icon: Scale,
-    iconBg: 'bg-rose-50 dark:bg-rose-950/40',
-    iconColor: 'text-rose-600 dark:text-rose-400',
-    accent: 'border-l-rose-400 dark:border-l-rose-500',
-    valueColor: 'text-rose-700 dark:text-rose-300',
+    icon: Scales,
+    iconVariant: 'pvf-ic-err',
+    barColor: '#FCA5A5',
     match: (e) => e.type === 'judicial_lien' || e.type === 'attachment',
   },
   {
     key: 'cessions',
     label: 'Cessões fiduciárias',
     description: 'Recebíveis em garantia',
-    icon: FileLock2,
-    iconBg: 'bg-amber-50 dark:bg-amber-950/40',
-    iconColor: 'text-amber-600 dark:text-amber-400',
-    accent: 'border-l-amber-400 dark:border-l-amber-500',
-    valueColor: 'text-amber-700 dark:text-amber-300',
+    icon: Lock,
+    iconVariant: 'pvf-ic-warn',
+    barColor: '#FDE68A',
     match: (e) => e.type.includes('assignment'),
   },
   {
     key: 'anticipations',
     label: 'Antecipações registradas',
     description: 'Com terceiros (FIDC, bancos)',
-    icon: Zap,
-    iconBg: 'bg-sky-50 dark:bg-sky-950/40',
-    iconColor: 'text-sky-600 dark:text-sky-400',
-    accent: 'border-l-sky-400 dark:border-l-sky-500',
-    valueColor: 'text-sky-700 dark:text-sky-300',
+    icon: Lightning,
+    iconVariant: 'pvf-ic-blue',
+    barColor: '#8AA5BD',
     match: (e) => e.type === 'registered_anticipation',
   },
 ];
 
 export default function RegulatoryCommitmentsCard() {
-  // mock — lojista atual
   const myEffects = MOCK_EFFECTS.filter(
     (e) => e.ur?.merchant?.id === 'mer_001' && e.status === 'active'
   );
@@ -59,108 +57,218 @@ export default function RegulatoryCommitmentsCard() {
   }).filter((t) => t.count > 0);
 
   return (
-    <Card className="overflow-hidden border-slate-200 dark:border-slate-700">
-      {/* Header com fundo sutil */}
-      <div className="px-5 py-4 bg-gradient-to-r from-slate-50 to-white dark:from-slate-800/60 dark:to-slate-800/20 border-b border-slate-100 dark:border-slate-700">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-slate-900 dark:bg-slate-100 flex items-center justify-center shrink-0">
-              <Shield className="w-5 h-5 text-white dark:text-slate-900" />
+    <div className="pvf-card" style={{ padding: 0, overflow: 'hidden' }}>
+      {/* Header */}
+      <div style={{
+        padding: '18px 22px',
+        background: 'linear-gradient(135deg, #002443, #001124)',
+        color: '#fff',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: -60,
+          right: -40,
+          width: 200,
+          height: 200,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(92,247,207,0.32), transparent 60%)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+            <div className="pvf-ic pvf-ic-solid-blue" style={{ background: 'rgba(92,247,207,0.16)', color: '#5CF7CF', border: '1px solid rgba(92,247,207,0.3)' }}>
+              <ShieldCheck weight="duotone" size={22} />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">
+              <div style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: 10.5,
+                fontWeight: 800,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: '#5CF7CF',
+                marginBottom: 4,
+              }}>
+                Compliance · CERC/B3
+              </div>
+              <h3 style={{
+                margin: 0,
+                fontFamily: 'Inter, sans-serif',
+                fontSize: 17,
+                fontWeight: 800,
+                letterSpacing: '-0.018em',
+                color: '#fff',
+                lineHeight: 1.25,
+              }}>
                 Compromissos sobre seus recebíveis
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
-                <Info className="w-3 h-3" />
-                Valores comprometidos por gravames registrados em CERC/B3
+              <p style={{
+                margin: '6px 0 0',
+                fontSize: 11.5,
+                color: 'rgba(255,255,255,0.65)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+              }}>
+                <Info weight="duotone" size={12} />
+                Valores comprometidos por gravames registrados
               </p>
             </div>
           </div>
-          <div className="text-left sm:text-right pl-13 sm:pl-0">
-            <p className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-semibold">
+          <div style={{ textAlign: 'right' }}>
+            <div style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 10,
+              fontWeight: 800,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: '#5CF7CF',
+              opacity: 0.78,
+            }}>
               Total comprometido
-            </p>
-            <p className="text-xl font-black text-slate-900 dark:text-white tabular-nums">
+            </div>
+            <div style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 28,
+              fontWeight: 800,
+              letterSpacing: '-0.024em',
+              color: '#fff',
+              fontVariantNumeric: 'tabular-nums',
+              lineHeight: 1,
+              marginTop: 4,
+            }}>
               {formatCurrencyShort(totalCommitted)}
-            </p>
+            </div>
           </div>
         </div>
       </div>
 
-      <CardContent className="p-5">
-        {/* Barra empilhada de proporção */}
-        <div className="mb-4">
-          <div className="flex h-2 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+      {/* Body */}
+      <div style={{ padding: 20 }}>
+        {/* Stacked bar */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{
+            display: 'flex',
+            height: 8,
+            borderRadius: 99,
+            overflow: 'hidden',
+            background: '#E0F8F1',
+            border: '1px solid #B3F0DE',
+          }}>
             {breakdown.map((item) => (
               <div
                 key={item.key}
-                className={`${item.iconBg.replace('bg-', 'bg-').replace('-50', '-400').replace('dark:bg-', 'dark:bg-').replace('-950/40', '-500')}`}
-                style={{ width: `${item.pct}%` }}
+                style={{ width: `${item.pct}%`, background: item.barColor }}
                 title={`${item.label}: ${item.pct.toFixed(0)}%`}
               />
             ))}
           </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 14px', marginTop: 10 }}>
             {breakdown.map((item) => (
-              <div key={item.key} className="flex items-center gap-1.5 text-[11px]">
-                <span className={`w-2 h-2 rounded-full ${item.iconColor.replace('text-', 'bg-')}`} />
-                <span className="text-slate-500 dark:text-slate-400">{item.label}</span>
-                <span className="text-slate-700 dark:text-slate-200 font-semibold tabular-nums">
-                  {item.pct.toFixed(0)}%
-                </span>
+              <div key={item.key} style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: 10.5,
+                fontWeight: 700,
+              }}>
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: item.barColor }} />
+                <span style={{ color: '#547C9D' }}>{item.label}</span>
+                <span style={{ color: '#001124', fontWeight: 800 }}>{item.pct.toFixed(0)}%</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Cards por tipo */}
+        {/* KPI cards por tipo */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {breakdown.map((item) => {
             const Icon = item.icon;
             return (
-              <div
-                key={item.key}
-                className={`relative p-4 rounded-lg bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 border-l-4 ${item.accent} hover:shadow-md transition-shadow`}
-              >
-                <div className="flex items-start justify-between gap-2 mb-3">
-                  <div className={`w-9 h-9 rounded-lg ${item.iconBg} flex items-center justify-center`}>
-                    <Icon className={`w-4.5 h-4.5 ${item.iconColor}`} />
+              <div key={item.key} className="pvf-kpi" style={{ minHeight: 140 }}>
+                <div className="pvf-kpi-top">
+                  <div className={`pvf-ic pvf-ic-sm ${item.iconVariant}`}>
+                    <Icon weight="duotone" size={16} />
                   </div>
-                  <span className={`text-2xl font-black tabular-nums ${item.iconColor}`}>
+                  <span style={{
+                    fontFamily: 'JetBrains Mono, monospace',
+                    fontSize: 26,
+                    fontWeight: 800,
+                    color: '#001124',
+                    lineHeight: 1,
+                    letterSpacing: '-0.02em',
+                  }}>
                     {item.count}
                   </span>
                 </div>
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight">
-                  {item.label}
-                </p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 mb-2">
-                  {item.description}
-                </p>
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-700/50">
-                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
-                    Valor afetado
+                <div>
+                  <p style={{
+                    margin: '6px 0 2px',
+                    fontFamily: 'Inter, sans-serif',
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: '#001124',
+                    lineHeight: 1.2,
+                  }}>
+                    {item.label}
                   </p>
-                  <p className={`text-base font-bold tabular-nums ${item.valueColor}`}>
+                  <p style={{
+                    margin: 0,
+                    fontSize: 11,
+                    color: '#547C9D',
+                  }}>
+                    {item.description}
+                  </p>
+                </div>
+                <div style={{
+                  paddingTop: 8,
+                  borderTop: '1px dashed #B3F0DE',
+                  marginTop: 4,
+                }}>
+                  <div className="pvf-kpi-lab" style={{ fontSize: 9 }}>Valor afetado</div>
+                  <div className="pvf-kpi-val" style={{ fontSize: 16, marginTop: 2 }}>
                     {formatCurrencyShort(item.value)}
-                  </p>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
 
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50">
-          <p className="text-[11px] text-slate-400 dark:text-slate-500">
-            Dados sincronizados com registradoras autorizadas pelo Banco Central
+        {/* Footer */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginTop: 14,
+          paddingTop: 12,
+          borderTop: '1px dashed #B3F0DE',
+          gap: 12,
+          flexWrap: 'wrap',
+        }}>
+          <p style={{
+            margin: 0,
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 10.5,
+            color: '#547C9D',
+            fontWeight: 600,
+            letterSpacing: '0.04em',
+          }}>
+            Dados sincronizados com registradoras autorizadas BCB
           </p>
-          <Link to={createPageUrl('MyContractEffects')}>
-            <Button variant="ghost" size="sm" className="h-7 text-xs text-slate-700 dark:text-slate-200 hover:text-slate-900">
-              Ver detalhes <ArrowRight className="w-3 h-3 ml-1" />
-            </Button>
+          <Link
+            to={createPageUrl('MyContractEffects')}
+            className="pvf-btn pvf-btn-out pvf-btn-sm"
+            style={{ textDecoration: 'none' }}
+          >
+            Ver detalhes
+            <ArrowRight weight="bold" size={12} />
           </Link>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

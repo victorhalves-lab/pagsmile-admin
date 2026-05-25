@@ -1,13 +1,12 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { MonoNumber } from '@/components/ui/mono-number';
-import { Zap, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import { Lightning, ArrowRight } from '@phosphor-icons/react';
 
 /**
- * AnticipationContextCard — V7. Recomendação de ação concreta.
- * Padrão consistente com GMVCardConsolidated / ChartCard.
+ * AnticipationContextCard — Pulse VF.
+ * Reference card hero V9 (.pvf-rc) com gradient mint, watermark icon
+ * e CTA com .pvf-btn-glass. Mantém toda a lógica de valores/taxa.
  */
 export default function AnticipationContextCard({
   receivableAmount = 212880,
@@ -23,57 +22,97 @@ export default function AnticipationContextCard({
   const net = netAmount ?? receivableAmount - fee;
 
   return (
-    <div className="rounded-card-v7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-v7-card p-5 h-full flex flex-col gap-4">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700">
-            <Zap className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
-          </div>
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] font-medium text-emerald-700 dark:text-emerald-400">
-              Antecipação
-            </p>
-            <p className="text-[10px] text-slate-500 mt-0.5">Disponível agora</p>
-          </div>
-        </div>
-        <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded border bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-500/10 dark:border-emerald-500/30 dark:text-emerald-400">
-          Elegível
-        </span>
+    <div className="pvf-rc h-full" style={{ minHeight: 230 }}>
+      {/* Watermark icon top-right (V9 padrão) */}
+      <div className="pvf-rc-wm">
+        <Lightning weight="duotone" size={46} />
       </div>
 
-      {/* Valor */}
+      {/* Eyebrow */}
       <div>
-        <p className="text-[11px] text-slate-500 mb-1">Você pode antecipar até</p>
-        <MonoNumber size="hero" className="text-slate-900 dark:text-white tracking-tight">
-          {fmt(receivableAmount)}
-        </MonoNumber>
+        <div className="pvf-rc-lab" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <span
+            style={{
+              display: 'inline-block',
+              padding: '2px 8px',
+              borderRadius: 99,
+              background: 'rgba(92,247,207,0.18)',
+              color: '#5CF7CF',
+              fontSize: 9,
+              letterSpacing: '0.12em',
+              border: '1px solid rgba(92,247,207,0.35)',
+              fontWeight: 800,
+            }}
+          >
+            ● ELEGÍVEL
+          </span>
+          <span>Antecipação · disponível agora</span>
+        </div>
+      </div>
+
+      {/* Valor principal */}
+      <div>
+        <p style={{
+          fontFamily: 'JetBrains Mono, monospace',
+          fontSize: 11,
+          color: 'rgba(255,255,255,0.7)',
+          fontWeight: 700,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          marginBottom: 4,
+        }}>
+          Você pode antecipar até
+        </p>
+        <div className="pvf-rc-val">
+          <span className="pvf-ccy">R$</span>
+          {fmt(receivableAmount).replace('R$', '').trim()}
+        </div>
       </div>
 
       {/* Métricas */}
-      <div className="flex items-center gap-4 text-[11px] text-slate-500 pt-3 border-t border-slate-100 dark:border-slate-800">
+      <div className="pvf-rc-desc" style={{ display: 'flex', gap: 18, alignItems: 'center', flexWrap: 'wrap' }}>
         <span>
-          Taxa{' '}
-          <MonoNumber size="xs" className="font-semibold text-slate-900 dark:text-white">
-            {feePercentage.toFixed(2)}%
-          </MonoNumber>
+          Taxa <b style={{ fontFamily: 'JetBrains Mono, monospace' }}>{feePercentage.toFixed(2)}%</b>
         </span>
-        <span className="w-px h-3 bg-slate-200 dark:bg-slate-700" />
+        <span style={{ opacity: 0.4 }}>·</span>
         <span>
-          Você recebe{' '}
-          <MonoNumber size="xs" className="font-semibold text-emerald-700 dark:text-emerald-400">
-            {fmt(net)}
-          </MonoNumber>{' '}
-          hoje
+          Recebe hoje <b style={{ fontFamily: 'JetBrains Mono, monospace' }}>{fmt(net)}</b>
         </span>
       </div>
 
-      {/* CTA */}
-      <Link to={createPageUrl('Anticipation')} className="block mt-auto">
-        <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium h-9 w-full">
+      {/* CTA glass */}
+      <Link to={createPageUrl('Anticipation')} style={{ marginTop: 8, display: 'inline-block' }}>
+        <button
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '10px 18px',
+            background: 'rgba(255,255,255,0.14)',
+            backdropFilter: 'blur(8px)',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.28)',
+            borderRadius: 11,
+            fontFamily: 'Inter, sans-serif',
+            fontWeight: 800,
+            fontSize: 13,
+            cursor: 'pointer',
+            transition: '0.18s',
+            position: 'relative',
+            zIndex: 2,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.22)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.14)';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
+        >
           Antecipar agora
-          <ArrowRight className="w-4 h-4 ml-1.5" />
-        </Button>
+          <ArrowRight weight="bold" size={15} />
+        </button>
       </Link>
     </div>
   );

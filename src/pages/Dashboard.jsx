@@ -93,40 +93,77 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen pb-8">
-      <EditorialPageHeader
-        titleWords={["PAINEL", "EXECUTIVO"]}
-        accentIndex={1}
-        subtitle="VISÃO 360 DA SUA OPERAÇÃO"
-        eyebrow="DASHBOARD · TEMPO REAL"
-        actions={
-          <div className="flex items-center gap-2 flex-wrap">
-            <ProfileSwitcher profile={profile} onChange={setProfile} />
-            <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => refetch()} title="Atualizar dados">
-              <RefreshCw className="w-4 h-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => setScheduleOpen(true)} title="Agendar relatório">
-              <CalendarPlus className="w-4 h-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => setTourOpen(true)} title="Tour guiado">
-              <HelpCircle className="w-4 h-4" />
-            </Button>
-            <Select value={period} onValueChange={setPeriod}>
-              <SelectTrigger className="w-36 h-9">
-                <Calendar className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="24h">{t('common.today')}</SelectItem>
-                <SelectItem value="yesterday">{t('common.yesterday')}</SelectItem>
-                <SelectItem value="7d">{t('common.last_7_days')}</SelectItem>
-                <SelectItem value="30d">{t('common.this_month')}</SelectItem>
-                <SelectItem value="last_month">{t('common.last_month')}</SelectItem>
-                <SelectItem value="90d">{t('common.last_90_days')}</SelectItem>
-              </SelectContent>
-            </Select>
+      {/* PAGE HERO · Pulse VF */}
+      <div className="mb-6 flex items-end justify-between gap-4 flex-wrap pb-5 border-b border-pag-mint-200 relative">
+        <div style={{ position: 'absolute', left: 0, bottom: -1, width: 96, height: 2, background: 'linear-gradient(90deg, #00C194, #5CF7CF, #002443)', borderRadius: 99 }} />
+        <div>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '6px 14px',
+            background: 'linear-gradient(135deg, #00C194, #5CF7CF)',
+            color: '#001124',
+            borderRadius: 99,
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 10.5,
+            fontWeight: 800,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            marginBottom: 12,
+            boxShadow: '0 6px 18px -4px rgba(0,193,148,0.55)',
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: 99, background: '#001124' }} />
+            Dashboard · tempo real
           </div>
-        }
-      />
+          <h1 style={{
+            margin: 0,
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 'clamp(32px, 4vw, 44px)',
+            fontWeight: 800,
+            letterSpacing: '-0.030em',
+            color: '#001124',
+            lineHeight: 1.05,
+          }}>
+            Painel <em style={{ fontStyle: 'normal', background: 'linear-gradient(135deg, #00C194, #5CF7CF, #002443)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>executivo</em>
+          </h1>
+          <p style={{
+            margin: '8px 0 0',
+            fontSize: 14,
+            color: '#547C9D',
+            maxWidth: 560,
+            lineHeight: 1.5,
+          }}>
+            Visão 360 da sua operação · saldo, recebíveis, performance e compromissos regulatórios.
+          </p>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <ProfileSwitcher profile={profile} onChange={setProfile} />
+          <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => refetch()} title="Atualizar dados">
+            <RefreshCw className="w-4 h-4" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => setScheduleOpen(true)} title="Agendar relatório">
+            <CalendarPlus className="w-4 h-4" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => setTourOpen(true)} title="Tour guiado">
+            <HelpCircle className="w-4 h-4" />
+          </Button>
+          <Select value={period} onValueChange={setPeriod}>
+            <SelectTrigger className="w-36 h-9">
+              <Calendar className="w-4 h-4 mr-2" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="24h">{t('common.today')}</SelectItem>
+              <SelectItem value="yesterday">{t('common.yesterday')}</SelectItem>
+              <SelectItem value="7d">{t('common.last_7_days')}</SelectItem>
+              <SelectItem value="30d">{t('common.this_month')}</SelectItem>
+              <SelectItem value="last_month">{t('common.last_month')}</SelectItem>
+              <SelectItem value="90d">{t('common.last_90_days')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
       {/* ZONA 0 — Alertas críticos (só se houver) */}
       {showSection('alerts') && (

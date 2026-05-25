@@ -1,20 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
-import { cn } from '@/lib/utils';
-import { Calendar, ChevronRight, Clock } from 'lucide-react';
-import { MonoNumber } from '@/components/ui/mono-number';
+import { Calendar, CaretRight, Clock } from '@phosphor-icons/react';
 
 /**
- * ReceivablesBreakdown — V7. Breakdown de recebíveis por bucket (D+1, D+7, D+30, D+30+).
- * Padrão consistente com GMVCardConsolidated / ChartCard.
+ * ReceivablesBreakdown — Pulse VF.
+ * Container `.pvf-card` + grid de `.pvf-kpi` (V9 mini cards) — um por bucket.
+ * Top accent gradient mint→glow, gradient number, .pvf-prog bar.
+ * Mantém todos os dados e links originais.
  */
 
 const BUCKETS_BASE = [
-  { id: 'd1', label: 'D+1', sub: 'Próximas 24h', accent: 'text-emerald-700 dark:text-emerald-400', bar: 'bg-emerald-500' },
-  { id: 'd7', label: 'D+7', sub: 'Esta semana', accent: 'text-sky-700 dark:text-sky-400', bar: 'bg-sky-500' },
-  { id: 'd30', label: 'D+30', sub: 'Próximos 30 dias', accent: 'text-violet-700 dark:text-violet-400', bar: 'bg-violet-500' },
-  { id: 'd30p', label: 'D+30+', sub: 'Mais de 30 dias', accent: 'text-amber-700 dark:text-amber-400', bar: 'bg-amber-500' },
+  { id: 'd1',   label: 'D+1',   sub: 'Próximas 24h',     variant: 'pvf-kpi' },
+  { id: 'd7',   label: 'D+7',   sub: 'Esta semana',      variant: 'pvf-kpi pvf-kpi-blue' },
+  { id: 'd30',  label: 'D+30',  sub: 'Próximos 30 dias', variant: 'pvf-kpi pvf-kpi-deep' },
+  { id: 'd30p', label: 'D+30+', sub: 'Mais de 30 dias',  variant: 'pvf-kpi' },
 ];
 
 export default function ReceivablesBreakdown({ data = {} }) {
@@ -28,33 +28,50 @@ export default function ReceivablesBreakdown({ data = {} }) {
   const total = buckets.reduce((s, b) => s + (b.value || 0), 0);
 
   return (
-    <div className="rounded-card-v7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-v7-card p-5">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700">
-            <Calendar className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+    <div className="pvf-card">
+      {/* Header com Section Header VF */}
+      <div className="pvf-section-h" style={{ marginBottom: 16 }}>
+        <div>
+          <div className="pvf-eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+            <span style={{ width: 18, height: 2, background: '#00C194', borderRadius: 99 }} />
+            Recebíveis · breakdown por bucket
           </div>
-          <div>
-            <h3 className="font-semibold text-slate-900 dark:text-white text-sm">A receber</h3>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Total{' '}
-              <MonoNumber size="xs" className="font-semibold text-slate-900 dark:text-white">
-                {fmt(total)}
-              </MonoNumber>
-            </p>
-          </div>
+          <h2 style={{
+            margin: 0,
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 18,
+            fontWeight: 800,
+            letterSpacing: '-0.018em',
+            color: '#001124',
+          }}>
+            A <em style={{ fontStyle: 'normal', background: 'linear-gradient(135deg,#00C194,#007A5C)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>receber</em>
+            <span style={{
+              marginLeft: 10,
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 12,
+              fontWeight: 700,
+              color: '#013766',
+              background: '#E6ECF2',
+              padding: '3px 10px',
+              borderRadius: 99,
+              border: '1px solid #C0CFDC',
+            }}>
+              {fmt(total)}
+            </span>
+          </h2>
         </div>
         <Link
           to={createPageUrl('ReceivablesAgenda')}
-          className="text-[11px] font-medium text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center gap-0.5"
+          className="pvf-btn pvf-btn-out pvf-btn-sm"
+          style={{ textDecoration: 'none' }}
         >
+          <Calendar weight="duotone" size={14} />
           Ver agenda
-          <ChevronRight className="w-3 h-3" />
+          <CaretRight weight="bold" size={12} />
         </Link>
       </div>
 
-      {/* Buckets */}
+      {/* Buckets · grid de V9 mini cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {buckets.map((b) => {
           const pct = total > 0 ? (b.value / total) * 100 : 0;
@@ -62,27 +79,28 @@ export default function ReceivablesBreakdown({ data = {} }) {
             <Link
               key={b.id}
               to={`${createPageUrl('ReceivablesAgenda')}?bucket=${b.id}`}
-              className="block p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors group"
+              className={b.variant}
+              style={{ textDecoration: 'none', cursor: 'pointer' }}
             >
-              <div className="flex items-center justify-between mb-2">
-                <span className={cn('font-mono text-[10px] uppercase tracking-[0.12em] font-semibold', b.accent)}>
-                  {b.label}
+              <div className="pvf-kpi-top">
+                <div className="pvf-kpi-lab">{b.label}</div>
+                <div className="pvf-ic pvf-ic-sm pvf-ic-mint">
+                  <Clock weight="duotone" size={16} />
+                </div>
+              </div>
+              <div className="pvf-kpi-val">
+                <span className="pvf-ccy">R$</span>
+                {fmt(b.value).replace('R$', '').trim()}
+              </div>
+              <div className="pvf-prog" style={{ marginTop: 10, height: 6 }}>
+                <div className="pvf-prog-bar" style={{ width: `${pct}%` }} />
+              </div>
+              <div className="pvf-kpi-foot" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <span>{b.sub}</span>
+                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: '#007A5C' }}>
+                  {pct.toFixed(0)}%
                 </span>
-                <Clock className="w-3 h-3 text-slate-400" />
               </div>
-              <MonoNumber size="base" className="block font-semibold text-slate-900 dark:text-white">
-                {fmt(b.value)}
-              </MonoNumber>
-              <p className="text-[10px] text-slate-500 mt-0.5">{b.sub}</p>
-              <div className="h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden mt-2">
-                <div
-                  className={cn('h-full rounded-full transition-all', b.bar)}
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-              <p className="font-mono text-[10px] tabular-nums text-slate-500 mt-1">
-                {pct.toFixed(0)}% do total
-              </p>
             </Link>
           );
         })}

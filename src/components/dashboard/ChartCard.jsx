@@ -10,28 +10,44 @@ import {
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
 
-export default function ChartCard({ 
-  title, 
+/**
+ * ChartCard — Pulse VF.
+ * Container `.pvf-card` com `.pvf-section-h` no header.
+ * Title em Inter bold + accent gradient mint→glow underline.
+ */
+export default function ChartCard({
+  title,
   subtitle,
-  children, 
+  children,
   className,
   action,
   periodSelector = false,
   selectedPeriod = '7d',
   onPeriodChange,
-  headerRight
+  headerRight,
 }) {
   return (
-    <div className={cn(
-      "bg-white rounded-xl border border-gray-100 p-5",
-      className
-    )}>
-      <div className="flex items-start justify-between mb-4">
+    <div className={cn('pvf-card', className)}>
+      {/* Header com pvf-section-h */}
+      <div className="pvf-section-h" style={{ marginBottom: 16 }}>
         <div>
-          <h3 className="font-semibold text-gray-900">{title}</h3>
           {subtitle && (
-            <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>
+            <div className="pvf-eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+              <span style={{ width: 18, height: 2, background: '#00C194', borderRadius: 99 }} />
+              {subtitle}
+            </div>
           )}
+          <h2 style={{
+            margin: 0,
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 18,
+            fontWeight: 800,
+            letterSpacing: '-0.018em',
+            color: '#001124',
+            lineHeight: 1.2,
+          }}>
+            {title}
+          </h2>
         </div>
         <div className="flex items-center gap-2">
           {periodSelector && (
