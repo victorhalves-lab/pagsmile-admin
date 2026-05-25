@@ -1,75 +1,142 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { TrendingUp, Sparkles, RotateCcw, ShieldCheck } from 'lucide-react';
+import { TrendUp, Sparkle, ArrowsClockwise, ShieldCheck } from '@phosphor-icons/react';
 import Sparkline from './Sparkline';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 
 /**
- * Recovery Revenue [#16] — JUSTIFICA o produto.
- * Padrão AppMax/Iugu — referências em recovery exposto.
- * Mostra ROI do PagSmile: quanto Recovery Agent + Dispute Manager + Retentativas recuperaram.
+ * RecoveryRevenueCard — Pulse VF.
+ * Reference card hero V9 gradient mint + watermark Sparkle + breakdown.
  */
 export default function RecoveryRevenueCard({ data = {} }) {
-  const formatCurrency = (v) =>
+  const fmt = (v) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v || 0);
 
-  const recovery   = data.recovery   ?? 18420;
-  const disputes   = data.disputes   ?? 8950;
-  const retries    = data.retries    ?? 12380;
+  const recovery = data.recovery ?? 18420;
+  const disputes = data.disputes ?? 8950;
+  const retries = data.retries ?? 12380;
   const total = recovery + disputes + retries;
 
   const breakdowns = [
-    { label: 'Recovery Agent',    value: recovery, icon: RotateCcw,    color: 'text-emerald-600', to: createPageUrl('RecoveryAgent') },
-    { label: 'Dispute Manager',   value: disputes, icon: ShieldCheck,  color: 'text-blue-600',    to: createPageUrl('DisputeManager') },
-    { label: 'Smart retries',     value: retries,  icon: TrendingUp,   color: 'text-violet-600',  to: createPageUrl('Transactions') },
+    { label: 'Recovery Agent',  value: recovery, icon: ArrowsClockwise, to: createPageUrl('RecoveryAgent') },
+    { label: 'Dispute Manager', value: disputes, icon: ShieldCheck,     to: createPageUrl('DisputeManager') },
+    { label: 'Smart retries',   value: retries,  icon: TrendUp,         to: createPageUrl('Transactions') },
   ];
 
   return (
-    <Card className="border-2 border-emerald-200 dark:border-emerald-900 bg-gradient-to-br from-emerald-50/50 via-white to-white dark:from-emerald-950/20 dark:via-slate-900 dark:to-slate-900 shadow-sm overflow-hidden">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
-            </div>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                Receita recuperada — mês
-              </p>
-              <p className="text-[10px] text-slate-500">Pelos agentes IA da PagSmile</p>
-            </div>
-          </div>
-        </div>
+    <div
+      className="relative h-full overflow-hidden p-5 rounded-2xl"
+      style={{
+        background: 'linear-gradient(135deg, #00C194, #007A5C)',
+        color: '#fff',
+        boxShadow: '0 12px 32px -8px rgba(0,193,148,0.5)',
+        minHeight: 320,
+      }}
+    >
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: -60, right: -40, width: 200, height: 200,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(92,247,207,0.4), transparent 60%)',
+        }}
+      />
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: 20, right: 20, color: '#fff', opacity: 0.85,
+          filter: 'drop-shadow(0 0 14px rgba(92,247,207,0.65))',
+        }}
+      >
+        <Sparkle weight="duotone" size={40} />
+      </div>
 
-        <p className="text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(total)}</p>
-        <p className="text-[11px] text-emerald-600 font-semibold mt-0.5 inline-flex items-center gap-1">
-          <TrendingUp className="w-3 h-3" />
+      {/* Header */}
+      <div className="relative mb-3">
+        <p
+          className="font-mono"
+          style={{
+            fontSize: 10.5, fontWeight: 800, letterSpacing: '0.14em',
+            textTransform: 'uppercase', color: '#5CF7CF',
+          }}
+        >
+          Receita recuperada · mês
+        </p>
+        <p className="font-mono" style={{ fontSize: 10, color: 'rgba(255,255,255,0.78)', fontWeight: 600 }}>
+          Pelos agentes IA da PagSmile
+        </p>
+      </div>
+
+      {/* Valor */}
+      <div className="relative">
+        <div
+          className="font-mono"
+          style={{
+            fontSize: 40, fontWeight: 800, letterSpacing: '-0.030em', lineHeight: 0.95,
+            color: '#fff', display: 'flex', alignItems: 'flex-start', gap: 2,
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        >
+          <span
+            style={{
+              fontSize: 16, color: 'rgba(255,255,255,0.55)',
+              fontWeight: 600, marginRight: 6, marginTop: 6,
+            }}
+          >
+            R$
+          </span>
+          {fmt(total).replace('R$', '').trim()}
+        </div>
+        <p
+          className="font-mono inline-flex items-center gap-1 mt-1"
+          style={{
+            fontSize: 11, color: '#5CF7CF', fontWeight: 700, letterSpacing: '0.06em',
+          }}
+        >
+          <TrendUp weight="bold" size={11} />
           ROI do PagSmile este mês
         </p>
+      </div>
 
-        <Sparkline data={[8, 12, 15, 18, 22, 28, 35, 42]} color="emerald" height={28} className="mt-2" />
+      {/* Sparkline */}
+      <div className="relative mt-3">
+        <Sparkline data={[8, 12, 15, 18, 22, 28, 35, 42]} color="emerald" height={28} />
+      </div>
 
-        <div className="mt-3 pt-3 border-t border-emerald-100 dark:border-emerald-900 space-y-1.5">
-          {breakdowns.map((b) => {
-            const Icon = b.icon;
-            return (
-              <Link key={b.label} to={b.to} className="flex items-center justify-between text-[11px] hover:text-[#2bc196] transition-colors">
-                <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                  <Icon className={cn('w-3 h-3', b.color)} />
-                  {b.label}
-                </span>
-                <span className="font-semibold text-slate-900 dark:text-white">{formatCurrency(b.value)}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+      {/* Breakdown */}
+      <div
+        className="relative mt-4 pt-3 space-y-2"
+        style={{ borderTop: '1px dashed rgba(92,247,207,0.3)' }}
+      >
+        {breakdowns.map((b) => {
+          const Icon = b.icon;
+          return (
+            <Link
+              key={b.label}
+              to={b.to}
+              className="flex items-center justify-between transition-colors group"
+              style={{ textDecoration: 'none', fontSize: 11.5 }}
+            >
+              <span
+                className="inline-flex items-center gap-1.5"
+                style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 700 }}
+              >
+                <Icon weight="duotone" size={13} style={{ color: '#5CF7CF' }} />
+                {b.label}
+              </span>
+              <span
+                className="font-mono"
+                style={{
+                  fontWeight: 800, color: '#fff',
+                  fontVariantNumeric: 'tabular-nums',
+                }}
+              >
+                {fmt(b.value)}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
   );
-}
-
-// Mini util pra evitar import extra de cn neste arquivo simples
-function cn(...classes) {
-  return classes.filter(Boolean).join(' ');
 }

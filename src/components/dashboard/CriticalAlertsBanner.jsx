@@ -1,19 +1,15 @@
 import React from 'react';
-import { AlertTriangle, ChevronRight, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { Warning, CaretRight, X } from '@phosphor-icons/react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 
 /**
- * Banner global de alertas críticos no topo do Dashboard.
- * Padrão Stripe / Adyen — substitui apenas a parte CRÍTICA do AlertsPanel.
- * O AlertsPanel continua existindo para alertas não-críticos.
+ * CriticalAlertsBanner — Pulse VF.
+ * Banner de alerta crítico com gradient danger soft + icon container err + CTA solid red.
  */
 export default function CriticalAlertsBanner({ alerts = [], onDismiss }) {
   const [dismissed, setDismissed] = React.useState([]);
 
-  // Mock se nenhum alerta for passado (ambiente demo)
   const defaultCritical = [
     {
       id: 'cb_ratio_critical',
@@ -39,40 +35,77 @@ export default function CriticalAlertsBanner({ alerts = [], onDismiss }) {
       {list.map((alert) => (
         <div
           key={alert.id}
-          className={cn(
-            'flex items-center gap-3 px-4 py-3 rounded-xl border-l-4 border-red-500',
-            'bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50',
-            'shadow-sm'
-          )}
+          className="flex items-center gap-3 px-4 py-3 rounded-2xl"
+          style={{
+            background: 'linear-gradient(135deg, #FEE2E2, #FECACA)',
+            border: '1px solid #FCA5A5',
+            borderLeft: '4px solid #B91C1C',
+            boxShadow: '0 4px 14px -4px rgba(185,28,28,0.2)',
+          }}
         >
-          <div className="w-8 h-8 rounded-full bg-red-500/15 flex items-center justify-center flex-shrink-0">
-            <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400" />
+          {/* Icon container err */}
+          <div
+            className="flex-shrink-0 inline-flex items-center justify-center"
+            style={{
+              width: 36, height: 36, borderRadius: 10,
+              background: 'linear-gradient(135deg, #FECACA, #FCA5A5)',
+              color: '#B91C1C',
+              border: '1px solid #FCA5A5',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5)',
+            }}
+          >
+            <Warning weight="duotone" size={18} />
           </div>
+
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-red-900 dark:text-red-200">
+            <p
+              className="font-mono"
+              style={{
+                fontSize: 10, fontWeight: 800,
+                letterSpacing: '0.14em', textTransform: 'uppercase',
+                color: '#7F1D1D', marginBottom: 2,
+              }}
+            >
               Alerta crítico
             </p>
-            <p className="text-xs text-red-700 dark:text-red-300 truncate">
+            <p
+              className="truncate"
+              style={{
+                fontFamily: 'Inter, sans-serif',
+                fontSize: 13, fontWeight: 700,
+                color: '#7F1D1D', lineHeight: 1.3,
+              }}
+            >
               {alert.title}
             </p>
           </div>
+
           {alert.action && alert.actionUrl && (
-            <Link to={alert.actionUrl}>
-              <Button
-                size="sm"
-                className="bg-red-600 hover:bg-red-700 text-white text-xs h-8"
-              >
-                {alert.action}
-                <ChevronRight className="w-3 h-3 ml-1" />
-              </Button>
+            <Link
+              to={alert.actionUrl}
+              className="inline-flex items-center gap-1.5 flex-shrink-0 transition-all hover:-translate-y-px"
+              style={{
+                padding: '8px 14px', borderRadius: 9,
+                background: 'linear-gradient(135deg, #DC2626, #991B1B)',
+                color: '#fff',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: 12, fontWeight: 800,
+                textDecoration: 'none',
+                boxShadow: '0 6px 14px -3px rgba(220,38,38,0.5)',
+              }}
+            >
+              {alert.action}
+              <CaretRight weight="bold" size={11} />
             </Link>
           )}
+
           <button
             onClick={() => handleDismiss(alert.id)}
-            className="text-red-400 hover:text-red-600 dark:hover:text-red-200 flex-shrink-0"
+            className="flex-shrink-0 transition-opacity hover:opacity-100"
+            style={{ color: '#B91C1C', opacity: 0.6, background: 'transparent', border: 0, padding: 4, cursor: 'pointer' }}
             aria-label="Dispensar"
           >
-            <X className="w-4 h-4" />
+            <X weight="bold" size={14} />
           </button>
         </div>
       ))}

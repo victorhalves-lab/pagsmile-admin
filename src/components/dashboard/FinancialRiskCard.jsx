@@ -1,23 +1,21 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { ShieldAlert, ChevronRight } from 'lucide-react';
+import { ShieldWarning, CaretRight } from '@phosphor-icons/react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
-import { cn } from '@/lib/utils';
 
 /**
- * Risco Financeiro Hoje [#6] — paridade Adyen "exposure".
- * Consolida: rolling reserve + disputas em curso + retentativas + MED em jogo.
+ * FinancialRiskCard — Pulse VF.
+ * Card branco + icon container err + progress bar com cor por nível de risco.
  */
 export default function FinancialRiskCard({ data = {} }) {
-  const formatCurrency = (v) =>
+  const fmt = (v) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v || 0);
 
   const items = [
-    { label: 'Rolling reserve',    value: data.rollingReserve ?? 18500, link: createPageUrl('FinancialOverview') },
-    { label: 'Disputas em curso',  value: data.disputesOpen ?? 8420,    link: createPageUrl('DisputeDashboard') },
+    { label: 'Rolling reserve',       value: data.rollingReserve ?? 18500, link: createPageUrl('FinancialOverview') },
+    { label: 'Disputas em curso',     value: data.disputesOpen ?? 8420,    link: createPageUrl('DisputeDashboard') },
     { label: 'Retentativas pendentes', value: data.retriesPending ?? 3680, link: createPageUrl('Transactions') },
-    { label: 'MED em jogo',        value: data.medAtRisk ?? 2150,        link: createPageUrl('MEDDashboard') },
+    { label: 'MED em jogo',           value: data.medAtRisk ?? 2150,        link: createPageUrl('MEDDashboard') },
   ];
 
   const total = items.reduce((sum, i) => sum + (i.value || 0), 0);
@@ -25,58 +23,120 @@ export default function FinancialRiskCard({ data = {} }) {
   const riskPct = Math.min((total / totalLimit) * 100, 100);
 
   const level =
-    riskPct < 30 ? { label: 'Baixo', color: 'text-emerald-600', bg: 'bg-emerald-100' }
-    : riskPct < 60 ? { label: 'Moderado', color: 'text-amber-600', bg: 'bg-amber-100' }
-    : { label: 'Alto', color: 'text-red-600', bg: 'bg-red-100' };
+    riskPct < 30 ? { label: 'Baixo', bg: 'linear-gradient(135deg, #B3F0DE, #B4FCE8)', color: '#005A43', border: '#4DD8AB', bar: 'linear-gradient(90deg, #1ECB9D, #007A5C)' }
+    : riskPct < 60 ? { label: 'Moderado', bg: 'linear-gradient(135deg, #FEF3C7, #FDE68A)', color: '#B45309', border: '#FDE68A', bar: 'linear-gradient(90deg, #FBBF24, #F59E0B)' }
+    : { label: 'Alto', bg: 'linear-gradient(135deg, #FEE2E2, #FCA5A5)', color: '#B91C1C', border: '#FCA5A5', bar: 'linear-gradient(90deg, #F87171, #DC2626)' };
 
   return (
-    <Card className="border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
-              <ShieldAlert className="w-4 h-4 text-white" />
-            </div>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
-                Risco financeiro hoje
-              </p>
-              <p className="text-[10px] text-slate-500">Exposição consolidada</p>
-            </div>
-          </div>
-          <span className={cn('text-[10px] font-semibold px-1.5 py-0.5 rounded', level.bg, level.color)}>
-            {level.label}
-          </span>
-        </div>
-
-        <p className="text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(total)}</p>
-        <p className="text-[11px] text-slate-500 mt-0.5">
-          {riskPct.toFixed(0)}% do limite de exposição ({formatCurrency(totalLimit)})
-        </p>
-
-        <div className="mt-2 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+    <div
+      className="relative h-full overflow-hidden p-5 rounded-2xl"
+      style={{
+        background: 'linear-gradient(135deg, #fff, #F0FAF6)',
+        border: '1px solid #80E5C6',
+        boxShadow: '0 4px 14px -4px rgba(0,193,148,0.12)',
+      }}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between mb-3 gap-2">
+        <div className="flex items-center gap-2.5">
           <div
-            className={cn('h-full rounded-full transition-all', {
-              'bg-emerald-500': riskPct < 30,
-              'bg-amber-500':   riskPct >= 30 && riskPct < 60,
-              'bg-red-500':     riskPct >= 60,
-            })}
-            style={{ width: `${riskPct}%` }}
-          />
+            className="inline-flex items-center justify-center"
+            style={{
+              width: 36, height: 36, borderRadius: 10,
+              background: 'linear-gradient(135deg, #FEE2E2, #FCA5A5)',
+              color: '#B91C1C',
+              border: '1px solid #FCA5A5',
+            }}
+          >
+            <ShieldWarning weight="duotone" size={18} />
+          </div>
+          <div>
+            <p
+              className="font-mono"
+              style={{
+                fontSize: 10.5, fontWeight: 800, letterSpacing: '0.14em',
+                textTransform: 'uppercase', color: '#B91C1C',
+              }}
+            >
+              Risco financeiro
+            </p>
+            <p className="font-mono" style={{ fontSize: 10, color: '#547C9D', fontWeight: 600 }}>
+              Exposição consolidada
+            </p>
+          </div>
         </div>
+        <span
+          className="font-mono inline-flex items-center"
+          style={{
+            padding: '4px 10px', borderRadius: 99,
+            background: level.bg, color: level.color, border: `1px solid ${level.border}`,
+            fontSize: 9.5, fontWeight: 800,
+            letterSpacing: '0.08em', textTransform: 'uppercase',
+          }}
+        >
+          {level.label}
+        </span>
+      </div>
 
-        <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-          {items.map((i) => (
-            <Link key={i.label} to={i.link} className="flex items-center justify-between text-[11px] hover:text-[#2bc196] transition-colors group">
-              <span className="text-slate-600 dark:text-slate-400">{i.label}</span>
-              <span className="font-semibold text-slate-900 dark:text-white inline-flex items-center gap-0.5">
-                {formatCurrency(i.value)}
-                <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100" />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+      {/* Valor */}
+      <div
+        className="font-mono"
+        style={{
+          fontSize: 28, fontWeight: 800, letterSpacing: '-0.024em', lineHeight: 1,
+          background: 'linear-gradient(135deg, #007A5C, #001124)',
+          WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent',
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        {fmt(total)}
+      </div>
+      <p className="mt-1" style={{ fontSize: 11, color: '#547C9D' }}>
+        <span className="font-mono" style={{ fontWeight: 800, color: '#001124' }}>{riskPct.toFixed(0)}%</span>{' '}
+        do limite ({fmt(totalLimit)})
+      </p>
+
+      {/* Risk bar */}
+      <div
+        className="mt-2.5 overflow-hidden"
+        style={{
+          height: 6, background: '#E0F8F1', borderRadius: 99, border: '1px solid #B3F0DE',
+        }}
+      >
+        <div
+          style={{
+            height: '100%', width: `${riskPct}%`,
+            background: level.bar, borderRadius: 99,
+            transition: 'width 0.4s ease',
+          }}
+        />
+      </div>
+
+      {/* Breakdown */}
+      <div
+        className="mt-4 pt-3 space-y-2"
+        style={{ borderTop: '1px dashed #B3F0DE' }}
+      >
+        {items.map((i) => (
+          <Link
+            key={i.label}
+            to={i.link}
+            className="group flex items-center justify-between transition-colors"
+            style={{ textDecoration: 'none', fontSize: 11 }}
+          >
+            <span style={{ color: '#547C9D', fontWeight: 600 }}>{i.label}</span>
+            <span
+              className="font-mono inline-flex items-center gap-0.5"
+              style={{
+                fontWeight: 800, color: '#001124',
+                fontVariantNumeric: 'tabular-nums',
+              }}
+            >
+              {fmt(i.value)}
+              <CaretRight weight="bold" size={11} style={{ opacity: 0.3 }} className="group-hover:opacity-100" />
+            </span>
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }
