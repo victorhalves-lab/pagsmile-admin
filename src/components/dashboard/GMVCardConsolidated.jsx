@@ -1,34 +1,44 @@
 import React from 'react';
-import { CurrencyDollar, Hash, Receipt, TrendUp, TrendDown, CaretRight, Lightning } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
-import Sparkline from './Sparkline';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import V9Segmented from '@/components/pulse-v9/V9Segmented';
+import V9GrowthPill from '@/components/pulse-v9/V9GrowthPill';
 
 /**
  * GMV / Volume Transacionado — Card consolidado com 3 visões em abas:
- *  1. Volume (R$)      — valor financeiro
- *  2. Transações (#)    — quantidade de transações
- *  3. Ticket Médio      — R$/tx incluindo split cartão vs PIX
- * Mantém toggle de período (Hoje / Ontem / 7d / Mês / Mês anterior).
+ *  1. Volume (R$)
+ *  2. Transações (#)
+ *  3. Ticket Médio
  *
- * UI 2026: paleta verde Pagsmile + accents navy/highlight + gradients sutis,
- * tipografia editorial, números HUGE em JetBrains Mono tabular.
+ * UI 100% Pulse V9 / VF · gradient hero card + watermark + sub-cards mint/blue solid.
+ * Dados, props e lógica preservados intactos.
  */
 
 const PERIODS = [
   { id: 'today',     label: 'Hoje' },
   { id: 'yesterday', label: 'Ontem' },
-  { id: '7d',        label: '7 dias' },
-  { id: 'mtd',       label: 'Mês atual' },
-  { id: 'lastmonth', label: 'Mês anterior' },
+  { id: '7d',        label: '7d' },
+  { id: 'mtd',       label: 'Mês' },
+  { id: 'lastmonth', label: 'Anterior' },
 ];
 
 const VIEWS = [
-  { id: 'volume',  label: 'Volume (R$)',     icon: CurrencyDollar },
-  { id: 'count',   label: 'Transações (#)',  icon: Hash },
-  { id: 'ticket',  label: 'Ticket Médio',    icon: Receipt },
+  { id: 'volume',  label: 'Volume (R$)',
+    icon: <><line className="stroke" x1="12" y1="1" x2="12" y2="23"/><path className="stroke" d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></>
+  },
+  { id: 'count', label: 'Transações',
+    icon: <><line className="stroke" x1="4" y1="9" x2="20" y2="9"/><line className="stroke" x1="4" y1="15" x2="20" y2="15"/><line className="stroke" x1="10" y1="3" x2="8" y2="21"/><line className="stroke" x1="16" y1="3" x2="14" y2="21"/></>
+  },
+  { id: 'ticket', label: 'Ticket Médio',
+    icon: <><path className="fill" d="M3 6h18l-2 12H5z"/><path className="stroke" d="M3 6h18l-2 12H5z M3 10h18"/></>
+  },
 ];
+
+// Watermark SVG (currency)
+const WM_CURRENCY = (
+  <><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></>
+);
 
 export default function GMVCardConsolidated({ data = {}, loading = false }) {
   const [period, setPeriod] = React.useState('today');
@@ -57,7 +67,6 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
     lastmonth: { value: data.lastMonth,    change: data.lastMonthChange,    sub: 'Mês completo' },
   };
 
-  // ===== DADOS DE CONTAGEM (# transações) =====
   const AVG_TICKET = 95;
   const countMap = Object.fromEntries(
     Object.entries(volumeMap).map(([k, v]) => [k, {
@@ -68,7 +77,6 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
     }])
   );
 
-  // ===== DADOS DE TICKET MÉDIO =====
   const ticketMap = Object.fromEntries(
     Object.entries(volumeMap).map(([k, v]) => [k, {
       value: AVG_TICKET,
@@ -81,17 +89,8 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
 
   const dataMap = { volume: volumeMap, count: countMap, ticket: ticketMap };
   const current = dataMap[view][period];
-  const viewMeta = VIEWS.find(v => v.id === view);
-  const positive = (current.change || 0) >= 0;
 
-  // Sparkline mock
-  const sparkSeries = view === 'count'
-    ? [420, 410, 470, 540, 510, 580, 650, 610, 700, 750, 720, 790]
-    : view === 'ticket'
-    ? [88, 90, 92, 95, 93, 96, 98, 95, 97, 99, 96, 95]
-    : [40, 38, 45, 52, 48, 55, 62, 58, 67, 72, 68, 75];
-
-  // Breakdown card vs pix
+  // Breakdown
   const breakdown = (() => {
     if (view === 'volume') {
       return {
@@ -129,213 +128,214 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
     };
   })();
 
-  const mainValue = view === 'count' ? formatNumber(current.value) : formatCurrency(current.value);
-  const Icon = viewMeta.icon;
+  const mainValueRaw = view === 'count'
+    ? formatNumber(current.value)
+    : formatCurrency(current.value);
 
+  // Para volume/ticket, isolar R$ como ccy (prefix small)
+  const splitValue = (() => {
+    if (view === 'count') return { ccy: null, num: mainValueRaw };
+    const m = mainValueRaw.match(/^(R\$)\s*(.+)$/);
+    if (m) return { ccy: m[1], num: m[2] };
+    return { ccy: null, num: mainValueRaw };
+  })();
+
+  // ===== Hero card V9 (reference card pattern) =====
   return (
-    <div
-      className="relative rounded-2xl border border-slate-200/80 dark:border-white/[0.06] overflow-hidden"
-      style={{
-        background:
-          'radial-gradient(800px 300px at 0% 0%, rgba(0,193,148,0.06), transparent 60%), linear-gradient(180deg, #ffffff 0%, #f8faf9 100%)',
-      }}
-    >
-      {/* Glow corner top-right */}
-      <div
-        className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-50 pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(92,247,207,0.15) 0%, transparent 70%)' }}
-      />
+    <div className="v9rc v9rc-blue v9rc-lg">
+      {/* Watermark */}
+      <div className="wm">
+        <svg viewBox="0 0 24 24">{WM_CURRENCY}</svg>
+      </div>
 
-      <div className="relative p-6">
-        {/* ===== HEADER ===== */}
-        <div className="flex items-start justify-between gap-3 mb-5 flex-wrap">
-          <div className="flex items-center gap-3">
-            {/* Ícone badge — fundo verde-claro com glow */}
-            <div className="relative">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#00c194] to-[#0f2b2b] flex items-center justify-center shadow-[0_4px_16px_-4px_rgba(0,193,148,0.4)]">
-                <Icon className="w-5 h-5 text-white" weight="bold" />
-              </div>
-              <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#5cf7cf] animate-pulse shadow-[0_0_8px_rgba(92,247,207,0.8)]" />
-            </div>
-            <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] font-bold text-[#00c194]">
-                {viewMeta.label.toUpperCase()}
-              </p>
-              <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
-                <Lightning className="w-3 h-3 text-amber-500" weight="fill" />
-                {current.sub}
-              </p>
-            </div>
-          </div>
-
-          {/* Period pills modernos */}
-          <div className="inline-flex items-center bg-white border border-slate-200 dark:bg-white/[0.04] dark:border-white/10 rounded-full p-1 shadow-sm">
-            {PERIODS.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setPeriod(p.id)}
-                className={cn(
-                  'px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider font-bold rounded-full transition-all',
-                  period === p.id
-                    ? 'bg-[#00c194] text-white shadow-[0_2px_8px_-2px_rgba(0,193,148,0.5)]'
-                    : 'text-slate-500 hover:text-[#00c194]'
-                )}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
+      {/* TOP ROW: tabs + period segmented */}
+      <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+        {/* Tabs Volume/Tx/Ticket — pills cápsula glass dark */}
+        <div className="inline-flex items-center bg-white/10 backdrop-blur-md rounded-full p-1 gap-1 border border-white/15 w-fit">
+          {VIEWS.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              onClick={() => setView(v.id)}
+              className={cn(
+                "px-3 py-1.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-[.12em] transition-all flex items-center gap-1.5",
+                view === v.id
+                  ? "bg-white text-[var(--pag-blue-900)] shadow-[0_4px_12px_-2px_rgba(255,255,255,.3)]"
+                  : "text-white/70 hover:text-white"
+              )}
+            >
+              <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{v.icon}</svg>
+              {v.label}
+            </button>
+          ))}
         </div>
 
-        {/* ===== VIEW TABS — underline grosso verde quando ativo ===== */}
-        <div className="flex items-center gap-1 mb-6 border-b border-slate-200/70 dark:border-white/[0.06]">
-          {VIEWS.map((v) => {
-            const VIcon = v.icon;
-            const active = view === v.id;
-            return (
-              <button
-                key={v.id}
-                onClick={() => setView(v.id)}
-                className={cn(
-                  'relative flex items-center gap-2 px-4 py-3 text-sm font-semibold transition-all',
-                  active
-                    ? 'text-[#00c194]'
-                    : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-                )}
-              >
-                <VIcon className="w-4 h-4" weight={active ? 'fill' : 'regular'} />
-                {v.label}
-                {active && (
-                  <span className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-gradient-to-r from-[#00c194] to-[#5cf7cf] rounded-t-full" />
-                )}
-              </button>
-            );
-          })}
+        {/* Period segmented */}
+        <V9Segmented
+          dark
+          options={PERIODS}
+          value={period}
+          onChange={setPeriod}
+        />
+      </div>
+
+      {/* MAIN VALUE */}
+      <div className="relative">
+        <div className="lab" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{
+            width: 6, height: 6, borderRadius: '50%',
+            background: 'var(--pag-glow-500)',
+            boxShadow: '0 0 8px var(--pag-glow-500)',
+            animation: 'pvf-pulse 1.6s infinite',
+            display: 'inline-block'
+          }} />
+          {current.sub?.toUpperCase()}
         </div>
 
-        {/* ===== MAIN GRID ===== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-end">
-          {/* === Valor principal HUGE === */}
-          <div className="lg:col-span-4">
-            <Link to={createPageUrl('Transactions')} className="group inline-flex items-baseline gap-2">
-              <span
-                className="font-mono font-extrabold tracking-tight tabular-nums text-[44px] sm:text-[52px] leading-none"
-                style={{
-                  background: 'linear-gradient(135deg, #002443 0%, #00c194 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                {mainValue}
-              </span>
-              <CaretRight
-                className="w-4 h-4 text-slate-300 group-hover:text-[#00c194] group-hover:translate-x-0.5 transition-all"
-                weight="bold"
-              />
-            </Link>
-
-            {/* Badge variação — chip verde sólido com ícone */}
-            <div className="flex items-center gap-2 mt-3">
-              <span
-                className={cn(
-                  'inline-flex items-center gap-1.5 font-mono text-xs tabular-nums font-bold px-2.5 py-1 rounded-full',
-                  positive
-                    ? 'bg-[#00c194] text-white shadow-[0_2px_8px_-2px_rgba(0,193,148,0.5)]'
-                    : 'bg-red-500 text-white shadow-[0_2px_8px_-2px_rgba(239,68,68,0.5)]'
-                )}
-              >
-                {positive
-                  ? <TrendUp className="w-3 h-3" weight="bold" />
-                  : <TrendDown className="w-3 h-3" weight="bold" />
-                }
-                {positive ? '+' : ''}{(current.change || 0).toFixed(1)}%
-              </span>
-              <span className="text-xs text-slate-500 font-medium">vs período anterior</span>
-            </div>
-
-            {current.projection && view !== 'ticket' && (
-              <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30">
-                <Lightning className="w-3.5 h-3.5 text-amber-600" weight="fill" />
-                <p className="text-[11px] font-mono text-amber-800 dark:text-amber-400">
-                  Projeção fim do mês:{' '}
-                  <span className="font-bold tabular-nums">
-                    {view === 'count' ? formatNumber(current.projection) : formatCurrency(current.projection)}
-                  </span>
-                </p>
-              </div>
-            )}
+        <Link to={createPageUrl('Transactions')} className="inline-flex items-baseline gap-2 group">
+          <div className="v">
+            {splitValue.ccy && <span className="ccy">{splitValue.ccy}</span>}
+            {splitValue.num}
           </div>
+        </Link>
 
-          {/* === Sub-cards CARTÃO vs PIX — dark navy com barra de proporção === */}
-          <div className="lg:col-span-4 grid grid-cols-2 gap-3">
-            {/* CARTÃO */}
-            <Link to={createPageUrl('CardTransactions')} className="block group">
-              <div
-                className="relative p-4 rounded-xl overflow-hidden h-full transition-all group-hover:scale-[1.02] group-hover:shadow-lg"
-                style={{
-                  background: 'linear-gradient(135deg, #002443 0%, #001b34 100%)',
-                }}
-              >
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] font-bold text-[#5cf7cf]">
-                  {breakdown.cardLabel}
-                </p>
-                <p className="font-mono font-extrabold text-white text-xl tabular-nums mt-1.5 leading-none">
-                  {breakdown.cardValue}
-                </p>
-                <p className="text-[10px] text-white/50 mt-1">{breakdown.cardPct}</p>
-                {/* Barra de proporção */}
-                <div className="mt-3 h-1 rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-[#5cf7cf] to-[#00c194] rounded-full transition-all"
-                    style={{ width: `${breakdown.cardPercent}%` }}
-                  />
-                </div>
-              </div>
-            </Link>
-
-            {/* PIX — verde Pagsmile sólido */}
-            <Link to={createPageUrl('PixTransactions')} className="block group">
-              <div
-                className="relative p-4 rounded-xl overflow-hidden h-full transition-all group-hover:scale-[1.02] group-hover:shadow-lg"
-                style={{
-                  background: 'linear-gradient(135deg, #00c194 0%, #18866a 100%)',
-                  boxShadow: '0 2px 12px -4px rgba(0,193,148,0.3)',
-                }}
-              >
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] font-bold text-white/90">
-                  {breakdown.pixLabel}
-                </p>
-                <p className="font-mono font-extrabold text-white text-xl tabular-nums mt-1.5 leading-none">
-                  {breakdown.pixValue}
-                </p>
-                <p className="text-[10px] text-white/70 mt-1">{breakdown.pixPct}</p>
-                {/* Barra de proporção */}
-                <div className="mt-3 h-1 rounded-full bg-white/20 overflow-hidden">
-                  <div
-                    className="h-full bg-white rounded-full transition-all"
-                    style={{ width: `${breakdown.pixPercent}%` }}
-                  />
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          {/* === Sparkline === */}
-          <div className="lg:col-span-4">
-            <div className="flex items-center justify-between mb-2">
-              <p className="font-mono text-[10px] text-slate-500 uppercase tracking-[0.16em] font-bold">
-                Tendência 12 períodos
-              </p>
-              <span className="font-mono text-[10px] text-[#00c194] font-bold tabular-nums">
-                {positive ? '↗' : '↘'} {Math.abs(current.change || 0).toFixed(1)}%
-              </span>
-            </div>
-            <div className="p-3 rounded-xl bg-white border border-slate-100 dark:bg-white/[0.02] dark:border-white/[0.06]">
-              <Sparkline data={sparkSeries} color="emerald" height={64} showTooltip />
-            </div>
-          </div>
+        <div className="mt-3 flex items-center gap-3 flex-wrap">
+          <V9GrowthPill value={current.change || 0} variant={(current.change || 0) >= 0 ? 'up-glow' : 'down'} />
+          <span style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 12,
+            color: 'rgba(255,255,255,.6)',
+            fontWeight: 600,
+            letterSpacing: '.04em',
+          }}>
+            vs período anterior
+          </span>
         </div>
+
+        {current.projection && view !== 'ticket' && (
+          <div style={{
+            marginTop: 14,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '6px 14px',
+            background: 'rgba(255,255,255,.10)',
+            border: '1px solid rgba(255,255,255,.18)',
+            borderRadius: 11,
+            backdropFilter: 'blur(8px)',
+          }}>
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 11,
+              color: 'var(--pag-glow-500)',
+              fontWeight: 800,
+              letterSpacing: '.12em',
+              textTransform: 'uppercase',
+            }}>Projeção</span>
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 13,
+              color: '#fff',
+              fontWeight: 800,
+            }}>
+              {view === 'count' ? formatNumber(current.projection) : formatCurrency(current.projection)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* SUB-CARDS Cartão / PIX */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-6 relative">
+        <Link to={createPageUrl('CardTransactions')} className="pvf-card pvf-card-glow-border block group" style={{ background: 'rgba(255,255,255,.08)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,.16)', padding: 16 }}>
+          <div className="flex items-center justify-between mb-2">
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 10,
+              color: 'var(--pag-glow-500)',
+              fontWeight: 800,
+              letterSpacing: '.16em',
+              textTransform: 'uppercase',
+            }}>{breakdown.cardLabel}</span>
+            <span className="pvf-tag pvf-tag-g">{breakdown.cardPct}</span>
+          </div>
+          <div style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 24,
+            fontWeight: 800,
+            color: '#fff',
+            letterSpacing: '-.02em',
+            lineHeight: 1,
+          }}>
+            {breakdown.cardValue}
+          </div>
+          {/* Barra de proporção */}
+          <div style={{
+            marginTop: 12,
+            height: 4,
+            background: 'rgba(255,255,255,.10)',
+            borderRadius: 99,
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              height: '100%',
+              width: `${breakdown.cardPercent}%`,
+              background: 'linear-gradient(90deg, var(--pag-glow-500), var(--pag-mint-500))',
+              borderRadius: 99,
+              boxShadow: '0 0 8px var(--pag-glow-500)',
+              transition: 'width .3s',
+            }} />
+          </div>
+        </Link>
+
+        <Link to={createPageUrl('PixTransactions')} className="pvf-card-mint block group" style={{
+          background: 'linear-gradient(135deg, var(--pag-mint-500), var(--pag-mint-700))',
+          padding: 16,
+          borderRadius: 16,
+          boxShadow: '0 12px 28px -8px rgba(0,193,148,.55)',
+        }}>
+          <div className="flex items-center justify-between mb-2">
+            <span style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 10,
+              color: '#fff',
+              fontWeight: 800,
+              letterSpacing: '.16em',
+              textTransform: 'uppercase',
+              opacity: .9,
+            }}>{breakdown.pixLabel}</span>
+            <span className="pvf-tag" style={{
+              background: 'rgba(255,255,255,.20)',
+              color: '#fff',
+              border: '1px solid rgba(255,255,255,.30)',
+            }}>{breakdown.pixPct}</span>
+          </div>
+          <div style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 24,
+            fontWeight: 800,
+            color: '#fff',
+            letterSpacing: '-.02em',
+            lineHeight: 1,
+          }}>
+            {breakdown.pixValue}
+          </div>
+          <div style={{
+            marginTop: 12,
+            height: 4,
+            background: 'rgba(255,255,255,.25)',
+            borderRadius: 99,
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              height: '100%',
+              width: `${breakdown.pixPercent}%`,
+              background: '#fff',
+              borderRadius: 99,
+              boxShadow: '0 0 8px rgba(255,255,255,.5)',
+              transition: 'width .3s',
+            }} />
+          </div>
+        </Link>
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import EditorialPageHeader from '@/components/editorial/EditorialPageHeader';
+import V9PageHero from '@/components/pulse-v9/V9PageHero';
 import ChartCard from '@/components/dashboard/ChartCard';
 import QuickActionsCustomizable from '@/components/dashboard/QuickActionsCustomizable';
 import BalanceCard from '@/components/dashboard/BalanceCard';
@@ -92,12 +92,15 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-6 bg-[var(--color-bg-page)] min-h-screen pb-8">
-      <EditorialPageHeader
-        titleWords={["PAINEL", "EXECUTIVO"]}
-        accentIndex={1}
-        subtitle="VISÃO 360 DA SUA OPERAÇÃO"
-        eyebrow="DASHBOARD · TEMPO REAL"
+    <div
+      className="space-y-6 min-h-screen pb-8 px-1"
+      style={{ background: 'linear-gradient(180deg, #F0FAF6 0%, #FAFCFE 100%)' }}
+    >
+      <V9PageHero
+        badge="DASHBOARD · TEMPO REAL"
+        title="Painel"
+        titleEm="executivo"
+        description="Visão 360 da sua operação · volume, conversão, recebíveis e risco em um só lugar."
         actions={
           <div className="flex items-center gap-2 flex-wrap">
             <ProfileSwitcher profile={profile} onChange={setProfile} />

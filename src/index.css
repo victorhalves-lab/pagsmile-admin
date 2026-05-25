@@ -11,6 +11,9 @@
 /* Pagsmile Editorial Fintech 2026 — tokens oficiais Brand Guide */
 @import './styles/editorial.css';
 
+/* Pulse V9 / VF — design system oficial (V9.html + PagsmilePulseDesignSystemVF.html) */
+@import './styles/pulse-v9.css';
+
 /* ============================================
    PAGSMILE PULSE · DESIGN SYSTEM V7 (final)
    Tokens oficiais da marca (Manual): Mint #2bc196, Navy #002443,
