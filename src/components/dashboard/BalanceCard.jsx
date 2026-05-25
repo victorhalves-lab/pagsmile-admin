@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Wallet, Clock, Lock, ArrowUpRight, Eye, EyeOff, FileText } from 'lucide-react';
+import { MonoNumber } from '@/components/ui/mono-number';
+import {
+  Wallet, Clock, Lock, ArrowUpRight, Eye, EyeOff, FileText,
+} from 'lucide-react';
 
 /**
- * BalanceCard — DS oficial.
- * Hero card navy gradient (V8 BOLD #1 / dark variant) com:
- *  - eyebrow mono glow
- *  - número JetBrains Mono grande
- *  - 3 sub-cards glass para Disponível / A receber / Bloqueado
- *  - growth pill mono
+ * BalanceCard — V7. Navy hero strip com saldo total + breakdown.
+ * Padrão consistente com GMVCardConsolidated / ChartCard.
  */
 export default function BalanceCard({
   available = 0,
@@ -20,115 +19,84 @@ export default function BalanceCard({
   const [showValues, setShowValues] = useState(true);
 
   const fmt = (v) => {
-    if (!showValues) return '••••••';
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(v || 0);
+    if (!showValues) return '•••••••';
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
   };
 
   const total = available + pending + blocked;
 
   const items = [
-    {
-      label: 'Disponível',
-      value: available,
-      icon: Wallet,
-      tone: 'mint',
-    },
-    {
-      label: 'A receber',
-      value: pending,
-      icon: Clock,
-      tone: 'glow',
-    },
-    {
-      label: 'Bloqueado',
-      value: blocked,
-      icon: Lock,
-      tone: 'warn',
-    },
+    { label: 'Disponível', value: available, icon: Wallet, accent: 'text-emerald-300' },
+    { label: 'A receber', value: pending, icon: Clock, accent: 'text-amber-300' },
+    { label: 'Bloqueado', value: blocked, icon: Lock, accent: 'text-rose-300' },
   ];
 
   return (
-    <div className={cn('ds-hero-card dark', className)}>
-      {/* TOP ROW: eyebrow + actions */}
-      <div className="relative flex items-center justify-between flex-wrap gap-3 mb-5">
-        <div className="flex items-center gap-3">
-          <span className="eyebrow">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--pag-glow-500)] shadow-[0_0_8px_var(--pag-glow-500)]" />
-            Saldo total · tempo real
-          </span>
-          <button
-            type="button"
-            onClick={() => setShowValues(!showValues)}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 grid place-items-center text-white/80 transition-colors"
-            aria-label="alternar visibilidade"
-          >
-            {showValues ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-          </button>
+    <div
+      className={cn(
+        'rounded-card-v7 p-6 text-white relative overflow-hidden',
+        'bg-slate-900 dark:bg-slate-950 border border-slate-800',
+        className
+      )}
+    >
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        {/* Total */}
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
+            <Wallet className="w-4 h-4 text-emerald-300" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] font-medium text-white/55">
+                Saldo total
+              </span>
+              <button
+                className="text-white/40 hover:text-white transition-colors"
+                onClick={() => setShowValues(!showValues)}
+                aria-label="alternar visibilidade"
+              >
+                {showValues ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+            <MonoNumber size="hero" className="text-white tracking-tight">
+              {fmt(total)}
+            </MonoNumber>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button
-            size="sm"
-            className="bg-[var(--pag-glow-500)] hover:bg-[var(--pag-glow-600)] text-[var(--pag-blue-900)] font-bold h-9 px-4 shadow-[0_6px_18px_-4px_rgba(92,247,207,0.55)]"
-          >
-            <ArrowUpRight className="w-4 h-4 mr-1.5" strokeWidth={2.5} />
+
+        {/* Breakdown */}
+        <div className="flex items-center gap-3 lg:gap-6 flex-wrap lg:flex-nowrap">
+          {items.map((item, i) => (
+            <React.Fragment key={item.label}>
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-white/[0.06] flex items-center justify-center border border-white/10">
+                  <item.icon className={cn('w-4 h-4', item.accent)} />
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.12em] font-medium text-white/50">
+                    {item.label}
+                  </p>
+                  <MonoNumber size="base" className="block font-semibold text-white mt-0.5">
+                    {fmt(item.value)}
+                  </MonoNumber>
+                </div>
+              </div>
+              {i < items.length - 1 && <div className="hidden lg:block w-px h-10 bg-white/10" />}
+            </React.Fragment>
+          ))}
+        </div>
+
+        {/* Ações */}
+        <div className="flex gap-2 lg:flex-shrink-0">
+          <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium h-9 px-3">
+            <ArrowUpRight className="w-4 h-4 mr-1.5" />
             Solicitar saque
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="border-white/20 text-white hover:bg-white/10 hover:text-white font-medium h-9 px-3 bg-transparent backdrop-blur-sm"
-          >
+          <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10 hover:text-white font-medium h-9 px-3 bg-transparent">
             <FileText className="w-4 h-4 mr-1.5" />
             Ver extrato
           </Button>
         </div>
-      </div>
-
-      {/* BIG VALUE */}
-      <div className="relative mb-6">
-        <div className="ds-num ds-num-xl on-dark">
-          <span className="ccy">R$</span>
-          {fmt(total).replace('R$', '').trim()}
-        </div>
-      </div>
-
-      {/* 3 SUB-CARDS glass */}
-      <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {items.map((item) => (
-          <div
-            key={item.label}
-            className="rounded-2xl bg-white/[0.08] backdrop-blur-md border border-white/[0.16] p-4 transition-colors hover:bg-white/[0.12]"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div
-                className={cn(
-                  'w-9 h-9 rounded-xl grid place-items-center',
-                  item.tone === 'mint' && 'bg-[var(--pag-mint-500)]/20 text-[var(--pag-glow-500)] border border-[var(--pag-mint-500)]/30',
-                  item.tone === 'glow' && 'bg-[var(--pag-glow-500)]/16 text-[var(--pag-glow-500)] border border-[var(--pag-glow-500)]/30',
-                  item.tone === 'warn' && 'bg-amber-400/14 text-amber-300 border border-amber-400/24'
-                )}
-              >
-                <item.icon className="w-4 h-4" strokeWidth={2} />
-              </div>
-              <span
-                className={cn(
-                  'font-mono text-[10px] uppercase tracking-[0.14em] font-bold px-2 py-0.5 rounded-md border',
-                  item.tone === 'mint' && 'bg-[var(--pag-glow-500)]/16 text-[var(--pag-glow-500)] border-[var(--pag-glow-500)]/30',
-                  item.tone === 'glow' && 'bg-[var(--pag-glow-500)]/16 text-[var(--pag-glow-500)] border-[var(--pag-glow-500)]/30',
-                  item.tone === 'warn' && 'bg-amber-400/14 text-amber-300 border-amber-400/24'
-                )}
-              >
-                {item.label}
-              </span>
-            </div>
-            <div className="ds-num ds-num-md on-dark">
-              {fmt(item.value)}
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );

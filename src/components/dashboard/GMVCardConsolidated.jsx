@@ -2,38 +2,32 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
+import { Button } from '@/components/ui/button';
+import { MonoNumber } from '@/components/ui/mono-number';
 import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  Hash,
-  Receipt,
-  CreditCard,
-  QrCode,
-  ArrowRight,
+  TrendingUp, TrendingDown, ArrowRight, DollarSign, Hash, Receipt, CreditCard, QrCode,
 } from 'lucide-react';
 
 /**
- * GMV Consolidated — DS oficial.
- * Hero card navy gradient (V8 BOLD #1 / dark) com:
- *  - tabs glass (Volume / Tx / Ticket)
- *  - segmented mono (período)
- *  - big number JetBrains
- *  - growth pill mono solid
- *  - 2 sub-cards glass (Cartão / PIX) com barra de proporção
+ * GMV / Volume Transacionado — Card consolidado com 3 visões em abas:
+ *  1. Volume (R$)
+ *  2. Transações (#)
+ *  3. Ticket Médio
+ *
+ * UI V7 padrão (navy hero strip + sub-cards). Dados/props/lógica preservados.
  */
 
 const PERIODS = [
-  { id: 'today', label: 'Hoje' },
+  { id: 'today',     label: 'Hoje' },
   { id: 'yesterday', label: 'Ontem' },
-  { id: '7d', label: '7d' },
-  { id: 'mtd', label: 'Mês' },
+  { id: '7d',        label: '7d' },
+  { id: 'mtd',       label: 'Mês' },
   { id: 'lastmonth', label: 'Anterior' },
 ];
 
 const VIEWS = [
   { id: 'volume', label: 'Volume', icon: DollarSign },
-  { id: 'count', label: 'Transações', icon: Hash },
+  { id: 'count',  label: 'Transações', icon: Hash },
   { id: 'ticket', label: 'Ticket Médio', icon: Receipt },
 ];
 
@@ -55,44 +49,33 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
     return new Intl.NumberFormat('pt-BR').format(Math.round(value || 0));
   };
 
-  // ===== Mapas de dados =====
+  // ===== DADOS DE VOLUME (R$) =====
   const volumeMap = {
-    today: { value: data.today, change: data.todayChange, sub: 'Tempo real' },
-    yesterday: { value: data.yesterday, change: data.yesterdayChange, sub: 'Comparado a anterior' },
-    '7d': { value: data.last7days, change: data.last7daysChange, sub: 'Incluindo hoje' },
-    mtd: {
-      value: data.currentMonth,
-      change: data.currentMonthChange,
-      sub: `${data.monthProgress || 0}% do mês`,
-      projection: data.monthProjection,
-    },
-    lastmonth: { value: data.lastMonth, change: data.lastMonthChange, sub: 'Mês completo' },
+    today:     { value: data.today,        change: data.todayChange,        sub: 'Tempo real' },
+    yesterday: { value: data.yesterday,    change: data.yesterdayChange,    sub: 'Comparado a anterior' },
+    '7d':      { value: data.last7days,    change: data.last7daysChange,    sub: 'Incluindo hoje' },
+    mtd:       { value: data.currentMonth, change: data.currentMonthChange, sub: `${data.monthProgress || 0}% do mês`, projection: data.monthProjection },
+    lastmonth: { value: data.lastMonth,    change: data.lastMonthChange,    sub: 'Mês completo' },
   };
 
   const AVG_TICKET = 95;
   const countMap = Object.fromEntries(
-    Object.entries(volumeMap).map(([k, v]) => [
-      k,
-      {
-        value: (v.value || 0) / AVG_TICKET,
-        change: v.change,
-        sub: v.sub,
-        projection: v.projection ? v.projection / AVG_TICKET : null,
-      },
-    ])
+    Object.entries(volumeMap).map(([k, v]) => [k, {
+      value: (v.value || 0) / AVG_TICKET,
+      change: v.change,
+      sub: v.sub,
+      projection: v.projection ? v.projection / AVG_TICKET : null,
+    }])
   );
 
   const ticketMap = Object.fromEntries(
-    Object.entries(volumeMap).map(([k, v]) => [
-      k,
-      {
-        value: AVG_TICKET,
-        change: (v.change || 0) * 0.3,
-        sub: v.sub,
-        cardTicket: 142,
-        pixTicket: 48,
-      },
-    ])
+    Object.entries(volumeMap).map(([k, v]) => [k, {
+      value: AVG_TICKET,
+      change: (v.change || 0) * 0.3,
+      sub: v.sub,
+      cardTicket: 142,
+      pixTicket: 48,
+    }])
   );
 
   const dataMap = { volume: volumeMap, count: countMap, ticket: ticketMap };
@@ -103,87 +86,72 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
       return {
         cardLabel: 'Cartão',
         cardValue: formatCurrency((current.value || 0) * 0.67),
-        cardPct: '67%',
-        cardPercent: 67,
+        cardPct: '67% do total',
         pixLabel: 'PIX',
         pixValue: formatCurrency((current.value || 0) * 0.33),
-        pixPct: '33%',
-        pixPercent: 33,
+        pixPct: '33% do total',
       };
     }
     if (view === 'count') {
       return {
         cardLabel: 'Cartão',
-        cardValue: formatNumber((current.value || 0) * 0.5),
-        cardPct: '50%',
-        cardPercent: 50,
+        cardValue: formatNumber((current.value || 0) * 0.50),
+        cardPct: '50% das transações',
         pixLabel: 'PIX',
-        pixValue: formatNumber((current.value || 0) * 0.5),
-        pixPct: '50%',
-        pixPercent: 50,
+        pixValue: formatNumber((current.value || 0) * 0.50),
+        pixPct: '50% das transações',
       };
     }
     return {
       cardLabel: 'Ticket Cartão',
       cardValue: formatCurrency(current.cardTicket),
-      cardPct: 'parcelado',
-      cardPercent: 75,
+      cardPct: 'média parcelado/à vista',
       pixLabel: 'Ticket PIX',
       pixValue: formatCurrency(current.pixTicket),
       pixPct: 'à vista',
-      pixPercent: 25,
     };
   })();
 
-  const mainValue =
-    view === 'count' ? formatNumber(current.value) : formatCurrency(current.value);
-
-  // Split R$ + número para aplicar .ccy
-  const splitMain = (() => {
-    if (view === 'count') return { ccy: null, num: mainValue };
-    const m = mainValue.match(/^(R\$)\s*(.+)$/);
-    if (m) return { ccy: m[1], num: m[2] };
-    return { ccy: null, num: mainValue };
-  })();
+  const mainValue = view === 'count'
+    ? formatNumber(current.value)
+    : formatCurrency(current.value);
 
   const positive = (current.change || 0) >= 0;
 
   return (
-    <div className="ds-hero-card dark">
-      {/* TOP ROW: view tabs + period segmented */}
-      <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5">
-        {/* View tabs glass */}
-        <div className="inline-flex items-center bg-white/10 backdrop-blur-md rounded-full p-1 gap-1 border border-white/15 w-fit">
+    <div className="rounded-card-v7 bg-slate-900 dark:bg-slate-950 border border-slate-800 overflow-hidden">
+      {/* Header navy: tabs + period */}
+      <div className="px-6 pt-5 pb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b border-white/5">
+        <div className="inline-flex items-center bg-white/5 rounded-lg p-1 gap-1 border border-white/10 w-fit">
           {VIEWS.map((v) => (
             <button
               key={v.id}
               type="button"
               onClick={() => setView(v.id)}
               className={cn(
-                'px-3 py-1.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-[0.12em] transition-all flex items-center gap-1.5',
+                'px-3 py-1.5 rounded-md font-mono text-[10px] font-bold uppercase tracking-[0.12em] transition-all flex items-center gap-1.5',
                 view === v.id
-                  ? 'bg-white text-[var(--pag-blue-900)] shadow-[0_4px_12px_-2px_rgba(255,255,255,0.3)]'
-                  : 'text-white/70 hover:text-white'
+                  ? 'bg-white text-slate-900'
+                  : 'text-white/60 hover:text-white'
               )}
             >
-              <v.icon className="w-3 h-3" strokeWidth={2.4} />
+              <v.icon className="w-3 h-3" />
               {v.label}
             </button>
           ))}
         </div>
 
-        {/* Period segmented */}
-        <div className="inline-flex items-center bg-black/30 backdrop-blur-md rounded-full p-1 gap-0.5 border border-white/10 w-fit">
+        <div className="inline-flex items-center bg-white/5 rounded-lg p-1 gap-1 border border-white/10 w-fit">
           {PERIODS.map((p) => (
             <button
               key={p.id}
               type="button"
               onClick={() => setPeriod(p.id)}
               className={cn(
-                'px-3 py-1.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-[0.10em] transition-all',
+                'px-3 py-1.5 rounded-md font-mono text-[10px] font-bold uppercase tracking-[0.12em] transition-all',
                 period === p.id
-                  ? 'bg-gradient-to-br from-[var(--pag-mint-400)] to-[var(--pag-mint-700)] text-white shadow-[0_4px_12px_-2px_rgba(0,193,148,0.55)]'
-                  : 'text-white/65 hover:text-white'
+                  ? 'bg-emerald-500 text-white'
+                  : 'text-white/60 hover:text-white'
               )}
             >
               {p.label}
@@ -192,123 +160,90 @@ export default function GMVCardConsolidated({ data = {}, loading = false }) {
         </div>
       </div>
 
-      {/* MAIN BLOCK: eyebrow + big number + growth pill */}
-      <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      {/* Body: main value + breakdown */}
+      <div className="px-6 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main */}
         <div className="lg:col-span-1">
-          <div className="font-mono text-[10px] uppercase tracking-[0.14em] font-bold text-[var(--pag-glow-500)] mb-2 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--pag-glow-500)] shadow-[0_0_8px_var(--pag-glow-500)] animate-pulse" />
-            {(current.sub || '').toUpperCase()}
-          </div>
-
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] font-medium text-white/50 mb-2">
+            {current.sub}
+          </p>
           <Link to={createPageUrl('Transactions')} className="inline-flex items-baseline gap-2 group">
-            <div className="ds-num ds-num-xl on-dark">
-              {splitMain.ccy && <span className="ccy">{splitMain.ccy}</span>}
-              {splitMain.num}
-            </div>
+            <MonoNumber size="hero" className="text-white tracking-tight">
+              {mainValue}
+            </MonoNumber>
             <ArrowRight className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
           </Link>
-
-          <div className="mt-3 flex items-center gap-2 flex-wrap">
-            <span
-              className={cn(
-                'ds-gp',
-                positive ? 'ds-gp-up-solid' : 'ds-gp-down'
-              )}
-            >
-              {positive ? (
-                <TrendingUp className="w-3 h-3" strokeWidth={3} />
-              ) : (
-                <TrendingDown className="w-3 h-3" strokeWidth={3} />
-              )}
-              {positive ? '+' : ''}
-              {(current.change || 0).toFixed(1)}%
+          <div className="mt-2 flex items-center gap-1.5">
+            {positive ? (
+              <TrendingUp className="w-4 h-4 text-emerald-400" />
+            ) : (
+              <TrendingDown className="w-4 h-4 text-rose-400" />
+            )}
+            <span className={cn(
+              'font-mono text-sm font-bold',
+              positive ? 'text-emerald-400' : 'text-rose-400'
+            )}>
+              {positive ? '+' : ''}{(current.change || 0).toFixed(1)}%
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.10em] font-bold text-white/50">
-              vs período anterior
+            <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-white/40 ml-1">
+              vs anterior
             </span>
           </div>
 
           {current.projection && view !== 'ticket' && (
-            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 backdrop-blur-sm">
-              <span className="font-mono text-[10px] uppercase tracking-[0.12em] font-bold text-[var(--pag-glow-500)]">
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] font-bold text-emerald-300">
                 Projeção
               </span>
-              <span className="font-mono text-[13px] font-bold text-white">
-                {view === 'count'
-                  ? formatNumber(current.projection)
-                  : formatCurrency(current.projection)}
+              <span className="font-mono text-[12px] font-bold text-white">
+                {view === 'count' ? formatNumber(current.projection) : formatCurrency(current.projection)}
               </span>
             </div>
           )}
         </div>
 
-        {/* 2 SUB-CARDS glass · Cartão / PIX */}
+        {/* Breakdown sub-cards */}
         <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* Cartão */}
           <Link
             to={createPageUrl('CardTransactions')}
-            className="rounded-2xl p-4 bg-white/[0.08] backdrop-blur-md border border-white/[0.16] hover:bg-white/[0.12] transition-colors block group"
+            className="rounded-xl p-4 bg-white/[0.04] border border-white/10 hover:border-emerald-500/40 hover:bg-white/[0.06] transition-colors block"
           >
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[var(--pag-glow-500)]/16 border border-[var(--pag-glow-500)]/30 grid place-items-center">
-                  <CreditCard className="w-4 h-4 text-[var(--pag-glow-500)]" strokeWidth={2} />
-                </div>
-                <span className="font-mono text-[10px] uppercase tracking-[0.14em] font-bold text-white/75">
+                <CreditCard className="w-4 h-4 text-emerald-300" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] font-bold text-white/70">
                   {breakdown.cardLabel}
                 </span>
               </div>
-              <span className="font-mono text-[10px] uppercase tracking-[0.10em] font-bold px-2 py-0.5 rounded-md bg-[var(--pag-glow-500)]/16 text-[var(--pag-glow-500)] border border-[var(--pag-glow-500)]/30">
-                {breakdown.cardPct}
-              </span>
+              <ArrowRight className="w-3.5 h-3.5 text-white/30" />
             </div>
-            <div className="ds-num ds-num-md on-dark mb-3">{breakdown.cardValue}</div>
-            <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all"
-                style={{
-                  width: `${breakdown.cardPercent}%`,
-                  background:
-                    'linear-gradient(90deg, var(--pag-glow-500), var(--pag-mint-500))',
-                  boxShadow: '0 0 8px var(--pag-glow-500)',
-                }}
-              />
-            </div>
+            <MonoNumber size="lg" className="block text-white font-bold">
+              {breakdown.cardValue}
+            </MonoNumber>
+            <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-white/40 mt-1">
+              {breakdown.cardPct}
+            </p>
           </Link>
 
-          {/* PIX */}
           <Link
             to={createPageUrl('PixTransactions')}
-            className="rounded-2xl p-4 block group transition-transform hover:-translate-y-0.5"
-            style={{
-              background:
-                'linear-gradient(135deg, var(--pag-mint-500), var(--pag-mint-700))',
-              boxShadow: '0 12px 28px -8px rgba(0,193,148,0.55)',
-            }}
+            className="rounded-xl p-4 bg-white/[0.04] border border-white/10 hover:border-emerald-500/40 hover:bg-white/[0.06] transition-colors block"
           >
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-white/20 border border-white/30 grid place-items-center">
-                  <QrCode className="w-4 h-4 text-white" strokeWidth={2} />
-                </div>
-                <span className="font-mono text-[10px] uppercase tracking-[0.14em] font-bold text-white/90">
+                <QrCode className="w-4 h-4 text-emerald-300" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] font-bold text-white/70">
                   {breakdown.pixLabel}
                 </span>
               </div>
-              <span className="font-mono text-[10px] uppercase tracking-[0.10em] font-bold px-2 py-0.5 rounded-md bg-white/20 text-white border border-white/30">
-                {breakdown.pixPct}
-              </span>
+              <ArrowRight className="w-3.5 h-3.5 text-white/30" />
             </div>
-            <div className="ds-num ds-num-md on-dark mb-3">{breakdown.pixValue}</div>
-            <div className="h-1 bg-white/25 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-white rounded-full transition-all"
-                style={{
-                  width: `${breakdown.pixPercent}%`,
-                  boxShadow: '0 0 8px rgba(255,255,255,0.5)',
-                }}
-              />
-            </div>
+            <MonoNumber size="lg" className="block text-white font-bold">
+              {breakdown.pixValue}
+            </MonoNumber>
+            <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-white/40 mt-1">
+              {breakdown.pixPct}
+            </p>
           </Link>
         </div>
       </div>
