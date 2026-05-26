@@ -330,13 +330,17 @@ export default function Dashboard() {
 
         <TabsContent value="executive" className="space-y-4">
           <ConversionMetricsCards transactions={transactions} />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <ChartCard title={t('dashboard.payment_methods')} subtitle={t('dashboard.volume_distribution')}>
-              <PaymentMethodsChart />
-            </ChartCard>
-            <ChartCard title={t('dashboard.approval_rate_by_brand')} subtitle={`${t('common.goal')}: 85%`}>
-              <ApprovalRateChart target={85} />
-            </ChartCard>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4" style={{ minWidth: 0 }}>
+            <div style={{ minWidth: 0 }}>
+              <ChartCard title={t('dashboard.payment_methods')} subtitle={t('dashboard.volume_distribution')}>
+                <PaymentMethodsChart />
+              </ChartCard>
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <ChartCard title={t('dashboard.approval_rate_by_brand')} subtitle={`${t('common.goal')}: 85%`}>
+                <ApprovalRateChart target={85} />
+              </ChartCard>
+            </div>
           </div>
           <ComparativeMetrics transactions={transactions} />
         </TabsContent>

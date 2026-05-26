@@ -56,32 +56,34 @@ export default function PaymentMethodsChart({ data = [], className }) {
   };
 
   return (
-    <div className={className} style={{ height: 256 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={chartData}
-            cx="50%" cy="50%"
-            innerRadius={64} outerRadius={86}
-            paddingAngle={5}
-            dataKey="value"
-            strokeWidth={0}
-            cornerRadius={8}
-          >
-            {chartData.map((entry, idx) => (
-              <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip />} />
-        </PieChart>
-      </ResponsiveContainer>
+    <div className={className}>
+      <div style={{ height: 220 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={chartData}
+              cx="50%" cy="50%"
+              innerRadius={56} outerRadius={80}
+              paddingAngle={5}
+              dataKey="value"
+              strokeWidth={0}
+              cornerRadius={8}
+            >
+              {chartData.map((entry, idx) => (
+                <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip content={<CustomTooltip />} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
 
-      <div className="flex justify-center gap-6 mt-2">
+      <div className="flex justify-center gap-6 mt-3 flex-wrap">
         {chartData.map((entry, idx) => (
           <div key={entry.name} className="flex items-center gap-2">
             <span
               style={{
-                width: 12, height: 12, borderRadius: 3,
+                width: 12, height: 12, borderRadius: 4,
                 background: COLORS[idx % COLORS.length],
               }}
             />

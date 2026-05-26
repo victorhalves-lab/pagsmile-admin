@@ -27,7 +27,7 @@ export default function ChartCard({
   headerRight,
 }) {
   return (
-    <div className={cn('pvf-card', className)}>
+    <div className={cn('pvf-card', className)} style={{ overflow: 'hidden', minWidth: 0 }}>
       {/* Header com pvf-section-h */}
       <div className="pvf-section-h" style={{ marginBottom: 16 }}>
         <div>

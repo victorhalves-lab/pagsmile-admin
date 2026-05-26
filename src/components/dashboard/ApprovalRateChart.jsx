@@ -64,9 +64,9 @@ export default function ApprovalRateChart({ data = [], target = 85, className })
   };
 
   return (
-    <div className={className} style={{ height: 256 }}>
+    <div className={className} style={{ height: 256, width: '100%' }}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 24, right: 10, left: 0, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 24, right: 56, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#E0F8F1" vertical={false} />
           <XAxis
             dataKey="name"
