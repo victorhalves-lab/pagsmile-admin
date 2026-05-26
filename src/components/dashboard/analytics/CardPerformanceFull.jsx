@@ -1,50 +1,19 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
 import {
-  CreditCard, TrendingUp, TrendingDown, ShieldCheck, RotateCw,
-  AlertTriangle, Target, Activity, Building2, BarChart3, Zap,
-} from 'lucide-react';
+  CreditCard, ShieldCheck, ArrowsClockwise, Warning,
+  Target as TargetIcon, Pulse, ChartBar, Buildings, Lightning,
+} from '@phosphor-icons/react';
 import {
   CARD_KPIS, CARD_BRANDS, CARD_INSTALLMENTS, CARD_VALUE_RANGES,
   CARD_DECLINE_REASONS, CARD_ISSUER_PERFORMANCE, CARD_HOURLY_APPROVAL,
   CARD_RETRY_FUNNEL,
 } from './analyticsMockData';
-
-const fmtCurrency = (v) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(v || 0);
-const fmtInt = (v) => new Intl.NumberFormat('pt-BR').format(v || 0);
-
-const TrendBadge = ({ value, inverted = false }) => {
-  const positive = inverted ? value < 0 : value >= 0;
-  const Icon = value >= 0 ? TrendingUp : TrendingDown;
-  return (
-    <span className={cn(
-      'inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded',
-      positive ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-900/50' : 'text-red-700 bg-red-100 dark:bg-red-900/50'
-    )}>
-      <Icon className="w-2.5 h-2.5" />
-      {Math.abs(value).toFixed(value < 1 && value > -1 ? 2 : 1)}{Math.abs(value) < 1 ? 'pp' : '%'}
-    </span>
-  );
-};
-
-const KpiTile = ({ icon: Icon, label, value, sub, change, inverted, colorClass = 'text-slate-900' }) => (
-  <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-    <div className="flex items-center justify-between mb-1">
-      <Icon className="w-3.5 h-3.5 text-slate-400" />
-      {typeof change === 'number' && <TrendBadge value={change} inverted={inverted} />}
-    </div>
-    <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{label}</p>
-    <p className={cn('text-lg font-bold mt-0.5 dark:text-white', colorClass)}>{value}</p>
-    {sub && <p className="text-[10px] text-slate-400 mt-0.5">{sub}</p>}
-  </div>
-);
-
-const rateColor = (r) => (r >= 88 ? 'text-emerald-600' : r >= 82 ? 'text-yellow-600' : 'text-red-600');
-const rateBar   = (r) => (r >= 88 ? '[&>div]:bg-emerald-500' : r >= 82 ? '[&>div]:bg-yellow-500' : '[&>div]:bg-red-500');
+import {
+  VF, VfCard, VfSectionHeader, VfKpiTile, VfPill, VfProgress,
+  VfInsightFooter, VfNumber,
+  fmtCurrency, fmtCurrencyFull, fmtInt,
+  rateColor, rateBarGradient,
+} from './vfHelpers';
 
 export default function CardPerformanceFull() {
   const peak = CARD_HOURLY_APPROVAL.reduce((max, h) => (h.rate > max.rate ? h : max), CARD_HOURLY_APPROVAL[0]);
@@ -52,253 +21,354 @@ export default function CardPerformanceFull() {
 
   return (
     <div className="space-y-4">
-      {/* ===== ROW 1 — KPIs do topo ===== */}
+      {/* ===== ROW 1 — KPIs ===== */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        <KpiTile icon={Target}        label="Aprovação"     value={`${CARD_KPIS.approvalRate}%`}      sub={`Meta ${CARD_KPIS.approvalRateTarget}%`} change={CARD_KPIS.approvalRateChange} />
-        <KpiTile icon={CreditCard}    label="Tentativas"    value={fmtInt(CARD_KPIS.totalAttempts)}    sub={`${fmtInt(CARD_KPIS.totalApproved)} aprov.`} />
-        <KpiTile icon={Activity}      label="Volume"        value={fmtCurrency(CARD_KPIS.totalVolume)} change={CARD_KPIS.totalVolumeChange} />
-        <KpiTile icon={BarChart3}     label="Ticket Médio"  value={fmtCurrency(CARD_KPIS.avgTicket)}   change={CARD_KPIS.avgTicketChange} />
-        <KpiTile icon={ShieldCheck}   label="3DS Cobertura" value={`${CARD_KPIS.threeDsUsage}%`}        sub={`+${CARD_KPIS.threeDsLiftPp}pp aprov.`} colorClass="text-blue-600" />
-        <KpiTile icon={AlertTriangle} label="Chargeback"    value={`${CARD_KPIS.chargebackRate}%`}      change={CARD_KPIS.chargebackRateChange} inverted colorClass="text-amber-600" />
+        <VfKpiTile icon={TargetIcon}  label="Aprovação"    value={`${CARD_KPIS.approvalRate}%`}      sub={`Meta ${CARD_KPIS.approvalRateTarget}%`}  change={CARD_KPIS.approvalRateChange} />
+        <VfKpiTile icon={CreditCard}  label="Tentativas"   value={fmtInt(CARD_KPIS.totalAttempts)}    sub={`${fmtInt(CARD_KPIS.totalApproved)} aprov.`} accent={VF.navy2} />
+        <VfKpiTile icon={Pulse}       label="Volume"       value={fmtCurrency(CARD_KPIS.totalVolume)} change={CARD_KPIS.totalVolumeChange} />
+        <VfKpiTile icon={ChartBar}    label="Ticket Médio" value={fmtCurrency(CARD_KPIS.avgTicket)}   change={CARD_KPIS.avgTicketChange} accent={VF.deep} />
+        <VfKpiTile icon={ShieldCheck} label="3DS"          value={`${CARD_KPIS.threeDsUsage}%`}        sub={`+${CARD_KPIS.threeDsLiftPp}pp aprov.`} accent={VF.navy2} />
+        <VfKpiTile icon={Warning}     label="Chargeback"   value={`${CARD_KPIS.chargebackRate}%`}      change={CARD_KPIS.chargebackRateChange} inverted accent={VF.amber} />
       </div>
 
-      {/* ===== ROW 2 — Aprovação por Bandeira (rica) ===== */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Aprovação por Bandeira</h3>
-              <p className="text-xs text-slate-500">Volume, mix débito/crédito e taxa de aprovação</p>
-            </div>
-            <Badge variant="outline" className="text-[10px]">6 bandeiras</Badge>
-          </div>
+      {/* ===== ROW 2 — Aprovação por Bandeira ===== */}
+      <VfCard>
+        <VfSectionHeader
+          eyebrow="Cartão · bandeiras"
+          title="Aprovação por"
+          highlight="bandeira"
+          icon={CreditCard}
+          rightSlot={<VfPill variant="navy">6 bandeiras</VfPill>}
+        />
 
-          <div className="overflow-x-auto -mx-4 px-4">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="text-slate-500 border-b border-slate-100 dark:border-slate-800">
-                  <th className="text-left py-2 font-semibold">Bandeira</th>
-                  <th className="text-right py-2 font-semibold">Tentativas</th>
-                  <th className="text-right py-2 font-semibold">Aprovados</th>
-                  <th className="text-right py-2 font-semibold">Recusados</th>
-                  <th className="text-right py-2 font-semibold">Volume</th>
-                  <th className="text-right py-2 font-semibold">Débito/Crédito</th>
-                  <th className="text-right py-2 font-semibold w-32">Taxa Aprov.</th>
-                </tr>
-              </thead>
-              <tbody>
-                {CARD_BRANDS.map((b) => (
-                  <tr key={b.brand} className="border-b border-slate-50 dark:border-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800/30">
-                    <td className="py-2.5">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-5 rounded bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center text-[8px] font-black text-slate-600 dark:text-slate-300">
-                          {b.label.substring(0, 4).toUpperCase()}
-                        </div>
-                        <span className="font-semibold text-slate-900 dark:text-white">{b.label}</span>
-                        <span className="text-[10px] text-slate-400">({b.share}%)</span>
-                      </div>
-                    </td>
-                    <td className="text-right py-2.5 text-slate-700 dark:text-slate-300">{fmtInt(b.count)}</td>
-                    <td className="text-right py-2.5 text-emerald-600 font-semibold">{fmtInt(b.approved)}</td>
-                    <td className="text-right py-2.5 text-red-500">{fmtInt(b.declined)}</td>
-                    <td className="text-right py-2.5 text-slate-900 dark:text-white font-semibold">{fmtCurrency(b.volume)}</td>
-                    <td className="text-right py-2.5">
-                      <div className="inline-flex items-center gap-1">
-                        <span className="text-[10px] text-blue-600">{b.debit}%</span>
-                        <span className="text-slate-300">/</span>
-                        <span className="text-[10px] text-violet-600">{b.credit}%</span>
-                      </div>
-                    </td>
-                    <td className="py-2.5">
-                      <div className="flex items-center gap-2 justify-end">
-                        <Progress value={b.approvalRate} className={cn('h-1.5 w-16', rateBar(b.approvalRate))} />
-                        <span className={cn('font-bold w-10 text-right', rateColor(b.approvalRate))}>{b.approvalRate.toFixed(1)}%</span>
-                      </div>
-                    </td>
-                  </tr>
+        <div className="overflow-x-auto -mx-5 px-5">
+          <table className="w-full" style={{ borderCollapse: 'separate', borderSpacing: 0 }}>
+            <thead>
+              <tr>
+                {['Bandeira', 'Tentativas', 'Aprovados', 'Recusados', 'Volume', 'D/C', 'Taxa Aprov.'].map((h, i) => (
+                  <th
+                    key={h}
+                    className="font-mono"
+                    style={{
+                      padding: '10px 8px',
+                      textAlign: i === 0 ? 'left' : 'right',
+                      fontSize: 9.5, fontWeight: 800,
+                      letterSpacing: '0.12em', textTransform: 'uppercase',
+                      color: VF.muted,
+                      borderBottom: `1px solid ${VF.mintBorder}`,
+                      width: i === 6 ? 140 : 'auto',
+                    }}
+                  >
+                    {h}
+                  </th>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+              </tr>
+            </thead>
+            <tbody>
+              {CARD_BRANDS.map((b, idx) => (
+                <tr
+                  key={b.brand}
+                  style={{
+                    background: idx % 2 === 1 ? 'rgba(176,240,222,0.18)' : 'transparent',
+                  }}
+                >
+                  <td style={{ padding: '12px 8px' }}>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="font-mono inline-flex items-center justify-center"
+                        style={{
+                          width: 36, height: 22, borderRadius: 5,
+                          background: 'linear-gradient(135deg, #E6ECF2, #C0CFDC)',
+                          color: VF.navy, border: '1px solid #8AA5BD',
+                          fontSize: 8, fontWeight: 900, letterSpacing: '0.04em',
+                        }}
+                      >
+                        {b.label.substring(0, 4).toUpperCase()}
+                      </div>
+                      <span style={{ fontSize: 12, fontWeight: 800, color: VF.navy }}>{b.label}</span>
+                      <span className="font-mono" style={{ fontSize: 10, color: VF.faint }}>({b.share}%)</span>
+                    </div>
+                  </td>
+                  <td className="font-mono" style={{ padding: '12px 8px', textAlign: 'right', fontSize: 12, color: VF.navy, fontVariantNumeric: 'tabular-nums' }}>{fmtInt(b.count)}</td>
+                  <td className="font-mono" style={{ padding: '12px 8px', textAlign: 'right', fontSize: 12, fontWeight: 800, color: VF.mintDark, fontVariantNumeric: 'tabular-nums' }}>{fmtInt(b.approved)}</td>
+                  <td className="font-mono" style={{ padding: '12px 8px', textAlign: 'right', fontSize: 12, color: VF.red, fontVariantNumeric: 'tabular-nums' }}>{fmtInt(b.declined)}</td>
+                  <td className="font-mono" style={{ padding: '12px 8px', textAlign: 'right', fontSize: 12, fontWeight: 800, color: VF.navy, fontVariantNumeric: 'tabular-nums' }}>{fmtCurrency(b.volume)}</td>
+                  <td style={{ padding: '12px 8px', textAlign: 'right' }}>
+                    <span className="font-mono" style={{ fontSize: 10, color: VF.navy2, fontWeight: 700 }}>{b.debit}%</span>
+                    <span style={{ margin: '0 4px', color: VF.faint }}>/</span>
+                    <span className="font-mono" style={{ fontSize: 10, color: VF.deep, fontWeight: 700 }}>{b.credit}%</span>
+                  </td>
+                  <td style={{ padding: '12px 8px' }}>
+                    <div className="flex items-center gap-2 justify-end">
+                      <VfProgress value={b.approvalRate} gradient={rateBarGradient(b.approvalRate)} width={70} height={5} />
+                      <span
+                        className="font-mono"
+                        style={{
+                          fontSize: 12, fontWeight: 800, color: rateColor(b.approvalRate),
+                          width: 44, textAlign: 'right',
+                          fontVariantNumeric: 'tabular-nums',
+                        }}
+                      >
+                        {b.approvalRate.toFixed(1)}%
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </VfCard>
 
       {/* ===== ROW 3 — Parcelamento + Faixa de Valor ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-3">Aprovação por Parcelamento</h3>
-            <div className="space-y-3">
-              {CARD_INSTALLMENTS.map((i) => (
-                <div key={i.range} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <div>
-                      <span className="font-semibold text-slate-700 dark:text-slate-200">{i.label}</span>
-                      <span className="ml-2 text-[10px] text-slate-400">{fmtInt(i.count)} tx · {fmtCurrency(i.volume)}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-slate-500">MDR {i.mdr}%</span>
-                      <span className={cn('font-bold', rateColor(i.approvalRate))}>{i.approvalRate}%</span>
-                    </div>
+        <VfCard>
+          <VfSectionHeader eyebrow="Cartão · parcelas" title="Aprovação por" highlight="parcelamento" />
+          <div className="space-y-3">
+            {CARD_INSTALLMENTS.map((i) => (
+              <div key={i.range}>
+                <div className="flex items-center justify-between" style={{ fontSize: 12, marginBottom: 4 }}>
+                  <div>
+                    <span style={{ fontWeight: 800, color: VF.navy }}>{i.label}</span>
+                    <span className="font-mono ml-2" style={{ fontSize: 10, color: VF.muted, fontWeight: 600 }}>
+                      {fmtInt(i.count)} tx · {fmtCurrency(i.volume)}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Progress value={i.approvalRate} className={cn('flex-1 h-1.5', rateBar(i.approvalRate))} />
-                    <span className="text-[10px] text-slate-400 w-10 text-right">{i.share}%</span>
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono" style={{ fontSize: 10, color: VF.muted, fontWeight: 700 }}>MDR {i.mdr}%</span>
+                    <span className="font-mono" style={{ fontSize: 13, fontWeight: 800, color: rateColor(i.approvalRate), fontVariantNumeric: 'tabular-nums' }}>
+                      {i.approvalRate}%
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 text-[10px] text-slate-500">
-              <Zap className="w-3 h-3 text-amber-500" />
-              <span>Insight: parcelamentos 11x-12x têm <strong className="text-red-600">79.4%</strong> de aprovação — considere capping em 10x.</span>
-            </div>
-          </CardContent>
-        </Card>
+                <div className="flex items-center gap-2">
+                  <VfProgress value={i.approvalRate} gradient={rateBarGradient(i.approvalRate)} height={5} />
+                  <span className="font-mono" style={{ fontSize: 10, color: VF.faint, width: 44, textAlign: 'right' }}>
+                    {i.share}%
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <VfInsightFooter icon={Lightning}>
+            Parcelamentos 11x-12x têm{' '}
+            <strong style={{ color: VF.red }}>79.4%</strong> de aprovação — considere capping em 10x.
+          </VfInsightFooter>
+        </VfCard>
 
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-3">Aprovação por Faixa de Valor</h3>
-            <div className="space-y-3">
-              {CARD_VALUE_RANGES.map((v) => (
-                <div key={v.label} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <div>
-                      <span className="font-semibold text-slate-700 dark:text-slate-200">{v.label}</span>
-                      <span className="ml-2 text-[10px] text-slate-400">{fmtInt(v.count)} tx · ticket {fmtCurrency(v.avg)}</span>
-                    </div>
-                    <span className={cn('font-bold', rateColor(v.approvalRate))}>{v.approvalRate}%</span>
+        <VfCard>
+          <VfSectionHeader eyebrow="Cartão · ticket" title="Aprovação por" highlight="faixa de valor" />
+          <div className="space-y-3">
+            {CARD_VALUE_RANGES.map((v) => (
+              <div key={v.label}>
+                <div className="flex items-center justify-between" style={{ fontSize: 12, marginBottom: 4 }}>
+                  <div>
+                    <span style={{ fontWeight: 800, color: VF.navy }}>{v.label}</span>
+                    <span className="font-mono ml-2" style={{ fontSize: 10, color: VF.muted, fontWeight: 600 }}>
+                      {fmtInt(v.count)} tx · ticket {fmtCurrency(v.avg)}
+                    </span>
                   </div>
-                  <Progress value={v.approvalRate} className={cn('h-1.5', rateBar(v.approvalRate))} />
-                  <p className="text-[10px] text-slate-400">Principal motivo de recusa: <span className="font-mono text-slate-600 dark:text-slate-300">{v.declineMain}</span></p>
+                  <span className="font-mono" style={{ fontSize: 13, fontWeight: 800, color: rateColor(v.approvalRate), fontVariantNumeric: 'tabular-nums' }}>
+                    {v.approvalRate}%
+                  </span>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                <VfProgress value={v.approvalRate} gradient={rateBarGradient(v.approvalRate)} height={5} />
+                <p className="font-mono" style={{ fontSize: 10, color: VF.muted, marginTop: 4 }}>
+                  Principal motivo:{' '}
+                  <span style={{ color: VF.navy, fontWeight: 700 }}>{v.declineMain}</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        </VfCard>
       </div>
 
-      {/* ===== ROW 4 — Análise de Recusas + Retry Intelligence ===== */}
+      {/* ===== ROW 4 — Recusas + Retry Intelligence ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Análise de Recusas</h3>
-              <Badge variant="outline" className="text-[10px]">{fmtInt(CARD_KPIS.totalDeclined)} recusas</Badge>
-            </div>
-            <div className="space-y-2">
-              {CARD_DECLINE_REASONS.map((d) => (
-                <div key={d.code} className="flex items-center gap-3 p-2 rounded-lg border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                  <div className="w-10 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[10px] font-mono font-bold text-slate-600 dark:text-slate-300">{d.code}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">{d.reason}</p>
-                    <p className="text-[10px] text-slate-500">{fmtInt(d.count)} tx · {d.share}% do total</p>
-                  </div>
-                  {d.recoverable ? (
-                    <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 text-[10px] border-0">Recuperável</Badge>
-                  ) : (
-                    <Badge variant="outline" className="text-[10px]">Definitivo</Badge>
-                  )}
+        <VfCard>
+          <VfSectionHeader
+            eyebrow="Cartão · recusas"
+            title="Análise de"
+            highlight="recusas"
+            rightSlot={<VfPill variant="warn">{fmtInt(CARD_KPIS.totalDeclined)} recusas</VfPill>}
+          />
+          <div className="space-y-2">
+            {CARD_DECLINE_REASONS.map((d) => (
+              <div
+                key={d.code}
+                className="flex items-center gap-3 p-2.5 transition-all hover:-translate-y-px"
+                style={{
+                  background: VF.surface,
+                  border: `1px solid ${VF.mintBorder}`,
+                  borderRadius: 10,
+                }}
+              >
+                <div
+                  className="font-mono inline-flex items-center justify-center"
+                  style={{
+                    width: 44, height: 28, borderRadius: 6,
+                    background: 'linear-gradient(135deg, #E6ECF2, #C0CFDC)',
+                    color: VF.navy, border: '1px solid #8AA5BD',
+                    fontSize: 10, fontWeight: 900,
+                  }}
+                >
+                  {d.code}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <RotateCw className="w-4 h-4 text-emerald-600" />
-                Retry Intelligence
-              </h3>
-              <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 border-0 text-[10px]">
-                +{fmtCurrency(CARD_RETRY_FUNNEL.recoveredVolume)} recuperado
-              </Badge>
-            </div>
-
-            {/* Funil */}
-            <div className="space-y-2">
-              {[
-                { label: 'Recusas no período', value: CARD_RETRY_FUNNEL.declined, pct: 100, color: 'bg-slate-400' },
-                { label: 'Elegíveis para retry', value: CARD_RETRY_FUNNEL.eligibleForRetry, pct: (CARD_RETRY_FUNNEL.eligibleForRetry / CARD_RETRY_FUNNEL.declined) * 100, color: 'bg-blue-400' },
-                { label: 'Re-tentadas', value: CARD_RETRY_FUNNEL.retried, pct: (CARD_RETRY_FUNNEL.retried / CARD_RETRY_FUNNEL.declined) * 100, color: 'bg-indigo-400' },
-                { label: 'Recuperadas com sucesso', value: CARD_RETRY_FUNNEL.recovered, pct: (CARD_RETRY_FUNNEL.recovered / CARD_RETRY_FUNNEL.declined) * 100, color: 'bg-emerald-500' },
-              ].map((step) => (
-                <div key={step.label}>
-                  <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="text-slate-700 dark:text-slate-200">{step.label}</span>
-                    <span className="font-bold text-slate-900 dark:text-white">{fmtInt(step.value)} <span className="text-slate-400 font-normal">({step.pct.toFixed(0)}%)</span></span>
-                  </div>
-                  <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                    <div className={cn('h-full', step.color)} style={{ width: `${step.pct}%` }} />
-                  </div>
+                <div className="flex-1 min-w-0">
+                  <p style={{ fontSize: 12, fontWeight: 700, color: VF.navy }} className="truncate">{d.reason}</p>
+                  <p className="font-mono" style={{ fontSize: 10, color: VF.muted, fontWeight: 600 }}>
+                    {fmtInt(d.count)} tx · {d.share}% do total
+                  </p>
                 </div>
-              ))}
-            </div>
+                <VfPill variant={d.recoverable ? 'mint' : 'navy'}>
+                  {d.recoverable ? 'Recuperável' : 'Definitivo'}
+                </VfPill>
+              </div>
+            ))}
+          </div>
+        </VfCard>
 
-            <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2 text-center">
-              <div>
-                <p className="text-[10px] text-slate-500">Taxa de recuperação</p>
-                <p className="text-base font-bold text-emerald-600">{CARD_KPIS.retryRecoveredRate}%</p>
+        <VfCard>
+          <VfSectionHeader
+            eyebrow="Cartão · retry"
+            title="Retry"
+            highlight="intelligence"
+            icon={ArrowsClockwise}
+            rightSlot={<VfPill variant="solid">+{fmtCurrency(CARD_RETRY_FUNNEL.recoveredVolume)} recuperado</VfPill>}
+          />
+
+          {(() => {
+            const funnel = [
+              { label: 'Recusas no período',     value: CARD_RETRY_FUNNEL.declined,         pct: 100,                                                                       grad: 'linear-gradient(90deg, #C0CFDC, #8AA5BD)' },
+              { label: 'Elegíveis para retry',   value: CARD_RETRY_FUNNEL.eligibleForRetry, pct: (CARD_RETRY_FUNNEL.eligibleForRetry / CARD_RETRY_FUNNEL.declined) * 100,    grad: `linear-gradient(90deg, #013766, ${VF.navy2})` },
+              { label: 'Re-tentadas',             value: CARD_RETRY_FUNNEL.retried,          pct: (CARD_RETRY_FUNNEL.retried / CARD_RETRY_FUNNEL.declined) * 100,            grad: `linear-gradient(90deg, #1A3939, ${VF.deep})` },
+              { label: 'Recuperadas com sucesso', value: CARD_RETRY_FUNNEL.recovered,        pct: (CARD_RETRY_FUNNEL.recovered / CARD_RETRY_FUNNEL.declined) * 100,           grad: `linear-gradient(90deg, #1ECB9D, ${VF.mintDark})` },
+            ];
+            return (
+              <div className="space-y-2.5">
+                {funnel.map((step) => (
+                  <div key={step.label}>
+                    <div className="flex items-center justify-between" style={{ fontSize: 11.5, marginBottom: 4 }}>
+                      <span style={{ color: VF.navy, fontWeight: 700 }}>{step.label}</span>
+                      <span className="font-mono" style={{ color: VF.navy, fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>
+                        {fmtInt(step.value)}{' '}
+                        <span style={{ color: VF.muted, fontWeight: 600 }}>({step.pct.toFixed(0)}%)</span>
+                      </span>
+                    </div>
+                    <VfProgress value={step.pct} gradient={step.grad} height={8} />
+                  </div>
+                ))}
               </div>
-              <div>
-                <p className="text-[10px] text-slate-500">Tentativas médias</p>
-                <p className="text-base font-bold text-slate-900 dark:text-white">{CARD_RETRY_FUNNEL.avgAttempts}</p>
-              </div>
+            );
+          })()}
+
+          <div
+            className="mt-4 pt-3 grid grid-cols-2 gap-2 text-center"
+            style={{ borderTop: '1px dashed #B3F0DE' }}
+          >
+            <div>
+              <p className="font-mono" style={{ fontSize: 9.5, color: VF.muted, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                Taxa de recuperação
+              </p>
+              <VfNumber size={20}>{CARD_KPIS.retryRecoveredRate}%</VfNumber>
             </div>
-          </CardContent>
-        </Card>
+            <div>
+              <p className="font-mono" style={{ fontSize: 9.5, color: VF.muted, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                Tentativas médias
+              </p>
+              <VfNumber size={20}>{CARD_RETRY_FUNNEL.avgAttempts}</VfNumber>
+            </div>
+          </div>
+        </VfCard>
       </div>
 
-      {/* ===== ROW 5 — Performance por Emissor + Aprovação por Hora ===== */}
+      {/* ===== ROW 5 — Emissor + Hora ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-        <Card className="lg:col-span-2">
-          <CardContent className="p-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-              <Building2 className="w-4 h-4 text-slate-400" />
-              Performance por Emissor
-            </h3>
-            <div className="space-y-2">
-              {CARD_ISSUER_PERFORMANCE.map((i) => (
-                <div key={i.issuer} className="flex items-center gap-3 text-xs">
-                  <span className="w-28 truncate font-semibold text-slate-700 dark:text-slate-200">{i.issuer}</span>
-                  <Progress value={i.approvalRate} className={cn('flex-1 h-1.5', rateBar(i.approvalRate))} />
-                  <span className={cn('w-12 text-right font-bold', rateColor(i.approvalRate))}>{i.approvalRate}%</span>
-                  <span className="w-14 text-right text-[10px] text-emerald-600">+{i.retryLift}pp retry</span>
+        <VfCard className="lg:col-span-2">
+          <VfSectionHeader eyebrow="Cartão · emissor" title="Por" highlight="emissor" icon={Buildings} />
+          <div className="space-y-2.5">
+            {CARD_ISSUER_PERFORMANCE.map((i) => (
+              <div key={i.issuer} className="flex items-center gap-3" style={{ fontSize: 12 }}>
+                <span className="truncate" style={{ width: 110, fontWeight: 800, color: VF.navy }}>
+                  {i.issuer}
+                </span>
+                <div className="flex-1">
+                  <VfProgress value={i.approvalRate} gradient={rateBarGradient(i.approvalRate)} height={5} />
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-3">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Aprovação por Hora do Dia</h3>
-              <div className="flex items-center gap-3 text-[10px]">
-                <span className="text-emerald-600">Pico: {peak.hour}h · {peak.rate.toFixed(1)}%</span>
-                <span className="text-red-500">Vale: {trough.hour}h · {trough.rate.toFixed(1)}%</span>
+                <span
+                  className="font-mono"
+                  style={{
+                    width: 48, textAlign: 'right',
+                    fontWeight: 800, color: rateColor(i.approvalRate),
+                    fontVariantNumeric: 'tabular-nums',
+                  }}
+                >
+                  {i.approvalRate}%
+                </span>
+                <span
+                  className="font-mono"
+                  style={{
+                    width: 70, textAlign: 'right', fontSize: 10,
+                    color: VF.mintDark, fontWeight: 700,
+                    fontVariantNumeric: 'tabular-nums',
+                  }}
+                >
+                  +{i.retryLift}pp retry
+                </span>
               </div>
-            </div>
-            <div className="flex items-end gap-0.5 h-32">
-              {CARD_HOURLY_APPROVAL.map((h) => {
-                const barHeight = ((h.rate - 70) / 25) * 100;
-                const color = h.rate >= 88 ? 'bg-emerald-500' : h.rate >= 82 ? 'bg-yellow-400' : 'bg-red-400';
-                return (
-                  <div key={h.hour} className="flex-1 flex flex-col items-center justify-end group relative">
-                    <div className={cn('w-full rounded-t transition-all hover:opacity-80', color)} style={{ height: `${barHeight}%` }} />
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity bg-slate-900 text-white text-[10px] rounded px-1.5 py-0.5 whitespace-nowrap">
-                      {h.hour}h: {h.rate.toFixed(1)}%
-                    </div>
+            ))}
+          </div>
+        </VfCard>
+
+        <VfCard className="lg:col-span-3">
+          <VfSectionHeader
+            eyebrow="Cartão · hora"
+            title="Aprovação por"
+            highlight="hora do dia"
+            rightSlot={(
+              <div className="flex items-center gap-2">
+                <VfPill variant="mint">Pico {peak.hour}h · {peak.rate.toFixed(1)}%</VfPill>
+                <VfPill variant="err">Vale {trough.hour}h · {trough.rate.toFixed(1)}%</VfPill>
+              </div>
+            )}
+          />
+          <div className="flex items-end gap-0.5" style={{ height: 130 }}>
+            {CARD_HOURLY_APPROVAL.map((h) => {
+              const barHeight = ((h.rate - 70) / 25) * 100;
+              const grad = rateBarGradient(h.rate);
+              return (
+                <div key={h.hour} className="flex-1 flex flex-col items-center justify-end group relative">
+                  <div
+                    className="w-full transition-all hover:opacity-90"
+                    style={{
+                      height: `${barHeight}%`,
+                      background: grad,
+                      borderRadius: '4px 4px 0 0',
+                    }}
+                  />
+                  <div
+                    className="absolute opacity-0 group-hover:opacity-100 pointer-events-none font-mono"
+                    style={{
+                      top: -28, left: '50%', transform: 'translateX(-50%)',
+                      background: VF.navy, color: '#fff',
+                      fontSize: 10, padding: '3px 8px', borderRadius: 5,
+                      whiteSpace: 'nowrap',
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    {h.hour}h: {h.rate.toFixed(1)}%
                   </div>
-                );
-              })}
-            </div>
-            <div className="flex justify-between mt-1 text-[9px] text-slate-400">
-              <span>00h</span><span>06h</span><span>12h</span><span>18h</span><span>23h</span>
-            </div>
-          </CardContent>
-        </Card>
+                </div>
+              );
+            })}
+          </div>
+          <div
+            className="flex justify-between mt-1.5 font-mono"
+            style={{ fontSize: 9.5, color: VF.faint, fontWeight: 700 }}
+          >
+            <span>00h</span><span>06h</span><span>12h</span><span>18h</span><span>23h</span>
+          </div>
+        </VfCard>
       </div>
     </div>
   );
