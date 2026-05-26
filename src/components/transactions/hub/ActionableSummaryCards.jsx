@@ -1,183 +1,204 @@
 import React from 'react';
-import { TrendingUp, AlertTriangle, Clock, RefreshCcw, ShieldAlert, ArrowRight } from 'lucide-react';
+import { TrendingUp, AlertTriangle, Clock, RefreshCcw, ShieldAlert, ArrowRight, ArrowUpRight, ArrowDownRight, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 /**
- * SummaryCards ACIONÁVEIS — Pulse VF (V9).
- * KPI cards com gradient corner accent + Inter labels + JetBrains Mono numbers.
- * Inline styles para garantir aplicação correta (sem dependência de @layer CSS externo).
+ * KPI Cards — Pulse V9 OFICIAL (.v9mc · mini corner card).
+ * Estrutura 1:1 do PagsmilePulseDesignSystemVF.html.
+ * Estilos inline para garantir aplicação 100% confiável independente de cascade externo.
  */
+
 const VARIANTS = {
   mint: {
-    bg: 'linear-gradient(135deg, #FFFFFF, #F0FAF6)',
-    border: '#80E5C6',
-    accent: 'linear-gradient(90deg, #00C194, #5CF7CF)',
+    cardBg: 'linear-gradient(135deg, #FFFFFF, #F0FAF6)',
+    cardBorder: '#80E5C6',
+    topAccent: 'linear-gradient(90deg, #00C194, #5CF7CF)',
     labelColor: '#007A5C',
     valueGradient: 'linear-gradient(135deg, #007A5C, #001124)',
-    iconBg: 'linear-gradient(135deg, #E0F8F1, #B4FCE8)',
-    iconColor: '#005A43',
-    iconBorder: '#4DD8AB',
-    ctaBg: 'rgba(0, 193, 148, 0.10)',
-    ctaBorder: 'rgba(0, 193, 148, 0.28)',
-    ctaColor: '#007A5C',
   },
   blue: {
-    bg: 'linear-gradient(135deg, #FFFFFF, #E6ECF2)',
-    border: '#C0CFDC',
-    accent: 'linear-gradient(90deg, #013766, #002443)',
+    cardBg: 'linear-gradient(135deg, #FFFFFF, #EAF1F8)',
+    cardBorder: '#C0CFDC',
+    topAccent: 'linear-gradient(90deg, #013766, #002443)',
     labelColor: '#002443',
     valueGradient: 'linear-gradient(135deg, #002443, #001124)',
-    iconBg: 'linear-gradient(135deg, #E6ECF2, #C0CFDC)',
-    iconColor: '#001124',
-    iconBorder: '#8AA5BD',
-    ctaBg: 'rgba(1, 55, 102, 0.08)',
-    ctaBorder: 'rgba(1, 55, 102, 0.28)',
-    ctaColor: '#002443',
   },
   deep: {
-    bg: 'linear-gradient(135deg, #FFFFFF, #E8EDED)',
-    border: '#C0CDCD',
-    accent: 'linear-gradient(90deg, #1A3939, #0F2B2B)',
+    cardBg: 'linear-gradient(135deg, #FFFFFF, #E8EDED)',
+    cardBorder: '#C0CDCD',
+    topAccent: 'linear-gradient(90deg, #1A3939, #0F2B2B)',
     labelColor: '#0F2B2B',
-    valueGradient: 'linear-gradient(135deg, #0F2B2B, #001124)',
-    iconBg: 'linear-gradient(135deg, #E8EDED, #C0CDCD)',
-    iconColor: '#091818',
-    iconBorder: '#8FAAAA',
-    ctaBg: 'rgba(15, 43, 43, 0.08)',
-    ctaBorder: 'rgba(15, 43, 43, 0.28)',
-    ctaColor: '#0F2B2B',
+    valueGradient: 'linear-gradient(135deg, #1A3939, #0F2B2B)',
   },
 };
 
-const HIGHLIGHT_STYLES = {
-  warn: { bg: 'linear-gradient(135deg, #FEF3C7, #FDE68A)', color: '#B45309', border: '#FDE68A' },
-  err:  { bg: 'linear-gradient(135deg, #FEE2E2, #FCA5A5)', color: '#B91C1C', border: '#FCA5A5' },
-  ok:   { bg: 'linear-gradient(135deg, #B3F0DE, #B4FCE8)', color: '#005A43', border: '#4DD8AB' },
+const ICON_STYLES = {
+  mint: { bg: 'linear-gradient(135deg, #1ECB9D, #007A5C)', color: '#fff', shadow: '0 6px 16px -3px rgba(0,193,148,.55)' },
+  blue: { bg: 'linear-gradient(135deg, #013766, #001124)', color: '#5CF7CF', shadow: '0 6px 16px -3px rgba(0,36,67,.55)' },
+  deep: { bg: 'linear-gradient(135deg, #1A3939, #0F2B2B)', color: '#5CF7CF', shadow: '0 6px 16px -3px rgba(15,43,43,.55)' },
+  warn: { bg: 'linear-gradient(135deg, #FEF3C7, #FDE68A)', color: '#B45309', shadow: 'none', border: '1px solid #FDE68A' },
+  err: { bg: 'linear-gradient(135deg, #FEE2E2, #FCA5A5)', color: '#B91C1C', shadow: 'none', border: '1px solid #FCA5A5' },
+};
+
+const PILL_STYLES = {
+  up: { bg: 'linear-gradient(135deg, #B3F0DE, #B4FCE8)', color: '#005A43', border: '1px solid #4DD8AB' },
+  upSolid: { bg: 'linear-gradient(135deg, #1ECB9D, #007A5C)', color: '#fff', border: 'none' },
+  upDark: { bg: '#001124', color: '#5CF7CF', border: '1px solid #00C194' },
+  down: { bg: 'linear-gradient(135deg, #FEE2E2, #FCA5A5)', color: '#B91C1C', border: '1px solid #FCA5A5' },
+  warn: { bg: 'linear-gradient(135deg, #FEF3C7, #FDE68A)', color: '#B45309', border: '1px solid #FDE68A' },
 };
 
 function KpiCard({ card }) {
   const v = VARIANTS[card.variant] || VARIANTS.mint;
+  const iconStyle = ICON_STYLES[card.iconVariant] || ICON_STYLES.mint;
+  const pillStyle = card.deltaVariant ? PILL_STYLES[card.deltaVariant] : null;
   const Icon = card.icon;
-  const hl = card.highlight ? (HIGHLIGHT_STYLES[card.highlightTone] || HIGHLIGHT_STYLES.warn) : null;
 
   return (
     <div
-      className="relative group transition-all"
       style={{
-        background: v.bg,
-        border: `1px solid ${v.border}`,
+        position: 'relative',
         borderRadius: 14,
-        padding: '16px 18px',
-        minHeight: 168,
+        padding: '18px 22px',
+        background: v.cardBg,
+        border: `1px solid ${v.cardBorder}`,
+        overflow: 'hidden',
+        minHeight: 160,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        gap: 10,
-        overflow: 'hidden',
+        gap: 8,
       }}
     >
       {/* Top accent gradient bar */}
       <div
         style={{
           position: 'absolute',
-          top: 0, left: 0, right: 0,
+          top: 0,
+          left: 0,
+          right: 0,
           height: 3,
-          background: v.accent,
+          background: v.topAccent,
+          zIndex: 1,
         }}
       />
 
-      {/* Top row: icon + highlight pill */}
-      <div className="flex items-start justify-between gap-2">
+      {/* Top row: icon + pill */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          position: 'relative',
+          marginTop: 4,
+        }}
+      >
         <div
-          className="inline-flex items-center justify-center flex-shrink-0"
           style={{
-            width: 32, height: 32,
+            width: 32,
+            height: 32,
             borderRadius: 9,
-            background: v.iconBg,
-            color: v.iconColor,
-            border: `1px solid ${v.iconBorder}`,
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)',
+            display: 'grid',
+            placeItems: 'center',
+            background: iconStyle.bg,
+            color: iconStyle.color,
+            boxShadow: iconStyle.shadow,
+            border: iconStyle.border || 'none',
+            flexShrink: 0,
           }}
         >
-          <Icon className="w-4 h-4" strokeWidth={2} />
+          <Icon style={{ width: 16, height: 16 }} strokeWidth={2.2} />
         </div>
-        {hl && (
+        {pillStyle && card.delta && (
           <span
             style={{
-              background: hl.bg,
-              color: hl.color,
-              border: `1px solid ${hl.border}`,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
               fontFamily: 'JetBrains Mono, monospace',
-              fontSize: 9,
-              fontWeight: 800,
-              padding: '3px 8px',
-              borderRadius: 999,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
+              fontWeight: 900,
+              fontSize: 11,
+              padding: '4px 10px',
+              borderRadius: 99,
+              lineHeight: 1,
               whiteSpace: 'nowrap',
+              background: pillStyle.bg,
+              color: pillStyle.color,
+              border: pillStyle.border,
+              boxShadow: card.deltaVariant === 'upSolid' ? '0 4px 12px -2px rgba(0,193,148,.55)' : 'none',
             }}
           >
-            Atenção
+            {card.deltaIcon && <card.deltaIcon style={{ width: 11, height: 11 }} strokeWidth={3} />}
+            {card.delta}
           </span>
         )}
       </div>
 
-      {/* Label + Value + Sub */}
-      <div style={{ flex: 1 }}>
-        <div
-          style={{
-            fontFamily: 'JetBrains Mono, monospace',
-            fontSize: 10,
-            fontWeight: 800,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: v.labelColor,
-            marginBottom: 6,
-          }}
-        >
-          {card.label}
-        </div>
-        <div
-          style={{
-            fontFamily: 'JetBrains Mono, monospace',
-            fontSize: 22,
-            fontWeight: 800,
-            letterSpacing: '-0.024em',
-            lineHeight: 1,
-            background: v.valueGradient,
-            WebkitBackgroundClip: 'text',
-            backgroundClip: 'text',
-            color: 'transparent',
-            fontVariantNumeric: 'tabular-nums',
-            wordBreak: 'break-word',
-          }}
-        >
-          {card.value}
-        </div>
-        <div
-          style={{
-            fontFamily: 'JetBrains Mono, monospace',
-            fontSize: 10.5,
-            color: '#013766',
-            marginTop: 6,
-            fontWeight: 600,
-          }}
-        >
-          {card.sub}
-        </div>
+      {/* Label */}
+      <div
+        style={{
+          fontFamily: 'JetBrains Mono, monospace',
+          fontSize: 10,
+          fontWeight: 800,
+          letterSpacing: '0.10em',
+          textTransform: 'uppercase',
+          color: v.labelColor,
+          marginTop: 6,
+        }}
+      >
+        {card.label}
+      </div>
+
+      {/* Value (mono + gradient text) */}
+      <div
+        style={{
+          fontFamily: 'JetBrains Mono, monospace',
+          fontSize: 24,
+          fontWeight: 800,
+          letterSpacing: '-0.020em',
+          lineHeight: 1,
+          background: v.valueGradient,
+          WebkitBackgroundClip: 'text',
+          backgroundClip: 'text',
+          color: 'transparent',
+          fontVariantNumeric: 'tabular-nums',
+          wordBreak: 'break-word',
+        }}
+      >
+        {card.value}
+      </div>
+
+      {/* Description */}
+      <div
+        style={{
+          fontFamily: 'JetBrains Mono, monospace',
+          fontSize: 11,
+          color: '#013766',
+          fontWeight: 600,
+          lineHeight: 1.4,
+        }}
+      >
+        {card.sub}
       </div>
 
       {/* CTA */}
       <button
         onClick={card.onCta}
-        className="inline-flex items-center justify-between w-full transition-all hover:-translate-y-px"
+        className="inline-flex items-center justify-between w-full transition-all hover:translate-x-0.5"
         style={{
+          marginTop: 4,
           padding: '7px 11px',
           borderRadius: 8,
-          background: v.ctaBg,
-          border: `1px solid ${v.ctaBorder}`,
-          color: v.ctaColor,
+          background: card.variant === 'blue' || card.variant === 'deep'
+            ? 'rgba(1, 55, 102, 0.08)'
+            : 'rgba(0, 193, 148, 0.10)',
+          border: card.variant === 'blue' || card.variant === 'deep'
+            ? '1px solid rgba(1, 55, 102, 0.28)'
+            : '1px solid rgba(0, 193, 148, 0.28)',
+          color: card.variant === 'blue' || card.variant === 'deep'
+            ? '#002443'
+            : '#007A5C',
           fontFamily: 'Inter, sans-serif',
           fontSize: 11,
           fontWeight: 800,
@@ -186,7 +207,7 @@ function KpiCard({ card }) {
         }}
       >
         <span>{card.cta}</span>
-        <ArrowRight className="w-3 h-3" />
+        <ArrowRight style={{ width: 12, height: 12 }} />
       </button>
     </div>
   );
@@ -217,7 +238,11 @@ export default function ActionableSummaryCards({ transactions = [] }) {
       value: formatCurrency(totalApproved),
       sub: `${approved.length} transações`,
       icon: TrendingUp,
+      iconVariant: 'mint',
       variant: 'mint',
+      delta: '+12.4%',
+      deltaVariant: 'upSolid',
+      deltaIcon: ArrowUpRight,
       cta: 'Ver detalhes',
       onCta: () => toast.info('Abrindo análise de volume...'),
     },
@@ -227,11 +252,13 @@ export default function ActionableSummaryCards({ transactions = [] }) {
       value: `${approvalRate.toFixed(1)}%`,
       sub: `${approved.length}/${total} tentativas`,
       icon: TrendingUp,
+      iconVariant: 'blue',
       variant: 'blue',
+      delta: approvalRate < 85 ? 'baixa' : '+1.2pp',
+      deltaVariant: approvalRate < 85 ? 'warn' : 'up',
+      deltaIcon: approvalRate < 85 ? AlertCircle : ArrowUpRight,
       cta: approvalRate < 85 ? 'Ver oportunidades' : 'Análise completa',
       onCta: () => toast.info('Abrindo análise de aprovação...'),
-      highlight: approvalRate < 85,
-      highlightTone: 'warn',
     },
     {
       key: 'preauth',
@@ -239,11 +266,13 @@ export default function ActionableSummaryCards({ transactions = [] }) {
       value: preAuth.length,
       sub: preAuth.length > 0 ? `${preAuth.length} aguardando captura` : 'tudo capturado',
       icon: Clock,
+      iconVariant: 'deep',
       variant: 'deep',
+      delta: preAuth.length > 0 ? 'atenção' : null,
+      deltaVariant: 'warn',
+      deltaIcon: AlertCircle,
       cta: preAuth.length > 0 ? 'Capturar agora' : 'Histórico',
       onCta: () => toast.success('Captura em lote iniciada'),
-      highlight: preAuth.length > 0,
-      highlightTone: 'warn',
     },
     {
       key: 'refused',
@@ -251,11 +280,13 @@ export default function ActionableSummaryCards({ transactions = [] }) {
       value: refused.length,
       sub: 'Recovery pode recuperar ~38%',
       icon: AlertTriangle,
+      iconVariant: 'err',
       variant: 'mint',
+      delta: refused.length > 5 ? '-8' : null,
+      deltaVariant: 'down',
+      deltaIcon: ArrowDownRight,
       cta: 'Ativar Recovery',
       onCta: () => toast.success('Configurando Recovery Agent...'),
-      highlight: refused.length > 5,
-      highlightTone: 'err',
     },
     {
       key: 'stale',
@@ -263,11 +294,13 @@ export default function ActionableSummaryCards({ transactions = [] }) {
       value: stalePending,
       sub: stalePending > 0 ? 'Risco de expirar' : 'tudo em dia',
       icon: RefreshCcw,
+      iconVariant: 'warn',
       variant: 'blue',
+      delta: stalePending > 0 ? 'atenção' : null,
+      deltaVariant: 'warn',
+      deltaIcon: AlertCircle,
       cta: stalePending > 0 ? 'Reprocessar' : '—',
       onCta: () => toast.success('Reprocessamento iniciado'),
-      highlight: stalePending > 0,
-      highlightTone: 'warn',
     },
     {
       key: 'expiring',
@@ -275,11 +308,13 @@ export default function ActionableSummaryCards({ transactions = [] }) {
       value: expiringCards,
       sub: 'em até 30 dias',
       icon: ShieldAlert,
+      iconVariant: 'deep',
       variant: 'deep',
+      delta: '+9.7%',
+      deltaVariant: 'upDark',
+      deltaIcon: ArrowUpRight,
       cta: 'Solicitar atualização',
       onCta: () => toast.success('Campanha de atualização agendada'),
-      highlight: expiringCards > 0,
-      highlightTone: 'warn',
     },
   ];
 

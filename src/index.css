@@ -17,6 +17,9 @@
 /* Pulse VF SYSTEM — utilitárias .pvf-* extraídas 1:1 do PulseVF (cards V9, tabelas V9, ícones, botões V8, pills) */
 @import './styles/pulse-vf-system.css';
 
+/* Pulse V9 OFICIAL — biblioteca 1:1 do PagsmilePulseDesignSystemVF.html (.v9rc, .v9mc, .v9tbl, .v9ic, .v9gp, .v9st) */
+@import './styles/v9-library.css';
+
 /* ============================================
    PAGSMILE PULSE · DESIGN SYSTEM V7 (final)
    Tokens oficiais da marca (Manual): Mint #2bc196, Navy #002443,

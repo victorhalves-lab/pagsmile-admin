@@ -169,6 +169,32 @@ export default function TransactionDataTable({
     }).format(value || 0);
   };
 
+  // V9 table cell styles (inline para garantir aplicação independente de cascade externo)
+  const v9ThStyle = (extra = {}) => ({
+    background: 'transparent',
+    color: '#5CF7CF',
+    fontFamily: 'JetBrains Mono, monospace',
+    fontSize: 10,
+    fontWeight: 900,
+    letterSpacing: '0.16em',
+    textTransform: 'uppercase',
+    padding: '14px 16px',
+    textAlign: 'left',
+    position: 'relative',
+    whiteSpace: 'nowrap',
+    borderBottom: 'none',
+    userSelect: 'none',
+    ...extra,
+  });
+
+  const v9TdStyle = {
+    padding: '14px 16px',
+    borderBottom: '1px solid #B3F0DE',
+    fontSize: 13,
+    verticalAlign: 'middle',
+    color: '#001124',
+  };
+
   const handleSelectAll = (checked) => {
     if (checked) {
       onSelectRows?.(data.map(row => row.id));
@@ -201,17 +227,17 @@ export default function TransactionDataTable({
         return (
           <div className="flex items-center gap-3">
             <div className={cn(
-              "pvf-ic pvf-ic-sm",
-              (row.method === 'pix' || row.type === 'pix') ? 'pvf-ic-mint' : 'pvf-ic-blue'
+              "v9ic v9ic-sm",
+              (row.method === 'pix' || row.type === 'pix') ? 'v9ic-mint' : 'v9ic-blue'
             )}>
               {(row.method === 'pix' || row.type === 'pix') ? (
-                <QrCode className="w-4 h-4" strokeWidth={2} />
+                <QrCode strokeWidth={2.2} />
               ) : (
-                <CreditCard className="w-4 h-4" strokeWidth={2} />
+                <CreditCard strokeWidth={2.2} />
               )}
             </div>
             <div className="min-w-0">
-              <p className="pvf-id truncate" style={{ fontSize: 12 }}>
+              <p className="id truncate" style={{ fontSize: 11.5 }}>
                 {row.transaction_id?.slice(0, 8)}...
               </p>
               <div className="flex items-center gap-1 mt-0.5">
@@ -280,7 +306,7 @@ export default function TransactionDataTable({
 
       case 'type':
         return (
-          <span className={cn('pvf-pill', (row.method === 'pix' || row.type === 'pix') ? 'pvf-pill-brand' : 'pvf-pill-info')}>
+          <span className={cn('pill-st', (row.method === 'pix' || row.type === 'pix') ? 'ok' : 'info')}>
             {(row.method === 'pix' || row.type === 'pix') ? 'PIX' : 'Cartão'}
           </span>
         );
@@ -288,9 +314,9 @@ export default function TransactionDataTable({
       case 'amount':
         return (
           <div>
-            <p className="pvf-num" style={{ fontSize: 13 }}>{formatCurrency(row.amount)}</p>
+            <p className="num">{formatCurrency(row.amount)}</p>
             {row.installments > 1 && (
-              <p className="font-mono" style={{ fontSize: 10.5, color: '#547C9D', marginTop: 2 }}>
+              <p className="mono" style={{ fontSize: 10.5, color: '#547C9D', marginTop: 2 }}>
                 {row.installments}x de {formatCurrency(row.amount / row.installments)}
               </p>
             )}
@@ -474,9 +500,18 @@ export default function TransactionDataTable({
     }
   };
 
+  // V9 table wrapper inline styles (garante visual independente de cascade externo)
+  const v9TblStyle = {
+    borderRadius: 16,
+    overflow: 'hidden',
+    background: 'linear-gradient(180deg, #fff, #FAFEFC)',
+    border: '1px solid #80E5C6',
+    boxShadow: '0 8px 24px -8px rgba(0, 193, 148, .15)',
+  };
+
   if (loading) {
     return (
-      <div className="pvf-tbl">
+      <div style={v9TblStyle}>
         <div className="p-4 space-y-3">
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="h-14 bg-slate-100 rounded animate-pulse"></div>
@@ -487,7 +522,13 @@ export default function TransactionDataTable({
   }
 
   return (
-    <div className="pvf-tbl">
+    <div style={v9TblStyle}>
+      {/* V9 hover styles (precisa de :hover, não dá pra inline) */}
+      <style>{`
+        .v9tbl-row:hover td { background: linear-gradient(90deg, #E0F8F1, transparent) !important; }
+        .v9tbl-row:hover td:first-child { box-shadow: inset 4px 0 0 #00C194; }
+      `}</style>
+
       {/* Column Selector */}
       <div
         className="flex items-center justify-between px-4 py-3"
@@ -497,8 +538,17 @@ export default function TransactionDataTable({
         }}
       >
         <div
-          className="pvf-eyebrow"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 10.5,
+            fontWeight: 800,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: '#007A5C',
+          }}
         >
           <span style={{ width: 18, height: 2, background: '#00C194', borderRadius: 99 }} />
           {totalItems > 0 ? `${totalItems} registros` : 'Sem registros'}
@@ -533,13 +583,13 @@ export default function TransactionDataTable({
         </Popover>
       </div>
 
-      {/* Table */}
+      {/* Table V9 — thead navy gradient + glow text + hover mint */}
       <div className="overflow-x-auto">
-        <table>
-          <thead>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead style={{ background: 'linear-gradient(180deg, #001124, #002443)' }}>
             <tr>
               {selectable && (
-                <th style={{ width: 44 }}>
+                <th style={v9ThStyle({ width: 44 })}>
                   <Checkbox
                     checked={selectedRows.length === data.length && data.length > 0}
                     onCheckedChange={handleSelectAll}
@@ -551,9 +601,8 @@ export default function TransactionDataTable({
                 .map((column) => (
                   <th
                     key={column.key}
-                    className={cn(column.sortable && 'cursor-pointer')}
                     onClick={() => handleSort(column)}
-                    style={{ userSelect: 'none' }}
+                    style={v9ThStyle({ cursor: column.sortable ? 'pointer' : 'default' })}
                   >
                     <div className="flex items-center gap-1">
                       {column.label}
@@ -569,7 +618,7 @@ export default function TransactionDataTable({
                     </div>
                   </th>
                 ))}
-              <th style={{ width: 44 }}></th>
+              <th style={v9ThStyle({ width: 44 })}></th>
             </tr>
           </thead>
           <tbody>
@@ -578,21 +627,24 @@ export default function TransactionDataTable({
                 <td
                   colSpan={visibleColumns.length + (selectable ? 2 : 1)}
                   className="text-center"
-                  style={{ height: 128, color: '#547C9D', fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}
+                  style={{ height: 128, color: '#547C9D', fontFamily: 'JetBrains Mono, monospace', fontSize: 12, padding: '14px 16px' }}
                 >
                   {emptyMessage}
                 </td>
               </tr>
             ) : (
-              data.map((row, idx) => (
+              data.map((row, idx) => {
+                const isSelected = selectedRows.includes(row.id);
+                return (
                 <tr
                   key={row.id || idx}
-                  style={selectedRows.includes(row.id) ? { background: 'linear-gradient(90deg, #E0F8F1, transparent)' } : undefined}
+                  className="v9tbl-row"
+                  style={isSelected ? { background: 'linear-gradient(90deg, #E0F8F1, transparent)' } : undefined}
                 >
                   {selectable && (
-                    <td>
+                    <td style={v9TdStyle}>
                       <Checkbox
-                        checked={selectedRows.includes(row.id)}
+                        checked={isSelected}
                         onCheckedChange={(checked) => handleSelectRow(row.id, checked)}
                       />
                     </td>
@@ -602,13 +654,13 @@ export default function TransactionDataTable({
                     .map((column) => (
                       <td
                         key={column.key}
-                        className={cn(onRowClick && 'cursor-pointer')}
                         onClick={() => column.key !== 'actions' && onRowClick?.(row)}
+                        style={{ ...v9TdStyle, cursor: onRowClick ? 'pointer' : 'default' }}
                       >
                         {renderCell(row, column.key)}
                       </td>
                     ))}
-                  <td>
+                  <td style={v9TdStyle}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -640,14 +692,15 @@ export default function TransactionDataTable({
                           </DropdownMenuItem>
                         )}
                       </DropdownMenuContent>
-                    </DropdownMenu>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                      </DropdownMenu>
+                      </td>
+                      </tr>
+                      );
+                      })
+                      )}
+                      </tbody>
+                      </table>
+                      </div>
 
       {/* Pagination */}
       {pagination && totalItems > 0 && (
