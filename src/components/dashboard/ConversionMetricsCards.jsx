@@ -194,7 +194,7 @@ export default function ConversionMetricsCards({ transactions = [] }) {
           />
           <div style={{ height: 220 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 5, right: 5, left: -16, bottom: 0 }}>
+              <AreaChart data={trendData} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
                 <defs>
                   <linearGradient id="vfGradMint" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor={VF.mint} stopOpacity={0.42} />
@@ -244,14 +244,15 @@ export default function ConversionMetricsCards({ transactions = [] }) {
           />
           <div style={{ height: 220 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
                 <Pie
                   data={volumeData}
                   cx="50%" cy="50%"
-                  innerRadius={56} outerRadius={86}
+                  innerRadius={48} outerRadius={76}
                   paddingAngle={4}
                   dataKey="value"
                   strokeWidth={0}
+                  cornerRadius={6}
                 >
                   {volumeData.map((entry, idx) => (
                     <Cell key={idx} fill={entry.color} />

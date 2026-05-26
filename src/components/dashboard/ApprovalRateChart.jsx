@@ -57,7 +57,7 @@ export default function ApprovalRateChart({ data = [], target = 85, className })
           {rate.toFixed(1)}%
         </p>
         <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.7)', marginTop: 2 }}>
-          {above ? '✓ Acima da meta' : `${(target - rate).toFixed(1)}% abaixo da meta`}
+          {above ? 'Acima da meta' : `${(target - rate).toFixed(1)}% abaixo da meta`}
         </p>
       </div>
     );

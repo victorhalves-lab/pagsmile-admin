@@ -54,7 +54,6 @@ import ProfileSwitcher, { useProfile } from '@/components/dashboard/ProfileSwitc
 import AlertsPanelEnhanced from '@/components/dashboard/AlertsPanelEnhanced';
 import OnboardingTour from '@/components/common/OnboardingTour';
 import ScheduledReportsModal from '@/components/common/ScheduledReportsModal';
-import RegulatoryCommitmentsCard from '@/components/dashboard/RegulatoryCommitmentsCard';
 
 // Container animado padrão
 const AnimatedSection = ({ children, delay = 0, className }) => (
@@ -360,11 +359,6 @@ export default function Dashboard() {
       {/* ZONA 9 — Alertas não-críticos com snooze */}
       <AnimatedSection delay={0.35}>
         <AlertsPanelEnhanced />
-      </AnimatedSection>
-
-      {/* ZONA 10 — Compromissos regulatórios (informativo, baixo destaque) */}
-      <AnimatedSection delay={0.4}>
-        <RegulatoryCommitmentsCard />
       </AnimatedSection>
 
       {/* Modais */}

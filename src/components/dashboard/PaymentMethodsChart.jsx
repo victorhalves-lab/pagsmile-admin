@@ -66,6 +66,7 @@ export default function PaymentMethodsChart({ data = [], className }) {
             paddingAngle={5}
             dataKey="value"
             strokeWidth={0}
+            cornerRadius={8}
           >
             {chartData.map((entry, idx) => (
               <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
