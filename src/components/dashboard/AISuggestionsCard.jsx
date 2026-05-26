@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Sparkle, CaretRight, X } from '@phosphor-icons/react';
+import { Target, TrendingDown, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
@@ -13,21 +14,21 @@ export default function AISuggestionsCard({ suggestions = [] }) {
 
   const defaults = [
     {
-      id: 's1', icon: '🎯',
+      id: 's1', Icon: Target,
       title: 'Aumente aprovação em 3.2pp',
       message: 'Detectei queda na aprovação Mastercard às quintas à noite. Considere ajustar regras de antifraude.',
       action: 'Ver análise', to: createPageUrl('DeclineAnalysis'),
       priority: 'high',
     },
     {
-      id: 's2', icon: '💸',
+      id: 's2', Icon: TrendingDown,
       title: 'R$ 12.480 em risco de churn',
       message: '47 assinantes têm cartão expirando em 30 dias. Ative Account Updater pra evitar perda.',
       action: 'Ativar', to: createPageUrl('Subscriptions'),
       priority: 'high',
     },
     {
-      id: 's3', icon: '⚡',
+      id: 's3', Icon: Zap,
       title: 'Antecipação com taxa promocional',
       message: 'Você tem R$ 212k em recebíveis. Taxa de antecipação está 18% abaixo do padrão hoje.',
       action: 'Ver oferta', to: createPageUrl('Anticipation'),
@@ -42,9 +43,9 @@ export default function AISuggestionsCard({ suggestions = [] }) {
   if (list.length === 0) return null;
 
   const priorityStyle = {
-    high:   { leftBorder: '#DC2626', bg: 'rgba(220,38,38,0.06)' },
-    medium: { leftBorder: '#F59E0B', bg: 'rgba(245,158,11,0.06)' },
-    low:    { leftBorder: '#013766', bg: 'rgba(1,55,102,0.06)' },
+    high:   { leftBorder: '#DC2626', bg: 'rgba(220,38,38,0.06)', iconBg: 'rgba(220,38,38,0.14)', iconBorder: 'rgba(220,38,38,0.35)', iconColor: '#FCA5A5' },
+    medium: { leftBorder: '#F59E0B', bg: 'rgba(245,158,11,0.06)', iconBg: 'rgba(245,158,11,0.14)', iconBorder: 'rgba(245,158,11,0.35)', iconColor: '#FDE68A' },
+    low:    { leftBorder: '#013766', bg: 'rgba(1,55,102,0.06)', iconBg: 'rgba(92,247,207,0.14)', iconBorder: 'rgba(92,247,207,0.3)', iconColor: '#5CF7CF' },
   };
 
   return (
@@ -138,7 +139,17 @@ export default function AISuggestionsCard({ suggestions = [] }) {
                   backdropFilter: 'blur(8px)',
                 }}
               >
-                <div className="text-2xl flex-shrink-0">{s.icon}</div>
+                <div
+                  className="flex-shrink-0 inline-flex items-center justify-center"
+                  style={{
+                    width: 32, height: 32, borderRadius: 9,
+                    background: p.iconBg,
+                    border: `1px solid ${p.iconBorder}`,
+                    color: p.iconColor,
+                  }}
+                >
+                  {s.Icon && <s.Icon size={16} strokeWidth={2} />}
+                </div>
                 <div className="flex-1 min-w-0">
                   <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, fontWeight: 700, color: '#fff' }}>
                     {s.title}
