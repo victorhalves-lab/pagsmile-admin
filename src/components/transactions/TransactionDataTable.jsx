@@ -201,17 +201,17 @@ export default function TransactionDataTable({
         return (
           <div className="flex items-center gap-3">
             <div className={cn(
-              "w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0",
-              row.type === 'pix' ? 'bg-teal-100' : 'bg-blue-100'
+              "pvf-ic pvf-ic-sm",
+              (row.method === 'pix' || row.type === 'pix') ? 'pvf-ic-mint' : 'pvf-ic-blue'
             )}>
-              {row.type === 'pix' ? (
-                <QrCode className="w-4 h-4 text-teal-600" />
+              {(row.method === 'pix' || row.type === 'pix') ? (
+                <QrCode className="w-4 h-4" strokeWidth={2} />
               ) : (
-                <CreditCard className="w-4 h-4 text-blue-600" />
+                <CreditCard className="w-4 h-4" strokeWidth={2} />
               )}
             </div>
             <div className="min-w-0">
-              <p className="font-mono text-sm font-medium text-gray-900 truncate">
+              <p className="pvf-id truncate" style={{ fontSize: 12 }}>
                 {row.transaction_id?.slice(0, 8)}...
               </p>
               <div className="flex items-center gap-1 mt-0.5">
@@ -280,19 +280,19 @@ export default function TransactionDataTable({
 
       case 'type':
         return (
-          <Badge variant="outline" className={cn(
-            row.type === 'pix' ? 'bg-teal-50 text-teal-700 border-teal-200' : 'bg-blue-50 text-blue-700 border-blue-200'
-          )}>
-            {row.type === 'pix' ? 'Pix' : 'Cartão'}
-          </Badge>
+          <span className={cn('pvf-pill', (row.method === 'pix' || row.type === 'pix') ? 'pvf-pill-brand' : 'pvf-pill-info')}>
+            {(row.method === 'pix' || row.type === 'pix') ? 'PIX' : 'Cartão'}
+          </span>
         );
 
       case 'amount':
         return (
           <div>
-            <p className="font-semibold text-gray-900">{formatCurrency(row.amount)}</p>
+            <p className="pvf-num" style={{ fontSize: 13 }}>{formatCurrency(row.amount)}</p>
             {row.installments > 1 && (
-              <p className="text-xs text-gray-500">{row.installments}x de {formatCurrency(row.amount / row.installments)}</p>
+              <p className="font-mono" style={{ fontSize: 10.5, color: '#547C9D', marginTop: 2 }}>
+                {row.installments}x de {formatCurrency(row.amount / row.installments)}
+              </p>
             )}
           </div>
         );
@@ -476,10 +476,10 @@ export default function TransactionDataTable({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-gray-100">
+      <div className="pvf-tbl">
         <div className="p-4 space-y-3">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-14 bg-gray-100 rounded animate-pulse"></div>
+            <div key={i} className="h-14 bg-slate-100 rounded animate-pulse"></div>
           ))}
         </div>
       </div>
@@ -487,15 +487,28 @@ export default function TransactionDataTable({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100">
+    <div className="pvf-tbl">
       {/* Column Selector */}
-      <div className="flex items-center justify-end p-3 border-b border-gray-100">
+      <div
+        className="flex items-center justify-between px-4 py-3"
+        style={{
+          borderBottom: '1px solid #B3F0DE',
+          background: 'linear-gradient(90deg, #F0FAF6, #fff)',
+        }}
+      >
+        <div
+          className="pvf-eyebrow"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+        >
+          <span style={{ width: 18, height: 2, background: '#00C194', borderRadius: 99 }} />
+          {totalItems > 0 ? `${totalItems} registros` : 'Sem registros'}
+        </div>
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="sm">
-              <Settings2 className="w-4 h-4 mr-2" />
+            <button className="pvf-btn pvf-btn-out pvf-btn-sm">
+              <Settings2 className="w-3.5 h-3.5" />
               Colunas
-            </Button>
+            </button>
           </PopoverTrigger>
           <PopoverContent className="w-56" align="end">
             <div className="space-y-2">
@@ -522,86 +535,80 @@ export default function TransactionDataTable({
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-50/50">
+        <table>
+          <thead>
+            <tr>
               {selectable && (
-                <TableHead className="w-12">
+                <th style={{ width: 44 }}>
                   <Checkbox
                     checked={selectedRows.length === data.length && data.length > 0}
                     onCheckedChange={handleSelectAll}
                   />
-                </TableHead>
+                </th>
               )}
               {allColumns
                 .filter(col => visibleColumns.includes(col.key))
                 .map((column) => (
-                  <TableHead 
+                  <th
                     key={column.key}
-                    className={cn(
-                      "text-xs font-semibold text-gray-600 uppercase tracking-wider",
-                      column.sortable && "cursor-pointer hover:bg-gray-100"
-                    )}
+                    className={cn(column.sortable && 'cursor-pointer')}
                     onClick={() => handleSort(column)}
+                    style={{ userSelect: 'none' }}
                   >
                     <div className="flex items-center gap-1">
                       {column.label}
                       {column.sortable && (
                         sortColumn === column.key ? (
-                          sortDirection === 'asc' ? 
-                            <ArrowUp className="w-3 h-3" /> : 
-                            <ArrowDown className="w-3 h-3" />
+                          sortDirection === 'asc'
+                            ? <ArrowUp className="w-3 h-3" />
+                            : <ArrowDown className="w-3 h-3" />
                         ) : (
-                          <ArrowUpDown className="w-3 h-3 opacity-30" />
+                          <ArrowUpDown className="w-3 h-3" style={{ opacity: 0.45 }} />
                         )
                       )}
                     </div>
-                  </TableHead>
+                  </th>
                 ))}
-              <TableHead className="w-12"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+              <th style={{ width: 44 }}></th>
+            </tr>
+          </thead>
+          <tbody>
             {data.length === 0 ? (
-              <TableRow>
-                <TableCell 
-                  colSpan={visibleColumns.length + (selectable ? 2 : 1)} 
-                  className="h-32 text-center text-gray-500"
+              <tr>
+                <td
+                  colSpan={visibleColumns.length + (selectable ? 2 : 1)}
+                  className="text-center"
+                  style={{ height: 128, color: '#547C9D', fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}
                 >
                   {emptyMessage}
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ) : (
               data.map((row, idx) => (
-                <TableRow 
+                <tr
                   key={row.id || idx}
-                  className={cn(
-                    "hover:bg-gray-50 transition-colors",
-                    selectedRows.includes(row.id) && "bg-blue-50"
-                  )}
+                  style={selectedRows.includes(row.id) ? { background: 'linear-gradient(90deg, #E0F8F1, transparent)' } : undefined}
                 >
                   {selectable && (
-                    <TableCell>
+                    <td>
                       <Checkbox
                         checked={selectedRows.includes(row.id)}
                         onCheckedChange={(checked) => handleSelectRow(row.id, checked)}
                       />
-                    </TableCell>
+                    </td>
                   )}
                   {allColumns
                     .filter(col => visibleColumns.includes(col.key))
                     .map((column) => (
-                      <TableCell 
+                      <td
                         key={column.key}
-                        className={cn(
-                          onRowClick && "cursor-pointer"
-                        )}
+                        className={cn(onRowClick && 'cursor-pointer')}
                         onClick={() => column.key !== 'actions' && onRowClick?.(row)}
                       >
                         {renderCell(row, column.key)}
-                      </TableCell>
+                      </td>
                     ))}
-                  <TableCell>
+                  <td>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -634,17 +641,20 @@ export default function TransactionDataTable({
                         )}
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))
             )}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
 
       {/* Pagination */}
       {pagination && totalItems > 0 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t border-gray-100">
+        <div
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4"
+          style={{ borderTop: '1px solid #B3F0DE', background: 'linear-gradient(180deg, #fff, #F0FAF6)' }}
+        >
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <span>Mostrando</span>
             <Select value={String(pageSize)} onValueChange={(v) => onPageSizeChange?.(Number(v))}>
