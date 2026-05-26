@@ -1,129 +1,138 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { 
-  CreditCard, 
-  QrCode, 
-  FileText, 
-  TrendingUp, 
-  TrendingDown,
-  Percent,
-  Target,
-  ArrowUpRight,
-  ArrowDownRight,
-  Minus
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
 import {
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend
+  CreditCard, QrCode, FileText, TrendUp, Target as TargetIcon,
+  Percent, ArrowUpRight, ArrowDownRight,
+} from '@phosphor-icons/react';
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
+import {
+  VF, VfCard, VfSectionHeader, VfPill, VfProgress, VfNumber, fmtInt,
+} from './analytics/vfHelpers';
 
-const ConversionCard = ({ 
-  title, 
-  rate, 
-  previousRate, 
-  approved, 
-  total, 
-  icon: Icon, 
-  color = 'blue',
-  benchmark
-}) => {
+const fmtCurrency = (v) =>
+  new Intl.NumberFormat('pt-BR', {
+    style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1,
+  }).format(v || 0);
+
+/* ─── Conversion KPI Card V9 ─── */
+const ConversionCard = ({ title, rate, previousRate, approved, total, icon: Icon, benchmark, accent }) => {
   const trend = rate - previousRate;
   const isPositive = trend >= 0;
   const isAboveBenchmark = benchmark ? rate >= benchmark : true;
-
-  const colors = {
-    blue: { bg: 'bg-blue-50', border: 'border-blue-200', icon: 'bg-blue-100 text-blue-600', bar: 'bg-blue-500', text: 'text-blue-700' },
-    emerald: { bg: 'bg-emerald-50', border: 'border-emerald-200', icon: 'bg-emerald-100 text-emerald-600', bar: 'bg-emerald-500', text: 'text-emerald-700' },
-    amber: { bg: 'bg-amber-50', border: 'border-amber-200', icon: 'bg-amber-100 text-amber-600', bar: 'bg-amber-500', text: 'text-amber-700' },
-    purple: { bg: 'bg-purple-50', border: 'border-purple-200', icon: 'bg-purple-100 text-purple-600', bar: 'bg-purple-500', text: 'text-purple-700' }
-  };
-
-  const c = colors[color];
+  const accentColor = accent || VF.mint;
 
   return (
-    <Card className={cn('border', c.border, c.bg)}>
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Icon className={cn("w-5 h-5 flex-shrink-0", c.text)} />
-            <div className="min-w-0">
-              <p className="text-xs font-medium text-slate-500 uppercase whitespace-nowrap overflow-hidden text-ellipsis">{title}</p>
-              <p className="text-xs text-slate-400">{approved.toLocaleString('pt-BR')} / {total.toLocaleString('pt-BR')}</p>
-            </div>
+    <div
+      className="relative overflow-hidden p-4 transition-all hover:-translate-y-0.5"
+      style={{
+        background: VF.surface,
+        border: `1px solid ${VF.mintBorder}`,
+        borderRadius: 14,
+        minHeight: 152,
+      }}
+    >
+      {/* Top accent line V9 */}
+      <span
+        style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+          background: `linear-gradient(90deg, ${accentColor}, ${VF.glow})`,
+        }}
+      />
+
+      <div className="flex items-start justify-between mb-3 gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <div
+            className="flex-shrink-0 inline-flex items-center justify-center"
+            style={{
+              width: 32, height: 32, borderRadius: 9,
+              background: 'linear-gradient(135deg, #E0F8F1, #B4FCE8)',
+              color: VF.mintDark,
+              border: `1px solid ${VF.mintBorder}`,
+            }}
+          >
+            <Icon weight="duotone" size={16} />
           </div>
-          <div className={cn(
-            'flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full',
-            isPositive ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
-          )}>
-            {isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-            {Math.abs(trend).toFixed(1)}%
-          </div>
-        </div>
-        
-        <div className="flex items-end justify-between mb-2">
-          <p className={cn('text-3xl font-bold', c.text)}>{rate.toFixed(1)}%</p>
-          {benchmark && (
-            <Badge 
-              variant={isAboveBenchmark ? 'default' : 'destructive'} 
-              className="text-[10px]"
+          <div className="min-w-0">
+            <p
+              className="font-mono truncate"
+              style={{
+                fontSize: 10, fontWeight: 800, letterSpacing: '0.12em',
+                textTransform: 'uppercase', color: VF.mintDark,
+              }}
             >
-              Bench: {benchmark}%
-            </Badge>
-          )}
+              {title}
+            </p>
+            <p
+              className="font-mono"
+              style={{ fontSize: 10, color: VF.muted, fontVariantNumeric: 'tabular-nums' }}
+            >
+              {fmtInt(approved)} / {fmtInt(total)}
+            </p>
+          </div>
         </div>
-        
-        {/* Progress bar */}
-        <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-          <div 
-            className={cn('h-full rounded-full transition-all duration-500', c.bar)}
-            style={{ width: `${Math.min(rate, 100)}%` }}
-          />
-        </div>
-      </CardContent>
-    </Card>
+        <span
+          className="font-mono inline-flex items-center gap-0.5"
+          style={{
+            padding: '3px 7px', borderRadius: 99,
+            background: isPositive
+              ? 'linear-gradient(135deg, #B3F0DE, #B4FCE8)'
+              : 'linear-gradient(135deg, #FEE2E2, #FCA5A5)',
+            color: isPositive ? VF.mintDark : VF.red,
+            border: `1px solid ${isPositive ? '#4DD8AB' : '#FCA5A5'}`,
+            fontSize: 9.5, fontWeight: 800,
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        >
+          {isPositive ? <ArrowUpRight weight="bold" size={9} /> : <ArrowDownRight weight="bold" size={9} />}
+          {Math.abs(trend).toFixed(1)}%
+        </span>
+      </div>
+
+      <div className="flex items-end justify-between mb-2 gap-2">
+        <VfNumber size={32}>{rate.toFixed(1)}%</VfNumber>
+        {benchmark && (
+          <VfPill variant={isAboveBenchmark ? 'mint' : 'err'}>
+            BMK {benchmark}%
+          </VfPill>
+        )}
+      </div>
+
+      <VfProgress
+        value={Math.min(rate, 100)}
+        gradient={`linear-gradient(90deg, ${accentColor}, ${VF.mintDark})`}
+        height={5}
+      />
+    </div>
   );
 };
 
 export default function ConversionMetricsCards({ transactions = [] }) {
-  // Calculate conversion metrics
   const metrics = React.useMemo(() => {
-    const cardTx = transactions.filter(t => t.method === 'credit_card' || t.method === 'debit_card');
-    const pixTx = transactions.filter(t => t.method === 'pix');
-    const boletoTx = transactions.filter(t => t.method === 'boleto');
+    const cardTx = transactions.filter((t) => t.method === 'credit_card' || t.method === 'debit_card');
+    const pixTx = transactions.filter((t) => t.method === 'pix');
+    const boletoTx = transactions.filter((t) => t.method === 'boleto');
 
-    const calcConversion = (txs) => {
-      const approved = txs.filter(t => t.status === 'approved').length;
+    const calc = (txs) => {
+      const approved = txs.filter((t) => t.status === 'approved').length;
       return { approved, total: txs.length, rate: txs.length > 0 ? (approved / txs.length) * 100 : 0 };
     };
 
-    const allMetrics = calcConversion(transactions);
-    const cardMetrics = calcConversion(cardTx);
-    const pixMetrics = calcConversion(pixTx);
-    const boletoMetrics = calcConversion(boletoTx);
+    const allMetrics = calc(transactions);
+    const cardMetrics = calc(cardTx);
+    const pixMetrics = calc(pixTx);
+    const boletoMetrics = calc(boletoTx);
 
-    // Mock previous period (in production, calculate from actual data)
     return {
-      all: { ...allMetrics, previousRate: allMetrics.rate - 1.2 },
-      card: { ...cardMetrics, previousRate: cardMetrics.rate - 0.8, benchmark: 75 },
-      pix: { ...pixMetrics, previousRate: pixMetrics.rate + 0.5, benchmark: 90 },
-      boleto: { ...boletoMetrics, previousRate: boletoMetrics.rate - 2.1, benchmark: 50 }
+      all:    { ...allMetrics,    previousRate: allMetrics.rate - 1.2 },
+      card:   { ...cardMetrics,   previousRate: cardMetrics.rate - 0.8, benchmark: 75 },
+      pix:    { ...pixMetrics,    previousRate: pixMetrics.rate + 0.5,  benchmark: 90 },
+      boleto: { ...boletoMetrics, previousRate: boletoMetrics.rate - 2.1, benchmark: 50 },
     };
   }, [transactions]);
 
-  // Conversion trend data (mock)
+  // Tendência mock (4 semanas)
   const trendData = [
     { name: 'Sem 1', cartao: 72, pix: 93, boleto: 46, geral: 76 },
     { name: 'Sem 2', cartao: 74, pix: 94, boleto: 48, geral: 78 },
@@ -131,146 +140,148 @@ export default function ConversionMetricsCards({ transactions = [] }) {
     { name: 'Sem 4', cartao: 73, pix: 94, boleto: 47, geral: 77 },
   ];
 
-  // Volume by method (mock)
+  // Volume mock
   const volumeData = [
-    { name: 'Cartão', value: 1250000, color: '#6366f1' },
-    { name: 'PIX', value: 890000, color: '#10b981' },
-    { name: 'Boleto', value: 320000, color: '#f59e0b' },
+    { name: 'Cartão', value: 1250000, color: VF.navy2 },
+    { name: 'PIX',    value: 890000,  color: VF.mint },
+    { name: 'Boleto', value: 320000,  color: VF.deep },
   ];
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact' }).format(value);
+  const ChartTooltip = ({ active, payload }) => {
+    if (!active || !payload || !payload.length) return null;
+    return (
+      <div
+        style={{
+          background: VF.navy, color: '#fff',
+          padding: '8px 12px', borderRadius: 8,
+          border: '1px solid rgba(92,247,207,0.3)',
+          boxShadow: '0 8px 24px -8px rgba(0,17,36,0.4)',
+        }}
+      >
+        <p className="font-mono" style={{ fontSize: 10, color: VF.glow, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>
+          {payload[0].payload.name}
+        </p>
+        {payload.map((entry, idx) => (
+          <div key={idx} className="flex items-center justify-between gap-3" style={{ fontSize: 11 }}>
+            <span style={{ color: 'rgba(255,255,255,0.75)' }}>{entry.name}</span>
+            <span className="font-mono" style={{ fontWeight: 800, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+              {entry.value}%
+            </span>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
-    <div className="space-y-6">
-      {/* Conversion Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <ConversionCard
-          title="Conversão Geral"
-          rate={metrics.all.rate}
-          previousRate={metrics.all.previousRate}
-          approved={metrics.all.approved}
-          total={metrics.all.total}
-          icon={Target}
-          color="purple"
-        />
-        <ConversionCard
-          title="Conversão Cartão"
-          rate={metrics.card.rate}
-          previousRate={metrics.card.previousRate}
-          approved={metrics.card.approved}
-          total={metrics.card.total}
-          icon={CreditCard}
-          color="blue"
-          benchmark={metrics.card.benchmark}
-        />
-        <ConversionCard
-          title="Conversão PIX"
-          rate={metrics.pix.rate}
-          previousRate={metrics.pix.previousRate}
-          approved={metrics.pix.approved}
-          total={metrics.pix.total}
-          icon={QrCode}
-          color="emerald"
-          benchmark={metrics.pix.benchmark}
-        />
-        <ConversionCard
-          title="Conversão Boleto"
-          rate={metrics.boleto.rate}
-          previousRate={metrics.boleto.previousRate}
-          approved={metrics.boleto.approved}
-          total={metrics.boleto.total}
-          icon={FileText}
-          color="amber"
-          benchmark={metrics.boleto.benchmark}
-        />
+    <div className="space-y-4">
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <ConversionCard title="Conversão Geral"   rate={metrics.all.rate}    previousRate={metrics.all.previousRate}    approved={metrics.all.approved}    total={metrics.all.total}    icon={TargetIcon}  accent={VF.deep} />
+        <ConversionCard title="Conversão Cartão" rate={metrics.card.rate}   previousRate={metrics.card.previousRate}   approved={metrics.card.approved}   total={metrics.card.total}   icon={CreditCard}  accent={VF.navy2} benchmark={metrics.card.benchmark} />
+        <ConversionCard title="Conversão PIX"    rate={metrics.pix.rate}    previousRate={metrics.pix.previousRate}    approved={metrics.pix.approved}    total={metrics.pix.total}    icon={QrCode}      accent={VF.mint}  benchmark={metrics.pix.benchmark} />
+        <ConversionCard title="Conversão Boleto" rate={metrics.boleto.rate} previousRate={metrics.boleto.previousRate} approved={metrics.boleto.approved} total={metrics.boleto.total} icon={FileText}    accent={VF.amber} benchmark={metrics.boleto.benchmark} />
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Conversion Trend */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-slate-500" />
-              Tendência de Conversão
-            </CardTitle>
-            <CardDescription>Evolução das taxas por método nas últimas semanas</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart data={trendData}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <VfCard>
+          <VfSectionHeader
+            eyebrow="Conversão · evolução"
+            title="Tendência por"
+            highlight="método"
+            icon={TrendUp}
+          />
+          <div style={{ height: 220 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={trendData} margin={{ top: 5, right: 5, left: -16, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="colorCartao" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                  <linearGradient id="vfGradMint" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={VF.mint} stopOpacity={0.42} />
+                    <stop offset="100%" stopColor={VF.mint} stopOpacity={0} />
                   </linearGradient>
-                  <linearGradient id="colorPix" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  <linearGradient id="vfGradNavy" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={VF.navy2} stopOpacity={0.32} />
+                    <stop offset="100%" stopColor={VF.navy2} stopOpacity={0} />
                   </linearGradient>
-                  <linearGradient id="colorBoleto" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                  <linearGradient id="vfGradDeep" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={VF.deep} stopOpacity={0.32} />
+                    <stop offset="100%" stopColor={VF.deep} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="#94a3b8" />
-                <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" domain={[0, 100]} />
-                <Tooltip 
-                  contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                  formatter={(value) => [`${value}%`, '']}
-                />
-                <Legend />
-                <Area type="monotone" dataKey="cartao" name="Cartão" stroke="#6366f1" fill="url(#colorCartao)" strokeWidth={2} />
-                <Area type="monotone" dataKey="pix" name="PIX" stroke="#10b981" fill="url(#colorPix)" strokeWidth={2} />
-                <Area type="monotone" dataKey="boleto" name="Boleto" stroke="#f59e0b" fill="url(#colorBoleto)" strokeWidth={2} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E0F8F1" vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 10, fill: VF.muted, fontFamily: 'JetBrains Mono, monospace' }} stroke="#B3F0DE" />
+                <YAxis tick={{ fontSize: 10, fill: VF.muted, fontFamily: 'JetBrains Mono, monospace' }} stroke="#B3F0DE" domain={[0, 100]} />
+                <Tooltip content={<ChartTooltip />} />
+                <Area type="monotone" dataKey="cartao" name="Cartão" stroke={VF.navy2} fill="url(#vfGradNavy)" strokeWidth={2.5} />
+                <Area type="monotone" dataKey="pix"    name="PIX"    stroke={VF.mint}  fill="url(#vfGradMint)" strokeWidth={2.5} />
+                <Area type="monotone" dataKey="boleto" name="Boleto" stroke={VF.deep}  fill="url(#vfGradDeep)" strokeWidth={2.5} />
               </AreaChart>
             </ResponsiveContainer>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="flex justify-center gap-4 mt-3 flex-wrap">
+            {[
+              { label: 'Cartão', color: VF.navy2 },
+              { label: 'PIX',    color: VF.mint },
+              { label: 'Boleto', color: VF.deep },
+            ].map((l) => (
+              <div key={l.label} className="flex items-center gap-1.5">
+                <span style={{ width: 10, height: 10, borderRadius: 3, background: l.color }} />
+                <span className="font-mono" style={{ fontSize: 10.5, color: VF.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  {l.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </VfCard>
 
-        {/* Volume Distribution */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Percent className="w-4 h-4 text-slate-500" />
-              Distribuição de Volume
-            </CardTitle>
-            <CardDescription>Volume transacionado por método de pagamento</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={220}>
+        <VfCard>
+          <VfSectionHeader
+            eyebrow="Volume · método"
+            title="Distribuição de"
+            highlight="volume"
+            icon={Percent}
+          />
+          <div style={{ height: 220 }}>
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={volumeData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  paddingAngle={3}
+                  cx="50%" cy="50%"
+                  innerRadius={56} outerRadius={86}
+                  paddingAngle={4}
                   dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  labelLine={false}
+                  strokeWidth={0}
                 >
-                  {volumeData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  {volumeData.map((entry, idx) => (
+                    <Cell key={idx} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => formatCurrency(value)} />
+                <Tooltip
+                  formatter={(v) => fmtCurrency(v)}
+                  contentStyle={{
+                    background: VF.navy, color: '#fff',
+                    border: '1px solid rgba(92,247,207,0.3)',
+                    borderRadius: 8,
+                    fontSize: 11,
+                  }}
+                  itemStyle={{ color: '#fff', fontFamily: 'JetBrains Mono, monospace' }}
+                  labelStyle={{ color: VF.glow }}
+                />
               </PieChart>
             </ResponsiveContainer>
-            <div className="flex justify-center gap-6 mt-2">
-              {volumeData.map((item) => (
-                <div key={item.name} className="flex items-center gap-2 text-xs">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-slate-600">{item.name}: {formatCurrency(item.value)}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="flex justify-center gap-4 mt-3 flex-wrap">
+            {volumeData.map((item) => (
+              <div key={item.name} className="flex items-center gap-1.5">
+                <span style={{ width: 10, height: 10, borderRadius: 3, background: item.color }} />
+                <span className="font-mono" style={{ fontSize: 10.5, color: VF.muted, fontWeight: 700, letterSpacing: '0.06em' }}>
+                  <strong style={{ color: VF.navy }}>{item.name}</strong>: {fmtCurrency(item.value)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </VfCard>
       </div>
     </div>
   );

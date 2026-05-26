@@ -8,7 +8,9 @@ import { Button } from '@/components/ui/button';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
+import V9TabSwitcher from '@/components/dashboard/V9TabSwitcher';
+import { ChartLineUp, CreditCard as CreditCardIcon, QrCode as QrCodeIcon, ChartPieSlice } from '@phosphor-icons/react';
 
 import EditorialPageHeader from '@/components/editorial/EditorialPageHeader';
 import ChartCard from '@/components/dashboard/ChartCard';
@@ -279,22 +281,61 @@ export default function Dashboard() {
         </AnimatedSection>
       ) : null}
 
-      {/* ZONA 8 — Tabs preservadas */}
+      {/* ZONA 8 — Tabs analíticas · V9 segmented switcher */}
       <Tabs value={activeView} onValueChange={setActiveView} className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="executive">{t('dashboard.views.executive')}</TabsTrigger>
-          <TabsTrigger value="card">{t('dashboard.views.card_performance')}</TabsTrigger>
-          <TabsTrigger value="pix">{t('dashboard.views.pix_performance')}</TabsTrigger>
-          <TabsTrigger value="analytics">{t('dashboard.views.advanced_analytics')}</TabsTrigger>
-        </TabsList>
+        <div className="flex items-center justify-between flex-wrap gap-3 pt-2">
+          <div>
+            <div
+              className="font-mono inline-flex items-center gap-2 mb-2"
+              style={{
+                fontSize: 10.5, fontWeight: 800,
+                letterSpacing: '0.14em', textTransform: 'uppercase',
+                color: '#007A5C',
+              }}
+            >
+              <span style={{ width: 18, height: 2, background: '#00C194', borderRadius: 99 }} />
+              Analytics · deep dive
+            </div>
+            <h2
+              style={{
+                margin: 0, fontFamily: 'Inter, sans-serif',
+                fontSize: 22, fontWeight: 800, letterSpacing: '-0.022em',
+                color: '#001124', lineHeight: 1.2,
+              }}
+            >
+              Performance{' '}
+              <em
+                style={{
+                  fontStyle: 'normal',
+                  background: 'linear-gradient(135deg,#00C194,#007A5C)',
+                  WebkitBackgroundClip: 'text', backgroundClip: 'text',
+                  color: 'transparent',
+                }}
+              >
+                detalhada
+              </em>
+            </h2>
+          </div>
+          <V9TabSwitcher
+            value={activeView}
+            onChange={setActiveView}
+            options={[
+              { value: 'executive', label: t('dashboard.views.executive'),          icon: ChartLineUp },
+              { value: 'card',      label: t('dashboard.views.card_performance'),   icon: CreditCardIcon },
+              { value: 'pix',       label: t('dashboard.views.pix_performance'),    icon: QrCodeIcon },
+              { value: 'analytics', label: t('dashboard.views.advanced_analytics'), icon: ChartPieSlice },
+            ]}
+          />
+
+        </div>
 
         <TabsContent value="executive" className="space-y-4">
           <ConversionMetricsCards transactions={transactions} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <ChartCard title={t('dashboard.payment_methods')} subtitle={t('dashboard.volume_distribution')} action>
+            <ChartCard title={t('dashboard.payment_methods')} subtitle={t('dashboard.volume_distribution')}>
               <PaymentMethodsChart />
             </ChartCard>
-            <ChartCard title={t('dashboard.approval_rate_by_brand')} subtitle={`${t('common.goal')}: 85%`} action>
+            <ChartCard title={t('dashboard.approval_rate_by_brand')} subtitle={`${t('common.goal')}: 85%`}>
               <ApprovalRateChart target={85} />
             </ChartCard>
           </div>

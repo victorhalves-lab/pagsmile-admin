@@ -1,93 +1,105 @@
 import React from 'react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  Cell,
-  ReferenceLine
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, Cell, ReferenceLine,
 } from 'recharts';
-import { cn } from '@/lib/utils';
+import { VF } from './analytics/vfHelpers';
 
+/**
+ * ApprovalRateChart — Pulse VF.
+ * Bars com cores brand-only + ref line meta + tooltip dark navy V9.
+ */
 export default function ApprovalRateChart({ data = [], target = 85, className }) {
-  // Mock data if no data provided
   const chartData = data.length > 0 ? data : [
-    { name: 'Visa', rate: 92.5 },
+    { name: 'Visa',   rate: 92.5 },
     { name: 'Master', rate: 88.3 },
-    { name: 'Elo', rate: 85.1 },
-    { name: 'Amex', rate: 79.8 },
-    { name: 'Hiper', rate: 82.4 },
-    { name: 'Pix', rate: 98.5 },
+    { name: 'Elo',    rate: 85.1 },
+    { name: 'Amex',   rate: 79.8 },
+    { name: 'Hiper',  rate: 82.4 },
+    { name: 'Pix',    rate: 98.5 },
   ];
 
-  const getBarColor = (rate) => {
-    if (rate >= target) return '#2bc196';
-    if (rate >= target - 10) return '#FBBF24';
-    return '#EF4444';
-  };
+  const barColor = (rate) =>
+    rate >= target ? VF.mint
+    : rate >= target - 10 ? '#F59E0B'
+    : '#DC2626';
 
   const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const rate = payload[0].value;
-      return (
-        <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-100">
-          <p className="font-medium text-gray-900">{payload[0].payload.name}</p>
-          <p className={cn(
-            "text-lg font-bold",
-            rate >= target ? "text-emerald-600" : rate >= target - 10 ? "text-yellow-600" : "text-red-600"
-          )}>
-            {rate.toFixed(1)}%
-          </p>
-          <p className="text-xs text-gray-500">
-            {rate >= target ? '✓ Acima da meta' : `${(target - rate).toFixed(1)}% abaixo da meta`}
-          </p>
-        </div>
-      );
-    }
-    return null;
+    if (!active || !payload || !payload.length) return null;
+    const rate = payload[0].value;
+    const above = rate >= target;
+    return (
+      <div
+        style={{
+          background: VF.navy, color: '#fff',
+          padding: '8px 12px', borderRadius: 8,
+          border: '1px solid rgba(92,247,207,0.3)',
+          boxShadow: '0 8px 24px -8px rgba(0,17,36,0.4)',
+        }}
+      >
+        <p
+          className="font-mono"
+          style={{
+            fontSize: 10, color: VF.glow, fontWeight: 800,
+            letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 2,
+          }}
+        >
+          {payload[0].payload.name}
+        </p>
+        <p
+          className="font-mono"
+          style={{
+            fontSize: 18, fontWeight: 800,
+            color: above ? VF.glow : rate >= target - 10 ? '#FBBF24' : '#FCA5A5',
+            fontVariantNumeric: 'tabular-nums', lineHeight: 1.1,
+          }}
+        >
+          {rate.toFixed(1)}%
+        </p>
+        <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.7)', marginTop: 2 }}>
+          {above ? '✓ Acima da meta' : `${(target - rate).toFixed(1)}% abaixo da meta`}
+        </p>
+      </div>
+    );
   };
 
   return (
-    <div className={cn("h-64", className)}>
+    <div className={className} style={{ height: 256 }}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-          <XAxis 
-            dataKey="name" 
+        <BarChart data={chartData} margin={{ top: 24, right: 10, left: 0, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#E0F8F1" vertical={false} />
+          <XAxis
+            dataKey="name"
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 12, fill: '#9CA3AF' }}
+            tick={{ fontSize: 11, fill: VF.muted, fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}
           />
-          <YAxis 
+          <YAxis
             domain={[0, 100]}
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 12, fill: '#9CA3AF' }}
-            tickFormatter={(value) => `${value}%`}
-            width={45}
+            tick={{ fontSize: 10, fill: VF.muted, fontFamily: 'JetBrains Mono, monospace' }}
+            tickFormatter={(v) => `${v}%`}
+            width={42}
           />
-          <Tooltip content={<CustomTooltip />} />
-          <ReferenceLine 
-            y={target} 
-            stroke="#6B7280" 
-            strokeDasharray="5 5" 
-            label={{ 
-              value: `Meta ${target}%`, 
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,193,148,0.06)' }} />
+          <ReferenceLine
+            y={target}
+            stroke={VF.mintDark}
+            strokeDasharray="4 4"
+            strokeWidth={1.5}
+            label={{
+              value: `Meta ${target}%`,
               position: 'right',
-              fontSize: 11,
-              fill: '#6B7280'
+              fontSize: 10,
+              fontFamily: 'JetBrains Mono, monospace',
+              fontWeight: 800,
+              fill: VF.mintDark,
             }}
           />
-          <Bar 
-            dataKey="rate" 
-            radius={[4, 4, 0, 0]}
-            maxBarSize={40}
-          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getBarColor(entry.rate)} />
+          <Bar dataKey="rate" radius={[5, 5, 0, 0]} maxBarSize={44}>
+            {chartData.map((entry, idx) => (
+              <Cell key={idx} fill={barColor(entry.rate)} />
             ))}
           </Bar>
         </BarChart>
