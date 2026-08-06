@@ -52,7 +52,9 @@ import {
   ShieldCheck,
   AlertTriangle,
   Mail,
-  Phone
+  Phone,
+  Award,
+  UsersRound
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -138,6 +140,7 @@ const getAdminSubMenuItems = (t) => [
       { label: 'Dashboard', page: 'CouponsOverview' },
       { label: 'Lista de Cupons', page: 'CouponList' },
       { label: 'Criar Cupom', page: 'CouponForm' },
+      { label: 'Promoções', page: 'Promotions' },
     ]
   },
   {
@@ -219,6 +222,36 @@ const getAdminSubMenuItems = (t) => [
     submenu: [
       { label: 'Lista de Clientes', page: 'Customers' },
       { label: 'Engagement Hub', page: 'CustomersHub' },
+    ]
+  },
+  {
+    id: 'loyalty',
+    label: 'Fidelidade',
+    icon: Award,
+    page: 'LoyaltyDashboard',
+    submenu: [
+      { label: 'Dashboard', page: 'LoyaltyDashboard' },
+      { label: 'Configuração do Programa', page: 'LoyaltyConfig' },
+      { label: 'Níveis & Benefícios', page: 'LoyaltyLevels' },
+      { label: 'Recompensas', page: 'LoyaltyRewards' },
+      { label: 'Gamification', page: 'LoyaltyGamification' },
+      { label: 'Acelerador de Pontos', page: 'LoyaltyAccelerator' },
+      { label: 'Member Get Member', page: 'LoyaltyMGM' },
+    ]
+  },
+  {
+    id: 'cdp',
+    label: 'CDP / CRM',
+    icon: UsersRound,
+    page: 'CdpDashboard',
+    submenu: [
+      { label: 'Dashboard', page: 'CdpDashboard' },
+      { label: 'Clientes (360º)', page: 'CdpCustomers' },
+      { label: 'Segmentos', page: 'CdpSegments' },
+      { label: 'Análise RFV', page: 'CdpRfvAnalysis' },
+      { label: 'Campanhas', page: 'CdpCampaigns' },
+      { label: 'Automação', page: 'CdpAutomation' },
+      { label: 'Geo Campanhas', page: 'CdpGeoCampaigns' },
     ]
   },
   {
@@ -499,6 +532,18 @@ const getAdminInternoMenuItems = (t) => [
     ]
   },
   {
+    id: 'loyalty-gov',
+    label: 'Loyalty (Governança)',
+    icon: Award,
+    page: 'AdminIntLoyaltyDashboard',
+  },
+  {
+    id: 'cdp-gov',
+    label: 'CDP / CRM (Governança)',
+    icon: UsersRound,
+    page: 'AdminIntCdpDashboard',
+  },
+  {
     id: 'admin',
     label: t('menu_admin.administration'),
     icon: Settings,
@@ -652,6 +697,7 @@ const adminInternoPages = [
   'AdminIntCompanies', 'AdminIntCompanyDetail',
   'AdminIntSalesReps', 'AdminIntSalesRepDetail',
   'AdminIntProjects', 'AdminIntProjectDetail', 'AdminIntProjectsConsolidatedDashboard',
+  'AdminIntLoyaltyDashboard', 'AdminIntCdpDashboard',
 ];
 
 import { Sun, Moon } from 'lucide-react';

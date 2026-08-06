@@ -201,6 +201,13 @@ import AdminIntCompliancePreKYCExport from './pages/AdminIntCompliancePreKYCExpo
 import AdminIntComplianceBDCHealth from './pages/AdminIntComplianceBDCHealth';
 import AdminIntComplianceCafLab from './pages/AdminIntComplianceCafLab';
 
+// ====== Loyalty + CDP/CRM (protótipo, mock data) ======
+import LoyaltyDashboard from './pages/LoyaltyDashboard';
+import CdpDashboard from './pages/CdpDashboard';
+import Promotions from './pages/Promotions';
+import AdminIntLoyaltyDashboard from './pages/AdminIntLoyaltyDashboard';
+import AdminIntCdpDashboard from './pages/AdminIntCdpDashboard';
+
 // ====== Entrega 10 — Operacional Self-Service (Admin Sub) ======
 import MyLimitRequest from './pages/MyLimitRequest';
 import MyFraudAlerts from './pages/MyFraudAlerts';
@@ -485,6 +492,13 @@ const AuthenticatedApp = () => {
       <Route path="/AdminIntCompliancePreKYCExport" element={<LayoutWrapper currentPageName="AdminIntCompliancePreKYCExport"><AdminIntCompliancePreKYCExport /></LayoutWrapper>} />
       <Route path="/AdminIntComplianceBDCHealth" element={<LayoutWrapper currentPageName="AdminIntComplianceBDCHealth"><AdminIntComplianceBDCHealth /></LayoutWrapper>} />
       <Route path="/AdminIntComplianceCafLab" element={<LayoutWrapper currentPageName="AdminIntComplianceCafLab"><AdminIntComplianceCafLab /></LayoutWrapper>} />
+
+      {/* ====== Loyalty + CDP/CRM (protótipo, mock data) ====== */}
+      <Route path="/LoyaltyDashboard" element={<LayoutWrapper currentPageName="LoyaltyDashboard"><LoyaltyDashboard /></LayoutWrapper>} />
+      <Route path="/CdpDashboard" element={<LayoutWrapper currentPageName="CdpDashboard"><CdpDashboard /></LayoutWrapper>} />
+      <Route path="/Promotions" element={<LayoutWrapper currentPageName="Promotions"><Promotions /></LayoutWrapper>} />
+      <Route path="/AdminIntLoyaltyDashboard" element={<LayoutWrapper currentPageName="AdminIntLoyaltyDashboard"><AdminIntLoyaltyDashboard /></LayoutWrapper>} />
+      <Route path="/AdminIntCdpDashboard" element={<LayoutWrapper currentPageName="AdminIntCdpDashboard"><AdminIntCdpDashboard /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
