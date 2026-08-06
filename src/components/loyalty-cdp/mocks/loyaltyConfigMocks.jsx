@@ -226,6 +226,7 @@ export const discountRules = [
     limits: { max_discount: 100, stackable: false, uses_per_customer: 1, total_uses: 5000 },
     channels: ['ecommerce', 'app'],
     validity: { start: '2026-01-01', end: '2026-12-31' },
+    performance: { uses: 3284, revenue: 184000, avg_discount: 42.50, conversion_lift: 18.4 },
   },
   {
     id: 'd2', name: 'Frete grátis Diamante', type: 'free_shipping', status: 'ativa', priority: 5,
@@ -235,6 +236,7 @@ export const discountRules = [
     limits: { max_discount: null, stackable: true, uses_per_customer: null, total_uses: null },
     channels: ['ecommerce', 'pdv', 'app'],
     validity: { start: '2026-01-01', end: null },
+    performance: { uses: 12840, revenue: 0, avg_discount: 18.90, conversion_lift: 12.1 },
   },
   {
     id: 'd3', name: 'Leve 3 Pague 2 - Camisetas', type: 'bogo', status: 'ativa', priority: 20,
@@ -244,6 +246,7 @@ export const discountRules = [
     limits: { max_discount: null, stackable: false, uses_per_customer: 5, total_uses: 10000 },
     channels: ['ecommerce', 'pdv'],
     validity: { start: '2026-08-01', end: '2026-08-31' },
+    performance: { uses: 420, revenue: 68000, avg_discount: 28.00, conversion_lift: 24.7 },
   },
   {
     id: 'd4', name: 'R$20 off Instagram (1ª compra)', type: 'fixed', status: 'programada', priority: 15,
@@ -253,5 +256,6 @@ export const discountRules = [
     limits: { max_discount: 20, stackable: false, uses_per_customer: 1, total_uses: 2000 },
     channels: ['instagram'],
     validity: { start: '2026-09-01', end: '2026-09-30' },
+    performance: { uses: 0, revenue: 0, avg_discount: 0, conversion_lift: 0 },
   },
 ];

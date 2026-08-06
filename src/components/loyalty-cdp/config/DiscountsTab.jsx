@@ -75,6 +75,22 @@ export default function DiscountsTab() {
                 <span>·</span>
                 <span className={r.limits.stackable ? 'text-mint-600 font-semibold' : ''}>{r.limits.stackable ? 'Acumulável' : 'Não acumulável'}</span>
               </div>
+
+              {r.performance && (
+                <div className="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                  {[
+                    { label: 'Usos', value: r.performance.uses.toLocaleString('pt-BR'), color: 'text-slate-700 dark:text-slate-200' },
+                    { label: 'Receita gerada', value: r.performance.revenue > 0 ? `R$ ${r.performance.revenue.toLocaleString('pt-BR')}` : '—', color: 'text-mint-600 font-semibold' },
+                    { label: 'Desc. médio', value: r.performance.avg_discount > 0 ? `R$ ${r.performance.avg_discount.toFixed(2)}` : '—', color: 'text-slate-700 dark:text-slate-200' },
+                    { label: 'Lift de conversão', value: r.performance.conversion_lift > 0 ? `+${r.performance.conversion_lift}%` : '—', color: r.performance.conversion_lift > 20 ? 'text-mint-600 font-semibold' : 'text-slate-700 dark:text-slate-200' },
+                  ].map((m) => (
+                    <div key={m.label}>
+                      <p className="text-[10px] text-slate-400 uppercase">{m.label}</p>
+                      <p className={`text-sm font-mono ${m.color}`}>{m.value}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}

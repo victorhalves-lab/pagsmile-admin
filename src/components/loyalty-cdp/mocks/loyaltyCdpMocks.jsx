@@ -200,15 +200,81 @@ export const adminIntLoyaltyKpis = {
 
 export const adminIntCdpKpis = {
   merchants_active_cdp: 98,
+  merchants_eligible: 142,
   messages_sent_platform: 8400000,
   conversions_platform: 242000,
   revenue_generated_platform: 28400000,
+  opt_in_rate: 78.4,
+  opt_out_pending: 3,
   sms_cost_monthly: 42000,
   whatsapp_cost_monthly: 68000,
   top_merchants: [
-    { name: 'Moda Express', sent: 284000, conv: 8420, revenue: 1240000 },
-    { name: 'TechStore BR', sent: 198000, conv: 6100, revenue: 980000 },
-    { name: 'Beauty Club', sent: 340000, conv: 11200, revenue: 1510000 },
+    { name: 'Moda Express', sent: 284000, conv: 8420, conv_rate: 2.96, revenue: 1240000, opt_out: 2, status: 'saudável' },
+    { name: 'TechStore BR', sent: 198000, conv: 6100, conv_rate: 3.08, revenue: 980000, opt_out: 0, status: 'saudável' },
+    { name: 'Beauty Club', sent: 340000, conv: 11200, conv_rate: 3.29, revenue: 1510000, opt_out: 1, status: 'saudável' },
+    { name: 'Edu+ Cursos', sent: 142000, conv: 3200, conv_rate: 2.25, revenue: 420000, opt_out: 5, status: 'atenção' },
+    { name: 'Casa & Co', sent: 89000, conv: 1800, conv_rate: 2.02, revenue: 280000, opt_out: 12, status: 'risco' },
+    { name: 'FitPro', sent: 67000, conv: 980, conv_rate: 1.46, revenue: 180000, opt_out: 18, status: 'risco' },
+  ],
+  volume_trend: [
+    { month: 'fev', whatsapp: 580, email: 320, sms: 180, push: 90 },
+    { month: 'mar', whatsapp: 640, email: 340, sms: 190, push: 110 },
+    { month: 'abr', whatsapp: 720, email: 380, sms: 210, push: 130 },
+    { month: 'mai', whatsapp: 810, email: 410, sms: 220, push: 150 },
+    { month: 'jun', whatsapp: 880, email: 440, sms: 230, push: 170 },
+    { month: 'jul', whatsapp: 940, email: 460, sms: 240, push: 190 },
+    { month: 'ago', whatsapp: 1020, email: 480, sms: 250, push: 210 },
+  ],
+  lgpd_alerts: [
+    { merchant: 'Casa & Co', type: 'Opt-out pendente > 7 dias', count: 12, severity: 'alto', since: '12 dias' },
+    { merchant: 'FitPro', type: 'Opt-out pendente > 7 dias', count: 18, severity: 'alto', since: '9 dias' },
+    { merchant: 'Edu+ Cursos', type: 'Limite de disparos/hora excedido', count: 1, severity: 'médio', since: 'hoje' },
+    { merchant: 'Moda Express', type: 'Consentimento expira em 30 dias', count: 340, severity: 'médio', since: 'renovação pendente' },
+  ],
+  channel_mix: [
+    { channel: 'WhatsApp', pct: 42, revenue: 11900000, color: '#25d366' },
+    { channel: 'Email', pct: 28, revenue: 7900000, color: '#2bc196' },
+    { channel: 'SMS', pct: 19, revenue: 5400000, color: '#3b82f6' },
+    { channel: 'Push', pct: 11, revenue: 3200000, color: '#f59e0b' },
+  ],
+};
+
+export const adminIntLoyaltyKpisRich = {
+  merchants_with_program: 142,
+  merchants_eligible: 220,
+  total_members_platform: 1240000,
+  points_issued_platform: 312000000,
+  points_redeemed_platform: 98000000,
+  redemption_rate_platform: 31.4,
+  points_liability_cents: 1860000000, // valor monetário dos pontos não resgatados
+  revenue_via_loyalty: 8400000,
+  program_types: [
+    { type: 'Pontos', count: 68, pct: 47.9, color: '#2bc196' },
+    { type: 'Níveis', count: 34, pct: 23.9, color: '#3b82f6' },
+    { type: 'Cashback', count: 28, pct: 19.7, color: '#8b5cf6' },
+    { type: 'Híbrido', count: 12, pct: 8.5, color: '#f59e0b' },
+  ],
+  burn_rate_by_merchant: [
+    { name: 'Beauty Club', issued: 18400000, redeemed: 7200000, burn: 39.1, status: 'saudável' },
+    { name: 'TechStore BR', issued: 12800000, redeemed: 5800000, burn: 45.3, status: 'saudável' },
+    { name: 'Moda Express', issued: 9600000, redeemed: 2400000, burn: 25.0, status: 'baixo' },
+    { name: 'Edu+ Cursos', issued: 4200000, redeemed: 2100000, burn: 50.0, status: 'saudável' },
+    { name: 'Casa & Co', issued: 2800000, redeemed: 420000, burn: 15.0, status: 'crítico' },
+  ],
+  expiry_alerts: [
+    { merchant: 'Moda Express', expiring_points: 2400000, value_cents: 24000000, days: 15, severity: 'alto' },
+    { merchant: 'TechStore BR', expiring_points: 980000, value_cents: 9800000, days: 22, severity: 'médio' },
+    { merchant: 'Beauty Club', expiring_points: 1400000, value_cents: 14000000, days: 30, severity: 'médio' },
+  ],
+  mgm_fraud_cases: [
+    { merchant: 'Casa & Co', referral_rate: 84.2, self_referral: 12, ip_overlap: 8, severity: 'crítico', status: 'investigando' },
+    { merchant: 'FitPro', referral_rate: 72.1, self_referral: 4, ip_overlap: 3, severity: 'alto', status: 'investigando' },
+  ],
+  top_merchants: [
+    { name: 'Moda Express', members: 18432, engagement: 64.2, revenue: 1240000 },
+    { name: 'Edu+ Cursos', members: 9800, engagement: 58.1, revenue: 620000 },
+    { name: 'TechStore BR', members: 14300, engagement: 71.5, revenue: 980000 },
+    { name: 'Beauty Club', members: 22100, engagement: 69.0, revenue: 1510000 },
   ],
 };
 
