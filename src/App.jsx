@@ -218,6 +218,7 @@ import LoyaltyMGM from './pages/LoyaltyMGM';
 
 // ====== CDP/CRM pages (Admin Sub) ======
 import CdpCustomers from './pages/CdpCustomers';
+import CdpCustomerDetail from './pages/CdpCustomerDetail';
 import CdpSegments from './pages/CdpSegments';
 import CdpRfvAnalysis from './pages/CdpRfvAnalysis';
 import CdpCampaigns from './pages/CdpCampaigns';
@@ -530,6 +531,7 @@ const AuthenticatedApp = () => {
 
       {/* CDP/CRM (Admin Sub) */}
       <Route path="/CdpCustomers" element={<LayoutWrapper currentPageName="CdpCustomers"><CdpCustomers /></LayoutWrapper>} />
+      <Route path="/CdpCustomerDetail" element={<LayoutWrapper currentPageName="CdpCustomerDetail"><CdpCustomerDetail /></LayoutWrapper>} />
       <Route path="/CdpSegments" element={<LayoutWrapper currentPageName="CdpSegments"><CdpSegments /></LayoutWrapper>} />
       <Route path="/CdpRfvAnalysis" element={<LayoutWrapper currentPageName="CdpRfvAnalysis"><CdpRfvAnalysis /></LayoutWrapper>} />
       <Route path="/CdpCampaigns" element={<LayoutWrapper currentPageName="CdpCampaigns"><CdpCampaigns /></LayoutWrapper>} />

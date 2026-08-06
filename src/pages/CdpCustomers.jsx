@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, Phone, Star, ShoppingBag, Coins, Download, RefreshCw, MessageSquare, ShoppingCart, ArrowUpDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Phone, Star, ShoppingBag, Coins, Download, RefreshCw, MessageSquare, ShoppingCart, ArrowUpDown, ChevronRight } from 'lucide-react';
 import { customers360 } from '@/components/loyalty-cdp/mocks/loyaltyCdpMocks';
 import { customerTimelineEvents } from '@/components/loyalty-cdp/mocks/cdpAnalyticsMocks';
 
@@ -33,6 +34,7 @@ const extendedCustomers = [
 ];
 
 export default function CdpCustomers() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(extendedCustomers[0]);
   const [rfvFilter, setRfvFilter] = useState('Todos');
@@ -106,10 +108,10 @@ export default function CdpCustomers() {
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {filtered.map((c, idx) => (
-                  <tr key={c.id} onClick={() => setSelected(c)} className={`cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/30 ${selected?.id === c.id ? 'bg-mint-50/40 dark:bg-mint-500/5' : ''}`}>
+                  <tr key={c.id} onClick={() => { setSelected(c); navigate('/CdpCustomerDetail'); }} className={`cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/30 ${selected?.id === c.id ? 'bg-mint-50/40 dark:bg-mint-500/5' : ''}`}>
                     <td className="px-4 py-3 text-xs text-slate-400">{idx + 1}</td>
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-900 dark:text-white">{c.name}</p>
+                      <p className="font-medium text-slate-900 dark:text-white flex items-center gap-1">{c.name} <ChevronRight className="w-3 h-3 text-slate-300" /></p>
                       <p className="text-xs text-slate-400">{c.email}</p>
                     </td>
                     <td className="px-4 py-3">
