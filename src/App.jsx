@@ -208,6 +208,22 @@ import Promotions from './pages/Promotions';
 import AdminIntLoyaltyDashboard from './pages/AdminIntLoyaltyDashboard';
 import AdminIntCdpDashboard from './pages/AdminIntCdpDashboard';
 
+// ====== Loyalty config pages (Admin Sub) ======
+import LoyaltyConfig from './pages/LoyaltyConfig';
+import LoyaltyLevels from './pages/LoyaltyLevels';
+import LoyaltyRewards from './pages/LoyaltyRewards';
+import LoyaltyGamification from './pages/LoyaltyGamification';
+import LoyaltyAccelerator from './pages/LoyaltyAccelerator';
+import LoyaltyMGM from './pages/LoyaltyMGM';
+
+// ====== CDP/CRM pages (Admin Sub) ======
+import CdpCustomers from './pages/CdpCustomers';
+import CdpSegments from './pages/CdpSegments';
+import CdpRfvAnalysis from './pages/CdpRfvAnalysis';
+import CdpCampaigns from './pages/CdpCampaigns';
+import CdpAutomation from './pages/CdpAutomation';
+import CdpGeoCampaigns from './pages/CdpGeoCampaigns';
+
 // ====== Entrega 10 — Operacional Self-Service (Admin Sub) ======
 import MyLimitRequest from './pages/MyLimitRequest';
 import MyFraudAlerts from './pages/MyFraudAlerts';
@@ -499,6 +515,22 @@ const AuthenticatedApp = () => {
       <Route path="/Promotions" element={<LayoutWrapper currentPageName="Promotions"><Promotions /></LayoutWrapper>} />
       <Route path="/AdminIntLoyaltyDashboard" element={<LayoutWrapper currentPageName="AdminIntLoyaltyDashboard"><AdminIntLoyaltyDashboard /></LayoutWrapper>} />
       <Route path="/AdminIntCdpDashboard" element={<LayoutWrapper currentPageName="AdminIntCdpDashboard"><AdminIntCdpDashboard /></LayoutWrapper>} />
+
+      {/* Loyalty config (Admin Sub) */}
+      <Route path="/LoyaltyConfig" element={<LayoutWrapper currentPageName="LoyaltyConfig"><LoyaltyConfig /></LayoutWrapper>} />
+      <Route path="/LoyaltyLevels" element={<LayoutWrapper currentPageName="LoyaltyLevels"><LoyaltyLevels /></LayoutWrapper>} />
+      <Route path="/LoyaltyRewards" element={<LayoutWrapper currentPageName="LoyaltyRewards"><LoyaltyRewards /></LayoutWrapper>} />
+      <Route path="/LoyaltyGamification" element={<LayoutWrapper currentPageName="LoyaltyGamification"><LoyaltyGamification /></LayoutWrapper>} />
+      <Route path="/LoyaltyAccelerator" element={<LayoutWrapper currentPageName="LoyaltyAccelerator"><LoyaltyAccelerator /></LayoutWrapper>} />
+      <Route path="/LoyaltyMGM" element={<LayoutWrapper currentPageName="LoyaltyMGM"><LoyaltyMGM /></LayoutWrapper>} />
+
+      {/* CDP/CRM (Admin Sub) */}
+      <Route path="/CdpCustomers" element={<LayoutWrapper currentPageName="CdpCustomers"><CdpCustomers /></LayoutWrapper>} />
+      <Route path="/CdpSegments" element={<LayoutWrapper currentPageName="CdpSegments"><CdpSegments /></LayoutWrapper>} />
+      <Route path="/CdpRfvAnalysis" element={<LayoutWrapper currentPageName="CdpRfvAnalysis"><CdpRfvAnalysis /></LayoutWrapper>} />
+      <Route path="/CdpCampaigns" element={<LayoutWrapper currentPageName="CdpCampaigns"><CdpCampaigns /></LayoutWrapper>} />
+      <Route path="/CdpAutomation" element={<LayoutWrapper currentPageName="CdpAutomation"><CdpAutomation /></LayoutWrapper>} />
+      <Route path="/CdpGeoCampaigns" element={<LayoutWrapper currentPageName="CdpGeoCampaigns"><CdpGeoCampaigns /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
