@@ -223,6 +223,10 @@ import CdpRfvAnalysis from './pages/CdpRfvAnalysis';
 import CdpCampaigns from './pages/CdpCampaigns';
 import CdpAutomation from './pages/CdpAutomation';
 import CdpGeoCampaigns from './pages/CdpGeoCampaigns';
+import CdpRepurchaseRate from './pages/CdpRepurchaseRate';
+import CdpTimeBetweenPurchases from './pages/CdpTimeBetweenPurchases';
+import CdpSalesEvolution from './pages/CdpSalesEvolution';
+import CdpSalesChannels from './pages/CdpSalesChannels';
 
 // ====== Entrega 10 — Operacional Self-Service (Admin Sub) ======
 import MyLimitRequest from './pages/MyLimitRequest';
@@ -531,6 +535,10 @@ const AuthenticatedApp = () => {
       <Route path="/CdpCampaigns" element={<LayoutWrapper currentPageName="CdpCampaigns"><CdpCampaigns /></LayoutWrapper>} />
       <Route path="/CdpAutomation" element={<LayoutWrapper currentPageName="CdpAutomation"><CdpAutomation /></LayoutWrapper>} />
       <Route path="/CdpGeoCampaigns" element={<LayoutWrapper currentPageName="CdpGeoCampaigns"><CdpGeoCampaigns /></LayoutWrapper>} />
+      <Route path="/CdpRepurchaseRate" element={<LayoutWrapper currentPageName="CdpRepurchaseRate"><CdpRepurchaseRate /></LayoutWrapper>} />
+      <Route path="/CdpTimeBetweenPurchases" element={<LayoutWrapper currentPageName="CdpTimeBetweenPurchases"><CdpTimeBetweenPurchases /></LayoutWrapper>} />
+      <Route path="/CdpSalesEvolution" element={<LayoutWrapper currentPageName="CdpSalesEvolution"><CdpSalesEvolution /></LayoutWrapper>} />
+      <Route path="/CdpSalesChannels" element={<LayoutWrapper currentPageName="CdpSalesChannels"><CdpSalesChannels /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>

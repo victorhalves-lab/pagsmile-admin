@@ -252,6 +252,10 @@ const getAdminSubMenuItems = (t) => [
       { label: 'Campanhas', page: 'CdpCampaigns' },
       { label: 'Automação', page: 'CdpAutomation' },
       { label: 'Geo Campanhas', page: 'CdpGeoCampaigns' },
+      { label: 'Evolução de Vendas', page: 'CdpSalesEvolution' },
+      { label: 'Canais de Venda', page: 'CdpSalesChannels' },
+      { label: 'Taxa de Recompra', page: 'CdpRepurchaseRate' },
+      { label: 'Tempo entre Compras', page: 'CdpTimeBetweenPurchases' },
     ]
   },
   {
@@ -698,6 +702,7 @@ const adminInternoPages = [
   'AdminIntSalesReps', 'AdminIntSalesRepDetail',
   'AdminIntProjects', 'AdminIntProjectDetail', 'AdminIntProjectsConsolidatedDashboard',
   'AdminIntLoyaltyDashboard', 'AdminIntCdpDashboard',
+  'CdpRepurchaseRate', 'CdpTimeBetweenPurchases', 'CdpSalesEvolution', 'CdpSalesChannels',
 ];
 
 import { Sun, Moon } from 'lucide-react';
