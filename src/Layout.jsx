@@ -306,22 +306,10 @@ const getAdminSubMenuItems = (t) => [
     page: 'Developers',
   },
   {
-    id: 'playbooks',
-    label: 'Playbooks',
-    icon: Briefcase,
-    page: 'Playbooks',
-  },
-  {
     id: 'impact-preview',
     label: 'Preview de Impacto',
     icon: Gauge,
     page: 'ImpactPreviewDemo',
-  },
-  {
-    id: 'audit',
-    label: 'Auditoria',
-    icon: ShieldCheck,
-    page: 'AuditTrail',
   },
   {
     id: 'notifications',
