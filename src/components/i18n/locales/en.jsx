@@ -3,7 +3,8 @@ export default {
     login: "Login",
     create_account: "Create Account",
     custom_proposal: "Custom Proposal",
-    copyright: "All rights reserved."
+    copyright: "All rights reserved.",
+    tagline: "Smart payments, automatic reconciliation, and AI applied to your financial workflow."
   },
   common: {
     save: "Save",

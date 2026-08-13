@@ -3,7 +3,8 @@ export default {
     login: "Fazer Login",
     create_account: "Criar Conta",
     custom_proposal: "Proposta Personalizada",
-    copyright: "Todos os direitos reservados."
+    copyright: "Todos os direitos reservados.",
+    tagline: "Pagamentos inteligentes, reconciliação automática e IA aplicada ao seu fluxo financeiro."
   },
   common: {
     save: "Salvar",
@@ -255,6 +256,7 @@ export default {
   },
   transactions: {
     title: "Transações",
+    subtitle: "Gerencie e monitore todas as transações",
     all: "Todas",
     card: "Cartão",
     pix: "Pix",
@@ -277,7 +279,8 @@ export default {
     fee: "Taxa",
     card_brand: "Bandeira",
     last_4_digits: "Últimos 4 dígitos",
-    authorization_code: "Código de Autorização"
+    authorization_code: "Código de Autorização",
+    recovery_agent: "Recovery Agent"
   },
   financial: {
     title: "Financeiro",
@@ -295,7 +298,72 @@ export default {
     total_balance: "Saldo Total",
     withdraw: "Sacar",
     anticipate: "Antecipar",
-    transfer: "Transferir"
+    transfer: "Transferir",
+    available_for_withdrawal: "Saldo Disponível para Saque",
+    min_withdrawal: "Saque mínimo",
+    withdrawal_history: "Histórico de Saques",
+    bank_accounts: "Contas Bancárias",
+    auto_withdrawal: "Saque Automático",
+    export: "Exportar",
+    date: "Data",
+    value: "Valor",
+    fee_label: "Taxa",
+    net: "Líquido",
+    destination: "Destino",
+    type: "Tipo",
+    manual: "Manual",
+    automatic: "Automático",
+    free: "Gratuito",
+    no_withdrawals: "Nenhum saque realizado ainda",
+    manage_accounts: "Gerencie suas contas para receber saques",
+    add_account: "Adicionar Conta",
+    no_bank_accounts: "Nenhuma conta bancária cadastrada",
+    primary: "Principal",
+    validated: "Validada",
+    pending: "Pendente",
+    auto_withdrawal_settings: "Configurações de Saque Automático",
+    auto_withdrawal_desc: "Configure para sacar automaticamente quando as condições forem atendidas",
+    enable_auto_withdrawal: "Ativar Saque Automático",
+    auto_when_conditions: "Sacar automaticamente quando as condições forem atendidas",
+    frequency: "Frequência",
+    daily: "Diário",
+    weekly: "Semanal",
+    biweekly: "Quinzenal",
+    monthly: "Mensal",
+    day_of_week: "Dia da Semana",
+    monday: "Segunda-feira",
+    tuesday: "Terça-feira",
+    wednesday: "Quarta-feira",
+    thursday: "Quinta-feira",
+    friday: "Sexta-feira",
+    min_amount_withdraw: "Valor mínimo para saque",
+    min_amount_help: "Sacar apenas se o saldo disponível for maior que este valor",
+    keep_min_balance: "Manter saldo mínimo",
+    keep_min_help: "Deixar este valor na conta como reserva",
+    default_destination_account: "Conta de Destino Padrão",
+    select_account: "Selecione uma conta...",
+    notify_auto_withdrawals: "Notificar saques automáticos",
+    notify_auto_help: "Receber e-mail quando o saque automático for executado",
+    request_withdrawal: "Solicitar Saque",
+    transfer_available: "Transfira seu saldo disponível para sua conta bancária",
+    withdrawal_amount: "Valor do Saque",
+    all: "Todos",
+    transfer_type: "Tipo de Transferência",
+    instant: "Instantâneo",
+    d0_d1: "D+0 ou D+1",
+    destination_account: "Conta de Destino",
+    withdrawal_fee: "Taxa de saque",
+    confirm_withdrawal: "Confirmar Saque",
+    cash_flow: "Fluxo de Caixa",
+    days: "dias",
+    next_receivables: "Próximos Recebíveis",
+    view_schedule: "Ver Agenda",
+    total_receivable: "Total a receber",
+    recent_movements: "Movimentações Recentes",
+    view_full_statement: "Ver Extrato Completo",
+    no_recent_movements: "Sem movimentações recentes",
+    entries: "Entradas",
+    exits: "Saídas"
   },
   disputes: {
     title: "Disputas",
@@ -309,7 +377,22 @@ export default {
     deadline: "Prazo",
     reason: "Motivo",
     contest: "Contestar",
-    accept: "Aceitar"
+    accept: "Aceitar",
+    critical_ratio_indicators: "Indicadores de Razão Crítica",
+    status: "Status",
+    normal: "Normal",
+    warning: "Atenção",
+    in_program: "Em Programa",
+    visa_cb_ratio: "Razão de Chargeback Visa",
+    mc_cb_ratio: "Razão de Chargeback Mastercard",
+    visa_fraud: "Fraude Visa (VFMP)",
+    mc_fraud: "Fraude Mastercard (EFM)",
+    trend_6months: "Tendência da Razão (6 meses)",
+    active_alerts: "alertas ativos",
+    configure_ai_agent: "Configurar Agente IA",
+    open_disputes: "Disputas em aberto",
+    win_rate: "Taxa de vitória",
+    in_contestation: "Em contestação"
   },
   compliance: {
     title: "KYC Compliance",
@@ -332,11 +415,64 @@ export default {
     plans: "Planos",
     active: "Ativas",
     cancelled: "Canceladas",
+    paused: "Pausadas",
     trial: "Em Trial",
     billing_cycle: "Ciclo de Cobrança",
     next_billing: "Próxima Cobrança",
     mrr: "MRR",
-    churn_rate: "Taxa de Churn"
+    churn_rate: "Taxa de Churn",
+    subscription: "Assinatura",
+    customer: "Cliente",
+    value: "Valor",
+    status: "Status",
+    cycle: "Ciclo",
+    ltv: "LTV",
+    active_subscriptions: "Assinaturas Ativas",
+    in_trial: "Em Trial",
+    delinquent: "Inadimplentes",
+    at_risk: "Valor em Risco",
+    delinquent_alert: "assinaturas inadimplentes",
+    dunning_active: "O sistema de dunning está tentando recuperar esses pagamentos.",
+    configure_dunning: "Configurar Dunning",
+    search_placeholder: "Buscar por cliente, email ou plano...",
+    all: "Todas",
+    view_details: "Ver detalhes",
+    change_payment: "Alterar Pagamento",
+    apply_discount: "Aplicar Desconto",
+    pause: "Pausar",
+    resume: "Reativar",
+    cancel: "Cancelar",
+    pause_subscription: "Pausar Assinatura",
+    resume_subscription: "Reativar Assinatura",
+    cancel_subscription: "Cancelar Assinatura",
+    apply_discount_title: "Aplicar Desconto",
+    pause_desc: "A assinatura será pausada e as cobranças suspensas.",
+    resume_desc: "A assinatura será reativada e as cobranças retomadas.",
+    cancel_desc: "Esta ação é irreversível. O cliente perderá acesso ao serviço.",
+    discount_desc: "Aplicar desconto no próximo ciclo desta assinatura.",
+    cancellation_reason: "Motivo do Cancelamento",
+    select_reason: "Selecione um motivo",
+    customer_request: "Solicitação do cliente",
+    not_using: "Não está usando",
+    too_expensive: "Muito caro",
+    found_alternative: "Encontrou alternativa",
+    other: "Outro",
+    discount_percentage: "Percentual de Desconto (%)",
+    for_how_many_cycles: "Por quantos ciclos",
+    confirm: "Confirmar",
+    processing: "Processando...",
+    subscription_updated: "Assinatura atualizada!",
+    no_subscriptions: "Nenhuma assinatura encontrada",
+    weekly: "Semanal",
+    biweekly: "Quinzenal",
+    monthly: "Mensal",
+    bimonthly: "Bimestral",
+    quarterly: "Trimestral",
+    semiannual: "Semestral",
+    annual: "Anual",
+    healthy: "Saudável",
+    attention: "Atenção",
+    risk: "Risco"
   },
   checkout: {
     title: "Checkout",
@@ -354,7 +490,41 @@ export default {
     expired_links: "Links Expirados",
     total_collected: "Total Arrecadado",
     copy_link: "Copiar Link",
-    share: "Compartilhar"
+    share: "Compartilhar",
+    link: "Link",
+    value: "Valor",
+    status: "Status",
+    usage: "Uso",
+    collected: "Arrecadado",
+    conversion: "Conversão",
+    open_value: "Valor Aberto",
+    min_value: "Mínimo",
+    sales: "vendas",
+    views: "visualizações",
+    search_placeholder: "Buscar por nome ou ID...",
+    all_status: "Todos",
+    active: "Ativo",
+    inactive: "Inativo",
+    expired: "Expirado",
+    sold_out: "Esgotado",
+    drafts: "Rascunhos",
+    showcases: "Vitrines",
+    copy: "Copiar",
+    link_copied: "Link copiado!",
+    link_updated: "Link atualizado!",
+    link_deleted: "Link excluído!",
+    open_link: "Abrir Link",
+    edit: "Editar",
+    qr_code: "QR Code",
+    deactivate: "Desativar",
+    activate: "Ativar",
+    delete: "Excluir",
+    delete_confirm: "Excluir este link?",
+    no_links: "Nenhum link de pagamento",
+    no_links_desc: "Crie seu primeiro link de pagamento para começar a receber",
+    no_links_found: "Nenhum link encontrado",
+    share_link: "Compartilhar Link",
+    variable_value: "Valor Variável"
   },
   integrations: {
     title: "Integrações",
@@ -371,8 +541,51 @@ export default {
     total_customers: "Total de Clientes",
     new_customers: "Novos Clientes",
     returning_customers: "Clientes Recorrentes",
-    lifetime_value: "Valor Vitalício",
-    customer_details: "Detalhes do Cliente"
+    lifetime_value: "LTV Médio",
+    customer_details: "Detalhes do Cliente",
+    customer: "Cliente",
+    document: "Documento",
+    segment: "Segmento",
+    purchases: "Compras",
+    ltv: "LTV",
+    last_purchase: "Última Compra",
+    never: "Nunca",
+    new: "Novo",
+    recurring: "Recorrente",
+    vip: "VIP",
+    at_risk: "Em Risco",
+    inactive: "Inativo",
+    active_customers: "Clientes Ativos (30d)",
+    of_total: "do total",
+    inactive_customers: "Clientes Inativos (+90d)",
+    reactivation_opportunity: "Oportunidade de Reativação",
+    vip_customers: "Clientes VIP",
+    high_value: "Alto Valor",
+    all: "Todos",
+    news: "Novos",
+    inactives: "Inativos",
+    view_full_profile: "Ver Perfil Completo",
+    send_email: "Enviar Email",
+    view_transactions: "Ver Transações",
+    add_tag: "Adicionar Tag",
+    clear_filters: "Limpar Filtros",
+    min_ltv: "LTV Mínimo",
+    max_ltv: "LTV Máximo",
+    min_purchases: "Compras Mínimas",
+    no_limit: "Sem limite",
+    search_placeholder: "Buscar por nome, email ou documento...",
+    no_customers: "Nenhum cliente encontrado",
+    no_vip: "Sem clientes VIP",
+    no_at_risk: "Sem clientes em risco",
+    no_new: "Sem clientes novos",
+    no_inactive: "Sem clientes inativos",
+    customer_profile: "Perfil do Cliente",
+    quick_view: "Visão Rápida do Cliente",
+    contact_info: "Contato",
+    activity: "Atividade",
+    first_purchase: "Primeira Compra",
+    preferred_method: "Método Preferido",
+    card: "Cartão"
   },
   reports: {
     title: "Relatórios",
@@ -465,7 +678,7 @@ export default {
     back: "Voltar",
     continue: "Continuar",
     custom_proposal_link: "Receber proposta personalizada →",
-    
+
     // Verification
     verify_identity: "Verifique sua identidade",
     how_receive_code: "Como deseja receber o código?",
@@ -477,7 +690,7 @@ export default {
     didnt_receive: "Não recebeu o código?",
     resend_now: "Reenviar agora",
     confirm_and_proceed: "Confirmar e Avançar",
-    
+
     // Step 2 - Plan Selection
     choose_plan: "Escolha seu Plano",
     step_2_of_3: "Etapa 2 de 3 - Selecione o plano ideal para seu negócio",
@@ -490,7 +703,7 @@ export default {
     plan_instant: "Instant (D+1)",
     plan_instant_desc: "Liquidez máxima",
     most_popular: "Mais Popular",
-    
+
     // Step 3 - Company Data
     company_data: "Dados da Empresa",
     step_3_of_3: "Etapa 3 de 3 - Informações do seu negócio",
@@ -525,7 +738,7 @@ export default {
     position_placeholder: "Ex: CEO, Diretor",
     finish_registration: "Finalizar Cadastro",
     creating: "Criando...",
-    
+
     // Compliance Start
     complete_compliance: "Complete seu Compliance",
     compliance_intro: "Para começarmos, escolha a modalidade de pagamento que melhor se adapta ao seu modelo de negócio.",
@@ -539,7 +752,7 @@ export default {
     pix_card_desc: "Solução completa para vendas",
     pix_card_details: "Requer compliance completo (KYC/KYB)",
     back_to_dashboard: "Voltar ao Dashboard",
-    
+
     // Compliance Forms
     compliance_pix: "Compliance PIX",
     compliance_full: "Compliance Completo (KYC/KYB)",
@@ -548,7 +761,7 @@ export default {
     previous: "Anterior",
     next: "Próxima",
     finish: "Finalizar",
-    
+
     // Step Titles
     step_identification: "Identificação",
     step_company_type: "Tipo de Empresa",
@@ -566,14 +779,14 @@ export default {
     step_pld_risks: "PLD - Riscos",
     step_pld_operation: "PLD - Operação",
     step_confirmation: "Confirmação",
-    
+
     // Document Upload
     document_upload: "Upload de Documentos",
     document_upload_full: "Upload de Documentos (Completo)",
     uploaded: "Enviado",
     upload: "Upload",
     x_of_y_docs: "{{current}} de {{total}}",
-    
+
     // Liveness
     identity_verification: "Verificação de Identidade",
     liveness_facematch: "Liveness e Facematch",
@@ -591,7 +804,7 @@ export default {
     demo_description: "Clique no botão abaixo para simular o processo de Liveness/Facematch que seria realizado pelo sócio.",
     open_external_simulation: "Abrir Simulação Externa",
     continue_to_dashboard: "Continuar para o Dashboard",
-    
+
     // Liveness Simulation
     liveness_proof: "Prova de Vida",
     follow_instructions: "Siga as instruções na tela",
@@ -621,7 +834,7 @@ export default {
     start_verification: "Iniciar Verificação",
     of: "de"
   },
-  
+
   // Compliance Form Fields
   compliance_forms: {
     // Step 1 - Identification
@@ -634,7 +847,7 @@ export default {
     corporate_name_placeholder: "Digite a razão social completa",
     trade_name: "Nome Fantasia",
     trade_name_placeholder: "Nome comercial da empresa (opcional)",
-    
+
     // Step 2 - Company Type
     company_type: "Tipo de Empresa",
     legal_nature_structure: "Natureza jurídica e estrutura",
@@ -652,7 +865,7 @@ export default {
     other: "Outro",
     other_desc: "Outra natureza jurídica",
     employees_count: "Quantidade de Colaboradores",
-    
+
     // Step 3 - Address
     commercial_address: "Endereço Comercial",
     headquarters_branches: "Localização da sede e filiais",
@@ -663,7 +876,7 @@ export default {
     state_placeholder: "UF",
     other_offices: "Outros Escritórios / Filiais",
     other_offices_placeholder: "Se houver, liste os endereços das filiais (opcional)",
-    
+
     // Step 4 - Activity
     economic_activity: "Atividade Econômica",
     cnae_description: "CNAE e descrição do negócio",
@@ -673,7 +886,7 @@ export default {
     secondary_cnaes_placeholder: "Liste os CNAEs secundários, se houver (opcional)",
     activity_description: "Descrição Detalhada da Atividade",
     activity_description_placeholder: "Descreva detalhadamente o que sua empresa faz, quais produtos ou serviços oferece, e como opera no mercado...",
-    
+
     // Step 5 - Volume
     financial_volume: "Volumetria Financeira",
     transaction_estimates: "Estimativas de volume transacionado",
@@ -685,7 +898,7 @@ export default {
     monthly_transactions: "Quantidade de Transações/Mês",
     monthly_transactions_placeholder: "Ex: 1000",
     annual_revenue: "Faturamento Anual",
-    
+
     // Step 6 - Client Profile
     client_profile: "Perfil dos Clientes",
     target_audience: "Público-alvo e localização",
@@ -699,7 +912,7 @@ export default {
     international_proportion: "Proporção de Clientes Internacionais",
     main_clients: "Principais Clientes",
     main_clients_placeholder: "Liste os principais clientes ou segmentos que atende (opcional)",
-    
+
     // Step 7 - Responsibles
     company_responsibles: "Responsáveis pela Empresa",
     main_contacts: "Contatos principais",
@@ -715,7 +928,7 @@ export default {
     financial_contact: "Contato Financeiro (se diferente)",
     financial_name_placeholder: "Nome do contato financeiro",
     financial_email_placeholder: "financeiro@empresa.com",
-    
+
     // Step 8 - PLD Sanctions
     pld_sanctions: "PLD - Sanções e Restrições",
     sanctions_verification: "Verificação de vínculos com listas restritivas",
@@ -727,7 +940,7 @@ export default {
     sanctioned_countries_detail: "Quais países e qual o tipo de vínculo (exportação, importação, parceria, etc.)",
     sanctioned_control_question: "A empresa é controlada por pessoa ou entidade que está em lista de sanções?",
     sanctioned_control_detail: "Detalhe o tipo de controle e a relação",
-    
+
     // Step 9 - PLD Risks
     pld_risks: "PLD - Análise de Riscos",
     risk_assessment: "Avaliação de riscos de lavagem de dinheiro",
@@ -737,7 +950,7 @@ export default {
     money_laundering_detail: "Descreva o histórico e situação atual",
     atypical_operations_question: "A empresa realiza operações com valores atípicos ou em espécie?",
     atypical_operations_detail: "Descreva a natureza dessas operações",
-    
+
     // Step 10 - PLD Operation
     pld_operation: "PLD - Controles Operacionais",
     compliance_procedures: "Procedimentos internos de compliance",
@@ -747,7 +960,7 @@ export default {
     pld_training_detail: "Informe a frequência e abrangência dos treinamentos",
     kyc_procedures_question: "A empresa possui procedimentos de KYC (Conheça seu Cliente)?",
     kyc_procedures_detail: "Descreva os procedimentos adotados para conhecer e validar clientes",
-    
+
     // Step 11 - Confirmation
     confirmation_declarations: "Confirmação e Declarações",
     final_review: "Revisão final e aceite dos termos",

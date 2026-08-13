@@ -3,7 +3,8 @@ export default {
     login: "登录",
     create_account: "创建账户",
     custom_proposal: "定制方案",
-    copyright: "版权所有。"
+    copyright: "版权所有。",
+    tagline: "智能支付、自动对账和应用于您的财务流程的人工智能。"
   },
   common: {
     save: "保存",
