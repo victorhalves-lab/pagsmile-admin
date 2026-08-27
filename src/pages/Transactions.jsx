@@ -9,6 +9,7 @@ import AllTransactionsView from '@/components/transactions/AllTransactionsView';
 import CardTransactionsView from '@/components/transactions/CardTransactionsView';
 import PixTransactionsView from '@/components/transactions/PixTransactionsView';
 import DeclineAnalysisView from '@/components/transactions/DeclineAnalysisView';
+import FeesView from '@/components/transactions/FeesView';
 import PaymentRecoveryAgentView from '@/components/transactions/PaymentRecoveryAgentView';
 import RefundsView from '@/components/transactions/RefundsView';
 import CRMView from '@/components/transactions/CRMView';
@@ -80,6 +81,9 @@ function TransactionsHubInner() {
         </TabsContent>
         <TabsContent value="declines" className="mt-4">
           <DeclineAnalysisView />
+        </TabsContent>
+        <TabsContent value="fees" className="mt-4">
+          <FeesView />
         </TabsContent>
         <TabsContent value="recovery" className="mt-4">
           <PaymentRecoveryAgentView />

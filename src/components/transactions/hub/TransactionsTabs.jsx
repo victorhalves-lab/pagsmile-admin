@@ -2,7 +2,7 @@ import React from 'react';
 import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import {
-  Layers, CreditCard, QrCode, RotateCcw, AlertTriangle, Sparkles, Users
+  Layers, CreditCard, QrCode, RotateCcw, AlertTriangle, Sparkles, Users, Receipt
 } from 'lucide-react';
 
 /**
@@ -16,6 +16,7 @@ export default function TransactionsTabs({ counts = {} }) {
     { value: 'pix',      label: 'PIX',             icon: QrCode,         badge: counts.pix },
     { value: 'refunds',  label: 'Reembolsos',      icon: RotateCcw,      badge: counts.refunds },
     { value: 'declines', label: 'Análise Recusas', icon: AlertTriangle,  badge: counts.declines, badgeVariant: 'destructive' },
+    { value: 'fees',     label: 'Custos & Taxas',  icon: Receipt },
     { value: 'recovery', label: 'Recovery Agent',  icon: Sparkles,       aiBadge: true },
     { value: 'crm',      label: 'CRM',             icon: Users },
   ];

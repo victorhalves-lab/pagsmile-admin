@@ -51,6 +51,7 @@ import {
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import { decomposeFees } from '@/lib/decomposeFees';
 import PageHeader from '@/components/common/PageHeader';
 import StatusBadge from '@/components/common/StatusBadge';
 import RelatedTransactionsCard from '@/components/transactions/detail/RelatedTransactionsCard';
@@ -366,22 +367,54 @@ export default function TransactionDetail() {
             </CardContent>
           </Card>
 
-          {/* Values and Fees */}
+          {/* Values and Fees — breakdown granular */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Valores e Taxas</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base">Valores e Taxas</CardTitle>
+                {(() => {
+                  const _f = decomposeFees(transaction);
+                  return _f.isEstimated ? (
+                    <span className="pill-st" style={{ fontSize: 9, padding: '2px 8px' }}>valores estimados</span>
+                  ) : null;
+                })()}
+              </div>
             </CardHeader>
             <CardContent className="divide-y divide-gray-100">
               <InfoRow label="Valor Bruto" value={formatCurrency(transaction.amount)} />
-              <InfoRow label="MDR (Taxa de Processamento)" value={`${formatCurrency(transaction.fee_amount || transaction.amount * 0.0349)} (${transaction.fee_percentage || 3.49}%)`} />
-              <InfoRow label="Taxa de Antecipação" value="R$ 0,00" />
-              <div className="flex items-start justify-between py-2 bg-green-50 -mx-6 px-6 mt-2">
-                <span className="text-sm font-medium text-green-700">Valor Líquido</span>
-                <span className="text-sm font-bold text-green-700">
-                  {formatCurrency(transaction.net_amount || transaction.amount * 0.9651)}
-                </span>
-              </div>
-              <InfoRow label="Data de Liquidação" value={transaction.settlement_date || 'D+30 - 26/02/2026'} />
+              {(() => {
+                const f = decomposeFees(transaction);
+                return (
+                  <>
+                    {f.components.map((c) => (
+                      <div key={c.key} className="flex items-start justify-between py-2">
+                        <span className="text-sm text-gray-500 flex items-center gap-1.5">
+                          {c.label}
+                          {c.rate != null && c.rate > 0 && (
+                            <span className="text-[11px] text-gray-400 font-mono">({c.rate.toFixed(2)}%)</span>
+                          )}
+                          {f.isEstimated && (
+                            <span className="text-[9px] text-gray-400 font-mono uppercase tracking-wider">est.</span>
+                          )}
+                        </span>
+                        <span className="text-sm font-medium text-gray-900 font-mono">{formatCurrency(c.value)}</span>
+                      </div>
+                    ))}
+                    <div className="flex items-start justify-between py-2 bg-rose-50 -mx-6 px-6">
+                      <span className="text-sm font-semibold text-rose-700">Total de Taxas</span>
+                      <span className="text-sm font-bold text-rose-700 font-mono">
+                        {formatCurrency(f.totalFees)}
+                        <span className="text-[11px] font-normal opacity-70 ml-1.5">({f.effectiveRate.toFixed(2)}%)</span>
+                      </span>
+                    </div>
+                    <div className="flex items-start justify-between py-2 bg-emerald-50 -mx-6 px-6">
+                      <span className="text-sm font-semibold text-emerald-700">Valor Líquido</span>
+                      <span className="text-sm font-bold text-emerald-700 font-mono">{formatCurrency(f.netAfterFees)}</span>
+                    </div>
+                  </>
+                );
+              })()}
+              <InfoRow label="Data de Liquidação" value={transaction.settlement_date || transaction.expected_settle_date || 'D+30'} />
             </CardContent>
           </Card>
         </div>
